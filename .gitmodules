@@ -1,15 +1,15 @@
 [submodule "lib/dojo-release-src/dojo"]
 	path = lib/dojo-release-src/dojo
-	url = git@github.com:dojo/dojo.git
+	url = https://github.com/dojo/dojo.git
 [submodule "lib/dojo-release-src/dijit"]
 	path = lib/dojo-release-src/dijit
-	url = git@github.com:dojo/dijit.git
+	url = https://github.com/dojo/dijit.git
 [submodule "lib/dojo-release-src/dojox"]
 	path = lib/dojo-release-src/dojox
-	url = git@github.com:dojo/dojox.git
+	url = https://github.com/dojo/dojox.git
 [submodule "lib/dojo-release-src/dijit-themes"]
 	path = lib/dojo-release-src/dijit-themes
-	url = git@github.com:dojo/dijit-themes.git
+	url = https://github.com/dojo/dijit-themes.git
 [submodule "lib/dojo-release-src/util"]
 	path = lib/dojo-release-src/util
-	url = git@github.com:dojo/util.git
+	url = https://github.com/dojo/util.git

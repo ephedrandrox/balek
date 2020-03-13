@@ -1,4 +1,12 @@
 
+release/
+
+node_modules/
+
+data/mongo/mongoDB/
+
+data/mysql/mysqlDB/
+
 .idea/
 
 .DS_Store
