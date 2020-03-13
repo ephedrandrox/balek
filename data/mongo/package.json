@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "docker build . -t balek-mongodb:develop",
+    "restart": "npm run stop && sleep 20 && npm run start",
+    "stop": "docker stack rm balek-mongo",
+    "start": "docker stack deploy --with-registry-auth -c docker-compose.yml balek-mongo && echo Deploying Stack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mysqldb:
+    image: "balek-mysqldb:develop"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootPass
+      - MYSQL_DATABASE=balek
+      - MYSQL_USER=balekAppUser
+      - MYSQL_PASSWORD=balekAppPassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysqlDB:/var/lib/mysql
+      - ./initSQL:/docker-entrypoint-initdb.d/:ro
