@@ -1,0 +1,44 @@
+/*todo make seperate css for each html
+*/
+
+.userManagement {
+    text-align: center
+}
+
+.userManagementWidget {
+    display: inline-block;
+}
+
+.userManagementWidgetUserList {
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+}
+
+.userManagementWidgetUserListItem {
+    padding: 5px;
+    border: solid black 3px;
+    background: #1C6EA4;
+    margin: 20px;
+    -webkit-box-shadow: 5px 5px 15px 5px #000000;
+    box-shadow: 5px 5px 15px 5px #000000;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.mouseOverUserListItem {
+    border: solid #7e0000 3px;
+    cursor: pointer;
+}
+
+.userManagementWidgetUserListItemUserImage {
+    max-width: 100px;
+}
+
+.userManagementWidgetUserEditFileInputLabel {
+    min-width: 50px;
+    min-height: 50px;
+    cursor: pointer;
+}

@@ -1,0 +1,44 @@
+.sessionMenuModulesMenu {
+    position: absolute;
+    top: 0px;
+    left: 80px;
+    height: 40px;
+    vertical-align: center;
+    color: black;
+    cursor: pointer;
+}
+
+.sessionMenuModulesMenuModuleImage {
+    height: 100%;
+}
+
+.sessionMenuModulesMenuModuleImageDiv {
+    display: inline-block;
+    border: solid #0a77d5 2px;
+    border-radius: 25px;
+    padding: 3px;
+    margin: 3px;
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 192, 255, 0.74)), to(#a6ffb2));
+    height: 100%;
+    -webkit-box-shadow: 0px 10px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 10px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 10px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+
+.sessionMenuModulesMenuModuleNameDiv {
+    position: relative;
+    display: inline;
+    top: -15px;
+    left: -30px;
+    cursor: pointer;
+    padding: 3px;
+    margin: 3px;
+    padding-left: 25px;
+    height: 100%;
+}
+
+.mouseOversessionMenuModulesMenuModuleIcon {
+    border: solid purple 2px;
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 52, 30, 0.74)), to(#a6ffb2));
+}

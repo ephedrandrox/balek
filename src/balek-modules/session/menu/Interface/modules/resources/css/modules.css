@@ -1,0 +1,22 @@
+
+.sessionModules {
+    position: fixed;
+    top: 40px;
+    bottom: 0px;
+    left: 0px;
+    border: none;
+    border-right: 5px solid black;
+    background: rgba(150, 242, 166, 0.36);
+    margin: 0;
+    padding: 20px;
+    z-index: 0;
+    visibility: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.sessionModules::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}

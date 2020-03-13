@@ -1,0 +1,51 @@
+.moduleInfo {
+    position: relative;
+    z-index: 100000000;
+    top: 50px;
+    border: solid rgba(6, 6, 6, 0.97) 5px;
+    color: #b8b8b8;
+    background: rgba(255, 31, 51, 0.61);
+    background: none;
+    border: none;
+    padding: 10px;
+}
+
+.moduleInfoMainDiv {
+    z-index: 1000000000000;
+    margin-top: 50px;
+    border: solid rgba(6, 6, 6, 0.97) 5px;
+    color: #b8b8b8;
+    background: rgba(44, 192, 255, 0.61);
+    padding: 10px;
+    background: none;
+    border: none;
+}
+
+.moduleInfoSessionDiv {
+    z-index: 1000000000000;
+    display: inline-block;
+    border: solid black 3px;
+}
+
+.moduleInfoModuleButton {
+    z-index: 1000000000001;
+    display: inline-block;
+    background: #0a36e9;
+    color: white;
+    cursor: pointer;
+    border: solid black 3px;
+    padding: 5px;
+}
+
+.moduleInfoSessionDiv {
+    background: white;
+    color: black;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.moduleInfoInstanceInfo {
+    background: black;
+    color: white;
+}
+

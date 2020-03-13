@@ -1,0 +1,56 @@
+.sessionWorkspaces {
+    position: fixed;
+    top: 40px;
+    bottom: 0px;
+    right: 0px;
+    margin: 0;
+    border: none;
+    border-left: 5px solid black;
+    background: rgba(85, 165, 242, 0.6);
+    padding: 20px;
+    z-index: 0;
+    visibility: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.sessionWorkspaces::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+.sessionWorkspacesButton {
+    display: block;
+    border-radius: 5px;
+    border: solid black 3px;
+    background: rgba(5, 5, 48, 0.66);
+    cursor: pointer;
+    margin: auto;
+    padding: 5px;
+    line-height: 30px;
+    height: 30px;
+    min-width: 100px;
+}
+
+.sessionWorkspacesButton:hover {
+    border: solid white 3px;
+    color: #55a5f2;
+}
+
+.sessionWorkspacesButtonIMG {
+    display: inline-block;
+    max-width: 25px;
+    max-height: 25px;
+    margin: 5px;
+    margin-left: 10px;
+}
+
+.sessionWorkspacesButtonTitle {
+    display: inline-block;
+    position: relative;
+    top: -10px;
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
+}

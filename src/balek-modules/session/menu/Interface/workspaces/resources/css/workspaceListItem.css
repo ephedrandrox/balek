@@ -1,0 +1,136 @@
+.workspaceListItem {
+    border: solid black 3px;
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.66);
+    color: white;
+    border: solid transparent 4px;
+    min-width: 100px;
+}
+
+.workspaceListWorkspaceLabel {
+    color: white;
+}
+
+.workspaceListItemIconDiv {
+    pointer: cursor;
+}
+
+.workspaceListItem:hover {
+    border: solid black 4px;
+}
+
+.workspaceListItemIconIMG {
+    max-width: 50px;
+}
+
+.activeWorkspace {
+    border: solid transparent 4px;
+    background: #3ba8a9;
+}
+
+.dijitReset {
+    /* Use this style to null out padding, margin, border in your template elements
+        so that page specific styles don't break them.
+        - Use in all TABLE, TR and TD tags.
+    */
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    line-height: normal;
+    color: inherit;
+}
+
+.dijitInline {
+    display: inline !important
+}
+
+.dijitInline {
+    /*  To inline block elements.
+        Similar to InlineBox below, but this has fewer side-effects in Moz.
+        Also, apparently works on a DIV as well as a FIELDSET.
+    */
+    display: inline-block; /* webkit and FF3 */
+    #zoom: 1; /* set hasLayout:true to mimic inline-block */
+    #display: inline; /* don't use .dj_ie since that increases the priority */
+    border: 0;
+    padding: 0;
+    vertical-align: middle;
+    #vertical-align: auto; /* makes TextBox,Button line up w/native counterparts on IE6 */
+}
+
+.dijitOffScreen { /* these class attributes should supersede any inline positioning style */
+    position: absolute !important;
+    left: -10000px !important;
+    top: -10000px !important;
+}
+
+.dijitTextBox {
+    background: white;
+    border: 1px solid black;
+
+    width: 50px;
+}
+
+/* InlineEditBox
+ *
+ * Styling InlineEditBox mainly includes:
+ *
+ * 1. Normal state
+ * 		.dijitInlineEditBoxDisplayMode  - for border
+ *
+ * 2. Hover state
+ * 		.dijitInlineEditBoxDisplayModeHover - for border and background color
+ */
+.dijitInlineEditBoxDisplayMode {
+    border: 1px solid transparent;
+}
+
+.dijitInlineEditBoxDisplayModeHover {
+    background-color: #e5f2fe;
+    border: solid 1px #759dc0;
+    color: #96f2a6;
+
+}
+
+.dijitInlineEditBoxDisplayMode {
+    border: none;
+}
+
+.dijitInputInner {
+    color: black;
+}
+
+.dijitTextBoxFocused {
+
+
+    border: solid #f21115 1px;
+}
+
+.dijitSelectLabel,
+.dijitTextBox .dijitInputInner,
+.dijitValidationTextBox .dijitValidationContainer {
+    padding: 1px 0;
+}
+
+.dijitSelectDisabled,
+.dijitTextBoxDisabled,
+.dijitTextBoxDisabled .dijitInputInner {
+    color: #818181;
+}
+
+.dj_gecko .dijitTextBox .dijitInputInner,
+.dj_webkit .dijitTextBox .dijitInputInner {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+
+.dj_gecko .dijitTextBox .dijitInputInner,
+.dj_webkit .dijitTextBox .dijitInputInner {
+    padding-left: 1px;
+    padding-right: 1px;
+}

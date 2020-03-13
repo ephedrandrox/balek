@@ -1,0 +1,27 @@
+.modulesListItem {
+    cursor: pointer;
+    color: white;
+    border: solid #55a5f2 3px;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px;
+    background: rgba(5, 5, 48, 0.66);
+}
+
+.modulesListItem:hover {
+    border: solid white 3px;
+    color: #55a5f2;
+}
+
+.modulesListItemIconIMG {
+    cursor: pointer;
+    max-width: 100px;
+}
+
+.modulesListItemTitle {
+    font-size: 14pt;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+    display: block;
+}

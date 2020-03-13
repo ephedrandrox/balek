@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Balek</title>
+
+     
+
+
+</head>
+<body  bgcolor=black>
+	<script>
+	    dojoConfig = {
+	        has: {
+	            "dojo-firebug": true,
+	            "dojo-debug-messages": true
+	        },
+	        // Don't attempt to parse the page for widgets
+	        parseOnLoad: false,
+	        packages: [
+	            {
+	                name: "balek-client",
+	                location: "../balek-client"
+	            }
+	        ],
+	        // Timeout after 10 seconds
+	        waitSeconds: 10,
+	        // Get "fresh" resources
+	        cacheBust: false,
+	        async: true
+	    };
+	</script>
+	 
+	
+	 
+	<script src="dojo/dojo.js"></script>
+
+	<script> 
+	  
+	    var BalekApp = {};
+	   
+	    require([ "balek-client/Interface", "dojo/domReady!" ], function (Interface) {
+			BalekApp._Interface = new Interface();
+		});
+	</script>
+
+
+</body>
+</html>
