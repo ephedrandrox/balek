@@ -1,0 +1,33 @@
+version: '3'
+services:
+  balek:
+    image: "balek:release"
+    build:
+      context: "../.."
+      dockerfile: "builds/balek/Dockerfile"
+    ports:
+      - "443:8080"
+    volumes:
+      - ./conf:/balek/src/balek-server/etc
+  mysqld:
+    image: "balek-mysql:release"
+    build: "../../data/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootPass
+      - MYSQL_DATABASE=balek
+      - MYSQL_USER=balekAppUser
+      - MYSQL_PASSWORD=balekAppPassword
+    ports:
+        - "3306:3306"
+    volumes:
+      - ./mysqlDB:/var/lib/mysql
+  mongodb:
+    image: "balek-mongodb:release"
+    build: "../../data/mongo"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+      - MONGO_INITDB_DATABASE=balek
+    volumes:
+      - ./dbInit:/docker-entrypoint-initdb.d/
+      - ./mongoDB:/data/db
