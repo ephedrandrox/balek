@@ -20,6 +20,7 @@ services:
     ports:
         - "3306:3306"
     volumes:
+      - ./initSQL:/docker-entrypoint-initdb.d/:ro
       - ./mysqlDB:/var/lib/mysql
   mongodb:
     image: "balek-mongodb:release"

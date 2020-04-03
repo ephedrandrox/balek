@@ -40,6 +40,8 @@ define(['dojo/_base/declare',
 
                 console.log("Starting server Instance");
 
+
+
                 let ioManagerIsReady = new Promise(lang.hitch(this, function (ioManagerPromiseResolve, ioManagerPromiseReject) {
                     this._ioManager._start(ioManagerPromiseResolve, ioManagerPromiseReject);
                 }));

@@ -178,6 +178,12 @@ define(['dojo/_base/declare',
                     } else if (oldSession.userKey === newSession.userKey) {
                         //also check that the session to switch too has unconnected status
                         console.log("Switching instances");
+                        if(newSession._wssConnection != null &&
+                            newSession._wssConnection.readyState === newSession._wssConnection.OPEN){
+                            console.log("Session Already has Connection, Disconnecting");
+                            newSession._wssConnection.sessionKey = null;
+                            newSession._wssConnection._wssConnection.close();
+                        }
                         oldSession._wssConnection = null;
                         wssConnection._sessionKey = newSessionKey;
                         newSession._wssConnection = wssConnection;
@@ -197,7 +203,10 @@ define(['dojo/_base/declare',
 
             },
             setSessionDisconnected: function (sessionKey) {
-                this._sessions[sessionKey].updateSessionStatus({_sessionStatus: 2});
+                if(this._sessions[sessionKey])
+                {
+                    this._sessions[sessionKey].updateSessionStatus({_sessionStatus: 2});
+                }
             },
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();

@@ -13,9 +13,9 @@ Currently in early development stage
 
 ####Get Balek:  
 
-    `git clone --recurse-submodules git@github.com:ephedrandrox/balek.git`  
+    `git clone --recurse-submodules https://github.com/ephedrandrox/balek.git`  
 
-The dojo toolkit is included as a submodule. If you forget the `--recurse-submodules` flag then you can run `git submodule init` in the repo directory to download the dojo toolkit.
+The dojo toolkit is included as a submodule. If you forget the `--recurse-submodules` flag then you can run `git submodule update --init --recursive` in the repo directory to download the dojo toolkit.
 
 ####Enter the repository directory and install modules  
 `cd balek`  

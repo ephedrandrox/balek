@@ -59,7 +59,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', "dojo/topic", "dojo/node!fs"],
                         "svg": 'image/svg+xml'
                     }
                 };
-
+                
                 httpsCallback(httpsConfig);
             }
         });

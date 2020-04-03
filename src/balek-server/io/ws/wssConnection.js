@@ -40,6 +40,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             onWebSocketClose: function (reasonCode, description) {
                 console.log((new Date()) + ' Peer ' + this._wssConnection.remoteAddress + ' disconnected.');
                 topic.publish("setSessionDisconnected", this._sessionKey);
+                //todo make this tell the session is contains to disassociate and remove the publish event
                 console.log(reasonCode, description);
 
             },
