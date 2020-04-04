@@ -61,10 +61,9 @@ This builds the interface using dojo build tools and Google Composure to reduce 
 
 
 ####Deploying using docker
- `git clone --recurse-submodules git@github.com:ephedrandrox/balek.git`
+ `git clone --recurse-submodules git@github.com:ephedrandrox/balek.git`  
  `cd balek`  
- `npm install`  
- `docker-compose -f builds/balek/docker-compose.yml build`
+ `docker-compose -f builds/balek/docker-compose.yml build`  
  `docker-compose -f builds/balek/docker-compose.yml up -d`
  
  You could place your ssl certificates in `balek/builds/balek/conf/cert/` and or configure `balek/builds/balek/conf/config.json` before building.

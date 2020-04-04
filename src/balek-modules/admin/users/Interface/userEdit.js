@@ -70,10 +70,18 @@ define(['dojo/_base/declare',
                         this.updateUserInfoAndClose();
                         break;
                     case dojoKeys.ESCAPE:
+                        keyUpEvent.preventDefault();
                         this.destroy();
                         break;
                 }
                 this.updateStatus();
+            },
+            _onKeyDown: function (keyDownEvent) {
+                switch (keyDownEvent.keyCode) {
+                    case dojoKeys.ESCAPE:
+                        keyDownEvent.preventDefault();
+                        break;
+                }
             },
             updateStatus: function () {
                 if (this._passwordField1 && !this.checkForAcceptablePasswordInputs()) {
