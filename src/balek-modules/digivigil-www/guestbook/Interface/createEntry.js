@@ -95,6 +95,9 @@ define(['dojo/_base/declare',
                     case dojoKeys.SHIFT:
                         this._shiftDown = true;
                         break;
+                    case dojoKeys.ESCAPE:
+                        keyDownEvent.preventDefault();
+                        break;
                     case dojoKeys.ENTER:
                         if (this._shiftDown) {
                             keyDownEvent.preventDefault();
