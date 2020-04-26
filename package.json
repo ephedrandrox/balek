@@ -11,8 +11,7 @@
     "mongodb": "^3.3.2",
     "mysql2": "^1.7.0",
     "sanitize-html": "^1.20.1",
-    "websocket": "^1.0.28",
-    "minimist": ">=0.2.1"
+    "websocket": "^1.0.28"
   },
   "name": "balek",
   "description": "balek",
@@ -25,9 +24,6 @@
   "author": "Blake Glanville",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-stylus": "^2.7.0",
-    "stylus": "^0.54.7",
-    "minimist": ">=0.2.1"
+    "stylus": "^0.54.7"
   }
 }
