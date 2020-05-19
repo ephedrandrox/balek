@@ -63,6 +63,11 @@ define(['dojo/_base/declare',
                 this._removeWidget();
 
             },
+            _onCancelEntryClicked: function (eventObject) {
+
+                this._removeWidget();
+
+            },
             _removeWidget() {
                 fx.fadeOut({
                     node: this.domNode,
