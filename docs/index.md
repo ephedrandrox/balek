@@ -16,7 +16,7 @@ Two new Objects are planned for development
     >Loaded on the server and client. Either as part of an Instance/Module or on their own. An example would be a data store on the client with a database backend. These should provide a state object when created that can be watched, and a way to get/set/sync data with callback communication between client and server objects.
 ####Developing Modules
 
-   The plan is to make modules something that can be development in their own repository, for now we can just modify a copy of balek.
+   The plan is to make modules something that can be developed in their own repository, for now we can just modify a copy of balek.
    
    Create a subdirectory in src/balek-modules/ and the three files Module.js, Instance.js, and Interface.js. Or copy a current module into a new directory and edit from there.
 

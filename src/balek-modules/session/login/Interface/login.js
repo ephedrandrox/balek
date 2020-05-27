@@ -64,12 +64,26 @@ define(['dojo/_base/declare',
                 let loginCredentials = {};
                 if (this._usernameField.value && this._passwordField.value) {
                     loginCredentials.username = this._usernameField.value;
-                    let cryptoPromise = crypto.subtle.digest('SHA-512', new TextEncoder("utf-8").encode(this._passwordField.value));
+                    if(typeof(TextEncoder) !== 'undefined'){
+                        let cryptoPromise = crypto.subtle.digest('SHA-512', new TextEncoder("utf-8").encode(this._passwordField.value));
 
-                    cryptoPromise.then(lang.hitch(this, function (passwordHash) {
-                        let passwordHashHex = Array.prototype.map.call(new Uint8Array(passwordHash), x => (('00' + x.toString(16)).slice(-2))).join('');
-                        loginCredentials.password = passwordHashHex;
 
+                        cryptoPromise.then(lang.hitch(this, function (passwordHash) {
+                            let passwordHashHex = Array.prototype.map.call(new Uint8Array(passwordHash), x => (('00' + x.toString(16)).slice(-2))).join('');
+                            loginCredentials.password = passwordHashHex;
+
+                            topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
+                                if (loginReply.error) {
+                                    alert(loginReply.error.error);
+                                } else {
+                                    //show status and fade out
+                                    this.destroy();
+                                }
+                            }));
+                        }));
+                    }else{
+                        loginCredentials.password = this._passwordField.value;
+                        loginCredentials.passwordNotEncrypted = true;
                         topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
                             if (loginReply.error) {
                                 alert(loginReply.error.error);
@@ -78,7 +92,7 @@ define(['dojo/_base/declare',
                                 this.destroy();
                             }
                         }));
-                    }));
+                    }
                 } else {
                     alert("Need more Input");
                 }
