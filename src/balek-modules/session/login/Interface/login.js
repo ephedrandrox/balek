@@ -68,8 +68,8 @@ define(['dojo/_base/declare',
                         if (loginReply.error) {
                             alert(loginReply.error.error);
                         } else {
-                            //show status and fade out
                             topic.publish("requestModuleLoad", "session/menu");
+                            topic.publish("loadBackground", "flowerOfLife");
                             this.destroy();
                         }
                     }));
