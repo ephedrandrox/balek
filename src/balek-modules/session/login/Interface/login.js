@@ -69,6 +69,7 @@ define(['dojo/_base/declare',
                             alert(loginReply.error.error);
                         } else {
                             //show status and fade out
+                            topic.publish("requestModuleLoad", "session/menu");
                             this.destroy();
                         }
                     }));
