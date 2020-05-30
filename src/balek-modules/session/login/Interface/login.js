@@ -62,36 +62,32 @@ define(['dojo/_base/declare',
             },
             sendLoginAndClose: function () {
                 let loginCredentials = {};
+
+                let sendLoginCredentials = lang.hitch(this, function(){
+                    topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
+                        if (loginReply.error) {
+                            alert(loginReply.error.error);
+                        } else {
+                            //show status and fade out
+                            this.destroy();
+                        }
+                    }));
+                });
+
+
                 if (this._usernameField.value && this._passwordField.value) {
                     loginCredentials.username = this._usernameField.value;
                     if(typeof(TextEncoder) !== 'undefined'){
                         let cryptoPromise = crypto.subtle.digest('SHA-512', new TextEncoder("utf-8").encode(this._passwordField.value));
-
-
                         cryptoPromise.then(lang.hitch(this, function (passwordHash) {
                             let passwordHashHex = Array.prototype.map.call(new Uint8Array(passwordHash), x => (('00' + x.toString(16)).slice(-2))).join('');
                             loginCredentials.password = passwordHashHex;
-
-                            topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
-                                if (loginReply.error) {
-                                    alert(loginReply.error.error);
-                                } else {
-                                    //show status and fade out
-                                    this.destroy();
-                                }
-                            }));
+                            sendLoginCredentials();
                         }));
                     }else{
                         loginCredentials.password = this._passwordField.value;
                         loginCredentials.passwordNotEncrypted = true;
-                        topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
-                            if (loginReply.error) {
-                                alert(loginReply.error.error);
-                            } else {
-                                //show status and fade out
-                                this.destroy();
-                            }
-                        }));
+                        sendLoginCredentials();
                     }
                 } else {
                     alert("Need more Input");
