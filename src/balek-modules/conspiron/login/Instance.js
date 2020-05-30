@@ -24,7 +24,6 @@ define(['dojo/_base/declare',
                                 const encoder = new nodeUtil.TextEncoder();
                                 let passwordHash = nodeCrypto.createHash('sha512');
 
-                                debugger;
                                 passwordHash.on('readable', lang.hitch(this, function(){
                                     const passwordHashText = Array.prototype.map.call(new Uint8Array(passwordHash.read()), x => (('00' + x.toString(16)).slice(-2))).join(''); // decoder.decode(passwordHash.read());
                                     if(passwordHashText){
