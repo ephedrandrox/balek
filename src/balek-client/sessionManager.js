@@ -145,15 +145,6 @@ define(['dojo/_base/declare',
                         _permissionGroups: sessionStatusAction.permissionGroups,
                         _username: sessionStatusAction.username
                     });
-                    if (this._session.userInGroup("users")) {
-                       topic.publish("requestModuleLoad", "session/menu");
-                        topic.publish("loadBackground", "flowerOfLife");
-
-                    }
-                    if (this._session.userInGroup("admin")) {
-                        //todo load admin accessible modules
-                    }
-
                 }
             }
 
