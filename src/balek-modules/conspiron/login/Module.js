@@ -1,6 +1,6 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/session/login/Instance'],
+        'balek-modules/conspiron/login/Instance'],
     function (declare, baseModule, moduleInstance) {
         return declare("sessionLoginModule", baseModule, {
             _displayName: "Conspiron Login",

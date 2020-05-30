@@ -4,7 +4,7 @@ define(['dojo/_base/declare',
         'dojo/topic',
         "dojo/dom-construct",
         "dojo/_base/window",
-        'balek-modules/session/login/Interface/login'
+        'balek-modules/conspiron/login/Interface/login'
     ],
     function (declare, lang, baseInterface, topic, domConstruct, win, loginInterface) {
 

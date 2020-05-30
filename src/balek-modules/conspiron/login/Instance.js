@@ -7,12 +7,12 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, baseInstance, nodeCrypto, nodeUtil) {
-        return declare("moduleSessionLoginInstance", baseInstance, {
+        return declare("moduleConspironLoginInstance", baseInstance, {
             _instanceKey: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleSessionLoginInstance starting...");
+                console.log("moduleConspironLoginInstance starting...");
             },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
                 if (moduleMessage.instanceKey == this._instanceKey) {

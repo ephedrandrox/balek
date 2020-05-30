@@ -14,15 +14,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/session/login/resources/html/login.html',
-        'dojo/text!balek-modules/session/login/resources/css/login.css'
+        'dojo/text!balek-modules/conspiron/login/resources/html/login.html',
+        'dojo/text!balek-modules/conspiron/login/resources/css/login.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
-        return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("moduleConspironLoginInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "loginInterface",
+            baseClass: "conspironLoginInterface",
 
             _userData: {},
             constructor: function (args) {

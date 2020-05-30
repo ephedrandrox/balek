@@ -2,11 +2,11 @@ body {
     text-align: center
 }
 
-.loginInterface * {
+.conspironLoginInterface * {
 
 }
 
-.loginInterface {
+.conspironLoginInterface {
     background: rgba(77, 164, 164, 0.84);
     display: inline;
     display: inline-block;
@@ -26,7 +26,7 @@ body {
     outline: none;
 }
 
-.loginInterfaceUsernameField {
+.conspironLoginInterfaceUsernameField {
     text-align: center;
     border-radius: 25px;
     background: #050530;
@@ -34,7 +34,7 @@ body {
     outline: none;
 }
 
-.loginInterfacePasswordField {
+.conspironLoginInterfacePasswordField {
     text-align: center;
     border-radius: 25px;
     background: #050530;
@@ -42,6 +42,6 @@ body {
     outline: none;
 }
 
-.loginInterfaceLoginButton {
+.conspironLoginInterfaceLoginButton {
     color: #1c6ea4;
 }
