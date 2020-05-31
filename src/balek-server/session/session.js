@@ -46,6 +46,14 @@ define([ 	'dojo/_base/declare',
                 }else if(request.interfaceLoadRequest && request.interfaceLoadRequest.requestType === "all"){
 
                     messageReplyCallback( this.getInterfaceLoadObject());
+                }else if(request.moduleUnloadRequest && request.moduleUnloadRequest.sessionModuleInstanceKey !== undefined){
+
+                    this.unloadModuleInstance(request.moduleUnloadRequest.sessionModuleInstanceKey).then(unloadResult =>{
+                        messageReplyCallback(unloadResult);
+                    }).catch(errorResult =>{
+                        messageReplyCallback(errorResult);
+                    });
+
                 }
                 else
                 {
@@ -53,6 +61,27 @@ define([ 	'dojo/_base/declare',
                     console.log("session request unkown.");
                 }
 
+            },
+            unloadModuleInstance: function(sessionModuleInstanceKey){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                    this._workspaceManager.unloadModuleInstance(sessionModuleInstanceKey);
+
+                    delete  this._instances[sessionModuleInstanceKey];
+
+                    topic.publish("unloadModuleInstance", sessionModuleInstanceKey, lang.hitch(this, unloaded =>{
+                        console.log("unloaded: " + unloaded);
+                        if(unloaded){
+                             Resolve({status: "Success"});
+                        }
+                        else
+                        {
+                            Reject({error: "Could Not Unload Module Instance " + sessionModuleInstanceKey});
+                        }
+                    }));
+
+
+                }));
             },
             getNewWorkspace: function(){
 

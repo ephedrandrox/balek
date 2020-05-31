@@ -90,15 +90,11 @@ define(['dojo/_base/declare',
                         topic.publish("getInterfaceFromInstanceKey", instanceKey, function(interfaceForInstance){
 
                             if(interfaceForInstance === false){
-                                if (moduleName !== "session/login" || moduleName !== "conspiron/login") {
-                                    //todo make module instances removable, until then, just dont reload the login module this way...
-                                    topic.publish("loadModuleInterface", moduleName, modulePath, instanceKey, function (loadedInterface) {
-                                    console.log(loadedInterface);
+
+                                topic.publish("loadModuleInterface", moduleName, modulePath, instanceKey, function (loadedInterface) {
                                     oneLoaded();
                                 });
-                                }else {
-                                    oneLoaded();
-                                }
+
 
                             }else{
                                 oneLoaded();
