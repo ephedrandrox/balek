@@ -61,6 +61,13 @@ define([ 	'dojo/_base/declare',
             {
                 return this._activeWorkspace;
             },
+            unloadModuleInstance: function(unloadModuleInstanceKey)
+            {
+                for (const workspaceKey in this._workspaces)
+                {
+                  delete this._workspaces[workspaceKey].instances[unloadModuleInstanceKey];
+                }
+            },
             receiveWorkspaceMessage: function(workspaceMessage, messageReplyCallback){
 
                 if(workspaceMessage.messageData)

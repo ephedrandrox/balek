@@ -18,7 +18,8 @@ define(['dojo/_base/declare',
                 console.log("Initializing######################### Balek Module Managers for server...");
 
                 topic.subscribe("loadModuleForClient", lang.hitch(this, this.loadModuleForClient));
-
+                topic.subscribe("unloadModuleInstance", lang.hitch(this, this.unloadModuleInstance));
+                
                 topic.subscribe("getModuleListForUser", lang.hitch(this, this.getModuleListForUser));
                 topic.subscribe("getRunningInstances", lang.hitch(this, this.getRunningInstances));
 
@@ -110,6 +111,20 @@ define(['dojo/_base/declare',
             },
             getInstanceModuleDisplayName: function (instanceKey) {
                 this._modules[this._instances[instanceKey]._moduleName]._displayName
+            },
+            unloadModuleInstance: function(instanceKey, returnCallback){
+                console.log("unloading instance " + instanceKey);
+
+                if(this._instances[instanceKey] !== undefined){
+                    this._instances[instanceKey]._end().then( lang.hitch(this, instanceEndResult =>{
+                        delete this._instances[instanceKey];
+                        returnCallback(true);
+                    })).catch( instanceEndError =>{
+                        returnCallback(false);
+                    });
+                }else {
+                    returnCallback(false);
+                }
             },
             loadModuleForClient: function (wssConnection, moduleName, returnCallback) {
 

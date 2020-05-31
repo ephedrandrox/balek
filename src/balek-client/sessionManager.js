@@ -32,6 +32,7 @@ define(['dojo/_base/declare',
 
                 topic.subscribe("requestNewWorkspace", lang.hitch(this, this.requestNewWorkspace));
                 topic.subscribe("requestSessionChange", lang.hitch(this, this.requestSessionChange));
+                topic.subscribe("requestSessionUnloadModuleInstance", lang.hitch(this, this.requestSessionUnloadModuleInstance));
 
                 topic.subscribe("receiveSessionMessage", lang.hitch(this, this.receiveSessionMessage));
                 topic.subscribe("receiveSessionManagerMessage", lang.hitch(this, this.receiveSessionManagerMessage));
@@ -115,6 +116,18 @@ define(['dojo/_base/declare',
                         changeSessionKey: changeSessionKey
                     }
                 });
+            },
+            requestSessionUnloadModuleInstance: function(sessionModuleInstanceKey, serverReplyCallback){
+                topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                    sessionMessage: {
+                        sessionKey: this._session._sessionKey,
+                        sessionRequest: {
+                            moduleUnloadRequest: {
+                                sessionModuleInstanceKey: sessionModuleInstanceKey
+                            }
+                        }
+                    }
+                }, serverReplyCallback);
             },
             sessionStatusActionReceived: function (sessionStatusAction) {
                 if (sessionStatusAction.action) {
