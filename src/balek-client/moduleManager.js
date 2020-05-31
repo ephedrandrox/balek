@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
         return declare("balekClientModuleManager", null, {
 
 
-            _interfaces: {},
+            _interfaces: null,
             _availableModulesState: null,
             constructor: function (args) {
 
@@ -23,6 +23,8 @@ define(['dojo/_base/declare',
                     availableModules: {}
                 });
 
+
+                this._interfaces = {};
                 topic.subscribe("loadModuleInterface", lang.hitch(this, this.loadModuleInterface));
                 topic.subscribe("receiveModuleMessage", lang.hitch(this, this.receiveModuleMessage));
                 topic.subscribe("requestModuleLoad", lang.hitch(this, this.requestModuleLoad));
@@ -45,17 +47,23 @@ define(['dojo/_base/declare',
                 }));
             },
             getInterfaceFromInstanceKey: function (instanceKey, interfaceReturnCallback) {
+
                 if (this._interfaces[instanceKey]) {
                     interfaceReturnCallback(this._interfaces[instanceKey]);
+                }else {
+                    interfaceReturnCallback(false);
                 }
             },
             loadModuleInterface: function (moduleName, modulePath, moduleInstanceKey, returnCallback) {
                 require([modulePath], lang.hitch(this, function (newInterface) {
+                    if( this._interfaces[moduleInstanceKey] === undefined)
+                    {
+                        this._interfaces[moduleInstanceKey] = new newInterface({
+                            _instanceKey: moduleInstanceKey,
+                            _moduleName: moduleName
+                        });
+                    }
 
-                    this._interfaces[moduleInstanceKey] = new newInterface({
-                        _instanceKey: moduleInstanceKey,
-                        _moduleName: moduleName
-                    });
 
                     returnCallback(this._interfaces[moduleInstanceKey]);
                 }));
