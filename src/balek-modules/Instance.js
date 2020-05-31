@@ -1,5 +1,7 @@
-define(['dojo/_base/declare'],
-    function (declare
+define(['dojo/_base/declare',
+        'dojo/_base/lang'],
+    function (declare,
+              lang
     ) {
 
         return declare("BalekServerModuleInstance", null, {
@@ -14,7 +16,11 @@ define(['dojo/_base/declare'],
 
             },
             _end: function () {
-
+                //overwrite this and reject to keep module instance from being unloaded
+                //Until all resources can be released.
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    Resolve({success: "Unloaded Instance"});
+                }));
             },
             _error: function (error) {
                 console.log(error);
