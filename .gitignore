@@ -10,3 +10,7 @@ data/mysql/mysqlDB/
 .idea/
 
 .DS_Store
+
+builds/conspiron/mysqlDB/
+
+builds/conspiron/mongoDB/

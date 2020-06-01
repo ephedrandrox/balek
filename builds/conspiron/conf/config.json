@@ -1,0 +1,24 @@
+{
+	"Session Settings": {
+		"Main Module": "conspiron/login"
+	},
+	"Network Settings":{
+		"Server Address" : "0.0.0.0",
+		"Server Port" : "8080"
+	},
+	"Database Settings": {
+		"MySQL Database Connection": {
+			"host": "mysqld",
+			"user": "balekAppUser",
+			"password": "balekAppPassword",
+			"database": "balek"
+		},
+		"Mongo Database Connection": {
+			"host": "mongodb",
+			"port": "27017",
+			"user": "root",
+			"password": "rootPass",
+			"collection": "balek"
+		}
+	}
+}
