@@ -1,15 +1,15 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/conspiron/login/Instance'],
+        'balek-modules/conspiron/menu/Instance'],
     function (declare, baseModule, moduleInstance) {
-        return declare("conspironLoginModule", baseModule, {
-            _displayName: "Conspiron Login",
-            _allowedSessions: [0],
+        return declare("conspironMenuModule", baseModule, {
+            _displayName: "Conspiron Menu",
+            _allowedSessions: [1],
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("conspironLoginModule  starting...");
+                console.log("conspironMenuModule  starting...");
             },
             newInstance: function (args) {
                 //must be overridden from base

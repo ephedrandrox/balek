@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, baseInterface, topic, domConstruct, win, loginInterface) {
 
-        return declare("moduleSessionLoginInterface", baseInterface, {
+        return declare("moduleConspironLoginInterface", baseInterface, {
             _instanceKey: null,
             _loginInterface: null,
 
