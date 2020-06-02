@@ -3,23 +3,23 @@ define(['dojo/_base/declare',
         'balek-modules/Interface',
         'dojo/topic',
         "dojo/dom-construct",
-        "dojo/dom-styl",
+        "dojo/dom-style",
         "dojo/_base/window",
-        'balek-modules/diaplode/menu/Interface/menu'
+        'balek-modules/diaplode/navigator/Interface/navigator'
     ],
-    function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, menuMainWidget) {
+    function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, navigatorMainWidget) {
 
         return declare("moduleDiaplodeLoginInterface", baseInterface, {
             _instanceKey: null,
-            _menuMainWidget: null,
+            _navigatorMainWidget: null,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
 
-                this._menuMainWidget = new menuMainWidget({_instanceKey: this._instanceKey});
-                topic.publish("displayAsDialog", this._menuMainWidget);
+                this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey});
+                topic.publish("displayAsDialog", this._navigatorMainWidget);
 
             },
             receiveMessage: function (moduleMessage) {
@@ -27,10 +27,10 @@ define(['dojo/_base/declare',
             },
             toggleShowView: function () {
                 let currentStateToggle = {"visible": "hidden", "hidden": "visible"};
-                domStyle.set(this._menuMainWidget.domNode, {"visibility": currentStateToggle[domStyle.get(this._menuMainWidget.domNode, "visibility")]});
+                domStyle.set(this._navigatorMainWidget.domNode, {"visibility": currentStateToggle[domStyle.get(this._navigatorMainWidget.domNode, "visibility")]});
             },
             unload: function () {
-                this._loginInterface.unload();
+                this._navigatorMainWidget.unload();
             }
         });
     }

@@ -1,15 +1,15 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/diaplode/menu/Instance'],
+        'balek-modules/diaplode/navigator/Instance'],
     function (declare, baseModule, moduleInstance) {
-        return declare("diaplodeRadialMenuModule", baseModule, {
-            _displayName: "Diaplode Menu",
+        return declare("diaplodeRadialNavigatorModule", baseModule, {
+            _displayName: "Diaplode Navigator",
             _allowedSessions: [1],
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("diaplodeRadialMenuModule  starting...");
+                console.log("diaplodeRadialNavigatorModule  starting...");
             },
             newInstance: function (args) {
                 //must be overridden from base

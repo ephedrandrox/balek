@@ -45,3 +45,17 @@ body {
 .diaplodeLoginInterfaceLoginButton {
     color: #1c6ea4;
 }
+
+.layerManagerBackgroundLayerNode{
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(166, 255, 178, 0.45)), to(#a6ffb2));
+
+
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+3,7db9e8+3,207cca+63,1e5799+97 */
+    background: #7db9e8; /* Old browsers */
+    background: radial-gradient(ellipse at center,  #7db9e8 3%,#7db9e8 3%, #ca0e69 63%,#1e5799 97%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#1e5799',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+
+}

@@ -2,12 +2,12 @@ body {
     text-align: center
 }
 
-.diaplodeMenuInterface * {
+.diaplodeNavigatorInterface * {
 
 }
 
-.diaplodeMenuInterface {
-    background: rgba(77, 164, 164, 0.84);
+.diaplodeNavigatorInterface {
+    background: rgba(77, 164, 164, 0.47);
     display: inline;
     display: inline-block;
     text-align: center;
@@ -26,22 +26,9 @@ body {
     outline: none;
 }
 
-.diaplodeMenuInterfaceUsernameField {
-    text-align: center;
-    border-radius: 25px;
-    background: #050530;
-    color: white;
-    outline: none;
-}
 
-.diaplodeMenuInterfacePasswordField {
-    text-align: center;
-    border-radius: 25px;
-    background: #050530;
-    color: white;
-    outline: none;
-}
 
-.diaplodeMenuInterfaceLoginButton {
-    color: #1c6ea4;
+.diaplodeNavigatorInterfaceImage {
+    width: 500px;
+    transform: rotate(45deg);
 }

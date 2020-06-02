@@ -4,12 +4,12 @@ define(['dojo/_base/declare',
         'balek-modules/Instance'
     ],
     function (declare, lang, topic, baseInstance, nodeCrypto, nodeUtil) {
-        return declare("moduleDiaplodeRadialMenuInstance", baseInstance, {
+        return declare("moduleDiaplodeRadialNavigatorInstance", baseInstance, {
             _instanceKey: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDiaplodeRadialMenuInstance starting...");
+                console.log("moduleDiaplodeRadialNavigatorInstance starting...");
             },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
                 if (moduleMessage.instanceKey == this._instanceKey) {

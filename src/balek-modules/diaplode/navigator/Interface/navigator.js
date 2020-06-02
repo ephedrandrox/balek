@@ -13,15 +13,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/diaplode/menu/resources/html/menu.html',
-        'dojo/text!balek-modules/diaplode/menu/resources/css/menu.css'
+        'dojo/text!balek-modules/diaplode/navigator/resources/html/navigator.html',
+        'dojo/text!balek-modules/diaplode/navigator/resources/css/navigator.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady,  _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
         return declare("moduleDiaplodeLoginInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "diaplodeMenuInterface",
+            baseClass: "diaplodeNavigatorInterface",
             _shiftDown: false,
             _userData: {},
             constructor: function (args) {
