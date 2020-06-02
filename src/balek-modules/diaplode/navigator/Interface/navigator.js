@@ -36,32 +36,35 @@ define(['dojo/_base/declare',
 
 
                 dojoReady(lang.hitch(this, function () {
-
-
-
-
-                        fx.animateProperty({
-                            node:this.domNode,
-                            duration:8000,
-
-                            properties: {
-                                transform: { end: 'translate(-50%, -50%)rotate(360deg)', start:'translate(-50%, -50%)rotate(0deg)'}
-                            }
-                        }).play();
-
                     fx.animateProperty({
-                        node:this._mainImage,
-                        duration:2000,
+                        node:this.domNode,
+                        duration:3000,
 
                         properties: {
-                            width:{ start: 0, end: 500},
-                            transform: { end: 'rotate(360deg)', start:'rotate(0deg)'}
+                            transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(100deg)'}
                         }
                     }).play();
 
+                    fx.animateProperty({
+                        node:this._mainImage,
+                        duration:1000,
 
+                        properties: {
+                            width:{ start: 0, end: 900},
+                            transform: { end: 'rotate(0deg)', start:'rotate(100deg)'},
+                            opacity: {start: 0, end: 1}
+                        }
+                    }).play();
 
+                    fx.animateProperty({
+                        node:this.domNode,
+                        duration:1000,
 
+                        properties: {
+
+                            opacity: {start: 0, end: 1}
+                        }
+                    }).play();
 
                 }));
 
@@ -89,7 +92,12 @@ define(['dojo/_base/declare',
                         break;
                     case dojoKeys.ESCAPE:
                         keyUpEvent.preventDefault();
-                        this.loadOrToggleModule( "admin/system");
+                        if (this._shiftDown) {
+                            this.loadOrToggleModule( "admin/system");
+                        }else
+                        {
+                            this.loadOrToggleModule( "diaplode/navigator");
+                        }
                         break;
                     case dojoKeys.SHIFT:
                         this._shiftDown = false;
