@@ -9,6 +9,8 @@ define(['dojo/_base/declare',
         "dojo/keys",
         "dijit/focus",
         "dojo/ready",
+        "dojo/_base/fx",
+        "dojox/fx/ext-dojo/complex",
 
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
@@ -16,7 +18,7 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/navigator/resources/html/navigator.html',
         'dojo/text!balek-modules/diaplode/navigator/resources/css/navigator.css'
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady,  _WidgetBase, _TemplatedMixin, template, templateCSS) {
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
         return declare("moduleDiaplodeLoginInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
@@ -32,8 +34,35 @@ define(['dojo/_base/declare',
                 //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
+
                 dojoReady(lang.hitch(this, function () {
-                    dijitFocus.focus(this._usernameField);
+
+
+
+
+                        fx.animateProperty({
+                            node:this.domNode,
+                            duration:8000,
+
+                            properties: {
+                                transform: { end: 'translate(-50%, -50%)rotate(300deg)', start:'translate(-50%, -50%)rotate(0deg)'}
+                            }
+                        }).play();
+
+                    fx.animateProperty({
+                        node:this._mainImage,
+                        duration:2000,
+
+                        properties: {
+                            width:{ start: 0, end: 500},
+                            transform: { end: 'rotate(300deg)', start:'rotate(0deg)'}
+                        }
+                    }).play();
+
+
+
+
+
                 }));
 
             },

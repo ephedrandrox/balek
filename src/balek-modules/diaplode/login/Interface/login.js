@@ -70,6 +70,8 @@ define(['dojo/_base/declare',
                         } else {
                             console.log("requesting menu...");
                             topic.publish("requestModuleLoad", "diaplode/navigator");
+                            topic.publish("loadBackground", "flowerOfLife");
+
                             this.destroy();
                         }
                     }));
