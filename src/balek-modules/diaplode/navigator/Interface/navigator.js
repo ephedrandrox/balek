@@ -45,7 +45,7 @@ define(['dojo/_base/declare',
                             duration:8000,
 
                             properties: {
-                                transform: { end: 'translate(-50%, -50%)rotate(300deg)', start:'translate(-50%, -50%)rotate(0deg)'}
+                                transform: { end: 'translate(-50%, -50%)rotate(360deg)', start:'translate(-50%, -50%)rotate(0deg)'}
                             }
                         }).play();
 
@@ -55,7 +55,7 @@ define(['dojo/_base/declare',
 
                         properties: {
                             width:{ start: 0, end: 500},
-                            transform: { end: 'rotate(300deg)', start:'rotate(0deg)'}
+                            transform: { end: 'rotate(360deg)', start:'rotate(0deg)'}
                         }
                     }).play();
 

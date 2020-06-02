@@ -110,6 +110,12 @@ var profile = (function () {
             },
             "balek-modules/digivigil-www/guestbook/Interface": {
                 include: [  "balek-modules/digivigil-www/guestbook/Interface"]
+            },
+            "balek-modules/diaplode/login/Interface": {
+                include: [  "balek-modules/diaplode/login/Interface"]
+            },
+            "balek-modules/diaplode/navigator/Interface": {
+                include: [  "balek-modules/diaplode/navigator/Interface"]
             }
         }
     };
