@@ -1,0 +1,19 @@
+body {
+    text-align: center
+}
+
+.diaplodeNavigatorInterfaceMenuItem * {
+
+}
+
+.diaplodeNavigatorInterfaceMenuItem {
+position: absolute;
+
+    opacity: 1;
+}
+
+
+
+.diaplodeNavigatorInterfaceMenuItemImage {
+    width: 20px;
+}

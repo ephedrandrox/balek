@@ -1,0 +1,11 @@
+.diaplodeNavigatorInterfaceRadialMenu{
+position: absolute;
+    top:0;
+    left: 0;
+
+    background: none;
+}
+
+.diaplodeNavigatorInterfaceRadialMenuImage{
+   width: 200px;
+}

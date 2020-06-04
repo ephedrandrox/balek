@@ -7,6 +7,7 @@ body {
 }
 
 .diaplodeNavigatorInterface {
+    position: absolute;
     background: rgba(77, 164, 164, 0.17);
     display: inline;
     display: inline-block;
@@ -24,7 +25,6 @@ body {
     margin-right: -50%;
     transform: translate(-50%, -50%);
     outline: none;
-
     opacity: 0;
 }
 
