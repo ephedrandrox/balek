@@ -90,7 +90,6 @@ define(['dojo/_base/declare',
                     }).play();
 
 
-                    this._menusState.set("activeMenus", ['1']);
 
                 }));
 
@@ -98,7 +97,7 @@ define(['dojo/_base/declare',
             activeMenusStateChange: function(name, oldState, newState){
                 if (name === "activeMenus") {
 
-                    this.addMenu();
+                   // this.addMenu();
                 }
             },
             addMenu: function(){
@@ -128,7 +127,7 @@ define(['dojo/_base/declare',
                             this.loadOrToggleModule("session/menu");
                         }else
                         {
-                            this.requestNewMenu("New");
+                            this.addMenu();
                         }
                         break;
                     case dojoKeys.ESCAPE:

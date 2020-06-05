@@ -21,8 +21,7 @@ define(['dojo/_base/declare',
                 this.requestState();
 
 
-                this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey, requestNewMenu: this.requestNewMenu
-                    });
+                this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey});
                 topic.publish("displayAsDialog", this._navigatorMainWidget);
 
             },
@@ -36,19 +35,6 @@ define(['dojo/_base/declare',
             },
             unload: function () {
                 this._navigatorMainWidget.unload();
-            },
-            requestNewMenu(name){
-
-                    console.log("requesting New Menu");
-                    topic.publish("sendBalekProtocolMessage", {
-                        moduleMessage: {
-                            instanceKey: this._instanceKey, messageData: {
-                                request: "New Navigator Menu",
-                                name: name
-                            }
-                        }
-                    });
-
             },
             requestState() {
 

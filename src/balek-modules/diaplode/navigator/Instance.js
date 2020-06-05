@@ -4,16 +4,19 @@ define(['dojo/_base/declare',
         'dojo/Stateful',
 
         'balek-modules/Instance',
+    'balek-modules/diaplode/navigator/Instance/radialMenu'
     ],
-    function (declare, lang, topic, Stateful, baseInstance) {
-        return declare("moduleDiaplodeRadialNavigatorInstance", baseInstance, {
+    function (declare, lang, topic, Stateful, baseInstance, radialMenu) {
+        return declare("moduleDiaplodeNavigatorInstance", baseInstance, {
             _instanceKey: null,
             _instanceState: null,
+            _menus: [],
             _remoteInterfaceStateUpdateRemoteCallback: null,
 
             constructor: function (args) {
-                declare.safeMixin(this, args);
 
+                declare.safeMixin(this, args);
+                this._menus = new Array();
                 let instanceState = declare([Stateful], {
                     activeMenus: null,
                     availableMenus: null,
@@ -39,7 +42,7 @@ define(['dojo/_base/declare',
                                 messageCallback({instanceState: JSON.stringify(this._instanceState)});
                                 this._remoteInterfaceStateUpdateRemoteCallback = messageCallback;
                             }else if(moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name){
-                                this.createNewNavigatorMenu(moduleMessage.messageData.name)
+                                this.createNewNavigatorMenu(moduleMessage.messageData.name, messageCallback)
                             }
 
                         }
@@ -58,8 +61,8 @@ define(['dojo/_base/declare',
                     Resolve({success: "Unloaded Instance"});
                 }));
             },
-            createNewNavigatorMenu: function(name){
-
+            createNewNavigatorMenu: function(name, stateChangeInterfaceCallback){
+                this._menus.push(new radialMenu({_menuName: name, _stateChangeInterfaceCallback: stateChangeInterfaceCallback}));
                 let originalMenus = this._instanceState.get("availableMenus");
                 originalMenus.push({name: name});
                 this._instanceState.set("availableMenus", originalMenus);
