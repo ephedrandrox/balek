@@ -19,27 +19,27 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/navigator/resources/html/navigator.html',
         'dojo/text!balek-modules/diaplode/navigator/resources/css/navigator.css',
 
-    "balek-modules/diaplode/navigator/Interface/radialMenu"
-    ],
-    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template, templateCSS, radialMenu) {
+        'balek-modules/Interface',
 
-        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin], {
+        "balek-modules/diaplode/navigator/Interface/radialMenu"
+    ],
+    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template, templateCSS, baseInterface, radialMenu) {
+
+        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterface",
             _shiftDown: false,
-            _menus: [],
-
+            _availableMenus: {},
+            _newMenus: [],
             _menusState: null,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-                this._menus = new Array();
-
-                //add menu state object
-
+                this._availableMenus = {};
+                this._newMenus = new Array();
 
                 let menusState = declare([Stateful], {
                     activeMenus: null,
@@ -47,66 +47,124 @@ define(['dojo/_base/declare',
                 });
 
                 this._menusState = new menusState({
-                    activeMenus: [],
-                    availableMenus: [],
+                    activeMenus: {},
+                    availableMenus: {},
 
                 });
 
-                this._menusStateActiveMenusWatchHandle = this._menusState.watch("activeMenus", lang.hitch(this, this.activeMenusStateChange));
+                this._menusStateWatchHandle = this._menusState.watch( lang.hitch(this, this.menusStateChange));
 
-                //todo should maybe give id and check for these before adding more and more in case body already has style
-                //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
-
                 dojoReady(lang.hitch(this, function () {
-                    fx.animateProperty({
-                        node:this.domNode,
-                        duration:900,
 
-                        properties: {
-                            transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(-100deg)'}
-                        }
-                    }).play();
+                    //request Navigator Instance State Changes be sent to this._InstanceStateChangeCallback
+                    this.sendInstanceCallbackMessage({
+                        request: "Diaplode Navigator State",
+                    }, lang.hitch(this, this._InstanceStateChangeCallback))
 
-                    fx.animateProperty({
-                        node:this._mainImage,
-                        duration:300,
-
-                        properties: {
-                            width:{ start: 0, end: 500},
-                            transform: { end: 'rotate(0deg)', start:'rotate(-100deg)'},
-                            opacity: {start: 0, end: 1}
-                        }
-                    }).play();
-
-                    fx.animateProperty({
-                        node:this.domNode,
-                        duration:1200,
-
-                        properties: {
-                            opacity: {start: 0, end: 1}
-                        }
-                    }).play();
-
-
+                    //Show Widget
+                    this.introAnimation();
 
                 }));
 
             },
-            activeMenusStateChange: function(name, oldState, newState){
-                if (name === "activeMenus") {
+            _InstanceStateChangeCallback(stateChangeUpdate) {
 
-                   // this.addMenu();
+                if(stateChangeUpdate.menusState)
+                {
+                    let menusState = JSON.parse(stateChangeUpdate.menusState);
+                    console.log(menusState);
+
+                    if(menusState.availableMenus)
+                    {
+                       this._menusState.set("availableMenus", menusState.availableMenus)
+                    }
+                    if(menusState.activeMenus)
+                    {
+                        this._menusState.set("activeMenus", menusState.activeMenus)
+                    }
+                }
+                console.log(stateChangeUpdate);
+
+            },
+            introAnimation: function(){
+                fx.animateProperty({
+                    node:this.domNode,
+                    duration:900,
+
+                    properties: {
+                        transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(-100deg)'}
+                    }
+                }).play();
+
+                fx.animateProperty({
+                    node:this._mainImage,
+                    duration:300,
+                    properties: {
+                        width:{ start: 0, end: 500},
+                        transform: { end: 'rotate(0deg)', start:'rotate(-100deg)'},
+                        opacity: {start: 0, end: 1}
+                    }
+                }).play();
+
+                fx.animateProperty({
+                    node:this.domNode,
+                    duration:1200,
+
+                    properties: {
+                        opacity: {start: 0, end: 1}
+                    }
+                }).play();
+            },
+            arrangeMenus: function(){
+                    console.log(this._menusState.get("availableMenus"));
+                    let count = 0;
+                    for(const menuToArrange in this._availableMenus)
+                    {
+                        this._availableMenus[menuToArrange].moveTo(100*count, 100*count);
+                        count++;
+
+                    }
+            },
+            updateAvailableMenus: function()
+            {
+                let availableMenusState = this._menusState.get("availableMenus");
+                for (const [index, newMenuWidget] of  this._newMenus.entries()) {
+                  newWidgetKey = newMenuWidget.getMenuKey();
+                  if (availableMenusState[newWidgetKey])
+                  {
+                      this._newMenus.splice(index, 1);
+                      this._availableMenus[newWidgetKey] = newMenuWidget;
+                  }
+                }
+                for (const availableMenuState in availableMenusState ) {
+
+                    if ( !this._availableMenus[availableMenuState]) {
+                        //this is when we should make a new menu and update the addmenu function
+                        alert("available menu that we havn't gotten a key for yet!")        ;            }
+                }
+            },
+            menusStateChange: function(name, oldState, newState){
+                if (name === "activeMenus") {
+                  console.log("active menu changed");
+                }else if (name === "availableMenus"){
+                    this.updateAvailableMenus();
+                   this.arrangeMenus();
                 }
             },
             addMenu: function(){
                 let newMenu = radialMenu({_instanceKey: this._instanceKey});
-                domConstruct.place(newMenu.domNode, this.domNode,"first");
-                this._menus.push(newMenu);
+
+                topic.publish("addToMainContentLayerAlwaysOnTop", newMenu.domNode);
+                //add widget to newMenu array that will be searched when available menu state is changed
+                this._newMenus.push(newMenu);
             },
+            removeMenu: function(menuKey){
 
+                //todo, start menu removal with delete key
 
+            },
             loadOrToggleModule: function(moduleID){
                 topic.publish("isModuleLoaded", moduleID, function (moduleIsLoaded) {
                     if (moduleIsLoaded) {
@@ -156,8 +214,8 @@ define(['dojo/_base/declare',
                 }
             },
             unload() {
-                this._menusStateCurrentMenuWatchHandle.unwatch();
-                this._menusStateCurrentMenuWatchHandle.remove();
+                this._menusStateWatchHandle.unwatch();
+                this._menusStateWatchHandle.remove();
                 this.destroy();
             }
         });

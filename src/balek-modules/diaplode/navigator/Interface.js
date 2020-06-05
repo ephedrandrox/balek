@@ -9,7 +9,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, navigatorMainWidget) {
 
-        return declare("moduleDiaplodeLoginInterface", baseInterface, {
+        return declare("moduleDiaplodeNavigatorModuleInterface", baseInterface, {
             _instanceKey: null,
             _navigatorMainWidget: null,
             _InstanceState: null,
@@ -17,8 +17,6 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-
-                this.requestState();
 
 
                 this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey});
@@ -35,24 +33,7 @@ define(['dojo/_base/declare',
             },
             unload: function () {
                 this._navigatorMainWidget.unload();
-            },
-            requestState() {
-
-                   console.log("requesting diaplode navigator state");
-                    topic.publish("sendBalekProtocolMessageWithReplyCallback", {
-                        moduleMessage: {
-                            instanceKey: this._instanceKey, messageData: {
-                                request: "Diaplode Navigator State"
-                            }
-                        }
-                    }, lang.hitch(this, function(reply){
-
-                        //this is when we update state
-                        console.log(reply);
-
-                    }));
-
-            },
+            }
         });
     }
 );
