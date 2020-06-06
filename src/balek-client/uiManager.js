@@ -59,10 +59,13 @@ define(['dojo/_base/declare',
                 domStyle.set(domNode, {"z-index": this._layerManager._mainContentZindex});
 
             },
-            addToMainContentLayerAlwaysOnTop: function (domNode) {
+            addToMainContentLayerAlwaysOnTop: function (domNode, callback) {
                 this.addToMainContentLayer(domNode);
                 domStyle.set(domNode, {"z-index": this._layerManager._mainContentZindex + 1000});
 
+                if(callback){
+                    callback(true);
+                }
             },
             addToMainContentLayerFirstBelowTop: function (domNode) {
                 this.addToMainContentLayer(domNode);
