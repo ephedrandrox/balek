@@ -16,7 +16,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                topic.subscribe("sendLoginCredentials", lang.hitch(this, this.sendLoginCredentials));
+                this.sendLoginCredentialsSubscribeHandle = topic.subscribe("sendLoginCredentials", lang.hitch(this, this.sendLoginCredentials));
                 this._loginInterface = new loginInterface({_instanceKey: this._instanceKey});
                 topic.publish("displayAsDialog", this._loginInterface);
 
@@ -35,6 +35,7 @@ define(['dojo/_base/declare',
                 }, messageCallback);
             },
             unload: function () {
+                this.sendLoginCredentialsSubscribeHandle.remove();
                 this._loginInterface.unload();
             }
         });

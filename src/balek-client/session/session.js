@@ -87,15 +87,19 @@ define(['dojo/_base/declare',
                         let moduleName = interfaceObject.moduleName;
                         let modulePath = "balek-modules/" + interfaceObject.moduleName + "/Interface";
                         let instanceKey = interfaceObject.instanceKey;
+                        topic.publish("getInterfaceFromInstanceKey", instanceKey, function(interfaceForInstance){
 
-                        if (moduleName !== "session/login") {
-                            topic.publish("loadModuleInterface", moduleName, modulePath, instanceKey, function (loadedInterface) {
-                                console.log(loadedInterface);
+                            if(interfaceForInstance === false){
+
+                                topic.publish("loadModuleInterface", moduleName, modulePath, instanceKey, function (loadedInterface) {
+                                    oneLoaded();
+                                });
+
+
+                            }else{
                                 oneLoaded();
-                            });
-                        } else {
-                            oneLoaded();
-                        }
+                            }
+                        });
 
                     }
                     //todo could set a timeout to reject after enough loading time
