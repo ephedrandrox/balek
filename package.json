@@ -4,6 +4,7 @@
     "build": "./lib/dojo-release-src/util/buildscripts/build.sh --profile ./balek.profile.js --language_in=ECMASCRIPT6",
     "buildDevelopementDatabases": "docker build -f data/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f data/mongo/Dockerfile .  -t balek-mongo:develop ",
     "startDevelopementDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
+    "stopDevelopementDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
   },
