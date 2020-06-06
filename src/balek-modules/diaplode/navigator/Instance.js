@@ -46,6 +46,13 @@ define(['dojo/_base/declare',
                 } else {
                     console.log("received Module message with incorrect instanceKey", moduleMessage.instanceKey, this._instanceKey)
                 }
+            },_end: function () {
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    console.log("destroying navigator Module Interface ");
+
+
+                    Resolve({success: "Unloaded Instance"});
+                }));
             }
         });
     }

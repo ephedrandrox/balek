@@ -1,7 +1,6 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'dojo/Stateful',
         'dojo/dom-class',
         'dojo/dom-construct',
         "dojo/_base/window",
@@ -20,15 +19,17 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/navigator/resources/css/radialMenu.css',
 
         'balek-modules/Interface',
+        'balek-modules/base/state/synced',
+
 
         "balek-modules/diaplode/navigator/Interface/menuItem"
 
     ],
-    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
-              mainCss, baseInterface, menuItem) {
+              mainCss, baseInterface, stateSynced, menuItem) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface], {
+        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterfaceRadialMenu",
@@ -36,7 +37,6 @@ define(['dojo/_base/declare',
             _activeStatus: false,
             _menuName: " ",
             _menuKey: null,
-            _menuState: null,
 
             _xRelativePosition: 0,
             _yRelativePosition: 0,
@@ -59,35 +59,31 @@ define(['dojo/_base/declare',
 
                 this._menuItems = {};
 
-                let menuState = declare([Stateful], {
-                    menuName: null,
-                    menuItems: null,
-                    activeStatus: false
-                });
 
-                this._menuState = new menuState({
-                    menuName: this._menuName,
-                    menuItems: new Array(),
-                    activeStatus: this._activeStatus
-                });
-
-                this._menuStateWatchHandle = this._menuState.watch(lang.hitch(this, this.menuStateChange));
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
                 dojoReady(lang.hitch(this, function () {
 
-                    this.requestNewMenu(this._menuName);
+
+                        console.log("requesting New Menu");
+
+                        this.sendInstanceCallbackMessage({
+                            request: "New Navigator Menu",
+                            name: this._menuName
+                        }, lang.hitch(this, this._InstanceStateChangeCallback));
+
+
 
                 }));
             },
-            menuStateChange:function(name, oldState, newState){
+            onInterfaceStateChange:function(name, oldState, newState){
 
                     if(name === "menuName"){
                         this._mainTitle.innerHTML = newState;
                     }
 
-                if(name === "key"){
+                if(name === "menuKey"){
                     this._menuKey = newState;
                     this.introAnimation();
                 }
@@ -165,32 +161,8 @@ define(['dojo/_base/declare',
                     }
                 }).play();
             },
-            requestNewMenu(name){
-                console.log("requesting New Menu");
-
-                this.sendInstanceCallbackMessage({
-                    request: "New Navigator Menu",
-                    name: name
-                }, lang.hitch(this, this._InstanceStateChangeCallback));
-            },
             getMenuKey: function(){
-                return this._menuState.get("key");
-            },
-            _InstanceStateChangeCallback: function(stateChangeUpdate){
-                console.log(stateChangeUpdate);
-                if(stateChangeUpdate.menuState)
-                {
-                    let menuState = JSON.parse(stateChangeUpdate.menuState);
-                    if(menuState.name){
-                        this._menuState.set("menuName", menuState.name);
-                    }
-                    if(menuState.key){
-                        this._menuState.set("key", menuState.key);
-                    }
-                    if(menuState.activeStatus !== undefined){
-                        this._menuState.set("activeStatus", menuState.activeStatus);
-                    }
-                }
+                return this._interfaceState.get("menuKey");
             },
             postCreate: function () {
                 topic.publish("addToMainContentLayerFirstBelowTop", this.domNode);
@@ -278,9 +250,9 @@ define(['dojo/_base/declare',
                 }
             },
             unload: function () {
+console.log("Destroying menu");
 
-                this._menuStateWatchHandle.unwatch();
-                this._menuStateWatchHandle.remove();
+                this.inherited(arguments);
 
                 this.destroy();
             },

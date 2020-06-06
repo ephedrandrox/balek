@@ -54,7 +54,7 @@ define(['dojo/_base/declare',
                     //Show Widget
                     this.introAnimation();
 
-                    on(document, "keyup", lang.hitch(this, this._onDocumentKeyUp));
+                    on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
                 }));
 
@@ -126,6 +126,17 @@ define(['dojo/_base/declare',
                     }
                 }
             },
+            unloadAllMenus:function()
+            {
+                for (const newMenuWidget of  this._newMenus) {
+                   newMenuWidget.unload();
+
+                }
+                for (const availableMenuKey in this._availableMenus ) {
+
+                    this._availableMenus[availableMenuKey].unload();
+                }
+            },
             onInterfaceStateChange: function(name, oldState, newState){
                 if (name === "availableMenus"){
                     this.updateAvailableMenus();
@@ -174,7 +185,7 @@ define(['dojo/_base/declare',
                             this.loadOrToggleModule( "admin/system");
                         }else
                         {
-                           
+
                         }
                         break;
                     case dojoKeys.SHIFT:
@@ -201,6 +212,7 @@ define(['dojo/_base/declare',
                 }
             },
             unload() {
+                this.unloadAllMenus();
                 console.log("destroying navigator");
                 this.inherited(arguments);
                 this.destroy();

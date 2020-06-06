@@ -28,6 +28,9 @@ body {
     opacity: 0;
 }
 
+.diaplodeNavigatorInterface:focus{
+border: solid #50d1d1 3px;
+}
 
 
 .diaplodeNavigatorInterfaceImage {

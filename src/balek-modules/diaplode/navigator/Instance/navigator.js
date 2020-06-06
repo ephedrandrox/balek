@@ -28,6 +28,7 @@ define(['dojo/_base/declare',
 
 
                 this._interfaceState.set("availableMenus", {});
+                this._interfaceState.set("activeFocus", true);
 
                 this._stateChangeInterfaceCallback({menusState: JSON.stringify(this._interfaceState)});
 
@@ -53,7 +54,7 @@ define(['dojo/_base/declare',
             let key = this.getUniqueMenuKey(); //get unique key
             this._menus[key] = new radialMenu({_menuName: name, _menuKey: key, _stateChangeInterfaceCallback: stateChangeInterfaceCallback});
             let originalMenus = this._interfaceState.get("availableMenus");
-            originalMenus[key]={name: name, _menuKey: key};
+            originalMenus[key]={name: name, menuKey: key};
             this._interfaceState.set("availableMenus", originalMenus);
             },
             createNewNavigatorMenuItem: function(menuKey, stateChangeInterfaceCallback){
@@ -75,7 +76,7 @@ define(['dojo/_base/declare',
 
             },
             _end: function(){
-                this.inherited(arguments);
+                return this.inherited(arguments);
 
             }
         });

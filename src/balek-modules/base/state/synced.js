@@ -1,5 +1,6 @@
 /*
 
+
 This Object can be mixed into both an interface and an instance to
 sync the _interfaceState object between the two
 
@@ -62,13 +63,15 @@ define(['dojo/_base/declare',
 
             },_end: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    console.log("destroying Interface State Watch handles");
+
                     this._interfaceStateWatchHandle.unwatch();
                     this._interfaceStateWatchHandle.remove();
                     Resolve({success: "Unloaded Instance"});
                 }));
             },
             unload: function () {
-                console.log("destroying transmitter handles");
+                console.log("destroying Interface State Watch handles");
 
                 this._interfaceStateWatchHandle.unwatch();
                 this._interfaceStateWatchHandle.remove();

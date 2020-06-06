@@ -12,7 +12,6 @@ define(['dojo/_base/declare',
         return declare("moduleDiaplodeNavigatorModuleInterface", baseInterface, {
             _instanceKey: null,
             _navigatorMainWidget: null,
-            _InstanceState: null,
 
             constructor: function (args) {
 
