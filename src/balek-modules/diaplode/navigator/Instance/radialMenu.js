@@ -2,21 +2,25 @@ define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
+        'dojo/node!crypto',
+
 
         'balek-modules/Instance',
+    'balek-modules/diaplode/navigator/Instance/menuItem'
     ],
-    function (declare, lang, topic, Stateful, baseInstance) {
+    function (declare, lang, topic, Stateful, crypto, baseInstance, menuItem) {
         return declare("moduleDiaplodeNavigatorRadialMenuInstance", baseInstance, {
             _instanceKey: null,
             _menuKey: null,
             _menuName: "Untitled Instance",
             _menuState: null,
+            _menuItems: {},
             _stateChangeInterfaceCallback: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-
+                this._menuItems = {};
                 let menuState = declare([Stateful], {
                     name: null,
                     key: null,
@@ -60,10 +64,19 @@ define(['dojo/_base/declare',
                 debugger;
                 this._menuState.set("activeStatus", status);
             },
-            createNewMenuItem: function(name){
-                let originalMenuItems = this._menuState.get("menuItems");
-                originalMenuItems.push({name: name});
-                this._menuState.set("menuItems", originalMenuItems);
+            createMenuItem: function(stateChangeInterfaceCallback){
+                console.log("creating new menu Item")
+                let key = this.getUniqueMenuItemKey(); //get unique key
+                this._menuItems[key] =  new menuItem({_menuKey: this._menuKey, _menuItemKey: key, _stateChangeInterfaceCallback: stateChangeInterfaceCallback});
+
+               // this._menuState.set("menuItems", originalMenuItems);
+            },
+            getUniqueMenuItemKey: function () {
+                do {
+                    var id = crypto.randomBytes(20).toString('hex');
+                    if (typeof this._menuItems[id] == "undefined") return id;
+                } while (true);
+
             }
         });
     }

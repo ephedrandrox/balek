@@ -121,11 +121,14 @@ define(['dojo/_base/declare',
                 }).play();
             },
             arrangeMenus: function(){
+
+                let placementArray = [{x:50,y:10},{x:66,y:30},{x:66,y:70},{x:50,y:90},{x:34,y:70},{x:34,y:30},
+                                        {x:42,y:20},{x:58,y:20},{x:66,y:50},{x:58,y:80},{x:42,y:80},{x:33,y:50}  ];
                     console.log(this._menusState.get("availableMenus"));
                     let count = 0;
                     for(const menuToArrange in this._availableMenus)
                     {
-                        this._availableMenus[menuToArrange].moveTo(5, 15*count);
+                        this._availableMenus[menuToArrange].moveTo(placementArray[count].x, placementArray[count].y);
                         count++;
 
                     }

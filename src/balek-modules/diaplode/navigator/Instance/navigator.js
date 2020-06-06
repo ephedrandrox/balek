@@ -70,6 +70,17 @@ define(['dojo/_base/declare',
             originalMenus[key]={name: name, _menuKey: key};
             this._menusState.set("availableMenus", originalMenus);
         },
+            createNewNavigatorMenuItem: function(menuKey, stateChangeInterfaceCallback){
+              if(this._menus[menuKey])
+              {
+                  this._menus[menuKey].createMenuItem(stateChangeInterfaceCallback);
+              }
+              else
+              {
+                  console.log("invalid menu key");
+              }
+
+            },
             getUniqueMenuKey: function () {
                 do {
                     var id = crypto.randomBytes(20).toString('hex');

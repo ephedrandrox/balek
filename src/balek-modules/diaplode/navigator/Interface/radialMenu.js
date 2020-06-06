@@ -34,7 +34,7 @@ define(['dojo/_base/declare',
             baseClass: "diaplodeNavigatorInterfaceRadialMenu",
 
             _activeStatus: false,
-            _menuName: "Untitled Interface",
+            _menuName: " ",
             _menuKey: null,
             _menuState: null,
 
@@ -42,7 +42,8 @@ define(['dojo/_base/declare',
             _yRelativePosition: 0,
 
             _mainCssString: mainCss,
-            _menuItems: [],
+            _menuItems: {},
+            _newMenuItems: [],
 
             _shiftDown: false,
 
@@ -54,7 +55,9 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
 
-                this._menuItems = new Array();
+                this._newMenuItems = new Array();
+
+                this._menuItems = {};
 
                 let menuState = declare([Stateful], {
                     menuName: null,
@@ -94,7 +97,7 @@ define(['dojo/_base/declare',
                 {
                     this._switchingLayers = true;
                     topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode, lang.hitch(this, function(){
-                        domStyle.set(this.domNode, "filter", "none");
+                        domStyle.set(this.domNode, "filter", "invert()");
                         dijitFocus.focus(this.domNode);
                         this._switchingLayers = false;
                         this.focusAnimation();
@@ -107,7 +110,7 @@ define(['dojo/_base/declare',
                 }else if(newState === false && newState !== oldState)
                 {
                     topic.publish("addToMainContentLayerFirstBelowTop", this.domNode);
-                    domStyle.set(this.domNode, "filter", "invert()");
+                    domStyle.set(this.domNode, "filter", "none");
                     this.blurAnimation();
 
                 }
@@ -238,8 +241,10 @@ define(['dojo/_base/declare',
                     case dojoKeys.ENTER:
                         keyUpEvent.preventDefault();
                         if (this._shiftDown) {
+
                         }else
                         {
+                            this.addMenuItem();
                         }
                         break;
                     case dojoKeys.ESCAPE:
@@ -293,8 +298,11 @@ define(['dojo/_base/declare',
             }
             ,
             addMenuItem: function(){
-               // let newMenuItem = menuItem({_instanceKey: this._instanceKey});
-               // domConstruct.place(newMenuItem.domNode, this.domNode,"first");
+                let newMenuItem = menuItem({_instanceKey: this._instanceKey, _menuKey: this._menuKey});
+
+
+                //add widget to newMenu array that will be searched when available menu state is changed
+                this._newMenuItems.push(newMenuItem);
                // this._menuItems.push(newMenuItem);
             }
         });

@@ -35,6 +35,10 @@ define(['dojo/_base/declare',
                                     debugger;
                                     this._navigator.changeNavigatorMenuActiveStatus(moduleMessage.messageData.status, moduleMessage.messageData.menuKey);
                                 }
+                                if( moduleMessage.messageData.request === "New Navigator Menu Item" && moduleMessage.messageData.menuKey) {
+                                    debugger;
+                                    this._navigator.createNewNavigatorMenuItem( moduleMessage.messageData.menuKey, messageCallback);
+                                }
                             }
                         }
                         console.log(moduleMessage.messageData);
@@ -42,15 +46,6 @@ define(['dojo/_base/declare',
                 } else {
                     console.log("received Module message with incorrect instanceKey", moduleMessage.instanceKey, this._instanceKey)
                 }
-            },
-            _end: function () {
-                //overwrite this and reject to keep module instance from being unloaded
-                //Until all resources can be released.
-                return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    this._interfaceStateWatchHandle.unwatch();
-                    this._interfaceStateWatchHandle.remove();
-                    Resolve({success: "Unloaded Instance"});
-                }));
             }
         });
     }
