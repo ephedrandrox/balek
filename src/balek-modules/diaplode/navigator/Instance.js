@@ -20,7 +20,7 @@ define(['dojo/_base/declare',
                 if (moduleMessage.instanceKey == this._instanceKey) {
                     if (moduleMessage.messageData) {
                         if(moduleMessage.messageData.request){
-                            if(moduleMessage.messageData.request === "Diaplode Navigator State"){
+                            if(moduleMessage.messageData.request === "New Navigator"){
                                 this._navigator = new navigator({_stateChangeInterfaceCallback: messageCallback});
                             }else if(this._navigator){
                                 if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name) {

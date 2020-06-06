@@ -66,6 +66,8 @@ define(['dojo/_base/declare',
                 //todo make it do something
             },
             unload: function () {
+                this.inherited(arguments);
+
                 this.destroy();
             }
 

@@ -15,6 +15,10 @@ define(['dojo/_base/declare',
                 console.log("starting moduleDiaplodeNavigatorRadialMenuInstance")
 
                 this._interfaceState.set("menuItemKey", this._menuItemKey);
+            },
+            _end: function(){
+                this.inherited(arguments);
+
             }
 
 

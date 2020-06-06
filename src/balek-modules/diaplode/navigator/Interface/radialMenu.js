@@ -217,11 +217,8 @@ define(['dojo/_base/declare',
                         menuKey: this._menuKey,
                     });
                 }
-
-
             },
             _onClick: function(){
-
 
                 this.sendInstanceMessage({
                     request: "Change Navigator Menu Name",

@@ -1,7 +1,6 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'dojo/Stateful',
         'dojo/dom-class',
         'dojo/dom-construct',
         "dojo/_base/window",
@@ -20,19 +19,19 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/navigator/resources/css/navigator.css',
 
         'balek-modules/Interface',
+        'balek-modules/base/state/synced',
 
         "balek-modules/diaplode/navigator/Interface/radialMenu"
     ],
-    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template, templateCSS, baseInterface, radialMenu) {
+    function (declare, lang, topic,  domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template, templateCSS, baseInterface, stateSynced, radialMenu) {
 
-        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface], {
+        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterface",
             _shiftDown: false,
             _availableMenus: {},
             _newMenus: [],
-            _menusState: null,
 
             constructor: function (args) {
 
@@ -41,18 +40,7 @@ define(['dojo/_base/declare',
                 this._availableMenus = {};
                 this._newMenus = new Array();
 
-                let menusState = declare([Stateful], {
-                    activeMenus: null,
-                    availableMenus: null
-                });
 
-                this._menusState = new menusState({
-                    activeMenus: {},
-                    availableMenus: {},
-
-                });
-
-                this._menusStateWatchHandle = this._menusState.watch( lang.hitch(this, this.menusStateChange));
 
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
@@ -60,37 +48,23 @@ define(['dojo/_base/declare',
 
                     //request Navigator Instance State Changes be sent to this._InstanceStateChangeCallback
                     this.sendInstanceCallbackMessage({
-                        request: "Diaplode Navigator State",
+                        request: "New Navigator",
                     }, lang.hitch(this, this._InstanceStateChangeCallback))
 
                     //Show Widget
                     this.introAnimation();
+
+                    on(document, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
                 }));
 
             },
             postCreate: function(){
                 topic.publish("addToMainContentLayer", this.domNode);
-
                 dijitFocus.focus(this.domNode);
 
-
             },
-            _InstanceStateChangeCallback(stateChangeUpdate) {
 
-                if(stateChangeUpdate.menusState)
-                {
-                    let menusState = JSON.parse(stateChangeUpdate.menusState);
-                    console.log(menusState);
-
-                    if(menusState.availableMenus)
-                    {
-                       this._menusState.set("availableMenus", menusState.availableMenus)
-                    }
-                }
-                console.log(stateChangeUpdate);
-
-            },
             introAnimation: function(){
                 fx.animateProperty({
                     node:this.domNode,
@@ -124,7 +98,7 @@ define(['dojo/_base/declare',
 
                 let placementArray = [{x:50,y:10},{x:66,y:30},{x:66,y:70},{x:50,y:90},{x:34,y:70},{x:34,y:30},
                                         {x:42,y:20},{x:58,y:20},{x:66,y:50},{x:58,y:80},{x:42,y:80},{x:33,y:50}  ];
-                    console.log(this._menusState.get("availableMenus"));
+                    console.log(this._interfaceState.get("availableMenus"));
                     let count = 0;
                     for(const menuToArrange in this._availableMenus)
                     {
@@ -135,7 +109,7 @@ define(['dojo/_base/declare',
             },
             updateAvailableMenus: function()
             {
-                let availableMenusState = this._menusState.get("availableMenus");
+                let availableMenusState = this._interfaceState.get("availableMenus");
                 for (const [index, newMenuWidget] of  this._newMenus.entries()) {
                   newWidgetKey = newMenuWidget.getMenuKey();
                   if (availableMenusState[newWidgetKey])
@@ -152,20 +126,18 @@ define(['dojo/_base/declare',
                     }
                 }
             },
-            menusStateChange: function(name, oldState, newState){
-               if (name === "availableMenus"){
+            onInterfaceStateChange: function(name, oldState, newState){
+                if (name === "availableMenus"){
                     this.updateAvailableMenus();
-                   this.arrangeMenus();
+                    this.arrangeMenus();
                 }
             },
             addMenu: function(){
                 let newMenu = radialMenu({_instanceKey: this._instanceKey});
-
                 //add widget to newMenu array that will be searched when available menu state is changed
                 this._newMenus.push(newMenu);
             },
             removeMenu: function(menuKey){
-
                 //todo, start menu removal with delete key
 
             },
@@ -202,11 +174,18 @@ define(['dojo/_base/declare',
                             this.loadOrToggleModule( "admin/system");
                         }else
                         {
-                            this.loadOrToggleModule( "diaplode/navigator");
+                           
                         }
                         break;
                     case dojoKeys.SHIFT:
                         this._shiftDown = false;
+                        break;
+                }
+            },
+            _onDocumentKeyUp: function (keyUpEvent) {
+                switch (keyUpEvent.keyCode) {
+                    case dojoKeys.ESCAPE:
+                            this.loadOrToggleModule( "diaplode/navigator");
                         break;
                 }
             },
@@ -222,8 +201,8 @@ define(['dojo/_base/declare',
                 }
             },
             unload() {
-                this._menusStateWatchHandle.unwatch();
-                this._menusStateWatchHandle.remove();
+                console.log("destroying navigator");
+                this.inherited(arguments);
                 this.destroy();
             }
         });
