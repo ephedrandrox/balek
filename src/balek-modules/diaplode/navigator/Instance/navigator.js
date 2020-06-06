@@ -24,14 +24,11 @@ define(['dojo/_base/declare',
                 this._menus = {};
 
                 let menusState = declare([Stateful], {
-                    activeMenus: null,
                     availableMenus: null
                 });
 
                 this._menusState = new menusState({
-                    activeMenus: [],
                     availableMenus: {},
-
                 });
 
                 this._stateChangeInterfaceCallback({menusState: JSON.stringify(this._menusState)});
@@ -55,6 +52,14 @@ define(['dojo/_base/declare',
                 if(this._menus[menuKey])
                 {debugger;
                     this._menus[menuKey].changeName(name);
+                }
+                debugger;
+            },
+            changeNavigatorMenuActiveStatus: function (status, menuKey){
+
+                if(this._menus[menuKey])
+                {debugger;
+                    this._menus[menuKey].changeActiveStatus(status);
                 }
                 debugger;
             },

@@ -9,8 +9,21 @@ position: absolute;
     z-index: 100000;
 
     color: black;
+
+    outline: none;
+opacity: 0;
+
+transform: translate(-50%, -50%);
 }
 
 .diaplodeNavigatorInterfaceRadialMenuImage{
-   width: 200px;
+    width: 5vw;
+}
+
+
+
+.diaplodeNavigatorInterfaceRadialMenuTitle{
+   position: absolute;
+    top: 0;
+    left: 0;
 }

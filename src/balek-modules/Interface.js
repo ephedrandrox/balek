@@ -35,13 +35,11 @@ define(['dojo/_base/declare', 'dojo/topic'
 
             },
             sendInstanceMessage(message){
-
                 topic.publish("sendBalekProtocolMessage", {
                     moduleMessage: {
                         instanceKey: this._instanceKey, messageData: message
                     }
                 });
-
             },
 
         });

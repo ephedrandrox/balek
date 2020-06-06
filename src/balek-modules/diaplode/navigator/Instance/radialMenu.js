@@ -20,6 +20,7 @@ define(['dojo/_base/declare',
                 let menuState = declare([Stateful], {
                     name: null,
                     key: null,
+                    activeStatus: false,
                     menuItems: null,
                 });
 
@@ -54,6 +55,10 @@ define(['dojo/_base/declare',
             changeName: function(name)
             {
                 this._menuState.set("name", name);
+            },
+            changeActiveStatus: function(status){
+                debugger;
+                this._menuState.set("activeStatus", status);
             },
             createNewMenuItem: function(name){
                 let originalMenuItems = this._menuState.get("menuItems");

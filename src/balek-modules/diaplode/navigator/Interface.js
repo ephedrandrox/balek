@@ -20,7 +20,6 @@ define(['dojo/_base/declare',
 
 
                 this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey});
-                topic.publish("displayAsDialog", this._navigatorMainWidget);
 
             },
             receiveMessage: function (moduleMessage) {

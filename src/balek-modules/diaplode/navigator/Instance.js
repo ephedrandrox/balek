@@ -31,6 +31,10 @@ define(['dojo/_base/declare',
                                     debugger;
                                     this._navigator.changeNavigatorMenuName(moduleMessage.messageData.name, moduleMessage.messageData.menuKey);
                                 }
+                                if( moduleMessage.messageData.request === "Change Navigator Menu Active Status" && moduleMessage.messageData.status !== undefined && moduleMessage.messageData.menuKey) {
+                                    debugger;
+                                    this._navigator.changeNavigatorMenuActiveStatus(moduleMessage.messageData.status, moduleMessage.messageData.menuKey);
+                                }
                             }
                         }
                         console.log(moduleMessage.messageData);

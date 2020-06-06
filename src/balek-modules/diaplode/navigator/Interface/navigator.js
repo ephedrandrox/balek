@@ -69,6 +69,13 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            postCreate: function(){
+                topic.publish("addToMainContentLayer", this.domNode);
+
+                dijitFocus.focus(this.domNode);
+
+
+            },
             _InstanceStateChangeCallback(stateChangeUpdate) {
 
                 if(stateChangeUpdate.menusState)
@@ -79,10 +86,6 @@ define(['dojo/_base/declare',
                     if(menusState.availableMenus)
                     {
                        this._menusState.set("availableMenus", menusState.availableMenus)
-                    }
-                    if(menusState.activeMenus)
-                    {
-                        this._menusState.set("activeMenus", menusState.activeMenus)
                     }
                 }
                 console.log(stateChangeUpdate);
@@ -122,7 +125,7 @@ define(['dojo/_base/declare',
                     let count = 0;
                     for(const menuToArrange in this._availableMenus)
                     {
-                        this._availableMenus[menuToArrange].moveTo(100*count, 100*count);
+                        this._availableMenus[menuToArrange].moveTo(5, 15*count);
                         count++;
 
                     }
@@ -142,13 +145,12 @@ define(['dojo/_base/declare',
 
                     if ( !this._availableMenus[availableMenuState]) {
                         //this is when we should make a new menu and update the addmenu function
-                        alert("available menu that we havn't gotten a key for yet!")        ;            }
+                        alert("available menu that we haven't gotten a key for yet!")        ;
+                    }
                 }
             },
             menusStateChange: function(name, oldState, newState){
-                if (name === "activeMenus") {
-                  console.log("active menu changed");
-                }else if (name === "availableMenus"){
+               if (name === "availableMenus"){
                     this.updateAvailableMenus();
                    this.arrangeMenus();
                 }
@@ -156,7 +158,6 @@ define(['dojo/_base/declare',
             addMenu: function(){
                 let newMenu = radialMenu({_instanceKey: this._instanceKey});
 
-                topic.publish("addToMainContentLayerAlwaysOnTop", newMenu.domNode);
                 //add widget to newMenu array that will be searched when available menu state is changed
                 this._newMenus.push(newMenu);
             },
@@ -175,6 +176,10 @@ define(['dojo/_base/declare',
                 });
             },
             _onFocus: function () {
+            console.log("Navigator focus");
+            },
+            onBlur: function(){
+                console.log("Navigator unfocus");
 
             },
             _onKeyUp: function (keyUpEvent) {
