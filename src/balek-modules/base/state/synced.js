@@ -61,6 +61,10 @@ define(['dojo/_base/declare',
 
                 }
 
+            },
+            setNewInterfaceCallback: function(newInterfaceCallback){
+                this._stateChangeInterfaceCallback = newInterfaceCallback;
+                this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
             },_end: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
                     console.log("destroying Interface State Watch handles");

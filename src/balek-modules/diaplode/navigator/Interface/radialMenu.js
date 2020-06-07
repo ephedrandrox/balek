@@ -36,7 +36,7 @@ define(['dojo/_base/declare',
 
             _activeStatus: false,
             _menuName: " ",
-            _menuKey: null,
+            _menuKey: undefined,
 
             _xRelativePosition: 0,
             _yRelativePosition: 0,
@@ -70,7 +70,8 @@ define(['dojo/_base/declare',
 
                         this.sendInstanceCallbackMessage({
                             request: "New Navigator Menu",
-                            name: this._menuName
+                            name: this._menuName,
+                            menuKey: this._menuKey,
                         }, lang.hitch(this, this._InstanceStateChangeCallback));
 
 

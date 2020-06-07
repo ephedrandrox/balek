@@ -21,12 +21,23 @@ define(['dojo/_base/declare',
                     if (moduleMessage.messageData) {
                         if(moduleMessage.messageData.request){
                             if(moduleMessage.messageData.request === "New Navigator"){
-                                this._navigator = new navigator({_stateChangeInterfaceCallback: messageCallback});
-                            }else if(this._navigator){
-                                if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name) {
-                                    debugger;
-                                    this._navigator.createNewNavigatorMenu(moduleMessage.messageData.name, messageCallback)
+
+                                if(this._navigator && this._navigator.setNewInterfaceCallback)
+                                {
+                                    this._navigator.setNewInterfaceCallback(messageCallback);
+                                }else {
+                                    this._navigator = new navigator({_stateChangeInterfaceCallback: messageCallback});
                                 }
+                            }else if(this._navigator){
+                                if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name && moduleMessage.messageData.menuKey === undefined) {
+                                    debugger;
+                                    this._navigator.createNewNavigatorMenu(moduleMessage.messageData.name, messageCallback);
+                                }
+                                if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name && moduleMessage.messageData.menuKey) {
+                                    debugger;
+                                    this._navigator.connectNavigatorMenuInterface(moduleMessage.messageData.menuKey, messageCallback);
+                                }
+
                                 if( moduleMessage.messageData.request === "Change Navigator Menu Name" && moduleMessage.messageData.name && moduleMessage.messageData.menuKey) {
                                     debugger;
                                     this._navigator.changeNavigatorMenuName(moduleMessage.messageData.name, moduleMessage.messageData.menuKey);

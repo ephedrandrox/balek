@@ -50,6 +50,16 @@ define(['dojo/_base/declare',
                 }
                 debugger;
             },
+            connectNavigatorMenuInterface: function(menuKey, interfaceCallback){
+                if(this._menus[menuKey])
+                {
+                    this._menus[menuKey].setNewInterfaceCallback(interfaceCallback);
+                }
+                else
+                {
+                    console.log("invalid menu key");
+                }
+            },
             createNewNavigatorMenu: function(name, stateChangeInterfaceCallback){
             let key = this.getUniqueMenuKey(); //get unique key
             this._menus[key] = new radialMenu({_menuName: name, _menuKey: key, _stateChangeInterfaceCallback: stateChangeInterfaceCallback});

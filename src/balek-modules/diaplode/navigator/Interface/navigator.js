@@ -49,7 +49,7 @@ define(['dojo/_base/declare',
                     //request Navigator Instance State Changes be sent to this._InstanceStateChangeCallback
                     this.sendInstanceCallbackMessage({
                         request: "New Navigator",
-                    }, lang.hitch(this, this._InstanceStateChangeCallback))
+                    }, lang.hitch(this, this._InstanceStateChangeCallback));
 
                     //Show Widget
                     this.introAnimation();
@@ -64,7 +64,6 @@ define(['dojo/_base/declare',
                 dijitFocus.focus(this.domNode);
 
             },
-
             introAnimation: function(){
                 fx.animateProperty({
                     node:this.domNode,
@@ -122,7 +121,7 @@ define(['dojo/_base/declare',
 
                     if ( !this._availableMenus[availableMenuState]) {
                         //this is when we should make a new menu and update the addmenu function
-                        alert("available menu that we haven't gotten a key for yet!")        ;
+                        this._availableMenus[availableMenuState]= this.addMenu(availableMenuState);
                     }
                 }
             },
@@ -143,10 +142,18 @@ define(['dojo/_base/declare',
                     this.arrangeMenus();
                 }
             },
-            addMenu: function(){
-                let newMenu = radialMenu({_instanceKey: this._instanceKey});
+            addMenu: function(menuKey){
+                let newMenu = radialMenu({_instanceKey: this._instanceKey, _menuKey: menuKey});
                 //add widget to newMenu array that will be searched when available menu state is changed
-                this._newMenus.push(newMenu);
+
+                if(!menuKey) {
+                    this._newMenus.push(newMenu);
+                }
+                else
+                {
+                    return newMenu
+                }
+
             },
             removeMenu: function(menuKey){
                 //todo, start menu removal with delete key
