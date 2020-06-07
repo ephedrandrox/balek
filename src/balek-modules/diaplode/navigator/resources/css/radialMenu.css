@@ -2,24 +2,37 @@
 position: absolute;
     top:0;
     left: 0;
-
     background: none;
-
     z-index: 100000;
-
     color: black;
-
     outline: none;
-opacity: 0;
+    opacity: 0;
 
-transform: translate(-50%, -50%);
+    border: solid #050530 3px;
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%);
+    padding:0;
+    margin: 0;
+    width: 9vw;
+    height:9vw;
+}
+
+.diaplodeNavigatorInterfaceRadialMenu:focus{
+    border: solid #50d1d1 3px;
 }
 
 .diaplodeNavigatorInterfaceRadialMenuImage{
-    width: 2vw;
+    position:relative;
+    top:0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    width: 9vw;
+    height: 9vw;
 }
-
-
 
 .diaplodeNavigatorInterfaceRadialMenuTitle{
    position: absolute;

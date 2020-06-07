@@ -105,7 +105,7 @@ define(['dojo/_base/declare',
 
                 }else if(newState === false && newState !== oldState)
                 {
-                    topic.publish("addToMainContentLayerFirstBelowTop", this.domNode);
+                    topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                     domStyle.set(this.domNode, "filter", "none");
                     this.blurAnimation();
 
@@ -143,7 +143,7 @@ define(['dojo/_base/declare',
 
                 fx.animateProperty({
                     node:this.domNode,
-                    duration:900,
+                    duration:400,
 
                     properties: {
                         transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(-300deg)'},
@@ -154,7 +154,7 @@ define(['dojo/_base/declare',
 
                 fx.animateProperty({
                     node:this._mainImage,
-                    duration:300,
+                    duration:200,
                     properties: {
                         transform: { end: 'rotate(0deg)', start:'rotate(-100deg)'},
                         opacity: {start: 0, end: 1}
@@ -171,6 +171,19 @@ define(['dojo/_base/declare',
             },
             _onFocus: function () {
                 console.log("focus");
+                if(!this._switchingLayers )
+                {
+                    this.sendInstanceMessage({
+                        request: "Change Navigator Menu Name",
+                        name: "Active",
+                        menuKey: this._menuKey,
+                    });
+                    this.sendInstanceMessage({
+                        request: "Change Navigator Menu Active Status",
+                        status: true,
+                        menuKey: this._menuKey,
+                    });
+                }
             },
             _onBlur: function(){
 
@@ -191,7 +204,6 @@ define(['dojo/_base/declare',
                 }
             },
             _onClick: function(){
-
                 this.sendInstanceMessage({
                     request: "Change Navigator Menu Name",
                     name: "Active",
@@ -250,7 +262,7 @@ define(['dojo/_base/declare',
                 }
             },
             unload: function () {
-console.log("Destroying menu");
+                console.log("Destroying menu");
 
                 this.inherited(arguments);
 
