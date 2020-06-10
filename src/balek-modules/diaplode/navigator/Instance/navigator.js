@@ -22,16 +22,21 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                this._menus = {};
+                this._menus = {}; //new Menus object for this instance
 
+
+                //set commands
                 this._commands={
                     "changeName" : lang.hitch(this, this.changeName),
+                    "newMenu" : lang.hitch(this, this.newMenu),
                 };
 
+                //set state
                 this._interfaceState.set("availableMenus", {});
                 this._interfaceState.set("activeFocus", true);
 
-                this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
+                this.prepareSyncedState();
+
                 this.setInterfaceCommands();
 
                 console.log("moduleDiaplodeNavigatorInstance starting...");
@@ -41,54 +46,17 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("name", newName);
                 remoteCommanderCallback({success: "Name Set"});
             },
-            changeNavigatorMenuName: function (name, menuKey){
-                if(this._menus[menuKey])
-                {debugger;
-                    this._menus[menuKey].changeName(name);
-                }
-                debugger;
-            },
-            changeNavigatorMenuActiveStatus: function (status, menuKey){
+            newMenu: function(name, remoteCommanderCallback)
+            {
+                let newMenu = new radialMenu({_instanceKey: this._instanceKey, _menuName: name});
 
-                if(this._menus[menuKey])
-                {debugger;
-                    this._menus[menuKey].changeActiveStatus(status);
-                }
-            },
-            connectNavigatorMenuInterface: function(menuKey, interfaceCallback){
-                if(this._menus[menuKey])
-                {
-                    this._menus[menuKey].setNewInterfaceCallback(interfaceCallback);
-                }
-                else
-                {
-                    console.log("invalid menu key");
-                }
-            },
-            createNewNavigatorMenu: function(name, stateChangeInterfaceCallback){
-            let key = this.getUniqueMenuKey(); //get unique key
-            this._menus[key] = new radialMenu({_menuName: name, _menuKey: key, _stateChangeInterfaceCallback: stateChangeInterfaceCallback});
-            let originalMenus = this._interfaceState.get("availableMenus");
-            originalMenus[key]={name: name, menuKey: key};
-            this._interfaceState.set("availableMenus", originalMenus);
-            },
-            createNewNavigatorMenuItem: function(menuKey, stateChangeInterfaceCallback){
-                if(this._menus[menuKey])
-              {
-                  this._menus[menuKey].createMenuItem(stateChangeInterfaceCallback);
-              }
-              else
-              {
-                  console.log("invalid menu key");
-              }
+                this._menus[newMenu._componentKey] = newMenu;
 
-            },
-            getUniqueMenuKey: function () {
-                do {
-                    var id = crypto.randomBytes(20).toString('hex');
-                    if (typeof this._menus[id] == "undefined") return id;
-                } while (true);
+                let originalMenus = this._interfaceState.get("availableMenus");
+                originalMenus[newMenu._componentKey]={name: name, componentKey: newMenu._componentKey};
+                this._interfaceState.set("availableMenus", originalMenus);
 
+                remoteCommanderCallback({success: "Created menu and set state"});
             },
             _end: function(){
                 return this.inherited(arguments);

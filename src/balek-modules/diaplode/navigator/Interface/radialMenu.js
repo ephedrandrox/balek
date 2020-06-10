@@ -36,7 +36,6 @@ define(['dojo/_base/declare',
 
             _activeStatus: false,
             _menuName: " ",
-            _menuKey: undefined,
 
             _xRelativePosition: 0,
             _yRelativePosition: 0,
@@ -60,32 +59,35 @@ define(['dojo/_base/declare',
                 this._menuItems = {};
 
 
+                if(  this._componentKey )
+                {
+                    this.askToConnectInterface();
+                }
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
                 dojoReady(lang.hitch(this, function () {
 
 
-                        console.log("requesting New Menu");
-
-                        this.sendInstanceCallbackMessage({
-                            request: "New Navigator Menu",
-                            name: this._menuName,
-                            menuKey: this._menuKey,
-                        }, lang.hitch(this, this._InstanceStateChangeCallback));
-
-
 
                 }));
             },
-            onInterfaceStateChange:function(name, oldState, newState){
+            postCreate: function()
+            {
 
+                    topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
+                    domStyle.set(this.domNode, "filter", "none");
+
+
+            },
+            onInterfaceStateChange:function(name, oldState, newState){
+                    console.log(name, newState);
                     if(name === "menuName"){
                         this._mainTitle.innerHTML = newState;
                     }
 
-                if(name === "menuKey"){
-                    this._menuKey = newState;
+                if(name === "componentKey"){
+                    this._componentKey = newState;
                     this.introAnimation();
                 }
                 if(name === "activeStatus"){
@@ -164,11 +166,6 @@ define(['dojo/_base/declare',
             },
             getMenuKey: function(){
                 return this._interfaceState.get("menuKey");
-            },
-            postCreate: function () {
-                topic.publish("addToMainContentLayerFirstBelowTop", this.domNode);
-
-
             },
             _onFocus: function () {
                 console.log("focus");

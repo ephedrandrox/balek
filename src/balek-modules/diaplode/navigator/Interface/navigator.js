@@ -47,13 +47,13 @@ define(['dojo/_base/declare',
 
                 dojoReady(lang.hitch(this, function () {
 
-                    //request Navigator Instance State Changes be sent to this._InstanceStateChangeCallback
-                    this.sendInstanceCallbackMessage({
-                        request: "New Navigator",
-                    }, lang.hitch(this, this._InstanceStateChangeCallback));
+                    if(  this._componentKey )
+                    {
+                        this.askToConnectInterface();
+                    }
 
                     //Show Widget
-                    this.introAnimation();
+                  //
 
                     on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
@@ -112,17 +112,17 @@ define(['dojo/_base/declare',
             updateAvailableMenus: function () {
                 let availableMenusState = this._interfaceState.get("availableMenus");
                 for (const [index, newMenuWidget] of  this._newMenus.entries()) {
-                    let newWidgetKey = newMenuWidget.getMenuKey();
+                    let newWidgetKey = newMenuWidget.getComponentKey();
                     if (availableMenusState[newWidgetKey]) {
                         this._newMenus.splice(index, 1);
                         this._availableMenus[newWidgetKey] = newMenuWidget;
                     }
                 }
-                for (const availableMenuState in availableMenusState) {
+                for (const availableMenuComponentKey in availableMenusState) {
 
-                    if (!this._availableMenus[availableMenuState]) {
+                    if (!this._availableMenus[availableMenuComponentKey]) {
                         //this is when we should make a new menu and update the addmenu function
-                        this._availableMenus[availableMenuState] = this.addMenu(availableMenuState);
+                        this._availableMenus[availableMenuComponentKey] = this.addMenu(availableMenuComponentKey);
                     }
                 }
             },
@@ -142,16 +142,20 @@ define(['dojo/_base/declare',
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
-                    this._instanceCommands.changeName("NewMenuName").then(function (results) {
+                    this._instanceCommands.changeName("ThisMenuName").then(function (results) {
                         console.log(results);
                     });
+                    //ready to show widget;
+                    this.introAnimation();
 
                 }
 
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommandKey
                 if (name === "interfaceRemoteCommandKey") {
+                    console.log("Remote COmmander Key!");
                     this._interfaceRemoteCommanderKey = newState;
+
                 }
 
                 if (name === "availableMenus") {
@@ -160,11 +164,11 @@ define(['dojo/_base/declare',
                 }
 
             },
-            addMenu: function (menuKey) {
-                let newMenu = radialMenu({_instanceKey: this._instanceKey, _menuKey: menuKey});
+            addMenu: function (availableMenuComponentKey) {
+                let newMenu = radialMenu({_instanceKey: this._instanceKey, _componentKey: availableMenuComponentKey});
                 //add widget to newMenu array that will be searched when available menu state is changed
 
-                if (!menuKey) {
+                if (!availableMenuComponentKey) {
                     this._newMenus.push(newMenu);
                 } else {
                     return newMenu
@@ -198,7 +202,9 @@ define(['dojo/_base/declare',
                         if (this._shiftDown) {
                             this.loadOrToggleModule("session/menu");
                         } else {
-                            this.addMenu();
+                            this._instanceCommands.newMenu("NewMenuName").then(function (results) {
+                                console.log(results);
+                            });
                         }
                         break;
                     case dojoKeys.ESCAPE:
