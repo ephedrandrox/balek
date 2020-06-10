@@ -27,7 +27,8 @@ define(['dojo/_base/declare',
         return declare("moduleBaseStateTransmitter", null, {
 
             _interfaceState: null,
-
+            _components: {},
+            _componentKey: null,
 
             constructor: function (args) {
 
@@ -42,12 +43,51 @@ define(['dojo/_base/declare',
 
                 this._interfaceStateWatchHandle = this._interfaceState.watch( lang.hitch(this, this.onInterfaceStateChange));
 
+
+
             },
             onInterfaceStateChange: function(name, oldState, newState){
-                console.log("state sync statechangeksllslslslslslslslslslslsl");
+
                 //overwrite in Interface
-                let interfaceStateObject = {[String(name)] : newState};
-                this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(interfaceStateObject)});
+                if(this._stateChangeInterfaceCallback)
+                {
+                    let interfaceStateObject = {[String(name)] : newState};
+                    this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(interfaceStateObject)});
+                }
+
+            },
+            askToConnectInterface: function(){
+                this.sendInstanceCallbackMessage({
+                    request: "State Connect",
+                    componentKey: this._componentKey
+                }, lang.hitch(this, this._InstanceStateChangeCallback));
+
+
+            },
+            getComponentKey: function(){
+                return this._componentKey;
+            },
+            prepareSyncedState: function()
+            {
+                this._componentKey = this.getUniqueComponentKey();
+                this._components[this._componentKey] = this;
+                this._interfaceState.set("componentKey",  this._componentKey);
+
+            },
+            connectInterface: function(instanceKey, componentKey, interfaceCallback) {
+                if (this._components[componentKey] && this._components[componentKey]._instanceKey === instanceKey) {
+                    console.log("connecting component to interface");
+
+                    this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
+                    debugger;
+
+                    interfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
+                }
+                else{
+                    debugger;
+                    console.log("THe component does not match");
+
+                }
             },
 
             _InstanceStateChangeCallback(stateChangeUpdate) {
@@ -81,7 +121,19 @@ define(['dojo/_base/declare',
                 this._interfaceStateWatchHandle.unwatch();
                 this._interfaceStateWatchHandle.remove();
                 this.destroy();
-            }
+            },
+            getUniqueComponentKey: function () {
+
+                let crypto = require('dojo/node!crypto');
+
+                do {
+                    let id = crypto.randomBytes(20).toString('hex');
+                    if (typeof this._components[id] == "undefined")
+                        this._components[id] = "Waiting for Object";
+                    return id;
+                } while (true);
+
+            },
 
         });
     });

@@ -48,7 +48,7 @@ these state changes:
                 }
 
 Step 5:
-Create your command functions in the Interface
+Create your command functions in the Instance
 instanceFunctionTwo: function(arg1, arg2, remoteCommanderCallback)
 {
 remoteCommanderCallback({success: "We did the thing!"});
@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
             _interfaceRemoteCommanderKeys: {}, //this object is shared with all remoteCommanders
 
             constructor: function (args) {
-
+//todo check for inclusion of statesync mixin and do it if needed
                 declare.safeMixin(this, args);
                 this._instanceCommands = {};
                 this._commands = {};
@@ -87,16 +87,15 @@ define(['dojo/_base/declare',
             },
             setInterfaceCommands() {
 
-                if (this._stateChangeInterfaceCallback) {
-                    //then this is an instance that is ready for state pushes to interface
-                    if (this._interfaceRemoteCommanderKey === null) {
-                        this._interfaceRemoteCommanderKey = this.getUniqueCommandKey();
-                        this._interfaceRemoteCommanderKeys[this._interfaceRemoteCommanderKey] = this;
-                    }
 
-                    this._interfaceState.set("interfaceRemoteCommandKey", this._interfaceRemoteCommanderKey);
-                    this._interfaceState.set("interfaceRemoteCommands", Object.keys(this._commands));
+                if (this._interfaceRemoteCommanderKey === null) {
+                    this._interfaceRemoteCommanderKey = this.getUniqueCommandKey();
+                    this._interfaceRemoteCommanderKeys[this._interfaceRemoteCommanderKey] = this;
                 }
+
+
+                this._interfaceState.set("interfaceRemoteCommandKey", this._interfaceRemoteCommanderKey);
+                this._interfaceState.set("interfaceRemoteCommands", Object.keys(this._commands));
 
             },
             linkRemoteCommands: function (interfaceLinks) {
