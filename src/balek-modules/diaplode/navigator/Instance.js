@@ -3,17 +3,20 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/Instance',
-        'balek-modules/diaplode/navigator/Instance/navigator'
+        'balek-modules/diaplode/navigator/Instance/navigator',
+        'balek-modules/base/command/remote',
+
     ],
-    function (declare, lang, topic, baseInstance, navigator) {
+    function (declare, lang, topic, baseInstance, navigator, remoteCommander) {
         return declare("moduleDiaplodeNavigatorModuleInstance", baseInstance, {
             _instanceKey: null,
             _navigator: null,
+            _remoteCommander: null,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-
+                this._remoteCommander= remoteCommander({_instanceKey: this._instanceKey});
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
             },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
@@ -26,11 +29,14 @@ define(['dojo/_base/declare',
                                 {
                                     this._navigator.setNewInterfaceCallback(messageCallback);
                                 }else {
-                                    this._navigator = new navigator({_stateChangeInterfaceCallback: messageCallback});
+                                    this._navigator = new navigator({_instanceKey: this._instanceKey, _stateChangeInterfaceCallback: messageCallback});
                                 }
                             }else if(this._navigator){
+                                if( moduleMessage.messageData.request === "Remote Command" && moduleMessage.messageData.remoteCommanderKey && moduleMessage.messageData.remoteCommand !== undefined) {
+                                     this._remoteCommander.routeCommand(this._instanceKey, moduleMessage.messageData.remoteCommanderKey, moduleMessage.messageData.remoteCommand, messageCallback, moduleMessage.messageData.remoteCommandArguments);
+                                    }
                                 if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name && moduleMessage.messageData.menuKey === undefined) {
-                                    debugger;
+
                                     this._navigator.createNewNavigatorMenu(moduleMessage.messageData.name, messageCallback);
                                 }
                                 if( moduleMessage.messageData.request === "New Navigator Menu" && moduleMessage.messageData.name && moduleMessage.messageData.menuKey) {
@@ -51,6 +57,7 @@ define(['dojo/_base/declare',
                                     this._navigator.createNewNavigatorMenuItem( moduleMessage.messageData.menuKey, messageCallback);
                                 }
                             }
+
                         }
                         console.log(moduleMessage.messageData);
                     }

@@ -6,14 +6,14 @@ define(['dojo/_base/declare',
 
         'balek-modules/Instance',
         'balek-modules/base/state/synced',
+        'balek-modules/base/command/remote',
 
         'balek-modules/diaplode/navigator/Instance/radialMenu'
 
     ],
-    function (declare, lang, topic, crypto, baseInstance, stateSynced, radialMenu) {
-        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced], {
+    function (declare, lang, topic, crypto, baseInstance, stateSynced, remoteCommander, radialMenu) {
+        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
             _instanceKey: null,
-
 
             _menus: {},
 
@@ -24,16 +24,22 @@ define(['dojo/_base/declare',
 
                 this._menus = {};
 
-
-
+                this._commands={
+                    "changeName" : lang.hitch(this, this.changeName),
+                };
 
                 this._interfaceState.set("availableMenus", {});
                 this._interfaceState.set("activeFocus", true);
 
-                this._stateChangeInterfaceCallback({menusState: JSON.stringify(this._interfaceState)});
-
+                this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
+                this.setInterfaceCommands();
 
                 console.log("moduleDiaplodeNavigatorInstance starting...");
+            },
+            changeName: function(newName, remoteCommanderCallback)
+            {
+                this._interfaceState.set("name", newName);
+                remoteCommanderCallback({success: "Name Set"});
             },
             changeNavigatorMenuName: function (name, menuKey){
                 if(this._menus[menuKey])
@@ -48,7 +54,6 @@ define(['dojo/_base/declare',
                 {debugger;
                     this._menus[menuKey].changeActiveStatus(status);
                 }
-                debugger;
             },
             connectNavigatorMenuInterface: function(menuKey, interfaceCallback){
                 if(this._menus[menuKey])
