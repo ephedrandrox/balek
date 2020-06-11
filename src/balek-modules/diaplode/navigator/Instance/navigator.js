@@ -21,11 +21,9 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-
                 this._menus = {}; //new Menus object for this instance
 
-
-                //set commands
+                //set setRemoteCommander commands
                 this._commands={
                     "changeName" : lang.hitch(this, this.changeName),
                     "newMenu" : lang.hitch(this, this.newMenu),
@@ -35,8 +33,9 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("availableMenus", {});
                 this._interfaceState.set("activeFocus", true);
 
-                this.prepareSyncedState();
 
+                //todo attache these to the constructor in base class
+                this.prepareSyncedState();
                 this.setInterfaceCommands();
 
                 console.log("moduleDiaplodeNavigatorInstance starting...");
@@ -49,18 +48,13 @@ define(['dojo/_base/declare',
             newMenu: function(name, remoteCommanderCallback)
             {
                 let newMenu = new radialMenu({_instanceKey: this._instanceKey, _menuName: name});
-
                 this._menus[newMenu._componentKey] = newMenu;
-
-                let originalMenus = this._interfaceState.get("availableMenus");
-                originalMenus[newMenu._componentKey]={name: name, componentKey: newMenu._componentKey};
-                this._interfaceState.set("availableMenus", originalMenus);
+                this._interfaceState.set("availableMenus", Object.keys(this._menus));
 
                 remoteCommanderCallback({success: "Created menu and set state"});
             },
             _end: function(){
                 return this.inherited(arguments);
-
             }
         });
     }

@@ -23,7 +23,6 @@ define(['dojo/_base/declare',
         'dojo/Stateful',
     ],
     function (declare, lang, Stateful) {
-
         return declare("moduleBaseStateTransmitter", null, {
 
             _interfaceState: null,
@@ -43,26 +42,20 @@ define(['dojo/_base/declare',
 
                 this._interfaceStateWatchHandle = this._interfaceState.watch( lang.hitch(this, this.onInterfaceStateChange));
 
-
-
             },
             onInterfaceStateChange: function(name, oldState, newState){
-
                 //overwrite in Interface
                 if(this._stateChangeInterfaceCallback)
                 {
                     let interfaceStateObject = {[String(name)] : newState};
                     this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(interfaceStateObject)});
                 }
-
             },
             askToConnectInterface: function(){
                 this.sendInstanceCallbackMessage({
                     request: "State Connect",
                     componentKey: this._componentKey
                 }, lang.hitch(this, this._InstanceStateChangeCallback));
-
-
             },
             getComponentKey: function(){
                 return this._componentKey;
@@ -87,7 +80,6 @@ define(['dojo/_base/declare',
 
                 }
             },
-
             _InstanceStateChangeCallback(stateChangeUpdate) {
                 if(stateChangeUpdate.interfaceState)
                 {
@@ -121,17 +113,13 @@ define(['dojo/_base/declare',
                 this.destroy();
             },
             getUniqueComponentKey: function () {
-
                 let crypto = require('dojo/node!crypto');
-
                 do {
                     let id = crypto.randomBytes(20).toString('hex');
                     if (typeof this._components[id] == "undefined")
                         this._components[id] = "Waiting for Object";
                     return id;
                 } while (true);
-
             },
-
         });
     });

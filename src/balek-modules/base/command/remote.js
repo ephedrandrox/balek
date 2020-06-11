@@ -11,8 +11,13 @@ Import into your main module Instance and create a new remoteCommander like so:
     You can then use this object to process moduleMessage.requests that are
     Remote Commands in your receiveMessage Function like so:
 
-       if( moduleMessage.messageData.request === "Remote Command" && moduleMessage.messageData.remoteCommanderKey && moduleMessage.messageData.remoteCommand !== undefined) {
-           this._remoteCommander.routeCommand(this._instanceKey, moduleMessage.messageData.remoteCommanderKey, moduleMessage.messageData.remoteCommand, messageCallback, moduleMessage.messageData.remoteCommandArguments);
+       if( moduleMessage.messageData.request === "Remote Command" &&
+            moduleMessage.messageData.remoteCommanderKey &&
+            moduleMessage.messageData.remoteCommand !== undefined) {
+               this._remoteCommander.routeCommand(this._instanceKey,
+               moduleMessage.messageData.remoteCommanderKey,
+               moduleMessage.messageData.remoteCommand,
+               messageCallback, moduleMessage.messageData.remoteCommandArguments);
        }
 
 Step 2:
@@ -79,29 +84,25 @@ define(['dojo/_base/declare',
             _interfaceRemoteCommanderKeys: {}, //this object is shared with all remoteCommanders
 
             constructor: function (args) {
-//todo check for inclusion of statesync mixin and do it if needed
+                //todo check for inclusion of statesync mixin and do it if needed
                 declare.safeMixin(this, args);
                 this._instanceCommands = {};
                 this._commands = {};
 
             },
             setInterfaceCommands() {
-
-
+                //this is to be called from the constructor of superclass instance
                 if (this._interfaceRemoteCommanderKey === null) {
                     this._interfaceRemoteCommanderKey = this.getUniqueCommandKey();
                     this._interfaceRemoteCommanderKeys[this._interfaceRemoteCommanderKey] = this;
                 }
-
-
                 this._interfaceState.set("interfaceRemoteCommandKey", this._interfaceRemoteCommanderKey);
                 this._interfaceState.set("interfaceRemoteCommands", Object.keys(this._commands));
-
             },
             linkRemoteCommands: function (interfaceLinks) {
-                console.log(interfaceLinks);
+                //this is to be called in superclassed interface after remote commands are received
+                //a good place is in the onInterfaceStateChange function
                 for (const linkKey in interfaceLinks) {
-
                     this._instanceCommands[interfaceLinks[linkKey]] = lang.hitch(this, function () {
                         let commandArguments = arguments;
                         return new Promise(lang.hitch(this, function (Resolve, Reject) {
@@ -116,28 +117,25 @@ define(['dojo/_base/declare',
                             });
 
                         }));
-
-
                     });
-
                 }
-
             },
             routeCommand: function (instanceKey, remoteCommanderKey, command, commandCallback, commandArguments) {
-                console.log("routing remote command!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                console.log(instanceKey, remoteCommanderKey, command);
+                //To be called from the main Module instance when it receives remoteCommand
                 let commanders = this._interfaceRemoteCommanderKeys;
-
                 if (this._interfaceRemoteCommanderKeys[remoteCommanderKey] &&
                     this._interfaceRemoteCommanderKeys[remoteCommanderKey]._instanceKey === instanceKey) {
-                    this._interfaceRemoteCommanderKeys[remoteCommanderKey].processCommand(instanceKey, remoteCommanderKey, command, commandCallback, commandArguments);
+                    this._interfaceRemoteCommanderKeys[remoteCommanderKey].processCommand(instanceKey,
+                                                                                    remoteCommanderKey,
+                                                                                    command,
+                                                                                    commandCallback,
+                                                                                    commandArguments);
                 } else {
                     console.log("could not Route command");
                 }
-
             },
             processCommand: function (instanceKey, remoteCommanderKey, command, commandCallback, commandArguments) {
-
+                // used by route command
                 if (this._instanceKey === instanceKey && this._interfaceRemoteCommanderKey === remoteCommanderKey) {
                     if (this._commands[command]) {
                         try {
@@ -148,29 +146,21 @@ define(['dojo/_base/declare',
                                 errorMessage: error.toString()
                             })
                         }
-
                     } else {
                         commandCallback({error: "Command Not available"})
                     }
-
                 } else {
                     console.log("this should not be happening");
                 }
             },
-            getCommands: function () {
-                return this._commands;
-            },
             getUniqueCommandKey: function () {
-
                 let crypto = require('dojo/node!crypto');
-
                 do {
                     let id = crypto.randomBytes(20).toString('hex');
                     if (typeof this._interfaceRemoteCommanderKeys[id] == "undefined")
                         this._interfaceRemoteCommanderKeys[id] = "Waiting for Object";
                     return id;
                 } while (true);
-
             },
         });
     });

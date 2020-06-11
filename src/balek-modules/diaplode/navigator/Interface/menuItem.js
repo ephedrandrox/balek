@@ -38,33 +38,32 @@ define(['dojo/_base/declare',
 
             _mainCssString: mainCss,
 
+            //##########################################################################################################
+            //Startup Functions Section
+            //##########################################################################################################
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-
-                if(  this._componentKey )
-                {
-                    this.askToConnectInterface();
-                }
-
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-
                 dojoReady(lang.hitch(this, function () {
-
+                    if(  this._componentKey )
+                    {
+                        this.askToConnectInterface();
+                    }
                 }));
 
             },
-            moveTo: function(x,y){
-                //make this part of a Movable class that inherits
-                this._xRelativePosition = x;
-                this._yRelativePosition = y;
-
-
-                domStyle.set(this.domNode, "top", y+"%");
-                domStyle.set(this.domNode, "left", x+"%");
+            postCreate: function () {
+                topic.publish("addToMainContentLayer", this.domNode);
             },
+
+            //##########################################################################################################
+            //State Functions Section
+            //##########################################################################################################
+
             onInterfaceStateChange: function(name, oldState, newState){
                console.log("menu Item State change", name, newState);
 
@@ -89,12 +88,33 @@ define(['dojo/_base/declare',
                 }
             },
 
-            postCreate: function () {
-                topic.publish("addToMainContentLayer", this.domNode);
-            },
+            //##########################################################################################################
+            //Event Functions Section
+            //##########################################################################################################
+
             _onFocus: function () {
                 //todo make it do something
             },
+
+            moveTo: function(x,y){
+                //make this part of a Movable class that inherits
+                this._xRelativePosition = x;
+                this._yRelativePosition = y;
+
+
+                domStyle.set(this.domNode, "top", y+"%");
+                domStyle.set(this.domNode, "left", x+"%");
+            },
+
+            //##########################################################################################################
+            //UI Functions Section
+            //##########################################################################################################
+
+            //##########################################################################################################
+            //Interface Functions Section
+            //##########################################################################################################
+
+
             unload: function () {
                 this.inherited(arguments);
 

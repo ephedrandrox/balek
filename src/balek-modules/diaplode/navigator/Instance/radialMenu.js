@@ -29,21 +29,14 @@ define(['dojo/_base/declare',
                     "newMenuItem" : lang.hitch(this, this.newMenuItem),
                 };
 
-
-
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
 
                 this._interfaceState.set("availableMenuItems", {});
-
-
                 this._interfaceState.set("name",this._menuName);
 
 
                 console.log("moduleDiaplodeRadialMenuInstance starting...");
-            },
-            _end: function () {
-                this.inherited(arguments);
             },
             changeName: function(name, remoteCommandCallback)
             {
@@ -55,16 +48,14 @@ define(['dojo/_base/declare',
                 remoteCommandCallback({success: "Active Status Set"});
             },
             newMenuItem: function(name , remoteCommandCallback){
-                console.log("creating new menu Item");
                 let newMenuItem = new menuItem({_instanceKey: this._instanceKey, _menuItemName: name});
                 this._menuItems[newMenuItem._componentKey] =  newMenuItem;
-                let keyarray = Object.keys(this._menuItems);
-                debugger;
-                this._interfaceState.set("availableMenuItems", keyarray);
+                this._interfaceState.set("availableMenuItems", Object.keys(this._menuItems));
 
                 remoteCommandCallback({success: "New Menu Item Created"});
-
-
+            },
+            _end: function () {
+                this.inherited(arguments);
             }
         });
     }
