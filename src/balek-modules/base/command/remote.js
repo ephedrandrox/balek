@@ -141,7 +141,6 @@ define(['dojo/_base/declare',
                 if (this._instanceKey === instanceKey && this._interfaceRemoteCommanderKey === remoteCommanderKey) {
                     if (this._commands[command]) {
                         try {
-                            debugger;
                             this._commands[command](...Object.values(commandArguments), commandCallback);
                         } catch (error) {
                             commandCallback({

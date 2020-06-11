@@ -7,6 +7,7 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'dojo/on',
         "dojo/dom-attr",
+        "dojo/dom-style",
         "dojo/keys",
         "dijit/focus",
         "dojo/ready",
@@ -20,14 +21,16 @@ define(['dojo/_base/declare',
 
         'balek-modules/Interface',
 
-        'balek-modules/base/state/synced'
+        'balek-modules/base/state/synced',
+        'balek-modules/base/command/remote',
+
 
     ],
-    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, dojoKeys,
+    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
-              mainCss, baseInterface, stateSynced) {
+              mainCss, baseInterface, stateSynced, remoteCommander) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceMenuItem", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced], {
+        return declare("moduleDiaplodeNavigatorInterfaceMenuItem", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
             _menuKey: null,
             templateString: template,
@@ -39,24 +42,51 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-                dojoReady(lang.hitch(this, function () {
-                    this.sendInstanceCallbackMessage({
-                        request: "New Navigator Menu Item",
-                        menuKey: this._menuKey
-                    }, lang.hitch(this, this._InstanceStateChangeCallback))
 
+                if(  this._componentKey )
+                {
+                    this.askToConnectInterface();
+                }
+
+                domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
+
+
+                dojoReady(lang.hitch(this, function () {
 
                 }));
 
             },
+            moveTo: function(x,y){
+                //make this part of a Movable class that inherits
+                this._xRelativePosition = x;
+                this._yRelativePosition = y;
+
+
+                domStyle.set(this.domNode, "top", y+"%");
+                domStyle.set(this.domNode, "left", x+"%");
+            },
             onInterfaceStateChange: function(name, oldState, newState){
                console.log("menu Item State change", name, newState);
 
-               if(name === "menuItemKey")
-               {
-                   //show menu item
-               }
+                if (name === "interfaceRemoteCommands") {
+                    this.linkRemoteCommands(newState);
+                    this._instanceCommands.changeName("ThisMenuItemName").then(function (results) {
+                        console.log(results);
+                    });
+                    //ready to show widget;
+                    this.introAnimation();
+
+                }
+
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommandKey
+                else if (name === "interfaceRemoteCommandKey") {
+                    console.log("Remote COmmander Key!");
+                    this._interfaceRemoteCommanderKey = newState;
+
+                }else{
+                    console.log("state unaccounted for....", name, newState);
+                }
             },
 
             postCreate: function () {

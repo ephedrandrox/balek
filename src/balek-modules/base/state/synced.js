@@ -79,12 +79,10 @@ define(['dojo/_base/declare',
                     console.log("connecting component to interface");
 
                     this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
-                    debugger;
 
                     interfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
                 }
                 else{
-                    debugger;
                     console.log("THe component does not match");
 
                 }

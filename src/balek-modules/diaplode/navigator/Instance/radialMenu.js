@@ -6,11 +6,13 @@ define(['dojo/_base/declare',
 
         'balek-modules/Instance',
         'balek-modules/base/state/synced',
+        'balek-modules/base/command/remote',
 
-    'balek-modules/diaplode/navigator/Instance/menuItem'
+
+        'balek-modules/diaplode/navigator/Instance/menuItem'
     ],
-    function (declare, lang, topic, crypto, baseInstance, stateSynced, menuItem) {
-        return declare("moduleDiaplodeNavigatorRadialMenuInstance", [baseInstance, stateSynced], {
+    function (declare, lang, topic, crypto, baseInstance, stateSynced, remoteCommander, menuItem) {
+        return declare("moduleDiaplodeNavigatorRadialMenuInstance", [baseInstance, stateSynced, remoteCommander], {
             _instanceKey: null,
             _menuName: "Untitled Instance",
             _menuItems: {},
@@ -20,9 +22,19 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 this._menuItems = {};
+                this._commands={
+
+                    "changeName" : lang.hitch(this, this.changeName),
+                    "changeActiveStatus" : lang.hitch(this, this.changeActiveStatus),
+                    "newMenuItem" : lang.hitch(this, this.newMenuItem),
+                };
+
 
 
                 this.prepareSyncedState();
+                this.setInterfaceCommands();
+
+                this._interfaceState.set("availableMenuItems", {});
 
 
                 this._interfaceState.set("name",this._menuName);
@@ -30,35 +42,30 @@ define(['dojo/_base/declare',
 
                 console.log("moduleDiaplodeRadialMenuInstance starting...");
             },
-            onInterfaceStateChange: function(name, oldState, newState){
-
-                if(name === "name")
-                {
-                    this._menuName = newState;
-                }
-                let interfaceStateObject = {[String(name)] : newState};
-                if(this._stateChangeInterfaceCallback){
-                    this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(interfaceStateObject)});
-                }
-
-            },
             _end: function () {
                 this.inherited(arguments);
             },
-           /* changeName: function(name)
+            changeName: function(name, remoteCommandCallback)
             {
                 this._interfaceState.set("name", name);
+                remoteCommandCallback({success: "Name Set"});
             },
-            changeActiveStatus: function(status){
-                debugger;
+            changeActiveStatus: function(status, remoteCommandCallback){
                 this._interfaceState.set("activeStatus", status);
+                remoteCommandCallback({success: "Active Status Set"});
             },
-            createMenuItem: function(stateChangeInterfaceCallback){
-                console.log("creating new menu Item")
-                let key = this.getUniqueMenuItemKey(); //get unique key
-                this._menuItems[key] =  new menuItem({_menuKey: this._menuKey, _menuItemKey: key, _stateChangeInterfaceCallback: stateChangeInterfaceCallback});
+            newMenuItem: function(name , remoteCommandCallback){
+                console.log("creating new menu Item");
+                let newMenuItem = new menuItem({_instanceKey: this._instanceKey, _menuItemName: name});
+                this._menuItems[newMenuItem._componentKey] =  newMenuItem;
+                let keyarray = Object.keys(this._menuItems);
+                debugger;
+                this._interfaceState.set("availableMenuItems", keyarray);
 
-            }*/
+                remoteCommandCallback({success: "New Menu Item Created"});
+
+
+            }
         });
     }
 );

@@ -23,7 +23,6 @@ define(['dojo/_base/declare',
 
                 this._navigator = new navigator({_instanceKey: this._instanceKey});
 
-                debugger;
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
 
 

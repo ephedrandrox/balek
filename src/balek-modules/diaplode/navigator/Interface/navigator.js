@@ -142,7 +142,7 @@ define(['dojo/_base/declare',
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
-                    this._instanceCommands.changeName("ThisMenuName").then(function (results) {
+                    this._instanceCommands.changeName("ThisNavigatorName").then(function (results) {
                         console.log(results);
                     });
                     //ready to show widget;

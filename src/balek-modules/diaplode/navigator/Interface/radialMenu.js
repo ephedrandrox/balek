@@ -20,6 +20,8 @@ define(['dojo/_base/declare',
 
         'balek-modules/Interface',
         'balek-modules/base/state/synced',
+        'balek-modules/base/command/remote',
+
 
 
         "balek-modules/diaplode/navigator/Interface/menuItem"
@@ -27,9 +29,9 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
-              mainCss, baseInterface, stateSynced, menuItem) {
+              mainCss, baseInterface, stateSynced, remoteCommander, menuItem) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced], {
+        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterfaceRadialMenu",
@@ -43,6 +45,7 @@ define(['dojo/_base/declare',
             _mainCssString: mainCss,
             _menuItems: {},
             _newMenuItems: [],
+            _availableMenuItems: [],
 
             _shiftDown: false,
 
@@ -55,6 +58,7 @@ define(['dojo/_base/declare',
 
 
                 this._newMenuItems = new Array();
+                this._availableMenuItems = {};
 
                 this._menuItems = {};
 
@@ -65,10 +69,7 @@ define(['dojo/_base/declare',
                 }
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-
                 dojoReady(lang.hitch(this, function () {
-
-
 
                 }));
             },
@@ -82,38 +83,82 @@ define(['dojo/_base/declare',
             },
             onInterfaceStateChange:function(name, oldState, newState){
                     console.log(name, newState);
-                    if(name === "menuName"){
-                        this._mainTitle.innerHTML = newState;
-                    }
 
-                if(name === "componentKey"){
-                    this._componentKey = newState;
+
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommands and link them
+                if (name === "interfaceRemoteCommands") {
+                    this.linkRemoteCommands(newState);
+                    this._instanceCommands.changeName("ThisMenuName").then(function (results) {
+                        console.log(results);
+                    });
+                    //ready to show widget;
                     this.introAnimation();
+
                 }
-                if(name === "activeStatus"){
+
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommandKey
+                else if (name === "interfaceRemoteCommandKey") {
+                    console.log("Remote COmmander Key!");
+                    this._interfaceRemoteCommanderKey = newState;
+
+                }
+
+                else if(name === "activeStatus"){
                     this._activeStatus = newState;
-                if(newState === true && newState !== oldState)
-                {
-                    this._switchingLayers = true;
-                    topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode, lang.hitch(this, function(){
-                        domStyle.set(this.domNode, "filter", "invert()");
-                        dijitFocus.focus(this.domNode);
-                        this._switchingLayers = false;
-                        this.focusAnimation();
+                    if(newState === true && newState !== oldState)
+                    {
+                        this._switchingLayers = true;
+                        topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode, lang.hitch(this, function(){
+                            domStyle.set(this.domNode, "filter", "invert()");
+                            dijitFocus.focus(this.domNode);
+                            this._switchingLayers = false;
+                            this.focusAnimation();
 
+                        }));
 
-                    }));
+                    }else if(newState === false && newState !== oldState)
+                    {
+                        topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
+                        domStyle.set(this.domNode, "filter", "none");
+                        this.blurAnimation();
+                    }
+                } else if (name === "availableMenuItems") {
+                    this.updateAvailableMenuItems();
+                    this.arrangeMenuItems();
+                }else {
+                    console.log("state unaccounted for....", name, newState);
+                }
+            },
+            arrangeMenuItems: function () {
 
-
-
-                }else if(newState === false && newState !== oldState)
-                {
-                    topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
-                    domStyle.set(this.domNode, "filter", "none");
-                    this.blurAnimation();
+                let placementArray = [{x:50,y:10},{x:66,y:30},{x:66,y:70},{x:50,y:90},{x:34,y:70},{x:34,y:30},
+                    {x:42,y:20},{x:58,y:20},{x:66,y:50},{x:58,y:80},{x:42,y:80},{x:33,y:50}  ];
+                console.log(this._interfaceState.get("availableMenuItems"));
+                let count = 0;
+                for (const menuToArrange in this._availableMenuItems) {
+                    this._availableMenuItems[menuToArrange].moveTo(placementArray[count].x, placementArray[count].y);
+                    count++;
 
                 }
-            }
+            },
+            updateAvailableMenuItems: function () {
+                let availableMenuItemsState = this._interfaceState.get("availableMenuItems");
+                for (const [index, newMenuItemWidget] of  this._newMenuItems.entries()) {
+                    let newWidgetKey = newMenuItemWidget.getComponentKey();
+                    if (availableMenuItemsState[newWidgetKey]) {
+                        this._newMenuItems.splice(index, 1);
+                        this._availableMenuItems[newWidgetKey] = newMenuItemWidget;
+                    }
+                }
+                for (const availableMenuItemComponentKey in availableMenuItemsState) {
+
+                    if (!this._availableMenuItems[availableMenuItemComponentKey]) {
+                        //this is when we should make a new menu and update the addmenu function
+                        this._availableMenuItems[availableMenuItemComponentKey] = this.addMenuItem(availableMenuItemComponentKey);
+                    }
+                }
             },
             introAnimation: function(){
                 fx.animateProperty({
@@ -142,8 +187,6 @@ define(['dojo/_base/declare',
             },
             focusAnimation: function(){
 
-
-
                 fx.animateProperty({
                     node:this.domNode,
                     duration:400,
@@ -164,23 +207,12 @@ define(['dojo/_base/declare',
                     }
                 }).play();
             },
-            getMenuKey: function(){
-                return this._interfaceState.get("menuKey");
-            },
             _onFocus: function () {
                 console.log("focus");
                 if(!this._switchingLayers )
                 {
-                    this.sendInstanceMessage({
-                        request: "Change Navigator Menu Name",
-                        name: "Active",
-                        menuKey: this._menuKey,
-                    });
-                    this.sendInstanceMessage({
-                        request: "Change Navigator Menu Active Status",
-                        status: true,
-                        menuKey: this._menuKey,
-                    });
+                    this.setActive(true);
+
                 }
             },
             _onBlur: function(){
@@ -189,30 +221,19 @@ define(['dojo/_base/declare',
 
                 if(!this._switchingLayers )
                 {
-                    this.sendInstanceMessage({
-                        request: "Change Navigator Menu Name",
-                        name: "Not Active",
-                        menuKey: this._menuKey,
-                    });
-                    this.sendInstanceMessage({
-                        request: "Change Navigator Menu Active Status",
-                        status: false,
-                        menuKey: this._menuKey,
-                    });
+                    this.setActive(false);
                 }
             },
+            setActive: function(activeOrNot){
+                this._instanceCommands.changeActiveStatus(activeOrNot);
+            },
+            setName: function(name)
+            {
+                this._instanceCommands.changeName(name);
+            },
             _onClick: function(){
-                this.sendInstanceMessage({
-                    request: "Change Navigator Menu Name",
-                    name: "Active",
-                    menuKey: this._menuKey,
-                });
-                this.sendInstanceMessage({
-                    request: "Change Navigator Menu Active Status",
-                    status: true,
-                    menuKey: this._menuKey,
-                });
-
+                this.setName("ThisMenuNameFROMCOMMAND");
+                this.setActive();
 
 
             },_onKeyUp: function (keyUpEvent) {
@@ -223,7 +244,10 @@ define(['dojo/_base/declare',
 
                         }else
                         {
-                            this.addMenuItem();
+                            this._instanceCommands.newMenuItem("NewMenuItemName").then(function (results) {
+                                console.log(results);
+                            });
+
                         }
                         break;
                     case dojoKeys.ESCAPE:
@@ -231,16 +255,7 @@ define(['dojo/_base/declare',
                         if (this._shiftDown) {
                         }else
                         {
-                            this.sendInstanceMessage({
-                                request: "Change Navigator Menu Name",
-                                name: "Not Active",
-                                menuKey: this._menuKey,
-                            });
-                            this.sendInstanceMessage({
-                                request: "Change Navigator Menu Active Status",
-                                status: false,
-                                menuKey: this._menuKey,
-                            });
+                            this.setActive(false);
                         }
                         break;
                     case dojoKeys.SHIFT:
@@ -276,13 +291,15 @@ define(['dojo/_base/declare',
                 domStyle.set(this.domNode, "left", x+"%");
             }
             ,
-            addMenuItem: function(){
-                let newMenuItem = menuItem({_instanceKey: this._instanceKey, _menuKey: this._menuKey});
+            addMenuItem: function(menuItemComponentKey){
+                 if (!menuItemComponentKey) {
+                    this._newMenus.push(newMenu);
+                } else {
+                     let newMenuItem = new menuItem({_instanceKey: this._instanceKey, _componentKey: menuItemComponentKey});
 
 
-                //add widget to newMenu array that will be searched when available menu state is changed
-                this._newMenuItems.push(newMenuItem);
-               // this._menuItems.push(newMenuItem);
+                     return newMenuItem;
+                }
             }
         });
     });
