@@ -1,7 +1,6 @@
 {
 	"Session Settings": {
-		"Main Module": "digivigil-www/guestbook",
-		"Main Module": "session/login"
+		"Main Module": "session/login",		"Main Module": "digivigil-www/guestbook"
 	},
 	"Network Settings":{
 		"Server Address" : "0.0.0.0",
@@ -19,7 +18,7 @@
 			"port": "27017",
 			"user": "root",
 			"password": "rootPass",
-			"collection": "balek"
+			"database": "balek"
 		}
 	}
 }
