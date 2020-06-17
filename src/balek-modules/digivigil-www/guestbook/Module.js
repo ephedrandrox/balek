@@ -24,9 +24,8 @@ define(['dojo/_base/declare',
                 console.log("digivigilGuestbookModule  starting...");
 
                 topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
-                    topic.publish("getMongoDbConnection", mongoDBConfig.host, mongoDBConfig.port, mongoDBConfig.user, mongoDBConfig.password, mongoDBConfig.collection, lang.hitch(this, function (dbConnection) {
+                    topic.publish("getMongoDbConnection", mongoDBConfig.host, mongoDBConfig.port, mongoDBConfig.user, mongoDBConfig.password, mongoDBConfig.database, lang.hitch(this, function (dbConnection) {
                         this._guestbookDBConnection = dbConnection;
-                        //todo check that it contains collection
                     }));
                 }));
 
