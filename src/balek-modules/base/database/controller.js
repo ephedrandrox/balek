@@ -39,7 +39,7 @@ define(['dojo/_base/declare',
 
                         if (this._Database === null)
                         {
-                            this._Database = mongoDBConfig.collection
+                            this._Database = mongoDBConfig.database;
                         }
                         let dbConnection = new mongoDbConnection({ 	_host : mongoDBConfig.host,
                             _port : mongoDBConfig.port,
