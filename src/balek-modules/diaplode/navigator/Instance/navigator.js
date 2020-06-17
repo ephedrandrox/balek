@@ -7,13 +7,16 @@ define(['dojo/_base/declare',
         'balek-modules/Instance',
         'balek-modules/base/state/synced',
         'balek-modules/base/command/remote',
+        'balek-modules/diaplode/navigator/databaseController',
+
 
         'balek-modules/diaplode/navigator/Instance/radialMenu'
 
     ],
-    function (declare, lang, topic, crypto, baseInstance, stateSynced, remoteCommander, radialMenu) {
-        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
+    function (declare, lang, topic, crypto, baseInstance, stateSynced, remoteCommander,databaseController, radialMenu) {
+        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander, databaseController], {
             _instanceKey: null,
+            _Collection: "diaplode.napokee",
 
             _menus: {},
 
@@ -32,18 +35,45 @@ define(['dojo/_base/declare',
                 //set state
                 this._interfaceState.set("availableMenus", {});
                 this._interfaceState.set("activeFocus", true);
+                this._interfaceState.set("log", "log Started");
 
 
                 //todo attache these to the constructor in base class
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
 
+
+
                 console.log("moduleDiaplodeNavigatorInstance starting...");
             },
             changeName: function(newName, remoteCommanderCallback)
             {
                 this._interfaceState.set("name", newName);
+
+
+
+                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (err, collection) {
+                            if(err){
+                                this._interfaceState.set("log", "ERROR getting collection " + err);
+
+                            }
+                            else if(collection){
+                                collection.insertOne({name: newName}, lang.hitch(this, function (error, response) {
+                                    if(error){
+                                        this._interfaceState.set("log", "ERROR Item Inserted " + error);
+                                    }
+                                    else if(response){
+                                        this._interfaceState.set("log", "Item Inserted " + response.ops[0]);
+                                    }
+
+                                }));
+                            }
+
+                        }));
                 remoteCommanderCallback({success: "Name Set"});
+
+
+
             },
             newMenu: function(name, remoteCommanderCallback)
             {

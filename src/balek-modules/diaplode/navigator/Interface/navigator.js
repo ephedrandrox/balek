@@ -22,11 +22,12 @@ define(['dojo/_base/declare',
         'balek-modules/base/state/synced',
         'balek-modules/base/command/remote',
 
+
         "balek-modules/diaplode/navigator/Interface/radialMenu"
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template,
-              templateCSS, baseInterface, stateSynced, remoteCommander, radialMenu) {
+              templateCSS, baseInterface, stateSynced, remoteCommander,  radialMenu) {
 
         return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
@@ -35,6 +36,10 @@ define(['dojo/_base/declare',
             _shiftDown: false,
             _availableMenus: {},
             _newMenus: [],
+            _mainLogDiv: null,
+
+            _DBCollection: "Diaplode",
+
 
             //##########################################################################################################
             //Startup Functions Section
@@ -58,6 +63,7 @@ define(['dojo/_base/declare',
                     on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
                 }));
+
 
             },
             postCreate: function () {
@@ -98,6 +104,15 @@ define(['dojo/_base/declare',
                     this.updateAvailableMenus();
                     this.arrangeMenus();
                 }
+
+                if (name === "log") {
+                    console.log("adding to log", newState);
+
+
+                    this._mainLogDiv.innerHTML += "<br/>" + newState;
+                }
+
+
 
             }
             ,

@@ -36,3 +36,10 @@ border: solid #50d1d1 3px;
 .diaplodeNavigatorInterfaceImage {
     width: 0px;
 }
+
+
+.diaplodeNavigatorInterfaceLogDiv {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
