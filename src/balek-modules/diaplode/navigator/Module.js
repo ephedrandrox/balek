@@ -1,9 +1,9 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/diaplode/navigator/databaseController',
+        'balek-modules/diaplode/navigator/Database',
 
         'balek-modules/diaplode/navigator/Instance'],
-    function (declare, baseModule, databaseController, moduleInstance) {
+    function (declare, baseModule, moduleDatabase, moduleInstance) {
         return declare("diaplodeRadialNavigatorModule", [baseModule], {
             _displayName: "Diaplode Navigator",
             _allowedSessions: [1],
@@ -13,7 +13,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                this._databaseController = new databaseController();
+                this._databaseController = new moduleDatabase();
                 this._databaseController.connectToDatabase();
 
                 console.log("diaplodeNavigatorModule  starting...");

@@ -9,7 +9,8 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("starting moduleDiaplodeNavigatorRadialMenuInstance")
+                console.log("starting moduleDiaplodeNavigatorRadialMenuInstance");
+
                 this._commands={
                     "changeName" : lang.hitch(this, this.changeName),
                     "changeActiveStatus" : lang.hitch(this, this.changeActiveStatus)

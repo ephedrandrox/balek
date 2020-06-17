@@ -2,7 +2,8 @@ define(['dojo/_base/declare',
         'balek-modules/base/database/controller'],
     function (declare, databaseController) {
         return declare("diaplodeDatabaseController", [databaseController], {
-_Database: "diaplode",
+
+            _Database: "diaplode",
 
             constructor: function (args) {
 

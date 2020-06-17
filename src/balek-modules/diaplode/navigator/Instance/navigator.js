@@ -7,24 +7,40 @@ define(['dojo/_base/declare',
         'balek-modules/Instance',
         'balek-modules/base/state/synced',
         'balek-modules/base/command/remote',
-        'balek-modules/diaplode/navigator/databaseController',
+        'balek-modules/diaplode/navigator/Database/navigator/menus',
 
 
         'balek-modules/diaplode/navigator/Instance/radialMenu'
 
     ],
-    function (declare, lang, topic, crypto, baseInstance, stateSynced, remoteCommander,databaseController, radialMenu) {
-        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander, databaseController], {
+    function (declare,
+              lang,
+              topic,
+
+              crypto,
+
+              baseInstance,
+              stateSynced,
+              remoteCommander,
+              menuDatabaseController,
+
+              radialMenu) {
+        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
             _instanceKey: null,
-            _Collection: "diaplode.napokee",
+            _Collection: "diaplode",
 
             _menus: {},
+
+            _menusDatabaseController: {},
 
             _stateChangeInterfaceCallback: null,
 
             constructor: function (args) {
+                debugger;
                 declare.safeMixin(this, args);
                 this._menus = {}; //new Menus object for this instance
+
+                this._menusDatabaseController = new menuDatabaseController();
 
                 //set setRemoteCommander commands
                 this._commands={
@@ -44,6 +60,8 @@ define(['dojo/_base/declare',
 
 
 
+
+
                 console.log("moduleDiaplodeNavigatorInstance starting...");
             },
             changeName: function(newName, remoteCommanderCallback)
@@ -51,26 +69,16 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("name", newName);
 
 
+                this._menusDatabaseController.newMenu(newName).then(lang.hitch(this,function (response){
+                    this._interfaceState.set("log", "Item Inserted " + response.ops[0]);
+                    remoteCommanderCallback({success: "Name Set"});
 
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (err, collection) {
-                            if(err){
-                                this._interfaceState.set("log", "ERROR getting collection " + err);
+                })).catch(lang.hitch(this,function(error) {
+                    this._interfaceState.set("log", "ERROR making new menu in database" + error);
+                    remoteCommanderCallback({error: "Name Not Set"});
 
-                            }
-                            else if(collection){
-                                collection.insertOne({name: newName}, lang.hitch(this, function (error, response) {
-                                    if(error){
-                                        this._interfaceState.set("log", "ERROR Item Inserted " + error);
-                                    }
-                                    else if(response){
-                                        this._interfaceState.set("log", "Item Inserted " + response.ops[0]);
-                                    }
+                }));
 
-                                }));
-                            }
-
-                        }));
-                remoteCommanderCallback({success: "Name Set"});
 
 
 

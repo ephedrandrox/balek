@@ -20,7 +20,6 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this._remoteCommander= remoteCommander({_instanceKey: this._instanceKey});
                 this._stateSyncer= new stateSyncer({_instanceKey: this._instanceKey});
-
                 this._navigator = new navigator({_instanceKey: this._instanceKey});
 
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");

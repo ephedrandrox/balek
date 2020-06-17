@@ -14,26 +14,16 @@ define(['dojo/_base/declare',
             _navigatorMainWidget: null,
 
             constructor: function (args) {
-
                 declare.safeMixin(this, args);
-
                 this.sendInstanceCallbackMessage({
                     request: "Navigator Component Key",
                 }, lang.hitch(this,function (requestResults) {
                     console.log("got command return results");
                     this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey, _componentKey: requestResults.componentKey });
                 }));
-
-
-
             },
             receiveMessage: function (moduleMessage) {
                 console.log("You shouldn't be seeing this", moduleMessage);
-
-
-
-
-
             },
             toggleShowView: function () {
                 let currentStateToggle = {"block": "none", "none": "block"};
