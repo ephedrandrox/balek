@@ -26,6 +26,8 @@ define(['dojo/_base/declare',
                 topic.subscribe("getSessionUserGroups", lang.hitch(this, this.getSessionUserGroups));
                 topic.subscribe("getSessionUserInfo", lang.hitch(this, this.getSessionUserInfo));
                 topic.subscribe("getSessionUsername", lang.hitch(this, this.getSessionUsername));
+                topic.subscribe("getSessionUserKey", lang.hitch(this, this.getSessionUserKey));
+
                 topic.subscribe("getSessionStatus", lang.hitch(this, this.getSessionStatus));
                 topic.subscribe("getSessionWSSConnection", lang.hitch(this, this.getSessionWSSConnection));
                 topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
@@ -250,6 +252,9 @@ define(['dojo/_base/declare',
             getSessionUsername: function (sessionKey, usernameReturn) {
                 //todo call function in session object
                 usernameReturn(this._sessions[sessionKey]._username);
+            },
+            getSessionUserKey: function(sessionKey, userKeyReturn){
+                userKeyReturn(this._sessions[sessionKey]._userKey);
             },
             getUniqueSessionKey: function () {
                 do {
