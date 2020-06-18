@@ -12,17 +12,23 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _Collection: "NavigatorMenus",
 
+            _userInfo: null,
 
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-
+debugger;
 
                 console.log("moduleDiaplodeNavigatorMenusDatabaseController starting...");
             },
             newMenu: function(newMenuName)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+
+
+
+
                     this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (err, collection) {
                         if(err){
                             Reject(err);

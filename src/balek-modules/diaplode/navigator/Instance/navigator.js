@@ -27,7 +27,6 @@ define(['dojo/_base/declare',
               radialMenu) {
         return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
             _instanceKey: null,
-            _Collection: "diaplode",
 
             _menus: {},
 
@@ -36,11 +35,16 @@ define(['dojo/_base/declare',
             _stateChangeInterfaceCallback: null,
 
             constructor: function (args) {
-                debugger;
                 declare.safeMixin(this, args);
                 this._menus = {}; //new Menus object for this instance
 
-                this._menusDatabaseController = new menuDatabaseController();
+
+                topic.publish("getSessionUserInfo", this._sessionKey, lang.hitch(this, function(userInfo){
+                    debugger;
+                    this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userInfo: userInfo});
+                }));
+
+
 
                 //set setRemoteCommander commands
                 this._commands={

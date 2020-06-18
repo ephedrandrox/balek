@@ -11,6 +11,7 @@ define(['dojo/_base/declare',
     function (declare, lang, topic, baseInstance, navigator, stateSyncer ,remoteCommander) {
         return declare("moduleDiaplodeNavigatorModuleInstance", baseInstance, {
             _instanceKey: null,
+            _sessionKey: null,
             _navigator: null,
             _remoteCommander: null,
             _stateSyncer: null,
@@ -20,7 +21,7 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this._remoteCommander= remoteCommander({_instanceKey: this._instanceKey});
                 this._stateSyncer= new stateSyncer({_instanceKey: this._instanceKey});
-                this._navigator = new navigator({_instanceKey: this._instanceKey});
+                this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey});
 
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
 
