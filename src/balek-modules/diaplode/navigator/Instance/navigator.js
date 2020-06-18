@@ -27,8 +27,13 @@ define(['dojo/_base/declare',
               radialMenu) {
         return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
             _instanceKey: null,
+            _sessionKey: null,
+            _userKey: null,
 
             _menus: {},
+
+            _menusFromDatabase: {},
+
 
             _menusDatabaseController: {},
 
@@ -37,13 +42,30 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 this._menus = {}; //new Menus object for this instance
+                this._menusFromDatabase = {};
 
+                if(this._instanceKey !== null && this._sessionKey !== null && this._userKey !== null )
+                {
+                    this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userKey: this._userKey});
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
-                    debugger;
-                    this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userKey: userKey});
-                }));
+                    this._menusDatabaseController.getRootMenus().then(lang.hitch(this,function (response){
+                        response.toArray().then(lang.hitch(this, function(menus){
 
+                            for (const menu of menus){
+                                this.loadMenu(menu.name, menu._id);
+                                this._menusFromDatabase[menu._id] = menu;
+                            }
+                            this._interfaceState.set("log", "Menus received");
+                        }));
+
+                    })).catch(lang.hitch(this,function(error) {
+                        this._interfaceState.set("log", "ERROR getting menus from database" + error);
+                    }));
+                }
+                else{
+
+                    console.log("Do not have all our keys!");
+                }
 
 
                 //set setRemoteCommander commands
@@ -64,36 +86,47 @@ define(['dojo/_base/declare',
 
 
 
-
-
                 console.log("moduleDiaplodeNavigatorInstance starting...");
             },
             changeName: function(newName, remoteCommanderCallback)
             {
+
                 this._interfaceState.set("name", newName);
 
+                if(remoteCommanderCallback)
+                {
+                    remoteCommanderCallback({success: "Changed Menu Name"});
 
-                this._menusDatabaseController.newMenu(newName).then(lang.hitch(this,function (response){
-                    this._interfaceState.set("log", "Item Inserted " + response.ops[0]);
-                    remoteCommanderCallback({success: "Name Set"});
+                }
 
-                })).catch(lang.hitch(this,function(error) {
-                    this._interfaceState.set("log", "ERROR making new menu in database" + error);
-                    remoteCommanderCallback({error: "Name Not Set"});
+            },
+            loadMenu: function(name, id){
+                let newMenu = new radialMenu({_sessionKey: this._sessionKey,
+                    _instanceKey: this._instanceKey,
+                    _userKey: this.userKey,
+                    _menuName: name,
+                    _menuID: id });
+                this._menus[newMenu._componentKey] = newMenu;
+                this._interfaceState.set("availableMenus", Object.keys(this._menus));
+            },
+            newMenu: function(name, remoteCommanderCallback)
+            {
+                this._menusDatabaseController.newMenu(name).then(lang.hitch(this,function (response){
+                            let menuID = response.ops[0]._id.toString();
 
+
+                    this.loadMenu(name, menuID);
+
+                    if(remoteCommanderCallback) {
+                        remoteCommanderCallback({success: "Created menu and set state"});
+                    }
+                        this._interfaceState.set("log", "New Menmu Added to Database");
+                    })).catch(lang.hitch(this,function(error) {
+                    this._interfaceState.set("log", "ERROR adding menu to database" + error);
                 }));
 
 
 
-
-            },
-            newMenu: function(name, remoteCommanderCallback)
-            {
-                let newMenu = new radialMenu({_instanceKey: this._instanceKey, _menuName: name});
-                this._menus[newMenu._componentKey] = newMenu;
-                this._interfaceState.set("availableMenus", Object.keys(this._menus));
-
-                remoteCommanderCallback({success: "Created menu and set state"});
             },
             _end: function(){
                 return this.inherited(arguments);

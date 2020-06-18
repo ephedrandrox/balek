@@ -21,7 +21,12 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this._remoteCommander= remoteCommander({_instanceKey: this._instanceKey});
                 this._stateSyncer= new stateSyncer({_instanceKey: this._instanceKey});
-                this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey});
+
+
+                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
+                    this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: userKey});
+
+                }));
 
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
 

@@ -23,11 +23,14 @@ define(['dojo/_base/declare',
         'balek-modules/base/command/remote',
 
 
-        "balek-modules/diaplode/navigator/Interface/radialMenu"
+        "balek-modules/diaplode/navigator/Interface/radialMenu",
+
+        "balek-modules/diaplode/ui/input/getUserInput",
+
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template,
-              templateCSS, baseInterface, stateSynced, remoteCommander,  radialMenu) {
+              templateCSS, baseInterface, stateSynced, remoteCommander,  radialMenu, getUserInput) {
 
         return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
@@ -83,9 +86,9 @@ define(['dojo/_base/declare',
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
-                    this._instanceCommands.changeName("ThisNavigatorName").then(function (results) {
-                        console.log(results);
-                    });
+                   // this._instanceCommands.changeName("ThisNavigatorName").then(function (results) {
+                   //     console.log(results);
+                   // });
                     // ready to show widget now that we have our
                     // interface linked and received our remote commands;
                     this.introAnimation();
@@ -130,9 +133,15 @@ define(['dojo/_base/declare',
                         if (this._shiftDown) {
                             this.loadOrToggleModule("session/menu");
                         } else {
-                            this._instanceCommands.newMenu("NewMenuName").then(function (results) {
-                                console.log(results);
-                            });
+                            let getNameForMenu = new getUserInput({question: "Choose a Menu Name", inputReplyCallback: lang.hitch(this, function(newMenuName){
+console.log("Requesting new menu", newMenuName);
+                                    this._instanceCommands.newMenu(newMenuName).then(function (results) {
+                                        console.log(results);
+                                     });
+                                    getNameForMenu.unload();
+                                }) });
+
+
                         }
                         break;
                     case dojoKeys.ESCAPE:

@@ -24,12 +24,15 @@ define(['dojo/_base/declare',
 
 
 
+
+
         "balek-modules/diaplode/navigator/Interface/menuItem"
 
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
-              mainCss, baseInterface, stateSynced, remoteCommander, menuItem) {
+              mainCss, baseInterface, stateSynced, remoteCommander,
+              menuItem) {
 
         return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
@@ -93,9 +96,9 @@ define(['dojo/_base/declare',
                     //Since We are extending with the remoteCommander
                     //We Check for interfaceRemoteCommands and link them
                     this.linkRemoteCommands(newState);
-                    this._instanceCommands.changeName("ThisMenuName").then(function (results) {
-                        console.log(results);
-                    });
+                   // this._instanceCommands.changeName("ThisMenuName").then(function (results) {
+                     //   console.log(results);
+                   // });
                     //ready to show widget;
                     this.introAnimation();
 
@@ -129,6 +132,8 @@ define(['dojo/_base/declare',
                 else if (name === "availableMenuItems") {
                     this.updateAvailableMenuItems();
                     this.arrangeMenuItems();
+                } else if (name === "name") {
+                   console.log("got name state:", oldState, newState);
                 }
                 else {
                     console.log("state unaccounted for....", name, newState);
@@ -226,7 +231,8 @@ define(['dojo/_base/declare',
                     duration:900,
 
                     properties: {
-                        transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(-300deg)'},
+                        transform: { end: 'translate(-50%, -50%)rotate(0deg)',
+                                    start:'translate(-50%, -50%)rotate(-300deg)'},
                         top:{end: this._yRelativePosition, start: 50, units: "%"},
                         left:{end: this._xRelativePosition, start: 50, units: "%"}
                     }
@@ -238,7 +244,8 @@ define(['dojo/_base/declare',
                     duration:400,
 
                     properties: {
-                        transform: { end: 'translate(-50%, -50%)rotate(0deg)', start:'translate(-50%, -50%)rotate(-300deg)'},
+                        transform: { end: 'translate(-50%, -50%)rotate(0deg)',
+                                    start:'translate(-50%, -50%)rotate(-300deg)'},
                         top:{start: this._yRelativePosition, end: 50, units: "%"},
                         left:{start: this._xRelativePosition, end: 50, units: "%"}
                     }
