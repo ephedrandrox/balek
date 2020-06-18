@@ -39,9 +39,9 @@ define(['dojo/_base/declare',
                 this._menus = {}; //new Menus object for this instance
 
 
-                topic.publish("getSessionUserInfo", this._sessionKey, lang.hitch(this, function(userInfo){
+                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
                     debugger;
-                    this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userInfo: userInfo});
+                    this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userKey: userKey});
                 }));
 
 

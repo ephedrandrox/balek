@@ -12,7 +12,7 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _Collection: "NavigatorMenus",
 
-            _userInfo: null,
+            _userKey: null,
 
 
             constructor: function (args) {
@@ -34,7 +34,7 @@ debugger;
                             Reject(err);
                         }
                         else if(collection){
-                            collection.insertOne({name: newMenuName}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({_userKey: this._userKey, name: newMenuName}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
