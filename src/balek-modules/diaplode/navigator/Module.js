@@ -20,7 +20,6 @@ define(['dojo/_base/declare',
             },
             newInstance: function (args) {
                 //must be overridden from base
-            debugger;
                 return new moduleInstance(args);
             }
         });

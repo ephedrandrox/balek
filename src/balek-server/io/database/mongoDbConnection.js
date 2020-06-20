@@ -1,7 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        "dojo/node!mongodb"],
+        "dojo/node!mongodb",],
     function (declare, lang, topic, mongodbNodeObject) {
 
         return declare("mongoDbConnection", null, {

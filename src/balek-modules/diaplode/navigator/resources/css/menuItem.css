@@ -1,15 +1,12 @@
-body {
-    text-align: center
-}
-
-.diaplodeNavigatorInterfaceMenuItem * {
-
-}
 
 .diaplodeNavigatorInterfaceMenuItem {
-position: absolute;
+    position: absolute;
 
     opacity: 1;
+}
+
+.diaplodeNavigatorInterfaceMenuItemNameDiv {
+
 }
 
 

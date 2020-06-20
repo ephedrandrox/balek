@@ -1,6 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+
         'dojo/dom-class',
         'dojo/dom-construct',
         "dojo/_base/window",
@@ -28,9 +29,29 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/ui/input/getUserInput",
 
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, fx, fxComplexExt, _WidgetBase, _TemplatedMixin, template,
-              templateCSS, baseInterface, stateSynced, remoteCommander,  radialMenu, getUserInput) {
+    function (declare,
+              lang,
+              topic,
+
+              domClass,
+              domConstruct,
+              win,
+              on,
+              domAttr,
+              dojoKeys,
+              dijitFocus,
+              dojoReady,
+              fx,
+              fxComplexExt,
+              _WidgetBase,
+              _TemplatedMixin,
+              template,
+              templateCSS,
+              baseInterface,
+              stateSynced,
+              remoteCommander,
+              radialMenu,
+              getUserInput) {
 
         return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
@@ -134,7 +155,7 @@ define(['dojo/_base/declare',
                             this.loadOrToggleModule("session/menu");
                         } else {
                             let getNameForMenu = new getUserInput({question: "Choose a Menu Name", inputReplyCallback: lang.hitch(this, function(newMenuName){
-console.log("Requesting new menu", newMenuName);
+                                    console.log("Requesting new menu", newMenuName);
                                     this._instanceCommands.newMenu(newMenuName).then(function (results) {
                                         console.log(results);
                                      });
@@ -242,6 +263,7 @@ console.log("Requesting new menu", newMenuName);
                     if (!this._availableMenus[availableMenuComponentKey]) {
                         //this is when we should make a new menu and update the addmenu function
                         this._availableMenus[availableMenuComponentKey] = this.addMenu(availableMenuComponentKey);
+
                     }
                 }
             },

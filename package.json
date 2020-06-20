@@ -9,9 +9,9 @@
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
   },
   "dependencies": {
-    "mongodb": "^3.3.2",
+    "mongodb": "^3.5.9",
     "mysql2": "^1.7.0",
-    "sanitize-html": "^1.20.1",
+    "sanitize-html": "^1.27.0",
     "websocket": "^1.0.28"
   },
   "name": "balek",

@@ -8,16 +8,16 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, crypto, diaplodeNavigatorDatabaseController) {
-        return declare("moduleDiaplodeNavigatorMenusDatabaseController", [diaplodeNavigatorDatabaseController], {
+        return declare("moduleDiaplodeNavigatorMenuItemsDatabaseController", [diaplodeNavigatorDatabaseController], {
             _instanceKey: null,
-            _Collection: "NavigatorMenus",
+            _Collection: "NavigatorMenuItems",
 
             _userKey: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDiaplodeNavigatorMenusDatabaseController starting...");
+                console.log("moduleDiaplodeNavigatorMenuItemsDatabaseController starting...");
             },
-            getUserMenus: function(){
+            getMenuItems: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
                         this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
@@ -25,14 +25,15 @@ define(['dojo/_base/declare',
                                 Reject(error);
                             }
                             else if(collection){
-                                collection.find({_userKey: this._userKey}, lang.hitch(this, function (error, response) {
-                                    if(error){
-                                        Reject(error);
-                                    }
-                                    else if(response){
-                                        Resolve(response);
-                                    }
-                                }));
+                                collection.find({_userKey: this._userKey, _menuID: this._menuID},
+                                    lang.hitch(this, function (error, response) {
+                                        if(error){
+                                            Reject(error);
+                                        }
+                                        else if(response){
+                                            Resolve(response);
+                                        }
+                                    }));
                             }
                         }));
                     }else {
@@ -40,7 +41,7 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
-            newMenu: function(newMenuName)
+            newMenuItem: function(newMenuItemName)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
 
@@ -49,12 +50,12 @@ define(['dojo/_base/declare',
                             Reject(error);
                         }
                         else if(collection){
-                            collection.insertOne({_userKey: this._userKey, name: newMenuName}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({_userKey: this._userKey, _menuID: this._menuID, name: newMenuItemName}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
                                 else if(response){
-                                   Resolve(response);
+                                    Resolve(response);
                                 }
                             }));
                         }

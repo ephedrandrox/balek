@@ -7,6 +7,8 @@ define(['dojo/_base/declare',
     function (declare, lang,  baseInstance, stateSynced, remoteCommander) {
         return declare("moduleDiaplodeNavigatorRadialMenuItemInstance", [baseInstance,stateSynced, remoteCommander], {
 
+            _stateChangeInterfaceCallback: null,
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("starting moduleDiaplodeNavigatorRadialMenuInstance");
@@ -16,9 +18,11 @@ define(['dojo/_base/declare',
                     "changeActiveStatus" : lang.hitch(this, this.changeActiveStatus)
                 };
 
+
+                this._interfaceState.set("name",this._menuItemName);
+
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
-                this._interfaceState.set("name",this._menuItemName);
             },
             changeName: function(name, remoteCommandCallback)
             {

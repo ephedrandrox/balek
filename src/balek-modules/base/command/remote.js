@@ -71,8 +71,7 @@ this._instanceCommands.commandNameOne(1,2);.then(function(results){
 */
 
 define(['dojo/_base/declare',
-        'dojo/_base/lang',
-    ],
+        'dojo/_base/lang',],
     function (declare, lang) {
 
         return declare("moduleBaseRemoteCommander", null, {
@@ -126,10 +125,10 @@ define(['dojo/_base/declare',
                 if (this._interfaceRemoteCommanderKeys[remoteCommanderKey] &&
                     this._interfaceRemoteCommanderKeys[remoteCommanderKey]._instanceKey === instanceKey) {
                     this._interfaceRemoteCommanderKeys[remoteCommanderKey].processCommand(instanceKey,
-                                                                                    remoteCommanderKey,
-                                                                                    command,
-                                                                                    commandCallback,
-                                                                                    commandArguments);
+                        remoteCommanderKey,
+                        command,
+                        commandCallback,
+                        commandArguments);
                 } else {
                     console.log("could not Route command");
                 }
@@ -139,7 +138,7 @@ define(['dojo/_base/declare',
                 if (this._instanceKey === instanceKey && this._interfaceRemoteCommanderKey === remoteCommanderKey) {
                     if (this._commands[command]) {
                         try {
-                            this._commands[command](...Object.values(commandArguments), commandCallback);
+                            //    this._commands[command](...Object.values(commandArguments), commandCallback);
                         } catch (error) {
                             commandCallback({
                                 error: "Command Found But Couldn't execute properly",
@@ -157,9 +156,10 @@ define(['dojo/_base/declare',
                 let crypto = require('dojo/node!crypto');
                 do {
                     let id = crypto.randomBytes(20).toString('hex');
-                    if (typeof this._interfaceRemoteCommanderKeys[id] == "undefined")
+                    if (typeof this._interfaceRemoteCommanderKeys[id] == "undefined"){
                         this._interfaceRemoteCommanderKeys[id] = "Waiting for Object";
-                    return id;
+                        return id;
+                    }
                 } while (true);
             },
         });

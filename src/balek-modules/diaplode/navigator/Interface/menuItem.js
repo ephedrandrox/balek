@@ -65,13 +65,10 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             onInterfaceStateChange: function(name, oldState, newState){
-               console.log("menu Item State change", name, newState);
+               console.log("menu Items State change", name, newState);
 
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
-                    this._instanceCommands.changeName("ThisMenuItemName").then(function (results) {
-                        console.log(results);
-                    });
                     //ready to show widget;
                     this.introAnimation();
 
@@ -83,7 +80,11 @@ define(['dojo/_base/declare',
                     console.log("Remote COmmander Key!");
                     this._interfaceRemoteCommanderKey = newState;
 
-                }else{
+                }else if (name === "name") {
+                    debugger;
+                   this._nameDiv.innerHTML = newState;
+                }
+                else{
                     console.log("state unaccounted for....", name, newState);
                 }
             },
@@ -109,7 +110,17 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
+            introAnimation: function(){
+                fx.animateProperty({
+                    node:this.domNode,
+                    duration:1200,
 
+                    properties: {
+                        opacity: {end: 1},
+
+                    }
+                }).play();
+            },
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################

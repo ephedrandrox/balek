@@ -1,13 +1,23 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
+
         'balek-modules/Interface',
+
         'dojo/topic',
         "dojo/dom-construct",
         "dojo/dom-style",
         "dojo/_base/window",
-        'balek-modules/diaplode/navigator/Interface/navigator'
+
+        'balek-modules/diaplode/navigator/Interface/navigator',
     ],
-    function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, navigatorMainWidget) {
+    function (declare,
+              lang,
+              baseInterface,
+              topic,
+              domConstruct,
+              domStyle,
+              win,
+              navigatorMainWidget) {
 
         return declare("moduleDiaplodeNavigatorModuleInterface", baseInterface, {
             _instanceKey: null,
@@ -17,9 +27,12 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this.sendInstanceCallbackMessage({
                     request: "Navigator Component Key",
-                }, lang.hitch(this,function (requestResults) {
+                }, lang.hitch(this, function (requestResults) {
                     console.log("got command return results");
-                    this._navigatorMainWidget = new navigatorMainWidget({_instanceKey: this._instanceKey, _componentKey: requestResults.componentKey });
+                    this._navigatorMainWidget = new navigatorMainWidget({
+                        _instanceKey: this._instanceKey,
+                        _componentKey: requestResults.componentKey
+                    });
                 }));
             },
             receiveMessage: function (moduleMessage) {

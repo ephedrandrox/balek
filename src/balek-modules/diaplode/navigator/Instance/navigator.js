@@ -10,7 +10,7 @@ define(['dojo/_base/declare',
         'balek-modules/diaplode/navigator/Database/navigator/menus',
 
 
-        'balek-modules/diaplode/navigator/Instance/radialMenu'
+        'balek-modules/diaplode/navigator/Instance/radialMenu',
 
     ],
     function (declare,
@@ -48,7 +48,7 @@ define(['dojo/_base/declare',
                 {
                     this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userKey: this._userKey});
 
-                    this._menusDatabaseController.getRootMenus().then(lang.hitch(this,function (response){
+                    this._menusDatabaseController.getUserMenus().then(lang.hitch(this,function (response){
                         response.toArray().then(lang.hitch(this, function(menus){
 
                             for (const menu of menus){
@@ -79,7 +79,6 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("activeFocus", true);
                 this._interfaceState.set("log", "log Started");
 
-
                 //todo attache these to the constructor in base class
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
@@ -103,7 +102,7 @@ define(['dojo/_base/declare',
             loadMenu: function(name, id){
                 let newMenu = new radialMenu({_sessionKey: this._sessionKey,
                     _instanceKey: this._instanceKey,
-                    _userKey: this.userKey,
+                    _userKey: this._userKey,
                     _menuName: name,
                     _menuID: id });
                 this._menus[newMenu._componentKey] = newMenu;

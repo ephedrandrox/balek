@@ -26,13 +26,16 @@ define(['dojo/_base/declare',
 
 
 
-        "balek-modules/diaplode/navigator/Interface/menuItem"
+        "balek-modules/diaplode/navigator/Interface/menuItem",
+
+        "balek-modules/diaplode/ui/input/getUserInput",
+
 
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss, baseInterface, stateSynced, remoteCommander,
-              menuItem) {
+              menuItem, getUserInput) {
 
         return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
@@ -49,7 +52,7 @@ define(['dojo/_base/declare',
 
             _menuItems: {},
             _newMenuItems: [],
-            _availableMenuItems: [],
+            _availableMenuItems: {},
 
             _shiftDown: false,
             _switchingLayers: false,
@@ -157,7 +160,15 @@ define(['dojo/_base/declare',
 
                         }else
                         {
-                            this._instanceCommands.newMenuItem("NewMenuItemName");
+
+                            let getNameForMenu = new getUserInput({question: "Choose a Menu Name", inputReplyCallback: lang.hitch(this, function(newMenuName){
+                                    console.log("Requesting new menu", newMenuName);
+                                    this._instanceCommands.newMenuItem(newMenuName).then(function (results) {
+                                        console.log(results);
+                                    });
+                                    getNameForMenu.unload();
+                                }) });
+
                         }
                         break;
                     case dojoKeys.ESCAPE:
@@ -286,10 +297,11 @@ define(['dojo/_base/declare',
                         this._availableMenuItems[newWidgetKey] = newMenuItemWidget;
                     }
                 }
-                for (const availableMenuItemComponentKey in availableMenuItemsState) {
+                for (const availableMenuItemComponentKey of Object.values(availableMenuItemsState)) {
 
                     if (!this._availableMenuItems[availableMenuItemComponentKey]) {
                         //this is when we should make a new menu and update the addmenu function
+
                         this._availableMenuItems[availableMenuItemComponentKey] = this.addMenuItem(availableMenuItemComponentKey);
                     }
                 }
