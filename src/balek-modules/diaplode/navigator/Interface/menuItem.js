@@ -81,7 +81,6 @@ define(['dojo/_base/declare',
                     this._interfaceRemoteCommanderKey = newState;
 
                 }else if (name === "name") {
-                    debugger;
                    this._nameDiv.innerHTML = newState;
                 }
                 else{

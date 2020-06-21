@@ -50,7 +50,7 @@ define(['dojo/_base/declare',
                         response.toArray().then(lang.hitch(this, function(menuItems){
 
                             for (const menuItem of menuItems){
-                                this.loadMenuItem(menuItem.name, menuItem._id );
+                                this.loadMenuItem(menuItem.name, menuItem._id.toString() );
                                 this._menuItemsFromDatabase[menuItem._id] = menuItem;
                             }
                             this._interfaceState.set("log", "Menus Item received");
@@ -65,10 +65,7 @@ define(['dojo/_base/declare',
                     console.log("Do not have all our keys!");
                 }
 
-
-
-
-
+                
 
                 this._commands={
 

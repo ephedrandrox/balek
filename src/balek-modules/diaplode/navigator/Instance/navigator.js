@@ -52,7 +52,7 @@ define(['dojo/_base/declare',
                         response.toArray().then(lang.hitch(this, function(menus){
 
                             for (const menu of menus){
-                                this.loadMenu(menu.name, menu._id);
+                                this.loadMenu(menu.name, menu._id.toString());
                                 this._menusFromDatabase[menu._id] = menu;
                             }
                             this._interfaceState.set("log", "Menus received");
