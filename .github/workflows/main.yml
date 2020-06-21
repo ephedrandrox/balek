@@ -33,4 +33,4 @@ jobs:
         echo test, and deploy your project.
         
     - name: Super-Linter
-    uses: github/super-linter@v2.1.0
+      uses: github/super-linter@v2.1.0
