@@ -138,7 +138,7 @@ define(['dojo/_base/declare',
                 if (this._instanceKey === instanceKey && this._interfaceRemoteCommanderKey === remoteCommanderKey) {
                     if (this._commands[command]) {
                         try {
-                            //    this._commands[command](...Object.values(commandArguments), commandCallback);
+                               this._commands[command](...Object.values(commandArguments), commandCallback);
                         } catch (error) {
                             commandCallback({
                                 error: "Command Found But Couldn't execute properly",
