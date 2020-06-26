@@ -9,10 +9,9 @@ sync the _interfaceState object between the two
 
 define(['dojo/_base/declare',
         'dojo/_base/lang',
-        'dojo/topic',
-        'balek-server/io/database/mongoDbConnection',
-],
-    function (declare, lang, topic, mongoDbConnection) {
+        'dojo/topic'
+    ],
+    function (declare, lang, topic) {
         return declare("moduleBaseDatabaseController", null, {
             shared: {
                 _DBConnection: {},
@@ -41,13 +40,16 @@ define(['dojo/_base/declare',
                         {
                             this._Database = mongoDBConfig.database;
                         }
-                        let dbConnection = new mongoDbConnection({ 	_host : mongoDBConfig.host,
-                            _port : mongoDBConfig.port,
-                            _user : mongoDBConfig.user,
-                            _password : mongoDBConfig.password,
-                            _database :  this._Database
-                        });
-                        this.shared._DBConnection   = dbConnection;
+
+                        topic.publish("getMongoDbConnection", mongoDBConfig.host,
+                            mongoDBConfig.port,
+                            mongoDBConfig.user,
+                            mongoDBConfig.password,
+                            this._Database,
+                            lang.hitch(this, function (dbConnection) {
+                                this.shared._DBConnection = dbConnection;
+                        }));
+
                     }));
                 }
             }));
