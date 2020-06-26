@@ -14,3 +14,7 @@ data/mysql/mysqlDB/
 builds/conspiron/mysqlDB/
 
 builds/conspiron/mongoDB/
+
+builds/diaplode/mysqlDB/
+
+builds/diaplode/mongoDB/

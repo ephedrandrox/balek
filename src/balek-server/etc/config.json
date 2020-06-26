@@ -19,7 +19,7 @@
 			"port": "27017",
 			"user": "root",
 			"password": "rootPass",
-			"collection": "balek"
+			"database": "balek"
 		}
 	}
 }
