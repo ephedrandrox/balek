@@ -43,24 +43,25 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this._menus = {}; //new Menus object for this instance
                 this._menusFromDatabase = {};
-
                 if(this._instanceKey !== null && this._sessionKey !== null && this._userKey !== null )
                 {
                     this._menusDatabaseController = new menuDatabaseController({_instanceKey: this._instanceKey, _userKey: this._userKey});
-
                     this._menusDatabaseController.getUserMenus().then(lang.hitch(this,function (response){
-                        response.toArray().then(lang.hitch(this, function(menus){
 
-                            for (const menu of menus){
-                                this.loadMenu(menu.name, menu._id.toString());
-                                this._menusFromDatabase[menu._id] = menu;
-                            }
-                            this._interfaceState.set("log", "Menus received");
+                            response.toArray().then(lang.hitch(this, function(menus){
+
+                                for( const index in menus){
+                                    let menu = menus[index];
+                                    this.loadMenu(menu.name, menu._id.toString());
+                                    this._menusFromDatabase[menu._id] = menu;
+                                }
+
+                                  this._interfaceState.set("log", "Menus received");
+                            }));
+
+                        })).catch(lang.hitch(this,function(error) {
+                            this._interfaceState.set("log", "ERROR getting menus from database" + error);
                         }));
-
-                    })).catch(lang.hitch(this,function(error) {
-                        this._interfaceState.set("log", "ERROR getting menus from database" + error);
-                    }));
                 }
                 else{
 
@@ -68,20 +69,21 @@ define(['dojo/_base/declare',
                 }
 
 
-                //set setRemoteCommander commands
-                this._commands={
-                    "changeName" : lang.hitch(this, this.changeName),
-                    "newMenu" : lang.hitch(this, this.newMenu),
-                };
 
-                //set state
-                this._interfaceState.set("availableMenus", {});
-                this._interfaceState.set("activeFocus", true);
-                this._interfaceState.set("log", "log Started");
+                                //set setRemoteCommander commands
+                                this._commands={
+                                    "changeName" : lang.hitch(this, this.changeName),
+                                    "newMenu" : lang.hitch(this, this.newMenu),
+                                };
 
-                //todo attache these to the constructor in base class
-                this.prepareSyncedState();
-                this.setInterfaceCommands();
+                                //set state
+                                this._interfaceState.set("availableMenus", {});
+                                this._interfaceState.set("activeFocus", true);
+                                this._interfaceState.set("log", "log Started");
+
+                                //todo attache these to the constructor in base class
+                                this.prepareSyncedState();
+                                this.setInterfaceCommands();
 
 
 

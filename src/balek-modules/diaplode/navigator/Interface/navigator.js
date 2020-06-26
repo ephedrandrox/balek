@@ -257,26 +257,34 @@ define(['dojo/_base/declare',
 
             updateAvailableMenus: function () {
                 let availableMenusState = this._interfaceState.get("availableMenus");
-                for (const [index, newMenuWidget] of  this._newMenus.entries()) {
-                    let newWidgetKey = newMenuWidget.getComponentKey();
-                    if (availableMenusState[newWidgetKey]) {
-                        this._newMenus.splice(index, 1);
-                        this._availableMenus[newWidgetKey] = newMenuWidget;
+
+                    for (const newMenuWidgetKey in this._newMenus) {
+                        let newMenuWidget = this._newMenus[newMenuWidgetKey];
+                        let newWidgetKey = newMenuWidget.getComponentKey();
+                        if (availableMenusState[newWidgetKey]) {
+                            this._newMenus.splice(index, 1);
+                            this._availableMenus[newWidgetKey] = newMenuWidget;
+                        }
                     }
-                }
-                for (const availableMenuComponentKey of Object.values(availableMenusState) ) {
+
+                for (const index in availableMenusState ) {
+                    let availableMenuComponentKey = availableMenusState[index];
                     if (!this._availableMenus[availableMenuComponentKey]) {
                         //this is when we should make a new menu and update the addmenu function
                         this._availableMenus[availableMenuComponentKey] = this.addMenu(availableMenuComponentKey);
 
                     }
                 }
-            },
-            unloadAllMenus: function () {
-                for (const newMenuWidget of  this._newMenus) {
-                    newMenuWidget.unload();
 
-                }
+            },
+
+            unloadAllMenus: function () {
+
+                 for ( let i = 0; i < this._newMenus.length; i++) {
+                                let newMenuWidget = this._newMenus[i];
+                                newMenuWidget.unload();
+                 }
+
                 for (const availableMenuKey in this._availableMenus) {
 
                     this._availableMenus[availableMenuKey].unload();

@@ -311,18 +311,21 @@ define(['dojo/_base/declare',
             },
             updateAvailableMenuItems: function () {
                 let availableMenuItemsState = this._interfaceState.get("availableMenuItems");
-                for (const [index, newMenuItemWidget] of  this._newMenuItems.entries()) {
+
+                for (const newMenuItemWidgetKey in this._newMenuItems) {
+                    let newMenuItemWidget = this._newMenuItems[newMenuItemWidgetKey];
                     let newWidgetKey = newMenuItemWidget.getComponentKey();
                     if (availableMenuItemsState[newWidgetKey]) {
                         this._newMenuItems.splice(index, 1);
                         this._availableMenuItems[newWidgetKey] = newMenuItemWidget;
                     }
                 }
-                for (const availableMenuItemComponentKey of Object.values(availableMenuItemsState)) {
 
+
+                for (const index in availableMenuItemsState ) {
+                    let availableMenuItemComponentKey = availableMenuItemsState[index];
                     if (!this._availableMenuItems[availableMenuItemComponentKey]) {
                         //this is when we should make a new menu and update the addmenu function
-
                         this._availableMenuItems[availableMenuItemComponentKey] = this.addMenuItem(availableMenuItemComponentKey);
                     }
                 }

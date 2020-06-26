@@ -48,8 +48,8 @@ define(['dojo/_base/declare',
 
                     this._menuItemsDatabaseController.getMenuItems().then(lang.hitch(this,function (response){
                         response.toArray().then(lang.hitch(this, function(menuItems){
-
-                            for (const menuItem of menuItems){
+                            for (const index in menuItems){
+                                let menuItem = menuItems[index];
                                 this.loadMenuItem(menuItem.name, menuItem._id.toString() );
                                 this._menuItemsFromDatabase[menuItem._id] = menuItem;
                             }
