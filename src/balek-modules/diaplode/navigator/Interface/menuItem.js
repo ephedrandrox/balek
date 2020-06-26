@@ -120,6 +120,17 @@ define(['dojo/_base/declare',
                     }
                 }).play();
             },
+            outroAnimation: function(){
+                fx.animateProperty({
+                    node:this.domNode,
+                    duration:1200,
+
+                    properties: {
+                        opacity: {end: 0},
+
+                    }
+                }).play();
+            },
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################

@@ -123,13 +123,16 @@ define(['dojo/_base/declare',
                             dijitFocus.focus(this.domNode);
                             this._switchingLayers = false;
                             this.focusAnimation();
-
+                            console.log("showing subs");
+                            this.showMenuItems();
                         }));
                     }else if(newState === false && newState !== oldState)
                     {
                         topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                         domStyle.set(this.domNode, "filter", "none");
                         this.blurAnimation();
+                        this.hideMenuItems();
+
                     }
                 }
                 else if (name === "availableMenuItems") {
@@ -216,6 +219,7 @@ define(['dojo/_base/declare',
             //UI Functions Section
             //##########################################################################################################
 
+
             moveTo: function(x,y){
                 //make this part of a Movable class that inherits
                 this._xRelativePosition = x;
@@ -275,6 +279,23 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Menu Item Functions Section
             //##########################################################################################################
+
+            showMenuItems: function (){
+
+                console.log("showing subs");
+                for(const menuItem in this._availableMenuItems)
+                {                            console.log("showing subs");
+
+                    this._availableMenuItems[menuItem].introAnimation();
+                }
+
+            },
+            hideMenuItems: function(){
+                for(const menuItem in this._availableMenuItems)
+                {
+                    this._availableMenuItems[menuItem].outroAnimation();
+                }
+            },
 
             arrangeMenuItems: function () {
                 let placementArray = [

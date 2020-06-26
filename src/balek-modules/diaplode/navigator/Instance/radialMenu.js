@@ -65,7 +65,7 @@ define(['dojo/_base/declare',
                     console.log("Do not have all our keys!");
                 }
 
-                
+
 
                 this._commands={
 

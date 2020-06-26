@@ -154,14 +154,6 @@ define(['dojo/_base/declare',
                         if (this._shiftDown) {
                             this.loadOrToggleModule("session/menu");
                         } else {
-                            let getNameForMenu = new getUserInput({question: "Choose a Menu Name", inputReplyCallback: lang.hitch(this, function(newMenuName){
-                                    console.log("Requesting new menu", newMenuName);
-                                    this._instanceCommands.newMenu(newMenuName).then(function (results) {
-                                        console.log(results);
-                                     });
-                                    getNameForMenu.unload();
-                                }) });
-
 
                         }
                         break;
@@ -193,8 +185,22 @@ define(['dojo/_base/declare',
                     case dojoKeys.ESCAPE:
                         keyDownEvent.preventDefault();
                         break;
+                    case dojoKeys.TAB:
+                       // keyDownEvent.preventDefault();
+                        break;
 
                 }
+            },
+            onAddMenuClicked: function (event){
+                console.log(event);
+                let getNameForMenu = new getUserInput({question: "Choose a Menu Name", inputReplyCallback: lang.hitch(this, function(newMenuName){
+                        console.log("Requesting new menu", newMenuName);
+                        this._instanceCommands.newMenu(newMenuName).then(function (results) {
+                            console.log(results);
+                        });
+                        getNameForMenu.unload();
+                    }) });
+
             },
 
             //##########################################################################################################
@@ -205,7 +211,6 @@ define(['dojo/_base/declare',
                 fx.animateProperty({
                     node: this.domNode,
                     duration: 900,
-
                     properties: {
                         transform: {
                             end: 'translate(-50%, -50%)rotate(0deg)',

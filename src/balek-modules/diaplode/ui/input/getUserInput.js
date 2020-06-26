@@ -62,6 +62,8 @@ define(['dojo/_base/declare',
                         break;
                     case dojoKeys.ESCAPE:
                         keyUpEvent.preventDefault();
+                        keyUpEvent.stopPropagation();
+
                         this.unload();
                         break;
 
@@ -74,6 +76,7 @@ define(['dojo/_base/declare',
                         break;
                     case dojoKeys.ESCAPE:
                         keyUpEvent.preventDefault();
+                        keyUpEvent.stopPropagation();
                         this.unload();
                         break;
 
