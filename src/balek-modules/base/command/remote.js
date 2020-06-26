@@ -71,8 +71,7 @@ this._instanceCommands.commandNameOne(1,2);.then(function(results){
 */
 
 define(['dojo/_base/declare',
-        'dojo/_base/lang',
-    ],
+        'dojo/_base/lang'],
     function (declare, lang) {
 
         return declare("moduleBaseRemoteCommander", null, {
@@ -105,7 +104,7 @@ define(['dojo/_base/declare',
                 for (const linkKey in interfaceLinks) {
                     this._instanceCommands[interfaceLinks[linkKey]] = lang.hitch(this, function () {
                         let commandArguments = arguments;
-                        return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                        return new Promise(lang.hitch(this, function (Resolve) {
                             this.sendInstanceCallbackMessage({
                                 request: "Remote Command",
                                 remoteCommanderKey: this._interfaceRemoteCommanderKey,
@@ -113,7 +112,7 @@ define(['dojo/_base/declare',
                                 remoteCommandArguments: commandArguments,
                             }, function (commandResults) {
                                 console.log("got command return results");
-                                Resolve(commandResults)
+                                Resolve(commandResults);
                             });
 
                         }));
@@ -126,10 +125,10 @@ define(['dojo/_base/declare',
                 if (this._interfaceRemoteCommanderKeys[remoteCommanderKey] &&
                     this._interfaceRemoteCommanderKeys[remoteCommanderKey]._instanceKey === instanceKey) {
                     this._interfaceRemoteCommanderKeys[remoteCommanderKey].processCommand(instanceKey,
-                                                                                    remoteCommanderKey,
-                                                                                    command,
-                                                                                    commandCallback,
-                                                                                    commandArguments);
+                        remoteCommanderKey,
+                        command,
+                        commandCallback,
+                        commandArguments);
                 } else {
                     console.log("could not Route command");
                 }
@@ -139,7 +138,9 @@ define(['dojo/_base/declare',
                 if (this._instanceKey === instanceKey && this._interfaceRemoteCommanderKey === remoteCommanderKey) {
                     if (this._commands[command]) {
                         try {
-                            this._commands[command](...Object.values(commandArguments), commandCallback);
+                                let args =Object.values(commandArguments)
+                                args.push(commandCallback);
+                               this._commands[command].apply(this, args);
                         } catch (error) {
                             commandCallback({
                                 error: "Command Found But Couldn't execute properly",
@@ -157,9 +158,10 @@ define(['dojo/_base/declare',
                 let crypto = require('dojo/node!crypto');
                 do {
                     let id = crypto.randomBytes(20).toString('hex');
-                    if (typeof this._interfaceRemoteCommanderKeys[id] == "undefined")
+                    if (typeof this._interfaceRemoteCommanderKeys[id] == "undefined"){
                         this._interfaceRemoteCommanderKeys[id] = "Waiting for Object";
-                    return id;
+                        return id;
+                    }
                 } while (true);
             },
         });
