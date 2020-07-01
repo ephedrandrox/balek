@@ -12,15 +12,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/conspiron/menu/resources/html/menu.html',
-        'dojo/text!balek-modules/conspiron/menu/resources/css/menu.css'
+        'dojo/text!balek-modules/conspiron/navigator/resources/html/navigator.html',
+        'dojo/text!balek-modules/conspiron/navigator/resources/css/navigator.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dojoReady, _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
-        return declare("moduleConspironMenuInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("moduleConspironNavigatorInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "conspironMenuInterface",
+            baseClass: "conspironNavigatorInterface",
 
             _shiftDown: false,
             _userData: {},

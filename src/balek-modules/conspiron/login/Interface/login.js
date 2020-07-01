@@ -69,7 +69,7 @@ define(['dojo/_base/declare',
                             alert(loginReply.error.error);
                         } else {
                             console.log("requesting menu...");
-                            topic.publish("requestModuleLoad", "conspiron/menu");
+                            topic.publish("requestModuleLoad", "conspiron/navigator");
                             this.destroy();
                         }
                     }));

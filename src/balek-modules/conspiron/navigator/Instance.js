@@ -5,12 +5,12 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, baseInstance) {
-        return declare("moduleConspironMenuInstance", baseInstance, {
+        return declare("moduleConspironNavigatorInstance", baseInstance, {
             _instanceKey: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleConspironMenuInstance starting...");
+                console.log("moduleConspironNavigatorInstance starting...");
             },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
                 if (moduleMessage.instanceKey == this._instanceKey) {

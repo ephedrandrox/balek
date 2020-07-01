@@ -2,11 +2,11 @@ body {
     text-align: center
 }
 
-.conspironMenuInterface * {
+.conspironNavigatorInterface * {
 
 }
 
-.conspironMenuInterface {
+.conspironNavigatorInterface {
     background: rgba(77, 164, 164, 0.84);
     display: inline;
     display: inline-block;
@@ -26,7 +26,7 @@ body {
     outline: none;
 }
 
-.conspironMenuInterfaceMenuButtonImage {
+.conspironNavigatorInterfaceNavigatorButtonImage {
     text-align: center;
     padding-left:40px;
     padding-right: 40px;
