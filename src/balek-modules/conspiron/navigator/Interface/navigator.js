@@ -12,12 +12,20 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+        'balek-modules/Interface',
+        'balek-modules/base/state/synced',
+        'balek-modules/base/command/remote',
+
+
+
         'dojo/text!balek-modules/conspiron/navigator/resources/html/navigator.html',
         'dojo/text!balek-modules/conspiron/navigator/resources/css/navigator.css'
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dojoReady, _WidgetBase, _TemplatedMixin, template, templateCSS) {
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dojoReady, _WidgetBase, _TemplatedMixin,baseInterface,
+              stateSynced,
+              remoteCommander, template, templateCSS) {
 
-        return declare("moduleConspironNavigatorInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("moduleConspironNavigatorInterface", [_WidgetBase, _TemplatedMixin,baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
             templateString: template,
             baseClass: "conspironNavigatorInterface",
@@ -31,6 +39,17 @@ define(['dojo/_base/declare',
                 //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
+
+                dojoReady(lang.hitch(this, function () {
+
+                    if (this._componentKey) {
+                        this.askToConnectInterface();
+                    }
+
+
+                }));
+
+
             },
             loadOrToggleModule: function(moduleID){
                 topic.publish("isModuleLoaded", moduleID, function (moduleIsLoaded) {
@@ -40,6 +59,41 @@ define(['dojo/_base/declare',
                         topic.publish("requestModuleLoad", moduleID);
                     }
                 });
+            },
+
+
+            onInterfaceStateChange: function (name, oldState, newState) {
+                console.log(name, newState);
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommands and link them
+                if (name === "interfaceRemoteCommands") {
+                    this.linkRemoteCommands(newState);
+                    // this._instanceCommands.changeName("ThisNavigatorName").then(function (results) {
+                    //     console.log(results);
+                    // });
+                    // ready to show widget now that we have our
+                    // interface linked and received our remote commands;
+               //     this.introAnimation();
+
+                }
+
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommandKey
+                if (name === "interfaceRemoteCommandKey") {
+                    console.log("Remote COmmander Key!");
+                    this._interfaceRemoteCommanderKey = newState;
+
+                }
+
+
+
+                if (name === "log") {
+                    console.log("adding to log", newState);
+
+                }
+
+
+
             },
             _onFocus: function () {
 

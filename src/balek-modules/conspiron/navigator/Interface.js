@@ -7,30 +7,40 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'balek-modules/conspiron/navigator/Interface/navigator'
     ],
-    function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, navigatorInterface) {
+    function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, navigatorMainWidget) {
 
         return declare("moduleConspironNavigatorInterface", baseInterface, {
             _instanceKey: null,
-            _navigatorInterface: null,
+            _navigatorMainWidget: null,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
+                this.sendInstanceCallbackMessage({
+                    request: "Navigator Component Key",
+                }, lang.hitch(this, function (requestResults) {
+                    console.log("got command return results");
+                    this._navigatorMainWidget = new navigatorMainWidget({
+                        _instanceKey: this._instanceKey,
+                        _componentKey: requestResults.componentKey
+                    });
+                    topic.publish("addToMainContentLayerAlwaysOnTop", this._navigatorMainWidget.domNode);
+                }));
 
-                this._navigatorInterface = new navigatorInterface({_instanceKey: this._instanceKey});
 
-                topic.publish("addToMainContentLayerAlwaysOnTop", this._navigatorInterface.domNode);
+
+
             },
             receiveMessage: function (moduleMessage) {
                 console.log("You shouldn't be seeing this", moduleMessage);
             },
             toggleShowView: function () {
                 let currentStateToggle = {"visible": "hidden", "hidden": "visible"};
-                domStyle.set(this._navigatorInterface.domNode, {"visibility": currentStateToggle[domStyle.get(this._navigatorInterface.domNode, "visibility")]});
+                domStyle.set(this._navigatorMainWidget.domNode, {"visibility": currentStateToggle[domStyle.get(this._navigatorMainWidget.domNode, "visibility")]});
             },
             unload: function () {
-                this._navigatorInterface.unload();
+                this._navigatorMainWidget.unload();
             }
         });
     }

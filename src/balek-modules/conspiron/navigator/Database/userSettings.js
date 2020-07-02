@@ -7,8 +7,8 @@ define(['dojo/_base/declare',
 
 
     ],
-    function (declare, lang, topic, crypto, diaplodeNavigatorDatabaseController) {
-        return declare("moduleConspironNavigatorUserSettingsDatabaseController", [diaplodeNavigatorDatabaseController], {
+    function (declare, lang, topic, crypto, conspironNavigatorUserSettingsDatabaseController) {
+        return declare("moduleConspironNavigatorUserSettingsDatabaseController", [conspironNavigatorUserSettingsDatabaseController], {
             _instanceKey: null,
             _Collection: "NavigatorSettings",
 
