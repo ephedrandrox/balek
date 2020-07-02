@@ -68,9 +68,23 @@ define(['dojo/_base/declare',
                         if (loginReply.error) {
                             alert(loginReply.error.error);
                         } else {
-                            console.log("requesting menu...");
-                            topic.publish("requestModuleLoad", "conspiron/navigator");
-                            this.destroy();
+                            topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
+                                lang.hitch(this, function (loginReply) {
+                                    if(loginReply.error === undefined)
+                                    {
+                                        topic.publish("requestModuleLoad", "conspiron/navigator");
+                                        topic.publish("loadBackground", "flowerOfLife");
+                                        this.destroy();
+                                    }
+                                    else
+                                    {
+                                        alert(loginReply.error);
+                                        //todo Maybe make a reset switch and use it here,
+                                    }
+                                }));
+
+
+
                         }
                     }));
                 });

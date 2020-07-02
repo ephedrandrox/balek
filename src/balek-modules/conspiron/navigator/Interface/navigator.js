@@ -27,12 +27,9 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-
                 //todo should maybe give id and check for these before adding more and more in case body already has style
                 //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
-
-
 
             },
             loadOrToggleModule: function(moduleID){
