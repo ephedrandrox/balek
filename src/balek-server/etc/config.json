@@ -1,6 +1,7 @@
 {
 	"Session Settings": {
-		"Main Module": "session/login",		"Main Module": "digivigil-www/guestbook"
+		"Main Module": "digivigil-www/guestbook",
+		"Main Module": "session/login"
 	},
 	"Network Settings":{
 		"Server Address" : "0.0.0.0",
