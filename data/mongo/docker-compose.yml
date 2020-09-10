@@ -1,7 +1,7 @@
 version: '3'
 services:
   mongodb:
-    image: "balek-mongodb:develop"
+    image: "balek-mongo:develop"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=rootPass

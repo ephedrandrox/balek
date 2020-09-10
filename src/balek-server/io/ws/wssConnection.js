@@ -26,13 +26,23 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             },
             onWebSocketMessage: function (wsMessage) {
                 if (wsMessage.type === 'utf8') {
-                    let dataReceived = JSON.parse(wsMessage.utf8Data);
 
-                    if (dataReceived.balekProtocolMessage != null) {
-                        topic.publish("receiveBalekProtocolMessage", dataReceived.balekProtocolMessage, this);
-                    } else {
-                        console.log("####Exception: Do not recognize message received from client");
+                    try{
+                        let dataReceived = JSON.parse(wsMessage.utf8Data);
+
+                        if (dataReceived.balekProtocolMessage != null) {
+                            topic.publish("receiveBalekProtocolMessage", dataReceived.balekProtocolMessage, this);
+                        } else {
+                            console.log("####Exception: Do not recognize message received from client");
+                        }
                     }
+                    catch(error)
+                    {
+                        console.log("Error: " + error);
+                        console.log("From Message: " + wsMessage.utf8Data);
+
+                    }
+
                 } else if (wsMessage.type === 'binary') {
                     console.log('Received Binary Message of ' + wsMessage.binaryData.length + ' bytes');
                 }

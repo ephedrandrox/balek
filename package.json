@@ -2,17 +2,17 @@
   "scripts": {
     "start": "node loadServer.js",
     "build": "./lib/dojo-release-src/util/buildscripts/build.sh --profile ./balek.profile.js --language_in=ECMASCRIPT6",
-    "buildDevelopementDatabases": "docker build -f data/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f data/mongo/Dockerfile .  -t balek-mongo:develop ",
-    "startDevelopementDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
-    "stopDevelopementDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
+    "buildDevelopmentDatabases": "docker build -f data/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f data/mongo/Dockerfile .  -t balek-mongo:develop ",
+    "startDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
+    "stopDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
   },
   "dependencies": {
-    "mongodb": "^3.5.9",
+    "mongodb": "^3.6.1",
     "mysql2": "^1.7.0",
-    "sanitize-html": "^1.27.0",
-    "websocket": "^1.0.28"
+    "sanitize-html": "^1.27.4",
+    "websocket": "^1.0.32"
   },
   "name": "balek",
   "description": "balek",
@@ -25,6 +25,6 @@
   "author": "Blake Glanville",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "stylus": "^0.54.7"
+    "stylus": "^0.54.8"
   }
 }
