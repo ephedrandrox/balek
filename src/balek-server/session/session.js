@@ -127,17 +127,17 @@ define([ 	'dojo/_base/declare',
                             }
             },
             getInstances: function(){
-                let instancesToRetrun = {};
+                let instancesToReturn = {};
 
                     for(const instanceKey in this._instances)
                     {
-                        instancesToRetrun[instanceKey] = {instanceKey:instanceKey,
+                        instancesToReturn[instanceKey] = {instanceKey:instanceKey,
                             moduleName: this._instances[instanceKey]._moduleName,
                             displayName: this._instances[instanceKey]._displayName}
 
                     }
 
-                    return instancesToRetrun;
+                    return instancesToReturn;
             },
             sendWorkspacesUpdate: function(updateType, workspacesData){
 
@@ -151,7 +151,24 @@ define([ 	'dojo/_base/declare',
                     }
                 });
             },
+            unload: function(){
 
+                //unload all instances
+                for(const instanceKey in this._instances) {
+
+                    this.unloadModuleInstance(instanceKey).then(function(value){
+
+
+                        console.log(value);
+                }).catch(function(error){
+
+
+                        console.log(error);
+                    });
+
+                }
+
+            }
 
         });
     });

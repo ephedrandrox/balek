@@ -45,13 +45,24 @@ define(['dojo/_base/declare',
             receiveSessionMessage: function (sessionMessage, messageReplyCallback) {
 
                 if (sessionMessage.sessionRequest && sessionMessage.sessionKey) {
+
+                if (sessionMessage.sessionRequest && sessionMessage.sessionRequest.sessionUnloadRequest && sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey) {
+                    console.log(sessionMessage.sessionRequest.sessionUnloadRequest);
+                    this.unloadSession(sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey);
+                    messageReplyCallback({success: "session Unloaded on server!"});
+
+                    }else {
                     this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
+
+                }
+
                 } else {
                     console.log("unknown session message");
                 }
 
             },
             receiveSessionManagerMessage: function (sessionManagerMessage) {
+                debugger;
 
                 if (sessionManagerMessage.sessionKey && sessionManagerMessage.changeSessionKey) {
                     if (this._sessions[sessionManagerMessage.sessionKey]
@@ -60,7 +71,7 @@ define(['dojo/_base/declare',
 
                     }
                 } else if (sessionManagerMessage.sessionKey && sessionManagerMessage.requestAvailableSessions) {
-
+//todo remove this and set up retreievable state object
                     if (this._sessions[sessionManagerMessage.sessionKey] && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
                         let sessionsToReturn = {};
                         let allSessions = this._sessions;
@@ -88,7 +99,9 @@ define(['dojo/_base/declare',
                             }
                         });
                     }
-                } else {
+                }
+               else
+                    {
                     console.log("unknown session Manager message");
                 }
 
@@ -168,6 +181,13 @@ define(['dojo/_base/declare',
                 }
 
             },
+            unloadSession: function(sessionKey){
+
+                //todo make unload return a promise and use it here
+                this._sessions[sessionKey].unload();
+                delete  this._sessions[sessionKey];
+
+            },
             changeSessionConnection: function (wssConnection, changeSessionKey) {
                 //if sessions have same user allow change
                 if (wssConnection._sessionKey && this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()]) {
@@ -231,7 +251,6 @@ define(['dojo/_base/declare',
                 this._sessions[sessionKey]._sessionStatus = sessionStatus;
             },
             getSessionStatus: function (sessionKey, statusReturn) {
-
                 statusReturn(this._sessions[sessionKey]._sessionStatus);
             },
             getSessionWSSConnection: function (sessionKey, statusReturn) {

@@ -87,6 +87,21 @@ define(['dojo/_base/declare',
                             topic.publish("requestSessionChange", sessionKey);
                         }));
                         domConstruct.place(newSessionDiv, this._availableSessionsNode);
+
+
+                        let newSessionUnloadDiv = domConstruct.create("div");
+                        newSessionUnloadDiv.innerHTML = "Close";
+
+                        on(newSessionUnloadDiv, 'click', lang.hitch(sessionKey, function (evt) {
+                            evt.stopPropagation();
+                            topic.publish("requestSessionUnload", sessionKey, function(value){
+                                console.log(value);
+                                //todo do something with this info. Should make session state, updating state changes interface
+                            });
+                        }));
+                        domConstruct.place(newSessionUnloadDiv, newSessionDiv);
+
+
                     }
 
                 }
