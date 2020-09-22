@@ -20,7 +20,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             sendDataToClient: function (dataToSend) {
                 let thestring = JSON.stringify(dataToSend);
 
-                if (this._wssConnection && this._wssConnection.readyState === this._wssConnection.OPEN)
+                if (this._wssConnection && this._wssConnection.isConnected())
                     this._wssConnection.sendUTF(thestring);
 
             },
@@ -57,6 +57,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             onWebsocketError: function (reasonCode, description) {
                 console.log((new Date()) + ' Peer ' + this._wssConnection.remoteAddress + ' threw error.');
                 console.log(reasonCode, description);
+            },
+            close: function(reasonForClose, timeout){
+                topic.publish("sendBalekProtocolMessage", this, {systemMessage: {message: "Connection closing in " + Math.floor(timeout/1000) + " seconds" , reasonForClose: reasonForClose}});
+
+                setTimeout( lang.hitch(this, function(){
+                        this._wssConnection.close();
+                }), timeout);
+
+            },
+            isConnected: function(){
+                if(this._wssConnection.state === "open")
+                {
+                    debugger;
+                    return true;
+                }else
+                {
+                    debugger;
+                    return false;
+                }
             }
         });
     });

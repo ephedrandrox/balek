@@ -48,13 +48,22 @@ define(['dojo/_base/declare',
 
                 if (sessionMessage.sessionRequest && sessionMessage.sessionRequest.sessionUnloadRequest && sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey) {
                     console.log(sessionMessage.sessionRequest.sessionUnloadRequest);
-                    this.unloadSession(sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey);
-                    messageReplyCallback({success: "session Unloaded on server!"});
+                    this.unloadSession(sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey).then(function(value){
+                        messageReplyCallback({success: "session Unloaded on server!",
+                                                successMessage: value});
+                    }).catch(function(error){
+                        messageReplyCallback({error: "session could not be unloaded!",
+                        errorMessage: error});
+                    });
 
-                    }else {
-                    this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
+                    }else if(this._sessions[sessionMessage.sessionKey]){
+                        this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
+                    }else
+                    {
+                        console.log("Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey);
+                        messageReplyCallback({success: "Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey});
 
-                }
+                    }
 
                 } else {
                     console.log("unknown session message");
@@ -71,7 +80,7 @@ define(['dojo/_base/declare',
 
                     }
                 } else if (sessionManagerMessage.sessionKey && sessionManagerMessage.requestAvailableSessions) {
-//todo remove this and set up retreievable state object
+                //todo remove this and set up retreievable state object
                     if (this._sessions[sessionManagerMessage.sessionKey] && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
                         let sessionsToReturn = {};
                         let allSessions = this._sessions;
@@ -183,9 +192,76 @@ define(['dojo/_base/declare',
             },
             unloadSession: function(sessionKey){
 
-                //todo make unload return a promise and use it here
-                this._sessions[sessionKey].unload();
-                delete  this._sessions[sessionKey];
+                //todo put this in a try/catch and use reject
+                //Reject currently isn't in the logic
+
+                //todo check that the session that is being unloaded belongs to the user that is asking for it to be unloaded
+                //And that the session being switched to also is allowed
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                  try{
+                      let sessionToUnload = this._sessions[sessionKey];
+                      let resolveMessage = "normal";
+                      let unloadAndResolve = lang.hitch(this, function(){
+                          //todo, this should be a promise being returned from unload
+                          sessionToUnload.unload();
+                          delete  this._sessions[sessionKey];
+                          Resolve(resolveMessage);
+                      });
+
+                      if(this._sessions[sessionKey])
+                      {
+
+                          //if the session being unloaded is connected we need to do something
+                          if(sessionToUnload._wssConnection != null && sessionToUnload._wssConnection._wssConnection != null &&
+                              sessionToUnload._wssConnection.isConnected())
+                          {
+                              let foundAnotherSession = false;
+                              this.getSessionsForUserKey(sessionToUnload._userKey, lang.hitch(this, function(otherUserSessions){
+                                  //if there are sessions, pick first one and make sure it isn't the one we are unloading
+                                  otherUserSessions.forEach(lang.hitch(this, function(otherSession){
+                                      debugger;
+                                      if( foundAnotherSession === false && sessionToUnload._sessionKey !== otherSession._sessionKey &&
+                                          otherSession._wssConnection &&  !otherSession._wssConnection.isConnected()){
+                                          debugger;
+                                          this.changeSessionConnection(sessionToUnload._wssConnection, otherSession._sessionKey);
+                                          resolveMessage = "Session Removed, switched to session:" + otherSession.sessionKey;
+                                          foundAnotherSession = true;
+                                      }
+                                  }));
+                                  //if there are no sessions just disconnect
+                                  if(foundAnotherSession === false)
+                                  {
+                                      resolveMessage = "Active Session being Removed, closing connection:" + sessionToUnload._sessionKey;
+                                      debugger;
+                                      //resolving here because user will be disconnected
+                                      unloadAndResolve();
+                                      debugger;
+                                      sessionToUnload._wssConnection.close(resolveMessage, 3000);
+
+                                  }else
+                                  {
+                                      //time to resolve removing after switching
+                                      unloadAndResolve();
+                                  }
+
+                              }));
+                          }else
+                          {
+                              unloadAndResolve();
+                          }
+                      }else
+                      {
+                          Reject("No session with that key was found:"+sessionKey);
+                      }
+
+                  }
+                  catch(error)
+                  {
+                    Reject(error);
+                  }
+                }));
+
+
 
             },
             changeSessionConnection: function (wssConnection, changeSessionKey) {
@@ -201,7 +277,7 @@ define(['dojo/_base/declare',
                         //also check that the session to switch too has unconnected status
                         console.log("Switching instances");
                         if(newSession._wssConnection != null &&
-                            newSession._wssConnection.readyState === newSession._wssConnection.OPEN){
+                            newSession._wssConnection.isConnected()){
                             console.log("Session Already has Connection, Disconnecting");
                             newSession._wssConnection.sessionKey = null;
                             newSession._wssConnection._wssConnection.close();
@@ -243,6 +319,17 @@ define(['dojo/_base/declare',
                             sessionKey: session,
                             sessionStatus: this._sessions[session]._sessionStatus
                         });
+                    }
+                }
+                sessionReturn(sessionsToReturn);
+            },
+            getSessionsForUserKey: function (userKey, sessionReturn) {
+
+                let sessionsToReturn = [];
+                for (var session in this._sessions) {
+
+                    if (this._sessions[session]._userKey == userKey) {
+                        sessionsToReturn.push(this._sessions[session]);
                     }
                 }
                 sessionReturn(sessionsToReturn);

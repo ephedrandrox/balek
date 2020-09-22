@@ -1,13 +1,17 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        "dojo/Stateful",
+
         'balek/session/session',
     'balek-server/session/workspaceManager'],
-    function (declare, lang, topic, balekSessionManagerSession, balekWorkspaceManager ) {
+    function (declare, lang, topic, Stateful, balekSessionManagerSession, balekWorkspaceManager ) {
 
         return declare("balekServerSessionManagerSession", balekSessionManagerSession, {
 
             _sessionKey: null,
+
+            _sessionState: null,
 
             _permissionGroups: null,
             _username: null,
@@ -22,6 +26,16 @@ define([ 	'dojo/_base/declare',
                 this._instances = {};
                 console.log("Initializing Balek Session Manager session for server...");
 
+                let sessionState = declare([Stateful], {
+                    userState: null,
+                    sessionKey: this._sessionKey
+                });
+                debugger;
+                this.sessionState = new sessionState({
+
+                    //get the user state from the userManager once  a user is assigned to a session
+
+                });
 
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "Session Status Changed", sessionStatus:  this._sessionStatus}});
 
@@ -33,6 +47,8 @@ define([ 	'dojo/_base/declare',
 
             },
             updateSessionStatus:function(args){
+
+                //check args, grab user state, update session state
                 declare.safeMixin(this, args);
 
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "Session Status Changed", sessionStatus:  this._sessionStatus, username: this._username, permissionGroups: this._permissionGroups}});
@@ -121,7 +137,8 @@ define([ 	'dojo/_base/declare',
             },
             getUserInfo: function()
             {
-                //todo should use this in session manager to check and cache results from db
+                //todo use the user state in the session state
+
                 return {    username: this._username,
                             userKey: this._userKey
                             }
@@ -158,7 +175,7 @@ define([ 	'dojo/_base/declare',
 
                     this.unloadModuleInstance(instanceKey).then(function(value){
 
-
+                    //todo make sure that the connection is removed
                         console.log(value);
                 }).catch(function(error){
 

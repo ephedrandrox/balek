@@ -42,6 +42,8 @@ define(['dojo/_base/declare',
                     topic.publish("receiveSessionManagerMessage", balekProtocolMessage.sessionManagerMessage);
                 } else if (balekProtocolMessage.userManagerMessage) {
                     topic.publish("receiveUserManagerMessage", balekProtocolMessage.userManagerMessage);
+                }else if(balekProtocolMessage.systemMessage){
+                    console.log("Balek System Message", balekProtocolMessage);
                 } else if(!balekProtocolMessage.messageReply){
                     console.log("Unknown balekProtocolMessage", balekProtocolMessage);
                 }
