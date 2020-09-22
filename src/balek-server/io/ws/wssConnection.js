@@ -20,7 +20,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             sendDataToClient: function (dataToSend) {
                 let thestring = JSON.stringify(dataToSend);
 
-                if (this._wssConnection && this._wssConnection.isConnected())
+                if (this._wssConnection && this.isConnected())
                     this._wssConnection.sendUTF(thestring);
 
             },
