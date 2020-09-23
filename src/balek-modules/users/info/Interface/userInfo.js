@@ -29,7 +29,7 @@ define(['dojo/_base/declare',
 
 
             _availableSessionsNode: null,
-            _availableSessionsListNodes: {},
+
 
             _userData: {
                 icon: null,
@@ -52,7 +52,7 @@ define(['dojo/_base/declare',
             },
             updateUserData: function () {
                 let userData = this._userState.get("userData");
-                let sessionUser = this._sessionState.get("_username");
+                let sessionUser = this._sessionState.get("userName");
                 //this is silly, should index by key
                 //todo make userDataByNameStore
                 for (const user in userData) {
@@ -64,7 +64,10 @@ define(['dojo/_base/declare',
                 }
 
                 this._userNameNode.innerHTML = this._userData.name;
-                this._userImageNode.src = this._userData.icon;
+                if(this._userData.icon !=null)
+                {
+                    this._userImageNode.src = this._userData.icon;
+                }
             },
             availableSessionsStateChange: function (name, oldState, newState) {
                 if (name === "availableSessions") {
@@ -72,13 +75,13 @@ define(['dojo/_base/declare',
                 }
             },
             updateSessionsView: function () {
-                let availableSessions = this._availableSessionsState.get("availableSessions");
+                let availableSessions = this._sessionState.get("availableSessions");
+                let replacementDiv=domConstruct.create("div");
 
                 for (const sessionKey in availableSessions) {
-                    if (!this._availableSessionsListNodes[sessionKey]) {
+
                         let newSessionDiv = domConstruct.create("div");
 
-                        this._availableSessionsListNodes[sessionKey] = newSessionDiv;
 
                         domClass.add(newSessionDiv, "userInfoAvailableSessionDiv");
                         newSessionDiv.innerHTML = sessionKey;
@@ -86,7 +89,7 @@ define(['dojo/_base/declare',
                             evt.stopPropagation();
                             topic.publish("requestSessionChange", sessionKey);
                         }));
-                        domConstruct.place(newSessionDiv, this._availableSessionsNode);
+                        domConstruct.place(newSessionDiv, replacementDiv);
 
 
                         let newSessionUnloadDiv = domConstruct.create("div");
@@ -102,35 +105,39 @@ define(['dojo/_base/declare',
                         domConstruct.place(newSessionUnloadDiv, newSessionDiv);
 
 
-                    }
+
 
                 }
+                domConstruct.empty(this._availableSessionsNode);
+                domConstruct.place(replacementDiv, this._availableSessionsNode);
             },
 
             postCreate() {
 
                 topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
                     this._sessionState = sessionState;
-
+                    //just add available states to session state and watch that!
                     topic.publish("getUserState", lang.hitch(this, function (userState) {
                         this._userState = userState;
                         this.updateUserData();
                         this._userStateWatchHandle = this._userState.watch("userData", lang.hitch(this, this.userStateChange))
                     }));
-
-                }));
-
-                topic.publish("getAvailableSessionsState", lang.hitch(this, function (availableSessionsState) {
-                    this._availableSessionsState = availableSessionsState;
                     this.updateSessionsView();
-                    this._availableSessionsStateeWatchHandle = this._availableSessionsState.watch("availableSessions", lang.hitch(this, this.availableSessionsStateChange))
+
+                    this._availableSessionsStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.availableSessionsStateChange))
+
                 }));
+
+              /*  topic.publish("getAvailableSessionsState", lang.hitch(this, function (availableSessionsState) {
+                    this._availableSessionsState = availableSessionsState;
+                    this._availableSessionsStateWatchHandle = this._availableSessionsState.watch("availableSessions", lang.hitch(this, this.availableSessionsStateChange))
+                }));*/
             },
             unload: function () {
                 this._userStateWatchHandle.unwatch();
                 this._userStateWatchHandle.remove();
-                this._availableSessionsStateeWatchHandle.unwatch();
-                this._availableSessionsStateeWatchHandle.remove();
+                this._availableSessionsStateWatchHandle.unwatch();
+                this._availableSessionsStateWatchHandle.remove();
             }
         });
     });

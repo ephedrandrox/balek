@@ -1,21 +1,20 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        "dojo/Stateful",
 
         'balek/session/session',
     'balek-server/session/workspaceManager'],
-    function (declare, lang, topic, Stateful, balekSessionManagerSession, balekWorkspaceManager ) {
+    function (declare, lang, topic, balekSessionManagerSession, balekWorkspaceManager ) {
 
         return declare("balekServerSessionManagerSession", balekSessionManagerSession, {
 
             _sessionKey: null,
 
-            _sessionState: null,
+            _sessionStateWatchHandle: null,
+            _availableSessionStates: {},
+            _availableSessionStateWatchHandles: {},
 
-            _permissionGroups: null,
-            _username: null,
-            _userKey: null,
+
             _workspaceManager: null,
             _instances: null,
 
@@ -26,33 +25,92 @@ define([ 	'dojo/_base/declare',
                 this._instances = {};
                 console.log("Initializing Balek Session Manager session for server...");
 
-                let sessionState = declare([Stateful], {
-                    userState: null,
-                    sessionKey: this._sessionKey
-                });
-                debugger;
-                this.sessionState = new sessionState({
 
-                    //get the user state from the userManager once  a user is assigned to a session
 
-                });
-
-                topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "Session Status Changed", sessionStatus:  this._sessionStatus}});
+                topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "New Session"}});
 
 
                 this._workspaceManager = new  balekWorkspaceManager();
 
 
 
+                this._availableSessionStates = {};
+                this._availableSessionStateWatchHandles = {};
+
+                this._sessionStateWatchHandle = this._syncedState.watch(lang.hitch(this, this.onStateChange));
+
 
             },
             updateSessionStatus:function(args){
-
+                //this is what we call to update session statue
+                //Then we update the state from here
                 //check args, grab user state, update session state
-                declare.safeMixin(this, args);
+                //declare.safeMixin(this, args);
+                //debugger;
+                for(const name in args)
+                {
+                    this._syncedState.set(name, args[name]);
+                }
 
-                topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "Session Status Changed", sessionStatus:  this._sessionStatus, username: this._username, permissionGroups: this._permissionGroups}});
+            },
+            onStateChange: function(name, oldState,newState)
+            {
+                if(name === "userKey"){
+                    topic.publish("getSessionsForUserKey", newState, lang.hitch(this, function(userSessions){
+                        console.log("User Sessions");
+                        let availableSessions = {};
+                        userSessions.forEach(lang.hitch(this, function(userSession){
+                            console.log(userSession._sessionKey);
+                            if(userSession._sessionKey!= this._sessionKey)
+                            {
+                                userSession.addAvailableSession(this);
+                                availableSessions[userSession._sessionKey] = userSession.getStatus();
+                                this.watchAvailableSessionState(userSession);
+                            }
+                        }));
+                        this.getState().set("availableSessions", availableSessions);
+                    }));
 
+                }
+            },
+            addAvailableSession: function(availableSession)
+            {
+                let availableSessions = this.getState().get("availableSessions");
+                availableSessions[availableSession._sessionKey] = availableSession.getStatus();
+                this.watchAvailableSessionState(availableSession);
+                this.getState().set("availableSessions", availableSessions);
+
+            },
+            onAvailableStateChange: function(availableSessionKey, name, oldState, newState){
+                //hitched this and available session Key in watch call
+                console.log(name, newState);
+                debugger;
+
+                if(name === "unloaded" || name === "sessionStatus")
+                {
+                    let availableSessions = this.getState().get("availableSessions");
+                    if( name === "unloaded")
+                    {
+                        console.log("unloaded");
+                        delete availableSessions[availableSessionKey]
+
+                    }else if(name === "sessionStatus")
+                    {
+                        console.log("sessionStatus");
+                        availableSessions[availableSessionKey] = newState;
+
+                    }
+                    this.getState().set("availableSessions", availableSessions);
+                }
+
+
+            },
+            watchAvailableSessionState: function(availableSession){
+                if(!this._availableSessionStates[availableSession._sessionKey])
+                {
+                    this._availableSessionStates[availableSession._sessionKey] = availableSession.getState();
+                    this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey].watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
+                }
             },
             sessionRequest: function(request, messageReplyCallback)
             {
@@ -62,6 +120,9 @@ define([ 	'dojo/_base/declare',
                 }else if(request.interfaceLoadRequest && request.interfaceLoadRequest.requestType === "all"){
 
                     messageReplyCallback( this.getInterfaceLoadObject());
+                }else if(request.interfaceConnectSyncedStateRequest){
+                    this.setNewInterfaceCallback(messageReplyCallback);
+
                 }else if(request.moduleUnloadRequest && request.moduleUnloadRequest.sessionModuleInstanceKey !== undefined){
 
                     this.unloadModuleInstance(request.moduleUnloadRequest.sessionModuleInstanceKey).then(unloadResult =>{
@@ -73,7 +134,7 @@ define([ 	'dojo/_base/declare',
                 }
                 else
                 {
-
+                    debugger;
                     console.log("session request unkown.");
                 }
 
@@ -135,14 +196,6 @@ define([ 	'dojo/_base/declare',
                     }
                 };
             },
-            getUserInfo: function()
-            {
-                //todo use the user state in the session state
-
-                return {    username: this._username,
-                            userKey: this._userKey
-                            }
-            },
             getInstances: function(){
                 let instancesToReturn = {};
 
@@ -151,7 +204,6 @@ define([ 	'dojo/_base/declare',
                         instancesToReturn[instanceKey] = {instanceKey:instanceKey,
                             moduleName: this._instances[instanceKey]._moduleName,
                             displayName: this._instances[instanceKey]._displayName}
-
                     }
 
                     return instancesToReturn;
@@ -169,12 +221,11 @@ define([ 	'dojo/_base/declare',
                 });
             },
             unload: function(){
+                debugger;
 
                 //unload all instances
                 for(const instanceKey in this._instances) {
-
                     this.unloadModuleInstance(instanceKey).then(function(value){
-
                     //todo make sure that the connection is removed
                         console.log(value);
                 }).catch(function(error){
@@ -184,6 +235,19 @@ define([ 	'dojo/_base/declare',
                     });
 
                 }
+debugger;
+                for( const watchHandle in this._availableSessionStateWatchHandles){
+                    debugger;
+
+                    this._availableSessionStateWatchHandles[watchHandle].unwatch();
+                    this._availableSessionStateWatchHandles[watchHandle].remove();
+                }
+
+
+                this._sessionStateWatchHandle.unwatch();
+                this._sessionStateWatchHandle.remove();
+                //todo delete the states
+                this.inherited(arguments);
 
             }
 

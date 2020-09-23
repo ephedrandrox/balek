@@ -34,6 +34,8 @@ define(['dojo/_base/declare',
                 this._getSessionStateTopicHandle = topic.subscribe("getSessionState", lang.hitch(this, this.getSessionState));
 
 
+
+
                 topic.publish("sendBalekProtocolMessageWithReplyCallback", {
                     sessionMessage: {
                         sessionKey: this._sessionKey,
@@ -45,6 +47,23 @@ define(['dojo/_base/declare',
                     }
                 }, lang.hitch(this, this.onInterfaceLoadRequestReply));
 
+
+                topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                    sessionMessage: {
+                        sessionKey: this._sessionKey,
+                        sessionRequest: {
+                            interfaceConnectSyncedStateRequest: {
+
+                            }
+                        }
+                    }
+                }, lang.hitch(this, this.onSyncedStateChangeCallback));
+
+
+
+            },
+            onSyncedStateChange: function(name, oldState, newState){
+               console.log(name, newState);
             },
             onInterfaceLoadRequestReply(interfaceLoadRequest) {
                 let sessionMessage = interfaceLoadRequest.sessionMessage;
@@ -124,11 +143,13 @@ define(['dojo/_base/declare',
                 }
             },
             getSessionState: function (sessionStateReturn) {
-                sessionStateReturn(this._sessionState);
+                sessionStateReturn(this._syncedState);
             },
             unload: function () {
                 this._getSessionStateTopicHandle.remove();
                 this._workspaceManager.unload();
+                this.inherited(arguments);
+
             }
         });
     });

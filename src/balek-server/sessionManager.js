@@ -32,6 +32,8 @@ define(['dojo/_base/declare',
                 topic.subscribe("getSessionWSSConnection", lang.hitch(this, this.getSessionWSSConnection));
                 topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
                 topic.subscribe("getSessionsForUser", lang.hitch(this, this.getSessionsForUser));
+                topic.subscribe("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey));
+
 
                 topic.subscribe("setSessionDisconnected", lang.hitch(this, this.setSessionDisconnected));
 
@@ -44,10 +46,12 @@ define(['dojo/_base/declare',
             },
             receiveSessionMessage: function (sessionMessage, messageReplyCallback) {
 
+                //todo replace this with a command manager
+
                 if (sessionMessage.sessionRequest && sessionMessage.sessionKey) {
 
                 if (sessionMessage.sessionRequest && sessionMessage.sessionRequest.sessionUnloadRequest && sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey) {
-                    console.log(sessionMessage.sessionRequest.sessionUnloadRequest);
+                   // console.log(sessionMessage.sessionRequest.sessionUnloadRequest);
                     this.unloadSession(sessionMessage.sessionRequest.sessionUnloadRequest.sessionKey).then(function(value){
                         messageReplyCallback({success: "session Unloaded on server!",
                                                 successMessage: value});
@@ -71,8 +75,6 @@ define(['dojo/_base/declare',
 
             },
             receiveSessionManagerMessage: function (sessionManagerMessage) {
-                debugger;
-
                 if (sessionManagerMessage.sessionKey && sessionManagerMessage.changeSessionKey) {
                     if (this._sessions[sessionManagerMessage.sessionKey]
                         && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
@@ -167,10 +169,10 @@ define(['dojo/_base/declare',
                                     //updateSession
                                     let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(user.permission_groups)));
                                     this._sessions[wssConnection._sessionKey].updateSessionStatus({
-                                        _sessionStatus: 1,
-                                        _username: credentialData.username,
-                                        _userKey: user.userKey,
-                                        _permissionGroups: permissionGroups
+                                        sessionStatus: 1,
+                                        userName: credentialData.username,
+                                        userKey: user.userKey,
+                                        permissionGroups: permissionGroups
                                     });
                                     matched = true;
                                     sessionUpdateReply({messageData: {message: "worked"}});
@@ -216,13 +218,12 @@ define(['dojo/_base/declare',
                               sessionToUnload._wssConnection.isConnected())
                           {
                               let foundAnotherSession = false;
-                              this.getSessionsForUserKey(sessionToUnload._userKey, lang.hitch(this, function(otherUserSessions){
+                              this.getSessionsForUserKey(sessionToUnload.getUserKey(), lang.hitch(this, function(otherUserSessions){
                                   //if there are sessions, pick first one and make sure it isn't the one we are unloading
+
                                   otherUserSessions.forEach(lang.hitch(this, function(otherSession){
-                                      debugger;
                                       if( foundAnotherSession === false && sessionToUnload._sessionKey !== otherSession._sessionKey &&
-                                          otherSession._wssConnection &&  !otherSession._wssConnection.isConnected()){
-                                          debugger;
+                                          otherSession._wssConnection === null ||  !otherSession._wssConnection.isConnected()){
                                           this.changeSessionConnection(sessionToUnload._wssConnection, otherSession._sessionKey);
                                           resolveMessage = "Session Removed, switched to session:" + otherSession.sessionKey;
                                           foundAnotherSession = true;
@@ -232,10 +233,8 @@ define(['dojo/_base/declare',
                                   if(foundAnotherSession === false)
                                   {
                                       resolveMessage = "Active Session being Removed, closing connection:" + sessionToUnload._sessionKey;
-                                      debugger;
                                       //resolving here because user will be disconnected
                                       unloadAndResolve();
-                                      debugger;
                                       sessionToUnload._wssConnection.close(resolveMessage, 3000);
 
                                   }else
@@ -273,14 +272,14 @@ define(['dojo/_base/declare',
                     let newSession = this._sessions[newSessionKey];
                     if (oldSessionKey === newSessionKey) {
                         console.log("can not change session because both keys are the same");
-                    } else if (oldSession.userKey === newSession.userKey) {
+                    } else if (oldSession.getUserKey() === newSession.getUserKey()) {
                         //also check that the session to switch too has unconnected status
                         console.log("Switching instances");
                         if(newSession._wssConnection != null &&
                             newSession._wssConnection.isConnected()){
                             console.log("Session Already has Connection, Disconnecting");
-                            newSession._wssConnection.sessionKey = null;
-                            newSession._wssConnection._wssConnection.close();
+                            newSession._wssConnection._sessionKey = null;
+                            newSession._wssConnection.close();
                         }
                         oldSession._wssConnection = null;
                         wssConnection._sessionKey = newSessionKey;
@@ -301,9 +300,9 @@ define(['dojo/_base/declare',
 
             },
             setSessionDisconnected: function (sessionKey) {
-                if(this._sessions[sessionKey])
+                if(this._sessions[sessionKey] && this._sessions[sessionKey].updateSessionStatus)
                 {
-                    this._sessions[sessionKey].updateSessionStatus({_sessionStatus: 2});
+                    this._sessions[sessionKey].updateSessionStatus({sessionStatus: 2});
                 }
             },
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
@@ -314,10 +313,10 @@ define(['dojo/_base/declare',
                 let sessionsToReturn = [];
                 for (var session in this._sessions) {
 
-                    if (this._sessions[session]._username == username) {
+                    if (this._sessions[session].getUserName() == username) {
                         sessionsToReturn.push({
                             sessionKey: session,
-                            sessionStatus: this._sessions[session]._sessionStatus
+                            sessionStatus: this._sessions[session].getStatus()
                         });
                     }
                 }
@@ -328,17 +327,17 @@ define(['dojo/_base/declare',
                 let sessionsToReturn = [];
                 for (var session in this._sessions) {
 
-                    if (this._sessions[session]._userKey == userKey) {
+                    if (this._sessions[session].getUserKey() == userKey) {
                         sessionsToReturn.push(this._sessions[session]);
                     }
                 }
                 sessionReturn(sessionsToReturn);
             },
             setSessionStatus: function (sessionKey, sessionStatus) {
-                this._sessions[sessionKey]._sessionStatus = sessionStatus;
+                this._sessions[sessionKey].updateSessionStatus({sessionStatus: sessionStatus});
             },
             getSessionStatus: function (sessionKey, statusReturn) {
-                statusReturn(this._sessions[sessionKey]._sessionStatus);
+                statusReturn(this._sessions[sessionKey].getStatus());
             },
             getSessionWSSConnection: function (sessionKey, statusReturn) {
                 if (this._sessions[sessionKey] && this._sessions[sessionKey]._wssConnection !== null) {
@@ -348,19 +347,19 @@ define(['dojo/_base/declare',
                 }
             },
             getSessionUserGroups: function (sessionKey, returnUserGroups) {
-                returnUserGroups(this._sessions[sessionKey]._permissionGroups);
+                returnUserGroups(this._sessions[sessionKey].getPermissionGroups());
             },
             getSessionUserInfo: function (sessionKey, returnUserInfo) {
-                topic.publish("getUserFromDatabase", this._sessions[sessionKey]._username, lang.hitch(this, function (userInfo) {
+                topic.publish("getUserFromDatabase", this._sessions[sessionKey].getUserName, lang.hitch(this, function (userInfo) {
                     returnUserInfo(userInfo)
                 }));
             },
             getSessionUsername: function (sessionKey, usernameReturn) {
                 //todo call function in session object
-                usernameReturn(this._sessions[sessionKey]._username);
+                usernameReturn(this._sessions[sessionKey].getUsername());
             },
             getSessionUserKey: function(sessionKey, userKeyReturn){
-                userKeyReturn(this._sessions[sessionKey]._userKey);
+                userKeyReturn(this._sessions[sessionKey].getUserKey());
             },
             getUniqueSessionKey: function () {
                 do {

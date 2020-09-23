@@ -18,6 +18,8 @@ overwrite onInterfaceStateChange in the interface to check state on change
 
 */
 
+//toDo refactor this, may be able to remove some code that isn't actually used
+//todo create a variable that is set by either the Interface or Instance and check that in appropriate funtions
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/Stateful',

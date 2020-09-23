@@ -33,14 +33,12 @@ define(['dojo/_base/declare',
                 this._dbController = new userDbController();
 
                 this._dbController.getUsersFromDatabase().then(lang.hitch(this, function (results) {
-                    debugger;
                     results.forEach ( lang.hitch(this, function(user){
                         this._userStates[user.userKey] = new this._UserState({
                             userName: user.name,
                             userKey: user.userKey
                         });
                     }));
-                    debugger;
                 })).catch(function (error) {
                     debugger;
                     console.log("Could not load users from database!!!!!!!!!!" , error);

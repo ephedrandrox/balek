@@ -69,11 +69,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
             isConnected: function(){
                 if(this._wssConnection.state === "open")
                 {
-                    debugger;
                     return true;
                 }else
                 {
-                    debugger;
                     return false;
                 }
             }

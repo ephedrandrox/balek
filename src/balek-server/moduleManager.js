@@ -140,7 +140,6 @@ define(['dojo/_base/declare',
                     let allowedSessions = this._modules[moduleName].allowedSessions();
 
                     topic.publish("getSessionStatus", wssConnection._sessionKey, lang.hitch(this, function (sessionStatus) {
-
                         if (allowedSessions == null || (Array.isArray(allowedSessions) && allowedSessions.includes(sessionStatus))) {
 
                             topic.publish("getSessionUserGroups", wssConnection._sessionKey, lang.hitch(this, function (sessionUserGroups) {
