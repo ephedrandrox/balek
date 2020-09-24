@@ -16,7 +16,6 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                this.sendLoginCredentialsSubscribeHandle = topic.subscribe("sendLoginCredentials", lang.hitch(this, this.sendLoginCredentials));
                 this._loginInterface = new loginInterface({_instanceKey: this._instanceKey});
                 topic.publish("displayAsDialog", this._loginInterface);
 
@@ -24,18 +23,7 @@ define(['dojo/_base/declare',
             receiveMessage: function (moduleMessage) {
                 console.log("You shouldn't be seeing this", moduleMessage);
             },
-            sendLoginCredentials: function (credentialData, messageCallback) {
-                topic.publish("sendBalekProtocolMessageWithReplyCallback", {
-                    moduleMessage: {
-                        instanceKey: this._instanceKey, messageData: {
-                            request: "Session Credentials Update",
-                            credentialData: credentialData
-                        }
-                    }
-                }, messageCallback);
-            },
             unload: function () {
-                this.sendLoginCredentialsSubscribeHandle.remove();
                 this._loginInterface.unload();
             }
         });

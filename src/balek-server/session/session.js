@@ -230,12 +230,11 @@ define([ 	'dojo/_base/declare',
                         console.log(value);
                 }).catch(function(error){
 
-
                         console.log(error);
                     });
 
                 }
-debugger;
+                debugger;
                 for( const watchHandle in this._availableSessionStateWatchHandles){
                     debugger;
 
