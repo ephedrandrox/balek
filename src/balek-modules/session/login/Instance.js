@@ -1,10 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'balek-modules/components/login/Instance/login',
-
-
-    ],
+        'balek-modules/components/login/Instance/login',],
     function (declare, lang, topic, _loginInstance) {
         return declare("moduleSessionLoginInstance", _loginInstance, {
             _instanceKey: null,
