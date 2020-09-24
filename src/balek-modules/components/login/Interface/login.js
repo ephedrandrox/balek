@@ -60,6 +60,10 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
+            _onLoginSuccess(){
+               alert("login success! You may want to override the _onLoginSuccess in your login interface to do something");
+               this.unload();
+            },
             _sendLoginAndClose: function () {
                 let loginCredentials = {};
 
