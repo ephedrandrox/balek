@@ -7,9 +7,6 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("moduleSessionLoginInstance starting...");
-            },
-            receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
-                this.inherited(arguments);
             }
         });
     }
