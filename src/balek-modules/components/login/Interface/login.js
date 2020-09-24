@@ -38,6 +38,9 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            postCreate(){
+                topic.publish("displayAsDialog", this);
+            },
             _onClickSendLoginButton: function (eventObject) {
                 this._sendLoginAndClose();
             },

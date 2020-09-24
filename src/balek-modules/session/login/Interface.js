@@ -8,9 +8,6 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
             },
-            postCreate(){
-                topic.publish("displayAsDialog", this);
-            },
             _onLoginSuccess(){
                 topic.publish("requestModuleLoad", "session/menu");
                 topic.publish("loadBackground", "flowerOfLife");
