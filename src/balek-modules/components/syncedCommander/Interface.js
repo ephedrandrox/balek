@@ -25,7 +25,6 @@ define(['dojo/_base/declare',
                 }
             },
             onInterfaceStateChange: function (name, oldState, newState) {
-                console.log(name, newState);
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
