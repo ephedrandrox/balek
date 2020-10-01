@@ -368,7 +368,7 @@ define(['dojo/_base/declare',
                 returnUserGroups(this._sessions[sessionKey].getPermissionGroups());
             },
             getSessionUserInfo: function (sessionKey, returnUserInfo) {
-                topic.publish("getUserFromDatabase", this._sessions[sessionKey].getUserName, lang.hitch(this, function (userInfo) {
+                topic.publish("getUserFromDatabase", this._sessions[sessionKey].getUserName(), lang.hitch(this, function (userInfo) {
                     returnUserInfo(userInfo)
                 }));
             },
