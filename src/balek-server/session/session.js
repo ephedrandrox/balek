@@ -195,9 +195,6 @@ define([ 	'dojo/_base/declare',
                     }
                 };
             },
-            getUserKey(){
-                return this._syncedState.get("userKey");
-            },
             getInstances: function(){
                 let instancesToReturn = {};
 
