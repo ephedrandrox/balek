@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
                     if (this._sessions[sessionManagerMessage.sessionKey]
                         && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
                         this.changeSessionConnection(this._sessions[sessionManagerMessage.sessionKey]._wssConnection, sessionManagerMessage.changeSessionKey);
-
+                        this.unloadAllUserSessionsExcept(sessionManagerMessage.changeSessionKey);
                     }
                 } else if (sessionManagerMessage.sessionKey && sessionManagerMessage.requestAvailableSessions) {
                 //todo remove this and set up retreievable state object
@@ -222,8 +222,9 @@ define(['dojo/_base/declare',
                                   //if there are sessions, pick first one and make sure it isn't the one we are unloading
 
                                   otherUserSessions.forEach(lang.hitch(this, function(otherSession){
+                                      debugger;
                                       if( foundAnotherSession === false && sessionToUnload._sessionKey !== otherSession._sessionKey &&
-                                          otherSession._wssConnection === null ||  !otherSession._wssConnection.isConnected()){
+                                          otherSession._wssConnection === null || (otherSession._wssConnection && !otherSession._wssConnection.isConnected())){
                                           this.changeSessionConnection(sessionToUnload._wssConnection, otherSession._sessionKey);
                                           resolveMessage = "Session Removed, switched to session:" + otherSession.sessionKey;
                                           foundAnotherSession = true;
@@ -265,7 +266,7 @@ define(['dojo/_base/declare',
             },
             changeSessionConnection: function (wssConnection, changeSessionKey) {
                 //if sessions have same user allow change
-                if (wssConnection._sessionKey && this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()]) {
+                if (wssConnection && wssConnection._sessionKey && this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()]) {
                     let oldSessionKey = wssConnection._sessionKey.toString();
                     let oldSession = this._sessions[oldSessionKey];
                     let newSessionKey = changeSessionKey.toString();
@@ -297,6 +298,23 @@ define(['dojo/_base/declare',
                 } else {
                     console.log("can not change session Connection because of invalid keys")
                 }
+
+            },
+            unloadAllUserSessionsExcept: function(sessionKeyToKeep){
+                let sessionUserKey = this._sessions[sessionKeyToKeep].getUserKey();
+                debugger;
+
+
+                this.getSessionsForUserKey(sessionUserKey, lang.hitch(this, function(sessionsForUser){
+                    sessionsForUser.forEach(lang.hitch(this, function(session){
+                        if(sessionKeyToKeep !== session._sessionKey)
+                        {
+                            debugger;
+                            this.unloadSession(session._sessionKey);
+                        }
+                    }));
+
+                }));
 
             },
             setSessionDisconnected: function (sessionKey) {
