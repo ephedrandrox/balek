@@ -105,6 +105,16 @@ define(['dojo/_base/declare',
                         domConstruct.place(newSessionUnloadDiv, newSessionDiv);
 
 
+                    let newSessionUnloadAllDiv = domConstruct.create("div");
+                    newSessionUnloadAllDiv.innerHTML = "change and unload all";
+                    on(newSessionUnloadAllDiv, 'click', lang.hitch(sessionKey, function (evt) {
+                        evt.stopPropagation();
+                        topic.publish("requestSessionChangeAndUnloadAll", sessionKey, function(value){
+                            console.log(value);
+                            //todo do something with this info. Should make session state, updating state changes interface
+                        });
+                    }));
+                    domConstruct.place(newSessionUnloadAllDiv, newSessionDiv);
 
 
                 }

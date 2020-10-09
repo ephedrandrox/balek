@@ -70,7 +70,7 @@ define([ 	'dojo/_base/declare',
 
             },
             getUserName(){
-                return this._syncedState.get("username");
+                return this._syncedState.get("userName");
             },
             getUserInfo: function()
             {

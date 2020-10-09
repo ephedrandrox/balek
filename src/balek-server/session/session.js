@@ -84,7 +84,6 @@ define([ 	'dojo/_base/declare',
             onAvailableStateChange: function(availableSessionKey, name, oldState, newState){
                 //hitched this and available session Key in watch call
                 console.log(name, newState);
-                debugger;
 
                 if(name === "unloaded" || name === "sessionStatus")
                 {
