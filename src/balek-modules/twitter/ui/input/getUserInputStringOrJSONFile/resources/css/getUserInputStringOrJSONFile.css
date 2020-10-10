@@ -1,0 +1,48 @@
+.twitterUIInputGetUserInput {
+    position: absolute;
+    padding: 30px;
+    opacity: 0;
+    border: solid black 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: grey;
+}
+
+.twitterUIInputGetUserInputUserInputField  {
+   width: 300px;
+}
+
+.twitterUIInputGetUserInputFileInput {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.twitterUIInputGetUserInputFileInputLabel {
+    cursor: pointer;
+    display: inline;
+    display: inline-block;
+    border: solid black 2px;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.twitterUIInputGetUserInputFileInputLabel:hover {
+    border: solid blue 2px;
+}
+
+.twitterUIInputGetUserInputFileInputDisplay {
+    max-width: 500px;
+    max-height: 500px;
+    overflow: scroll;
+    border: solid black 2px;
+}

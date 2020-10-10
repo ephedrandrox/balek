@@ -1,0 +1,30 @@
+
+.twitterContactsInterfaceContactsMenu {
+    position: absolute;
+    background: white;
+    background: rgba(77, 164, 164, 0.17);
+    display: inline-block;
+    text-align: center;
+    padding: 100px;
+    border: solid #050530 3px;
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
+    border-radius: 50%;
+    visibility: visible;
+    z-index: 5;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+    opacity: 0;
+}
+
+.twitterContactsInterfaceContactsMenuButton {
+    cursor: pointer;
+    border: solid transparent 3px;
+}
+
+.twitterContactsInterfaceContactsMenuButton:hover {
+border: solid red 3px;
+}

@@ -1,0 +1,10 @@
+<div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown" tabindex="0">
+    ${stringQuestion}:</br> </br>
+    <input class=${baseClass}UserInputField type="text" data-dojo-attach-point='_userInputValue' value="" tabindex="2"></br> </br>
+    Or
+    </br>
+    <label for="userInputFile" class=${baseClass}FileInputLabel>${fileQuestion}:</label></br>
+    <input type="file" id="userInputFile" class=${baseClass}FileInput data-dojo-attach-point='_userInputFile' data-dojo-attach-event="onchange:_onUserInputFileChange">
+    <br><br>
+    <div data-dojo-attach-point='_userInputFileDisplay' class=${baseClass}FileInputDisplay >No Usable File Contents</div>
+</div>
