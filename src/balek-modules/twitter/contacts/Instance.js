@@ -5,6 +5,8 @@ define(['dojo/_base/declare',
         "dojo/topic",
         //Balek Instances to include
         "balek-modules/twitter/contacts/Instance/contactsMenu",
+        //Balek Service Includes
+        'balek-modules/twitter/services/userLookup',
         //Balek Instance extension include
         'balek-modules/components/syncedCommander/Instance',],                          //Array of files to include
     function (declare,
@@ -12,6 +14,8 @@ define(['dojo/_base/declare',
               topic,
               //Balek Instances to include
               contactsMenuInstance,
+              //Balek Service Includes
+              twitterUserLookup,
               //Balek Instance extension include
               _syncedCommanderInstance) {   //variables from array of included files
         return declare("moduleTwitterContactsInstance", _syncedCommanderInstance, {     //Declares instance extending base instance
@@ -20,10 +24,18 @@ define(['dojo/_base/declare',
 
             _contactsMenu: null,                                                        //Contacts Menu Instance created after getting session key
 
+            _twitterUserLookup: null,                                                   //Twitter user lookup service initialized in constructor
+            _twitterUserLookupServiceState:null,
+            _twitterUserLookupServiceStateWatchHandle: null,
+            _twitterUserLookupDataState:null,
+            _twitterUserLookupDataStateWatchHandle: null,
+            _twitterUserLookupErrorDataState:null,
+            _twitterUserLookupErrorDataStateWatchHandle: null,
+
             constructor: function (args) {                                              //called when a new instance is created by moduleManager for a session
                 declare.safeMixin(this, args);                                          //mixes in args from moduleManager like _instanceKey
 
-                //set syncedCommander commands
+              //set syncedCommander commands
                 this._commands={
                     "importContacts" : lang.hitch(this, this.importContacts)
                 };
@@ -39,6 +51,16 @@ define(['dojo/_base/declare',
                     this._contactsMenu = new contactsMenuInstance({ _instanceKey: this._instanceKey,
                                                                     _sessionKey: this._sessionKey,
                                                                     _userKey: userKey });
+
+                    this._twitterUserLookup = new twitterUserLookup();
+                    this._twitterUserLookupServiceState = this._twitterUserLookup.getServiceState();
+                    this._twitterUserLookupServiceStateWatchHandle = this._twitterUserLookupServiceState.watch(lang.hitch(this, this.onTwitterUserLookupServiceStateChange));
+                    this._twitterUserLookupDataState = this._twitterUserLookup.getDataState();
+                    this._twitterUserLookupDataStateWatchHandle = this._twitterUserLookupDataState.watch(lang.hitch(this, this.onTwitterUserLookupDataStateChange));
+                    this._twitterUserLookupErrorDataState = this._twitterUserLookup.getErrorDataState();
+                    this._twitterUserLookupErrorDataStateWatchHandle = this._twitterUserLookupErrorDataState.watch(lang.hitch(this, this.onTwitterErrorDataStateChange));
+
+
                     //set the contactsMenuInstanceKeys to trigger interface to load
                     this._interfaceState.set("contactsMenuInstanceKeys", {instanceKey: this._contactsMenu._instanceKey, sessionKey: this._contactsMenu._sessionKey, userKey: this._contactsMenu._userKey, componentKey: this._contactsMenu._componentKey});
                     //let the twitter/contacts Interface know Instance is ready
@@ -46,6 +68,27 @@ define(['dojo/_base/declare',
                 }));
                 console.log("moduleTwitterContactsInstance starting...", this._instanceKey);
             },
+            //##########################################################################################################
+            //State Events Methods Section
+            //##########################################################################################################
+
+            onTwitterUserLookupServiceStateChange(name, oldState, newState)
+            {
+                this._contactsMenu._interfaceState.set(name, newState);
+            },
+            onTwitterUserLookupDataStateChange(name, oldState, newState)
+            {
+                //have this update list state
+                this._contactsMenu._interfaceState.set(name, newState);
+            },
+            onTwitterErrorDataStateChange(name, oldState, newState)
+            {
+                this._contactsMenu._interfaceState.set(name, newState);
+            },
+            //##########################################################################################################
+            //Remote Commands Methods Section
+            //##########################################################################################################
+
             //This is the function that is called when Interface calls the importContacts remote command
             importContacts(names, remoteCommanderCallback){
                 console.log("newName", arguments);
@@ -53,17 +96,35 @@ define(['dojo/_base/declare',
                 //check if we got a string or array from Interface
                 if(typeof names === "string")
                 {
-                    //let the Interface know that can not look up a name yet
-                    remoteCommanderCallback({name: "Could not look for single name: " + names.toString()});
-                }else if(typeof names === "object" && Array.isArray(names))
-                {
-                    //let the Interface know that can not look up a names yet
-                    remoteCommanderCallback({name: "Could not look for Array of names: " + names.toString()});
+                    names = names.split(",");
                 }
 
+                if(typeof names === "object" && Array.isArray(names))
+                {
+                    if(names.length >0 && names[0] !== '' ){
+                        this._twitterUserLookup.requestUsersInfo(names);
+                        remoteCommanderCallback({name: "Added Names to Queue"});
+                    }else
+                    {
+                        remoteCommanderCallback({name: "Could not find names to lookup: " + names.toString()});
+                    }
+                }else {
+                    remoteCommanderCallback({name: "Could not find names to lookup: " + names.toString()});
+                }
+            },
+            //##########################################################################################################
+            //Instance Inherited Methods Section
+            //##########################################################################################################
+
+            _end(){
+                this._twitterUserLookupServiceStateWatchHandle.unwatch();
+                this._twitterUserLookupServiceStateWatchHandle.remove();
+                this._twitterUserLookupDataStateWatchHandle.unwatch();
+                this._twitterUserLookupDataStateWatchHandle.remove();
+                this._twitterUserLookupErrorDataStateWatchHandle.unwatch();
+                this._twitterUserLookupErrorDataStateWatchHandle.remove();
+               return  this.inherited(arguments);
             }
         });
     }
 );
-
-
