@@ -1,9 +1,10 @@
 //This file is loaded by the Balek interface aka web client
 //And is used to create a new module interface to connect to an module instance
 define(['dojo/_base/declare',
+        'dojo/_base/lang',
         "dojo/topic",
         'balek-modules/components/login/Interface',],                                        //Array of files to include
-    function (declare, topic, _loginInterface) {                                    //variables from array of included files
+    function (declare, lang, topic, _loginInterface) {                                    //variables from array of included files
         return declare("moduleTwitterLoginInterface", _loginInterface, {   //Declares Interface extending base Interface
             _instanceKey: null,                                             //This is used to identify and communicate with the module instance
 
@@ -12,8 +13,20 @@ define(['dojo/_base/declare',
                 console.log("moduleTwitterLoginInstance started", this._instanceKey);
             },
             _onLoginSuccess(){
-                topic.publish("requestModuleLoad", "session/menu");
-                topic.publish("loadBackground", "flowerOfLife");
+                topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
+                    let availableSessions = sessionState.get("availableSessions");
+                    let firstSessionKey = Object.keys(availableSessions)[0];
+
+                    if(firstSessionKey && firstSessionKey !== null)
+                    {
+                        topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
+                    }else
+                    {
+                        topic.publish("requestModuleLoad", "twitter/contacts");         //this requests that the session/menu module gets loaded
+                        topic.publish("loadBackground", "flowerOfLife");            //this requests that the uiManager loads flowerOfLife Background
+                    }
+                }));
+
                 this.unload();
             }
         });

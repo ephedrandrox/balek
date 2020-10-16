@@ -1,8 +1,7 @@
-
 .twitterContactsInterfaceContactsMenu {
     position: absolute;
     background: white;
-    background: rgba(77, 164, 164, 0.17);
+    background: rgba(77, 164, 164, 0.9);
     display: inline-block;
     text-align: center;
     padding: 100px;
@@ -15,16 +14,74 @@
     top: 50%;
     left: 50%;
     margin-right: -50%;
+    width: 200px;
     transform: translate(-50%, -50%);
     outline: none;
+    color:black;
     opacity: 0;
 }
 
+.twitterContactsInterfaceContactsMenuStatusDiv {
+    border: solid black 2px;
+    display: inline-block;
+    background: rgba(191, 197, 219, 0.9);
+    margin: 5px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.twitterContactsInterfaceContactsMenuRequestsRemainingDiv {
+    display: inline-block;
+    background: rgba(191, 197, 219, 0.9);
+    border: solid purple 2px;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.twitterContactsInterfaceContactsMenuRequestsInQueueDiv {
+    display: inline-block;
+    background: rgba(191, 197, 219, 0.9);
+    border: solid #0b4c06 2px;
+    margin: 5px;
+    white-space: nowrap;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.twitterContactsInterfaceContactsMenuQueueProcessingDiv {
+    display: inline-block;
+    background: rgba(191, 197, 219, 0.9);
+    border: solid #5f0e0e 2px;
+    margin: 3px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
 .twitterContactsInterfaceContactsMenuButton {
+    display: inline-block;
     cursor: pointer;
     border: solid transparent 3px;
+    border-radius: 30px;
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.twitterContactsInterfaceContactsMenuDisabledButton{
+    display: inline-block;
+    border: solid grey 3px;
+    border-radius: 30px;
 }
 
 .twitterContactsInterfaceContactsMenuButton:hover {
-border: solid red 3px;
+    display: inline-block;
+    border: solid red 3px;
+    border-radius: 30px;
+}
+
+.twitterContactsInterfaceContactsMenuMenuItem{
+    white-space: nowrap;
+    display: inline-block;
+    padding: 3px;
+    margin: 5px;
 }

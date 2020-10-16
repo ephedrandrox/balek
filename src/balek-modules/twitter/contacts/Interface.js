@@ -4,12 +4,15 @@ define(['dojo/_base/declare',
         'dojo/topic',
         //Balek Interface Includes
         'balek-modules/twitter/contacts/Interface/contactsMenu',
+        'balek-modules/twitter/contacts/Interface/contactsList',
+        //Balek Interface Extensions
         'balek-modules/components/syncedCommander/Interface',],                         //Array of files to include
-    function (declare, topic, contactsMenuInterface, _syncedCommanderInterface ) {      //variables from array of included files
+    function (declare, topic, contactsMenuInterface, contactsListInterface, _syncedCommanderInterface ) {      //variables from array of included files
         return declare("moduleTwitterContactsInterface", _syncedCommanderInterface, {   //Declares Interface extending base Interface
             _instanceKey: null,                                                         //This is used to identify and communicate with the module instance
 
             _contactsMenuInterface: null,                                               //We create the menu interface when keys are received
+            _contactsListInterface: null,
 
             constructor: function (args) {                                              //called when a new interface is created
                 declare.safeMixin(this, args);                                          //mixes in args from moduleManager like _instanceKey
@@ -34,11 +37,18 @@ define(['dojo/_base/declare',
                                                                                     _componentKey: newState.componentKey,
                                                                                     _contactInstanceCommands:  this._instanceCommands });
                     }
+                }else if (name === "contactsListInstanceKeys") {
+                    if(newState.instanceKey && newState.sessionKey && newState.userKey && newState.componentKey)
+                    {
+                        console.log("Creating contactsListInterface from Keys:", newState);
+                        this._contactsListInterface = new contactsListInterface({   _instanceKey:newState.instanceKey,
+                                                                                    _sessionKey:  newState.sessionKey,
+                                                                                    _userkey: newState.userKey,
+                                                                                    _componentKey: newState.componentKey,
+                                                                                    _contactsInstanceCommands:  this._instanceCommands});
+                    }
                 }
             }
         });
     }
 );
-
-
-

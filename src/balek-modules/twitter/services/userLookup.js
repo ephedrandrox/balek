@@ -26,9 +26,9 @@ define(['dojo/_base/declare',
             _method: "GET",                                     //method of request
             _url: "/2/users/by",                                //path to API resource
 
-            _requestsMax: 900,                                  //How many requests we can make in cooldown period
-            _requestsMaxUsersPerRequest:100,                    //How many users we can request at a time
-            _requestCooldown: 900000,                           //Amount of time before requests reset
+            _requestsMax: 5,                                  //How many requests we can make in cooldown period
+            _requestsMaxUsersPerRequest:3,                    //How many users we can request at a time
+            _requestCooldown: 5000,                           //Amount of time before requests reset
 
             _twitterUsersToLookup: null,                        //Users to lookup queue array
             _twitterUserInfoDataState: null,                    //User results added to this state object
@@ -150,7 +150,9 @@ define(['dojo/_base/declare',
                 setTimeout(lang.hitch(this, function(){
                     if(!this._queueResetting){
                         requestsRemaining =  this._serviceState.get("requestsRemaining") + usersToProcess.length ;
-                        this._serviceState.set("requestsRemaining", requestsRemaining  );
+                        if(requestsRemaining <= this._requestsMax){
+                            this._serviceState.set("requestsRemaining", requestsRemaining  );
+                        }
                         continueOrNot();
                     }
                 }), this._requestCooldown);
@@ -185,7 +187,9 @@ define(['dojo/_base/declare',
 
                         setTimeout(lang.hitch(this, function(){
                             requestsRemaining =  this._serviceState.get("requestsRemaining") + 1 ;
-                            this._serviceState.set("requestsRemaining", requestsRemaining  );
+                            if(requestsRemaining <= this._requestsMax){
+                                this._serviceState.set("requestsRemaining", requestsRemaining  );
+                            }
                         }), this._requestCooldown);
                     }));
                 }else

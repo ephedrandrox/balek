@@ -1,5 +1,10 @@
 <div class="${baseClass}" >
-Twitter Contacts Menu<br>
-    <br>
-    <div class="${baseClass}Button" data-dojo-attach-event="onclick:_onAddContactClicked">Add Contacts</div>
+    <div class="${baseClass}Button" data-dojo-attach-point='_dockMenuButton' data-dojo-attach-event="onclick:_onDockMenuButtonClicked">⬆︎Dock⬆︎</div>
+
+    <div class="${baseClass}MenuItem">Status: <div class="${baseClass}StatusDiv " data-dojo-attach-point='_statusDiv'>Starting</div></div>
+    <div class="${baseClass}MenuItem">Requests Remaining: <div class="${baseClass}RequestsRemainingDiv" data-dojo-attach-point='_requestsRemainingDiv'>0</div></div>
+    <div class="${baseClass}MenuItem">Requests In Queue:<div class="${baseClass}RequestsInQueueDiv" data-dojo-attach-point='_requestsInQueueDiv'>0</div></div>
+    <div class="${baseClass}MenuItem">Fetching Status:<div class="${baseClass}QueueProcessingDiv" data-dojo-attach-point='_queueProcessingDiv'>Idle</div></div>
+
+    <div class="${baseClass}Button" data-dojo-attach-point='_getInputButton' data-dojo-attach-event="onclick:_onAddContactClicked">➕ Add Contacts ➕</div>
 </div>

@@ -5,6 +5,7 @@ define(['dojo/_base/declare',
         "dojo/topic",
         //Balek Instances to include
         "balek-modules/twitter/contacts/Instance/contactsMenu",
+        "balek-modules/twitter/contacts/Instance/contactsList",
         //Balek Service Includes
         'balek-modules/twitter/services/userLookup',
         //Balek Instance extension include
@@ -14,6 +15,7 @@ define(['dojo/_base/declare',
               topic,
               //Balek Instances to include
               contactsMenuInstance,
+              contactsListInstance,
               //Balek Service Includes
               twitterUserLookup,
               //Balek Instance extension include
@@ -23,6 +25,7 @@ define(['dojo/_base/declare',
             _sessionKey: null,                                                          //used to identify session, set by sessionManager
 
             _contactsMenu: null,                                                        //Contacts Menu Instance created after getting session key
+            _contactsList: null,
 
             _twitterUserLookup: null,                                                   //Twitter user lookup service initialized in constructor
             _twitterUserLookupServiceState:null,
@@ -52,6 +55,16 @@ define(['dojo/_base/declare',
                                                                     _sessionKey: this._sessionKey,
                                                                     _userKey: userKey });
 
+                    this._contactsList = new contactsListInstance({_instanceKey: this._instanceKey,
+                        _sessionKey: this._sessionKey,
+                        _userKey: userKey });
+                    this._interfaceState.set("contactsListInstanceKeys", {  instanceKey: this._contactsList._instanceKey,
+                                                                            sessionKey: this._contactsList._sessionKey,
+                                                                            userKey: this._contactsList._userKey,
+                                                                            componentKey: this._contactsList._componentKey});
+
+                    this._contactsList._interfaceState.set("Status", "Ready");
+
                     this._twitterUserLookup = new twitterUserLookup();
                     this._twitterUserLookupServiceState = this._twitterUserLookup.getServiceState();
                     this._twitterUserLookupServiceStateWatchHandle = this._twitterUserLookupServiceState.watch(lang.hitch(this, this.onTwitterUserLookupServiceStateChange));
@@ -62,29 +75,45 @@ define(['dojo/_base/declare',
 
 
                     //set the contactsMenuInstanceKeys to trigger interface to load
-                    this._interfaceState.set("contactsMenuInstanceKeys", {instanceKey: this._contactsMenu._instanceKey, sessionKey: this._contactsMenu._sessionKey, userKey: this._contactsMenu._userKey, componentKey: this._contactsMenu._componentKey});
+                    this._interfaceState.set("contactsMenuInstanceKeys", {  instanceKey: this._contactsMenu._instanceKey,
+                                                                            sessionKey: this._contactsMenu._sessionKey,
+                                                                            userKey: this._contactsMenu._userKey,
+                                                                            componentKey: this._contactsMenu._componentKey});
                     //let the twitter/contacts Interface know Instance is ready
                     this._interfaceState.set("Status", "Ready");
                 }));
                 console.log("moduleTwitterContactsInstance starting...", this._instanceKey);
             },
+
             //##########################################################################################################
             //State Events Methods Section
             //##########################################################################################################
 
             onTwitterUserLookupServiceStateChange(name, oldState, newState)
             {
-                this._contactsMenu._interfaceState.set(name, newState);
+                if(name === "Status"){
+                    this._contactsMenu._interfaceState.set("twitterStatus", newState);
+                }else if(name === "requestsRemaining"){
+                    this._contactsMenu._interfaceState.set("twitterRequestsRemaining", newState);
+
+                }else if(name === "usersInQueue" )
+                {
+                    this._contactsMenu._interfaceState.set("twitterRequestsInQueue", newState);
+                }else if(name === "processingQueue" )
+                {
+                    this._contactsMenu._interfaceState.set("twitterProcessingQueue", newState);
+                }
             },
             onTwitterUserLookupDataStateChange(name, oldState, newState)
             {
                 //have this update list state
-                this._contactsMenu._interfaceState.set(name, newState);
+                this._contactsList._interfaceState.set("ContactListItem"+name.toLowerCase(), newState);
             },
             onTwitterErrorDataStateChange(name, oldState, newState)
             {
-                this._contactsMenu._interfaceState.set(name, newState);
+                this._contactsList._interfaceState.set("ContactListError"+name.toLowerCase(), newState);
             },
+
             //##########################################################################################################
             //Remote Commands Methods Section
             //##########################################################################################################
@@ -112,6 +141,7 @@ define(['dojo/_base/declare',
                     remoteCommanderCallback({name: "Could not find names to lookup: " + names.toString()});
                 }
             },
+
             //##########################################################################################################
             //Instance Inherited Methods Section
             //##########################################################################################################
