@@ -8,6 +8,8 @@ define(['dojo/_base/declare',
         "balek-modules/twitter/contacts/Instance/contactsList",
         //Balek Service Includes
         'balek-modules/twitter/services/userLookup',
+        //Balek Database Includes
+        'balek-modules/twitter/contacts/Database/contacts',
         //Balek Instance extension include
         'balek-modules/components/syncedCommander/Instance',],                          //Array of files to include
     function (declare,
@@ -18,6 +20,8 @@ define(['dojo/_base/declare',
               contactsListInstance,
               //Balek Service Includes
               twitterUserLookup,
+              //Balek Database Includes
+              twitterContactsDatabase,
               //Balek Instance extension include
               _syncedCommanderInstance) {   //variables from array of included files
         return declare("moduleTwitterContactsInstance", _syncedCommanderInstance, {     //Declares instance extending base instance
@@ -35,10 +39,15 @@ define(['dojo/_base/declare',
             _twitterUserLookupErrorDataState:null,
             _twitterUserLookupErrorDataStateWatchHandle: null,
 
+            _twitterContactsDatabase: null,
+
+
             constructor: function (args) {                                              //called when a new instance is created by moduleManager for a session
                 declare.safeMixin(this, args);                                          //mixes in args from moduleManager like _instanceKey
 
-              //set syncedCommander commands
+                this._twitterContactsDatabase = {};
+
+                //set syncedCommander commands
                 this._commands={
                     "importContacts" : lang.hitch(this, this.importContacts)
                 };
@@ -48,6 +57,8 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("log", "log Started");
                 //get Session User Key
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
+                    this._twitterContactsDatabase = new twitterContactsDatabase({_instanceKey: this._instanceKey, _userKey: userKey});
+                    this.loadContactsFromDatabase();
                     //set the log state
                     this._interfaceState.set("log", "creating contacts Menu instance");
                     //create the contactsMenu Instance
@@ -108,6 +119,12 @@ define(['dojo/_base/declare',
             {
                 //have this update list state
                 this._contactsList._interfaceState.set("ContactListItem"+name.toLowerCase(), newState);
+                try{
+                    let newContact = newState;
+                    this.saveContactToDatabase(newContact);
+                }catch(error){
+                    console.log(error);
+                }
             },
             onTwitterErrorDataStateChange(name, oldState, newState)
             {
@@ -122,24 +139,80 @@ define(['dojo/_base/declare',
             importContacts(names, remoteCommanderCallback){
                 console.log("newName", arguments);
                 console.log("Names to find is " + names);
-                //check if we got a string or array from Interface
+
+                let namesToLookup = [];
+                let namesAlreadyListed = [];
+
                 if(typeof names === "string")
                 {
                     names = names.split(",");
                 }
+                console.log("Names to find is " + names);
+                console.log("length is " + names.length);
 
+                //Add names to Instance Memory with loading status
                 if(typeof names === "object" && Array.isArray(names))
                 {
-                    if(names.length >0 && names[0] !== '' ){
-                        this._twitterUserLookup.requestUsersInfo(names);
+                    names.forEach( lang.hitch(this, function(name, nameIndex){
+
+                        let stateName = "ContactListItem"+name.toLowerCase();
+                        console.log(nameIndex, name,stateName);
+
+                        let nameState =  this._contactsList._interfaceState.get(stateName.toString());
+                        console.log(stateName, nameState);
+                        if(nameState !== undefined){
+                            namesAlreadyListed.push(name);
+                        }else
+                        {
+                            namesToLookup.push(name);
+                        }
+                    }));
+
+                    if(namesToLookup.length > 0 ){
+                        console.log("adding names", namesToLookup);
+                        this._twitterUserLookup.requestUsersInfo(namesToLookup);
                         remoteCommanderCallback({name: "Added Names to Queue"});
-                    }else
-                    {
-                        remoteCommanderCallback({name: "Could not find names to lookup: " + names.toString()});
+                        console.log("added names", namesToLookup);
                     }
-                }else {
+                    console.log("skipping names already resolved", namesAlreadyListed);
+
+                }else
+                {
                     remoteCommanderCallback({name: "Could not find names to lookup: " + names.toString()});
                 }
+            },
+
+            //##########################################################################################################
+            //Instance Database Methods Section
+            //##########################################################################################################
+
+            loadContactsFromDatabase(){
+                this._twitterContactsDatabase.getUserContacts().then(lang.hitch(this,function (response){
+
+                    response.toArray().then(lang.hitch(this, function(contacts){
+
+                        for( const index in contacts){
+                            let contact = contacts[index];
+                            this._contactsList._interfaceState.set("ContactListItem"+contact.twitterUsername.toLowerCase(), contact.contact);
+                        }
+                        console.log("Contacts received");
+
+                    }));
+
+                })).catch(lang.hitch(this,function(error) {
+                    console.log("ERROR getting contacts from database" + error);
+                }));
+            },
+            saveContactToDatabase: function(contactToSave)
+            {
+                this._twitterContactsDatabase.newContact(contactToSave).then(lang.hitch(this,function (response){
+                    let contactID = response.ops[0]._id.toString();
+                    console.log("New Contact Added to Database");
+
+                })).catch(lang.hitch(this,function(error) {
+                    console.log("ERROR adding Contact to database", error);
+
+                }));
             },
 
             //##########################################################################################################
