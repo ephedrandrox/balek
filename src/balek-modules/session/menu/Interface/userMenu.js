@@ -47,7 +47,7 @@ define(['dojo/_base/declare',
             },
             updateUserData: function () {
                 let userData = this._userState.get("userData");
-                let sessionUser = this._sessionState.get("_username");
+                let sessionUser = this._sessionState.get("userName");
                 //this is silly, should index by key
                 for (const user in userData) {
                     if (userData[user].name === sessionUser) {

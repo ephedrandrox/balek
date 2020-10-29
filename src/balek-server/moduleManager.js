@@ -75,9 +75,15 @@ define(['dojo/_base/declare',
             },
             receiveModuleMessage: function (moduleMessage, wssConnection, messageCallback) {
 
-                if (moduleMessage.instanceKey) {
+                if (moduleMessage.instanceKey ) {
+                    if( this._instances[moduleMessage.instanceKey]){
+                        this._instances[moduleMessage.instanceKey].receiveMessage(moduleMessage, wssConnection, messageCallback);
+                    }else {
+                        console.log();
 
-                    this._instances[moduleMessage.instanceKey].receiveMessage(moduleMessage, wssConnection, messageCallback);
+                        messageCallback({error: "Unknown Instance key"});
+                    }
+
                 } else if (moduleMessage.loadRequest) {
 
                     this.loadModuleForClient(wssConnection, moduleMessage.loadRequest, function (moduleInterface) {
@@ -134,7 +140,6 @@ define(['dojo/_base/declare',
                     let allowedSessions = this._modules[moduleName].allowedSessions();
 
                     topic.publish("getSessionStatus", wssConnection._sessionKey, lang.hitch(this, function (sessionStatus) {
-
                         if (allowedSessions == null || (Array.isArray(allowedSessions) && allowedSessions.includes(sessionStatus))) {
 
                             topic.publish("getSessionUserGroups", wssConnection._sessionKey, lang.hitch(this, function (sessionUserGroups) {

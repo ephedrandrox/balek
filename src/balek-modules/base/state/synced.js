@@ -8,6 +8,10 @@ To use, create your instance object with "_stateChangeInterfaceCallback"
 Which should be a messageCallback
 _stateChangeInterfaceCallback sends the State change to the Interface
 
+or you can add this.prepareSyncedState() to instance constructor
+which will create a component key that you can create your interface
+with and then call this.askToConnectInterface() in Interface with this._componentKey set
+
 this._interfaceState.set() in your instance object to change the state;
 
 
@@ -18,6 +22,8 @@ overwrite onInterfaceStateChange in the interface to check state on change
 
 */
 
+//toDo refactor this, may be able to remove some code that isn't actually used
+//todo create a variable that is set by either the Interface or Instance and check that in appropriate funtions
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/Stateful',
@@ -72,8 +78,6 @@ define(['dojo/_base/declare',
                     console.log("connecting component to interface");
 
                     this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
-
-                    interfaceCallback({interfaceState: JSON.stringify(this._interfaceState)});
                 }
                 else{
                     console.log("THe component does not match");
@@ -110,7 +114,6 @@ define(['dojo/_base/declare',
 
                 this._interfaceStateWatchHandle.unwatch();
                 this._interfaceStateWatchHandle.remove();
-                this.destroy();
             },
             getUniqueComponentKey: function () {
                 let crypto = require('dojo/node!crypto');

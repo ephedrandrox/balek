@@ -1,13 +1,19 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        "dojo/Stateful",
         'dojo/node!crypto',
 
         "balek-server/users/dbController"],
-    function (declare, lang, topic, crypto, userDbController) {
+    function (declare, lang, topic, Stateful, crypto, userDbController) {
         return declare("usersManager", null, {
 
+            _UserState: null, //constructor for state object
+
+            _userStates: null,
+
             _dbController: null,
+            _usersManagerState: null,
 
             constructor: function (args) {
 
@@ -15,16 +21,47 @@ define(['dojo/_base/declare',
 
                 console.log("Initializing Users Manager");
 
+                this._UserState = declare([Stateful], {
+                    userName: null,
+                    userKey: null
+                });
+                this._userStates = {};
+
                 //todo make User Store
                 //todo watch User Store changes in sessions
 
                 this._dbController = new userDbController();
 
+                this._dbController.getUsersFromDatabase().then(lang.hitch(this, function (results) {
+                    results.forEach ( lang.hitch(this, function(user){
+                        this._userStates[user.userKey] = new this._UserState({
+                            userName: user.name,
+                            userKey: user.userKey
+                        });
+                    }));
+                })).catch(function (error) {
+                    debugger;
+                    console.log("Could not load users from database!!!!!!!!!!" , error);
+                });
+
+                topic.subscribe("getUserState", lang.hitch(this, this.getUserState));
+
+                //replace these with state object
                 topic.subscribe("getUserFromDatabase", lang.hitch(this, this.getUserFromDatabase));
                 topic.subscribe("getUsersFromDatabase", lang.hitch(this, this.getUsersFromDatabase));
 
                 topic.subscribe("receiveUserManagerMessage", lang.hitch(this, this.receiveUserManagerMessage));
 
+            },
+            getUserState: function(userKey, returnGetUserState)
+            {
+                if (this._userStates[userKey])
+                {
+                    returnGetUserState(this._userStates[userKey]);
+                }else
+                {
+                    returnGetUserState({error: "there is no state for that userID"});
+                }
             },
             getUserFromDatabase: function (username, returnGetUserFromDatabase) {
                 this._dbController.getUserFromDatabase(username).then(function (results) {

@@ -14,15 +14,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/session/login/resources/html/login.html',
-        'dojo/text!balek-modules/session/login/resources/css/login.css'
+        'dojo/text!balek-modules/components/login/resources/html/login.html',
+        'dojo/text!balek-modules/components/login/resources/css/login.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
-        return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("moduleComponentsLoginInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "loginInterface",
+            baseClass: "loginComponentInterface",
 
             _userData: {},
             constructor: function (args) {
@@ -38,8 +38,11 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            postCreate(){
+                topic.publish("displayAsDialog", this);
+            },
             _onClickSendLoginButton: function (eventObject) {
-                this.sendLoginAndClose();
+                this._sendLoginAndClose();
             },
             _onFocus: function () {
                 this._usernameField.focus();
@@ -51,7 +54,7 @@ define(['dojo/_base/declare',
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ENTER:
                         keyUpEvent.preventDefault();
-                        this.sendLoginAndClose();
+                        this._sendLoginAndClose();
                         break;
                     case dojoKeys.ESCAPE:
                         keyUpEvent.preventDefault();
@@ -60,33 +63,32 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            sendLoginAndClose: function () {
+            _onLoginSuccess(){
+               alert("login success! You may want to override the _onLoginSuccess in your login interface to do something");
+               this.unload();
+            },
+            _sendLoginAndClose: function () {
                 let loginCredentials = {};
 
-                let sendLoginCredentials = lang.hitch(this, function(){
-                    topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
-                        if (loginReply.error) {
-                            alert(loginReply.error.error);
-                        } else {
+                let sendLoginCredentials = lang.hitch(this, this._sendLoginCredentials, loginCredentials, lang.hitch(this, function (loginReply) {
+                    if (loginReply.error) {
+                        alert(loginReply.error.error);
+                    } else {
 
-                            topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
-                                lang.hitch(this, function (loginReply) {
-                                    if(loginReply.error === undefined)
-                                    {
-                                        topic.publish("requestModuleLoad", "session/menu");
-                                        topic.publish("loadBackground", "flowerOfLife");
-                                        this.destroy();
-                                    }
-                                    else
-                                    {
-                                       alert(loginReply.error);
-                                       //todo Maybe make a reset switch and use it here,
-                                    }
-                                }));
-
-                        }
-                    }));
-                });
+                        topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
+                            lang.hitch(this, function (loginReply) {
+                                if(loginReply.error === undefined)
+                                {
+                                    this._onLoginSuccess();
+                                }
+                                else
+                                {
+                                   alert(loginReply.error);
+                                   //todo Maybe make a reset switch and use it here,
+                                }
+                            }));
+                    }
+                }));
 
 
                 if (this._usernameField.value && this._passwordField.value) {
@@ -106,6 +108,16 @@ define(['dojo/_base/declare',
                 } else {
                     alert("Need more Input");
                 }
+            },
+            _sendLoginCredentials: function (credentialData, messageCallback) {
+                topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                    moduleMessage: {
+                        instanceKey: this._instanceKey, messageData: {
+                            request: "Session Credentials Update",
+                            credentialData: credentialData
+                        }
+                    }
+                }, messageCallback);
             },
             unload() {
                 this.destroy();
