@@ -3,7 +3,7 @@ define(['dojo/_base/declare',
         'dojo/topic',
         'dojo/node!crypto',
 
-        'balek-modules/diaplode/navigator/Database',
+        'balek-modules/diaplode/Database',
 
 
     ],

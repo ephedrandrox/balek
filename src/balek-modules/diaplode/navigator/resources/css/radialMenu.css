@@ -3,7 +3,7 @@ position: absolute;
     top:0;
     left: 0;
     background: none;
-    z-index: 100000;
+    z-index: 6000;
     color: black;
     outline: none;
     opacity: 0;

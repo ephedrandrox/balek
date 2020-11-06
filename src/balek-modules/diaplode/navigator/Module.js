@@ -1,6 +1,6 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/diaplode/navigator/Database',
+        'balek-modules/diaplode/Database',
 
         'balek-modules/diaplode/navigator/Instance'],
     function (declare, baseModule, moduleDatabase, moduleInstance) {

@@ -31,7 +31,8 @@ define(['dojo/_base/declare',
 
             return new Promise(lang.hitch(this, function(Resolve, Reject){
                 if(this.shared._DBConnection._db){
-                    console.log("alreadyyyyyyyyy connected");
+                    console.log("already connected");
+                    Resolve(this.shared._DBConnection._db);
                 }
                     else{
                     topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
@@ -48,6 +49,7 @@ define(['dojo/_base/declare',
                             this._Database,
                             lang.hitch(this, function (dbConnection) {
                                 this.shared._DBConnection = dbConnection;
+                                Resolve(this.shared._DBConnection._db);
                         }));
 
                     }));

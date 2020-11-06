@@ -19,7 +19,6 @@ define(['dojo/_base/declare',
                     if (moduleMessage.messageData) {
                         if(moduleMessage.messageData.request){
                             if( moduleMessage.messageData.request === "Component Key") {
-                                debugger;
                                 messageCallback({componentKey: this._componentKey})  ;
                             }
                             if( moduleMessage.messageData.request === "Remote Command" &&
