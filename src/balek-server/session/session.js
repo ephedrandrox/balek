@@ -57,10 +57,10 @@ define([ 	'dojo/_base/declare',
             {
                 if(name === "userKey"){
                     topic.publish("getSessionsForUserKey", newState, lang.hitch(this, function(userSessions){
-                        console.log("User Sessions");
+                       // console.log("User Sessions");
                         let availableSessions = {};
                         userSessions.forEach(lang.hitch(this, function(userSession){
-                            console.log(userSession._sessionKey);
+                            //console.log(userSession._sessionKey);
                             if(userSession._sessionKey!= this._sessionKey)
                             {
                                 userSession.addAvailableSession(this);
@@ -146,7 +146,7 @@ define([ 	'dojo/_base/declare',
                     delete  this._instances[sessionModuleInstanceKey];
 
                     topic.publish("unloadModuleInstance", sessionModuleInstanceKey, lang.hitch(this, unloaded =>{
-                        console.log("unloaded: " + unloaded);
+                        //console.log("unloaded: " + unloaded);
                         if(unloaded){
                              Resolve({status: "Success"});
                         }

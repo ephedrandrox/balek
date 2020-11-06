@@ -34,6 +34,7 @@ define(['dojo/_base/declare',
 
             },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
+                //todo remove this function and inherit synced commander
                 if (moduleMessage.instanceKey == this._instanceKey) {
                     if (moduleMessage.messageData) {
                         if(moduleMessage.messageData.request){
@@ -63,7 +64,7 @@ define(['dojo/_base/declare',
                                 }
 
                         }
-                        console.log(moduleMessage.messageData);
+                        //console.log(moduleMessage.messageData);
                     }
                 } else {
                     console.log("received Module message with incorrect instanceKey",

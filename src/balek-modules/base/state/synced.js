@@ -76,7 +76,6 @@ define(['dojo/_base/declare',
             connectInterface: function(instanceKey, componentKey, interfaceCallback) {
                 if (this._components[componentKey] && this._components[componentKey]._instanceKey === instanceKey) {
                     console.log("connecting component to interface");
-
                     this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
                 }
                 else{
