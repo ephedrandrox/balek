@@ -42,6 +42,7 @@ border: solid #50d1d1 3px;
     position: absolute;
     top: 0;
     left: 0;
+    opacity: .5;
 }
 
 
@@ -49,14 +50,13 @@ border: solid #50d1d1 3px;
     position: absolute;
     top: 50%;
     left: calc(50% - 50px);
-
+font-size: 50px;
     border: solid white 2px;
 }
 
 
 .diaplodeNavigatorInterfaceCommandsDiv {
    color: white;
-
     border: solid black 2px;
 }
 

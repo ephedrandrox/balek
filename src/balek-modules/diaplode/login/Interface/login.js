@@ -73,11 +73,23 @@ define(['dojo/_base/declare',
                                 lang.hitch(this, function (loginReply) {
                                     if(loginReply.error === undefined)
                                     {
-                                        topic.publish("requestModuleLoad", "diaplode/navigator");
-                                        topic.publish("requestModuleLoad", "diaplode/commander");
+                                        topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
+                                            let availableSessions = sessionState.get("availableSessions");
+                                            let firstSessionKey = Object.keys(availableSessions)[0];
 
-                                        topic.publish("loadBackground", "flowerOfLife");
-                                        this.destroy();
+                                            if(firstSessionKey && firstSessionKey !== null)
+                                            {
+                                                topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
+                                            }else
+                                            {
+                                                topic.publish("requestModuleLoad", "diaplode/navigator");
+                                                topic.publish("requestModuleLoad", "diaplode/commander");
+
+                                                topic.publish("loadBackground", "flowerOfLife");
+                                            }
+                                        }));
+
+
                                     }
                                     else
                                     {
