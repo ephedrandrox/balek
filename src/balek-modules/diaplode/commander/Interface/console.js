@@ -49,6 +49,8 @@ define(['dojo/_base/declare',
             _consoleInputNode: null,
             _consoleOutputNode: null,
 
+            _consoleOnLoadSettingNode: null,
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -62,6 +64,16 @@ define(['dojo/_base/declare',
             postCreate: function () {
                // domConstruct.place(this.domNode, this._ContactsListDomNode);
                 topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
+                let dockedState = this._interfaceState.get("consoleDocked");
+
+                if(dockedState === 'false')
+                {
+                    this.dockConsole();
+                }
+                else
+                {
+                    this.unDockConsole();
+                }
             },
             //##########################################################################################################
             //Event Functions Section
@@ -159,6 +171,20 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
+            _consoleOnLoadToggleClicked: function(clickEvent){
+
+                let currentSetting = this._interfaceState.get("consoleDocked");
+                if(currentSetting === "docked")
+                {
+
+                }else
+                {
+                    this._commanderInstanceCommands.saveSettings({consoleDockedOnLoad: false}).then(
+                        function(results){
+                        console.log("got results", results);
+                        });
+                }
+            },
             _onConsoleUndockButtonClicked: function(clickEvent)
             {
                 this._instanceCommands.undockInterface();
@@ -166,6 +192,9 @@ define(['dojo/_base/declare',
             _onConsoleKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendConsoleInput("\u0004");
+            },
+            _onSettingButtonClicked: function(clickEvent){
+                alert("put console settings here");
             },
             _onViewportResize: function(resizeEvent)
             {

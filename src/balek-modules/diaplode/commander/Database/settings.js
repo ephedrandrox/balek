@@ -3,7 +3,6 @@ define(['dojo/_base/declare',
         'dojo/topic',
         'balek-modules/diaplode/Database',
 
-
     ],
     function (declare, lang, topic,  diaplodeDatabaseController) {
         return declare("moduleDiaplodeCommanderSettingsDatabaseController", [diaplodeDatabaseController], {
@@ -79,22 +78,54 @@ define(['dojo/_base/declare',
             setUserSettings: function(userSettings)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    this.getUserSettings().then(lang.hitch(this, function (userSettingsResults) {
+                        userSettingsResults.toArray().then(lang.hitch(this, function(userSettingsResultsArray){
+                            if(userSettingsResultsArray.length>0 && userSettingsResultsArray[0])
+                            {
+                                //settings already in database, get collection and update
+                                //todo save collection in controller instead of retrieving each time
+                                let settingID = {_id: userSettingsResultsArray[0]._id};
+                                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
+                                    if(error){
+                                        Reject(error);
+                                    }
+                                    else if(collection){
+                                        debugger;
+                                        collection.updateOne(settingID, {$set: {userSettings: userSettings}}, lang.hitch(this, function (error, response) {
+                                            if(error){
+                                                Reject(error);
+                                            }
+                                            else if(response){
+                                                Resolve(response);
+                                            }
+                                        }));
+                                    }
+                                }));
 
-                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                        if(error){
-                            Reject(error);
-                        }
-                        else if(collection){
-                            collection.insertOne({_userKey: this._userKey, userSettings: userSettings}, lang.hitch(this, function (error, response) {
-                                if(error){
-                                    Reject(error);
-                                }
-                                else if(response){
-                                    Resolve(response);
-                                }
-                            }));
-                        }
+                            }else
+                            {
+                                //No Settings yet, so lets create them
+                                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
+                                    if(error){
+                                        Reject(error);
+                                    }
+                                    else if(collection){
+                                        collection.insertOne({_userKey: this._userKey, userSettings: userSettings}, lang.hitch(this, function (error, response) {
+                                            if(error){
+                                                Reject(error);
+                                            }
+                                            else if(response){
+                                                Resolve(response);
+                                            }
+                                        }));
+                                    }
+                                }));
+                            }
+                        }));
+                    })).catch(lang.hitch(this, function (error) {
+                        Reject(error);
                     }));
+
                 }));
             }
         });

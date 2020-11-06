@@ -13,7 +13,7 @@ define(['dojo/_base/declare',
               lang,
               systemCommand) {
         return declare("diaplodeSystemSSHService", null, {
-            
+
             _onOutputCallback: null,
             _onErrorCallback: null,
             _onCloseCallback: null,

@@ -50,8 +50,11 @@
 .diaplodeCommanderInterfaceConsoleTopBarDiv {
     padding: 0;
     margin: 0;
+    color: black;
     grid-area: 1 / 1 / 2 / 3;
     background: white;
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
 }
 
 .diaplodeCommanderInterfaceConsoleInputDiv {
@@ -89,6 +92,13 @@
     background: #000280;
 }
 .diaplodeCommanderInterfaceConsoleDockMenuButtonDiv {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    border: solid #615561 3px;
+}
+
+.diaplodeCommanderInterfaceConsoleOnLoadSettingButtonDiv {
     padding: 0;
     margin: 0;
     display: inline-block;

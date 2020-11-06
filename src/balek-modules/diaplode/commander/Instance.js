@@ -16,7 +16,7 @@ define(['dojo/_base/declare',
 
             _settingsDatabase: null,
 
-            _userSettings:{ showOnLoad: true},  //these will be saved in database if no settings found
+            _userSettings:{ consoleDockedOnLoad: true},  //these will be saved in database if no settings found
 
             constructor: function (args) {
 
@@ -67,13 +67,23 @@ define(['dojo/_base/declare',
                     userKey: this._consoleInstance._userKey,
                     componentKey: this._consoleInstance._componentKey});
 
-                if(this._userSettings.showOnLoad)
+                if(this._userSettings.consoleDockedOnLoad)
                 {
+                    this._consoleInstance.dockInterface();
+                }else {
                     this._consoleInstance.undockInterface();
                 }
             },
             saveSettings:function(settings, remoteCommanderCallback) {
-                remoteCommanderCallback({message: "worked"});
+                if(settings.consoleDockedOnLoad === true || settings.consoleDockedOnLoad === false)
+                {
+                    this._userSettings.consoleDockedOnLoad = settings.consoleDockedOnLoad;
+                }
+                this._settingsDatabase.setUserSettings(this._userSettings).then(function(Result){
+                    remoteCommanderCallback({message: "worked"});
+                }).catch(function(errorResult){
+                    remoteCommanderCallback({error: errorResult});
+                });
             },
             _end: function () {
                     return new Promise(lang.hitch(this, function(Resolve, Reject){
