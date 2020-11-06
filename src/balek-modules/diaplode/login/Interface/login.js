@@ -74,6 +74,8 @@ define(['dojo/_base/declare',
                                     if(loginReply.error === undefined)
                                     {
                                         topic.publish("requestModuleLoad", "diaplode/navigator");
+                                        topic.publish("requestModuleLoad", "diaplode/commander");
+
                                         topic.publish("loadBackground", "flowerOfLife");
                                         this.destroy();
                                     }

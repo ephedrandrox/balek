@@ -1,0 +1,27 @@
+<div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus,onblur:onBlur" tabindex="1">
+    <div class="${baseClass}TopBarDiv" data-dojo-attach-point='_consoleOutputNode' >
+        Diaplode Console:
+    </div>
+
+    <div class="${baseClass}OutputDiv" data-dojo-attach-point='_consoleOutputNode' >
+    </div>
+
+    <div class="${baseClass}MenuDiv">
+        <b>Keys:</b> </br>
+        <b>Return:</b> Nothing </br>
+        <b>Return + Shift :</b> Request Session Menu Module </br>
+        </br>
+        <b>esc:</b> Hide/show Navigator </br>
+        <b>esc+shift:</b> request Admin System Module </br>
+    </div>
+
+    <div class="${baseClass}InputDiv">
+        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleKillClicked">X</div>
+        <input data-dojo-attach-point='_consoleInputNode' type="text" autocomplete="off" class="${baseClass}Input"
+               data-dojo-attach-event="onkeyup:_onConsoleInputKeyUp" />
+    </div>
+
+    <div class="${baseClass}DockMenuDiv" >
+        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleUndockButtonClicked">⬇︎</div>
+    </div>
+</div>
