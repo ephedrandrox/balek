@@ -133,7 +133,6 @@ define([ 	'dojo/_base/declare',
                 }
                 else
                 {
-                    debugger;
                     console.log("session request unkown.");
                 }
 
@@ -220,7 +219,6 @@ define([ 	'dojo/_base/declare',
                 });
             },
             unload: function(){
-                debugger;
 
                 //unload all instances
                 for(const instanceKey in this._instances) {
@@ -233,9 +231,7 @@ define([ 	'dojo/_base/declare',
                     });
 
                 }
-                debugger;
                 for( const watchHandle in this._availableSessionStateWatchHandles){
-                    debugger;
 
                     this._availableSessionStateWatchHandles[watchHandle].unwatch();
                     this._availableSessionStateWatchHandles[watchHandle].remove();

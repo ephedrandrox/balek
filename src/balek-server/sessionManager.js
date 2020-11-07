@@ -302,14 +302,12 @@ define(['dojo/_base/declare',
             },
             unloadAllUserSessionsExcept: function(sessionKeyToKeep){
                 let sessionUserKey = this._sessions[sessionKeyToKeep].getUserKey();
-                debugger;
 
 
                 this.getSessionsForUserKey(sessionUserKey, lang.hitch(this, function(sessionsForUser){
                     sessionsForUser.forEach(lang.hitch(this, function(session){
                         if(sessionKeyToKeep !== session._sessionKey)
                         {
-                            debugger;
                             this.unloadSession(session._sessionKey);
                         }
                     }));

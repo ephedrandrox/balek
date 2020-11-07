@@ -86,6 +86,8 @@ define(['dojo/_base/declare',
                                                 topic.publish("requestModuleLoad", "diaplode/commander");
 
                                                 topic.publish("loadBackground", "flowerOfLife");
+
+                                                this.destroy();
                                             }
                                         }));
 

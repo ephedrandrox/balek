@@ -62,6 +62,25 @@ define(['dojo/_base/declare',
                                         messageCallback);
 
                                 }
+                                if( moduleMessage.messageData.request === "Component State Connect" &&
+                                    moduleMessage.messageData.componentKey) {
+debugger;
+                                    this._stateSyncer.connectComponentInterface(this._instanceKey,
+                                        moduleMessage.messageData.componentKey,
+                                        moduleMessage.messageData.stateName,
+                                        messageCallback);
+
+                                }
+                            if( moduleMessage.messageData.request === "Component State Update" &&
+                                moduleMessage.messageData.componentKey) {
+                                debugger;
+                                this._stateSyncer.updateComponentInterface(this._instanceKey,
+                                    moduleMessage.messageData.componentKey,
+                                    moduleMessage.messageData.stateName,
+                                    moduleMessage.messageData.update);
+
+                            }
+
 
                         }
                         //console.log(moduleMessage.messageData);

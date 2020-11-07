@@ -29,15 +29,17 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/navigator/Interface/menuItem",
 
         "balek-modules/diaplode/ui/input/getUserInput",
+        "balek-modules/diaplode/ui/containers/movable"
+
 
 
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss, baseInterface, stateSynced, remoteCommander,
-              menuItem, getUserInput) {
+              menuItem, getUserInput, diaplodeMovableContainer) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
+        return declare("moduleDiaplodeNavigatorInterfaceRadialMenu", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander, diaplodeMovableContainer], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterfaceRadialMenu",
@@ -80,6 +82,9 @@ define(['dojo/_base/declare',
             postCreate: function()
             {
                     topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
+                    //only do this then reset
+                //
+               this.makeMovable();
             },
 
             //##########################################################################################################
@@ -220,15 +225,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
 
-            moveTo: function(x,y){
-                //make this part of a Movable class that inherits
-                this._xRelativePosition = x;
-                this._yRelativePosition = y;
 
-
-                domStyle.set(this.domNode, "top", y+"%");
-                domStyle.set(this.domNode, "left", x+"%");
-            },
             introAnimation: function(){
                 fx.animateProperty({
                     node:this.domNode,
@@ -299,8 +296,8 @@ define(['dojo/_base/declare',
 
             arrangeMenuItems: function () {
                 let placementArray = [
-                    {x:50,y:10},{x:66,y:30},{x:66,y:70},
-                    {x:50,y:90},{x:34,y:70},{x:34,y:30},
+                    {x:500,y:100},{x:660,y:300},{x:660,y:700},
+                    {x:500,y:900},{x:340,y:700},{x:340,y:300},
                     {x:42,y:20},{x:58,y:20},{x:66,y:50},
                     {x:58,y:80},{x:42,y:80},{x:33,y:50}  ];
                 let count = 0;

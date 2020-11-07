@@ -13,6 +13,7 @@ define(['dojo/_base/declare',
         "dojo/_base/fx",
         "dojox/fx/ext-dojo/complex",
 
+
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
@@ -27,6 +28,8 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/navigator/Interface/radialMenu",
 
         "balek-modules/diaplode/ui/input/getUserInput",
+
+    "balek-modules/diaplode/ui/containers/movable"
 
     ],
     function (declare,
@@ -51,9 +54,10 @@ define(['dojo/_base/declare',
               stateSynced,
               remoteCommander,
               radialMenu,
-              getUserInput) {
+              getUserInput,
+              diaplodeMovableContainer) {
 
-        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
+        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander,diaplodeMovableContainer], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterface",
@@ -62,7 +66,8 @@ define(['dojo/_base/declare',
             _newMenus: [],
             _mainLogDiv: null,
 
-            _DBCollection: "Diaplode",
+
+
 
 
             //##########################################################################################################
@@ -93,6 +98,8 @@ define(['dojo/_base/declare',
             postCreate: function () {
                 topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
+
+               this.makeMovable();
 
             },
 
