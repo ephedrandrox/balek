@@ -50,7 +50,6 @@ define(['dojo/_base/declare',
                   this.getComponentState("diaplodeMovable").then(lang.hitch(this, function(stateResult){
                       this._diaplodeMovableState = stateResult;
                       this._diaplodeMovableState.watch(lang.hitch(this, this.onStateReceived));
-
                       //set and watch the state
                       console.log(this._diaplodeMovableState);
                   })).catch(lang.hitch(this, function(errorResult){
@@ -64,6 +63,8 @@ define(['dojo/_base/declare',
             },
             onStateReceived: function(name, oldState, newState)
             {
+                console.log("COmponent State Received!");
+
                 console.log(name, oldState, newState);
                 if(name === 'elementBox' && oldState === undefined){
                     this.moveTo(Math.round(newState.t), Math.round(newState.l));
@@ -71,6 +72,7 @@ define(['dojo/_base/declare',
 
             },
             makeMovable: function(){
+                console.log("Making Movable");
 
                 if(this._diaplodeMovableState){
                    let movableState =  this._diaplodeMovableState.get("elementBox");
@@ -79,6 +81,7 @@ define(['dojo/_base/declare',
                     }
                 }
                 this._dnd = new Moveable(this.domNode);
+
                 this._dnd.on("MoveStop", lang.hitch(this, this.onMoved));
 
             },
@@ -91,6 +94,7 @@ define(['dojo/_base/declare',
             },
             onMoved: function(MoveEvent){
                 let elementBox = domGeometry.getContentBox(this.domNode);
+                console.log("sending Box");
                 this._componentStateSet("diaplodeMovable", "elementBox", elementBox);
             }
         });

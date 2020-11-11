@@ -40,7 +40,7 @@ define(['dojo/_base/declare',
                             if( moduleMessage.messageData.request === "Component State Connect" &&
                                 moduleMessage.messageData.componentKey) {
                                 debugger;
-                                this._stateSyncer.connectComponentInterface(this._instanceKey,
+                                this.connectComponentInterface(this._instanceKey,
                                     moduleMessage.messageData.componentKey,
                                     moduleMessage.messageData.stateName,
                                     messageCallback);
@@ -49,7 +49,7 @@ define(['dojo/_base/declare',
                             if( moduleMessage.messageData.request === "Component State Update" &&
                                 moduleMessage.messageData.componentKey) {
                                 debugger;
-                                this._stateSyncer.updateComponentInterface(this._instanceKey,
+                                this.updateComponentInterface(this._instanceKey,
                                     moduleMessage.messageData.componentKey,
                                     moduleMessage.messageData.stateName,
                                     moduleMessage.messageData.update);

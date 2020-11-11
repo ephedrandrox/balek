@@ -57,7 +57,7 @@ define(['dojo/_base/declare',
               getUserInput,
               diaplodeMovableContainer) {
 
-        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander,diaplodeMovableContainer], {
+        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander, diaplodeMovableContainer], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterface",
@@ -99,7 +99,7 @@ define(['dojo/_base/declare',
                 topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
 
-               this.makeMovable();
+                this.makeMovable();
 
             },
 

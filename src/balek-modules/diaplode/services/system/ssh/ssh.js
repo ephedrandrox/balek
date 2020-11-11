@@ -26,10 +26,9 @@ define(['dojo/_base/declare',
                 //ToDO have it check for ssh version and ability to connect
                 console.log("diaplodeSystemSSHService starting...");
                 if(this.sshUsername != null && this.sshHostname != null && this._onOutputCallback != null) {
-                    // let arguments = ["-tt", this.sshUsername+"@"+this.sshHostname];
-                    let arguments = ["-tt","localhost"];
+                    let sshArguments = ["-tt","localhost"];
                     this._systemCommand = new systemCommand({_command: "ssh",
-                        _arguments: arguments,
+                        _arguments: sshArguments,
                         _onOutputCallback: this._onOutputCallback});
                     this.runCommand().then(lang.hitch(this, function(sshResult){
                         //it should just keep running

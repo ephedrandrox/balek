@@ -82,8 +82,13 @@ define(['dojo/_base/declare',
             _ComponentStateChangeCallback: function(stateName, stateChangeUpdate){
                 let componentState = JSON.parse(stateChangeUpdate.componentState);
 
-                for (const [key, value] of Object.entries(componentState)) {
+               /* for (const [key, value] of Object.entries(componentState)) {
                     this._componentStates[stateName].set(key, value);
+                }
+                */
+                for (const key in componentState)
+                {
+                    this._componentStates[stateName].set(key, componentState[key]);
                 }
 
             },
@@ -207,10 +212,17 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
                     console.log("destroying Interface State Watch handles");
                     //todo _componentStateWatchHandles get rid of all of these
-                    for (const [key, value] of Object.entries(this._componentStateWatchHandles)) {
+                 /*   for (const [key, value] of Object.entries(this._componentStateWatchHandles)) {
                         this._componentStateWatchHandles[key].unwatch();
                         this._componentStateWatchHandles[key].remove();
                     }
+*/
+                    for (const key in this._componentStateWatchHandles)
+                    {
+                        this._componentStateWatchHandles[key].unwatch();
+                        this._componentStateWatchHandles[key].remove();
+                    }
+
 
                     this._interfaceStateWatchHandle.unwatch();
                     this._interfaceStateWatchHandle.remove();
@@ -220,10 +232,12 @@ define(['dojo/_base/declare',
             unload: function () {
                 console.log("destroying Interface State Watch handles");
                 //_componentStateWatchHandles get rid of all of these
-                for (const [key, value] of Object.entries(this._componentStateWatchHandles)) {
+                for (const key in this._componentStateWatchHandles)
+                {
                     this._componentStateWatchHandles[key].unwatch();
                     this._componentStateWatchHandles[key].remove();
                 }
+
 
                 this._interfaceStateWatchHandle.unwatch();
                 this._interfaceStateWatchHandle.remove();
