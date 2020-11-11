@@ -16,6 +16,8 @@ define(['dojo/_base/declare',
         "dijit/_TemplatedMixin",
         'dojo/text!balek-modules/diaplode/commander/resources/html/console.html',
         'dojo/text!balek-modules/diaplode/commander/resources/css/console.css',
+        //Diaplode ui components
+        "balek-modules/diaplode/ui/input/getUserInput",
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
     ],
@@ -37,6 +39,8 @@ define(['dojo/_base/declare',
               _TemplatedMixin,
               template,
               mainCss,
+              //Diaplode ui components
+              getUserInput,
               //Balek Interface Includes
               _syncedCommanderInterface) {
         return declare("moduleDiaplodeCommanderInterfaceConsole", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface], {
@@ -191,7 +195,18 @@ define(['dojo/_base/declare',
             },
             _onConsoleNewNoteButtonClicked: function(clickEvent){
                 console.log("clicked");
-                topic.publish("createNewDiaplodeNote");
+
+                let getDataForNote = new getUserInput({question: "Start Note with...",
+                                inputReplyCallback: lang.hitch(this, function(newNoteData){
+                        console.log("Requesting new Note with", newNoteData);
+
+                        topic.publish("createNewDiaplodeNote", newNoteData);
+
+
+
+                                    getDataForNote.unload();
+                    }) });
+
             },
             _onConsoleKillClicked: function(clickEvent)
             {

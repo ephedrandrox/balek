@@ -20,9 +20,9 @@ define(['dojo/_base/declare',
                 this._interfaces = [];
                 console.log("moduleDiaplodeElementsNotesInterface started", this._instanceKey);
 
-               this._createNoteSubscribeHandle=  topic.subscribe("createNewDiaplodeNote", lang.hitch(this, function(){
+               this._createNoteSubscribeHandle=  topic.subscribe("createNewDiaplodeNote", lang.hitch(this, function(noteContent){
                     console.log("createNewDiaplodeNote topic Command Called");
-                    this._instanceCommands.createNote().then(function(commandReturnResults){
+                    this._instanceCommands.createNote(noteContent).then(function(commandReturnResults){
                         debugger;
                         console.log("Create Note Received Command Response", commandReturnResults);
                     }).catch(function(commandErrorResults){

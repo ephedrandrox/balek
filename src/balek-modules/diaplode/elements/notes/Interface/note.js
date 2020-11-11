@@ -16,6 +16,8 @@ define(['dojo/_base/declare',
     "dijit/_TemplatedMixin",
     'dojo/text!balek-modules/diaplode/elements/notes/resources/html/note.html',
     'dojo/text!balek-modules/diaplode/elements/notes/resources/css/note.css',
+    //Diaplode ui components
+    "balek-modules/diaplode/ui/input/getUserInput",
     //Balek Interface Includes
     'balek-modules/components/syncedCommander/Interface',
     "balek-modules/diaplode/ui/containers/movable"
@@ -39,6 +41,8 @@ function (declare,
           _TemplatedMixin,
           template,
           mainCss,
+          //Diaplode ui components
+          getUserInput,
           //Balek Interface Includes
           _syncedCommanderInterface,
           diaplodeMovableContainer) {
@@ -80,7 +84,26 @@ function (declare,
             if (name === "Status" && newState === "Ready") {
                 console.log("Instance Status:", newState);
             }
+            if (name === "noteContent") {
+               this.domNode.innerHTML = newState;
+            }
             console.log(name, newState);
+        },
+        _onDoubleClick: function(clickEvent)
+        {
+            let getDataForNote = new getUserInput({question: "Change Note to...",
+                inputReplyCallback: lang.hitch(this, function(newnoteContent){
+                    console.log("Requesting Note Data Change with", newnoteContent);
+
+                    this._instanceCommands.addContent(newnoteContent).then(function(commandResult){
+                        console.log(commandResult);
+                    });
+
+
+
+                    getDataForNote.unload();
+                }) });
+
         },
         _onKeyUp: function(keyUpEvent){
             switch (keyUpEvent.keyCode) {
