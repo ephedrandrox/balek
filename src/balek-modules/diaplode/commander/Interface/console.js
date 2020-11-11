@@ -189,6 +189,10 @@ define(['dojo/_base/declare',
             {
                 this._instanceCommands.undockInterface();
             },
+            _onConsoleNewNoteButtonClicked: function(clickEvent){
+                console.log("clicked");
+                topic.publish("createNewDiaplodeNote");
+            },
             _onConsoleKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendConsoleInput("\u0004");
