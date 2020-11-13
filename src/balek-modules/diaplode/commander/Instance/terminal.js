@@ -43,8 +43,14 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Remote Command Functions Section
             //##########################################################################################################
-            connectTerminal:  function(connectionInfo)
+            connectTerminal:  function(remoteCommandCallback)
             {
+                remoteCommandCallback({success: "Connecting Terminal"});
+
+                this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
+                    _onOutputCallback: lang.hitch(this, function(data){
+                        this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
+                    })});
 
             },
             sendTerminalInput: function( input){

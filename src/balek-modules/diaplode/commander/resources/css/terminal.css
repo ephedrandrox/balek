@@ -6,7 +6,13 @@
 .diaplodeCommanderInterfaceTerminal {
     position: absolute;
     background: rgba(77, 164, 164, 0.27);
-    display: inline-block;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 30px;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
     padding: 0;
     margin: 0;
     border: none;
@@ -22,6 +28,7 @@
     height: 200px;
 
     max-height: 80%;
+    max-width: 80%;
     outline: none;
     opacity: .6;
 
@@ -29,4 +36,32 @@
     box-shadow: 0px 0px 15px 8px #050530;
 
     text-align: left;
+}
+
+.diaplodeCommanderInterfaceTerminalOutputDiv {
+    grid-area: 1 / 1 / 2 / 2;
+    background: black;
+    color: white;
+    overflow: auto;
+    scroll: auto;
+}
+.diaplodeCommanderInterfaceTerminalInputFrame {
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    grid-area: 2 / 1 / 3 / 2;
+    background: blue
+}
+.diaplodeCommanderInterfaceTerminalInputFrameInputDiv {
+    grid-area: 1 / 1 / 2 / 2; }
+.diaplodeCommanderInterfaceTerminalInputFrameButtonsDiv {
+    grid-area: 1 / 2 / 2 / 3; }
+
+.diaplodeCommanderInterfaceTerminalInput {
+    background: black;
+    color: white;
+    width: 100%;
+    height: 100%;
 }

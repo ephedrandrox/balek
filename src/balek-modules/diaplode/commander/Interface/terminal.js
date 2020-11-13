@@ -11,11 +11,14 @@ define(['dojo/_base/declare',
         "dojo/fx",
         "dojo/keys",
         //Dijit widget includes
-        "dijit/Viewport",
+        "dijit/focus",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         'dojo/text!balek-modules/diaplode/commander/resources/html/terminal.html',
         'dojo/text!balek-modules/diaplode/commander/resources/css/terminal.css',
+
+        "balek-modules/diaplode/ui/input/getUserInput",
+
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
         "balek-modules/diaplode/ui/containers/movable"
@@ -34,11 +37,12 @@ define(['dojo/_base/declare',
               fx,
               dojoKeys,
               //Dijit widget includes
-              dijitViewPort,
+              dijitFocus,
               _WidgetBase,
               _TemplatedMixin,
               template,
               mainCss,
+              getUserInput,
               //Balek Interface Includes
               _syncedCommanderInterface,
               _diaplodeMovableContainer) {
@@ -69,11 +73,11 @@ define(['dojo/_base/declare',
 
                 if(dockedState === 'false')
                 {
-                    this.dockTerminal();
+                    //this.dockTerminal();
                 }
                 else
                 {
-                    this.unDockTerminal();
+                    //this.unDockTerminal();
                 }
                 this.makeMovable();
 
@@ -90,11 +94,11 @@ define(['dojo/_base/declare',
                     console.log("terminalDocked Status:", newState);
 
                     if(newState==='true'){
-                        this.dockTerminal();
+                     //   this.dockTerminal();
 
                     }else
                     {
-                        this.unDockTerminal();
+                     //   this.unDockTerminal();
                     }
                 }else if (name === "terminalOutput" ) {
                     this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
@@ -137,7 +141,10 @@ define(['dojo/_base/declare',
                 }
             },
             _onFocus: function(event){
-
+                dijitFocus.focus(this._terminalInputNode);
+            },
+            _onClick: function(event){
+                dijitFocus.focus(this._terminalInputNode);
             },
             _onTerminalInputKeyUp: function(keyUpEvent){
                 console.log("Key up code an dstuff---------------------------",keyUpEvent);
@@ -172,39 +179,17 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            _terminalOnLoadToggleClicked: function(clickEvent){
-
-                let currentSetting = this._interfaceState.get("terminalDocked");
-                if(currentSetting === "docked")
-                {
-
-                }else
-                {
-                    this._commanderInstanceCommands.saveSettings({terminalDockedOnLoad: false}).then(
-                        function(results){
-                            console.log("got results", results);
-                        });
-                }
-            },
-            _onTerminalUndockButtonClicked: function(clickEvent)
+            _onTerminalConnectClicked: function(clickEvent)
             {
-                this._instanceCommands.undockInterface();
+                console.log("Connecting Terminal");
+
+               this._instanceCommands.connectTerminal().then(function(remoteCommandResult){
+                   console.log(remoteCommandResult);
+               })
             },
             _onTerminalKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendTerminalInput("\u0004");
-            },
-            _onViewportResize: function(resizeEvent)
-            {
-                if(this._interfaceState.get("terminalDocked") === 'true'){
-                    console.log("resized docked");
-                    let elementBox = domGeometry.getContentBox(this.domNode);
-                    domStyle.set(this.domNode, {"top":(30-elementBox.h) + "px"});
-
-                }else {
-                    console.log("resized undocked");
-
-                }
             },
             //##########################################################################################################
             //UI Functions Section
