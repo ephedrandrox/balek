@@ -1,0 +1,32 @@
+.diaplodeCommanderInterfaceTerminal * {
+
+}
+
+
+.diaplodeCommanderInterfaceTerminal {
+    position: absolute;
+    background: rgba(77, 164, 164, 0.27);
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-bottom: solid #050530 3px;
+
+    visibility: visible;
+    top: 100px;
+    left: 100px;
+    right: 0;
+    bottom: 0;
+
+    width: 200px;
+    height: 200px;
+
+    max-height: 80%;
+    outline: none;
+    opacity: .6;
+
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
+
+    text-align: left;
+}

@@ -1,0 +1,10 @@
+<div class="${baseClass}"  data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus,onblur:onBlur" tabindex="1">
+   Terminal
+   <div data-dojo-attach-point='_terminalOutputNode'></div>
+
+   <div class="${baseClass}InputDiv">
+      <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onTerminalKillClicked">X</div>
+      <input data-dojo-attach-point='_terminalInputNode' type="text" autocomplete="off" class="${baseClass}Input"
+             data-dojo-attach-event="onkeyup:_onTerminalInputKeyUp" />
+   </div>
+</div>

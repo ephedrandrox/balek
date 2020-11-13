@@ -1,17 +1,20 @@
 define(['dojo/_base/declare',
         'dojo/topic',
         //Balek Interface Includes
+        'balek-modules/diaplode/commander/Interface/terminal',
         'balek-modules/diaplode/commander/Interface/console',
         //Balek Interface Extensions
         'balek-modules/components/syncedCommander/Interface',],
-    function (declare, topic, consoleInterface,  _syncedCommanderInterface ) {
+    function (declare, topic, terminalInterface, consoleInterface,  _syncedCommanderInterface ) {
         return declare("moduleDiaplodeCommanderInterface", _syncedCommanderInterface, {
             _instanceKey: null,
 
+            _terminalInterfaces:[],
             _consoleInterface: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+                this._terminalInterfaces=[];
                 console.log("moduleDiaplodeCommanderInterface started", this._instanceKey);
             },
             onInterfaceStateChange: function (name, oldState, newState) {
@@ -32,6 +35,14 @@ define(['dojo/_base/declare',
                             _componentKey: newState.componentKey,
                             _commanderInstanceCommands:  this._instanceCommands });
                     }
+                }else if(name.toString().substr(0,29) === "commanderTerminalInstanceKeys" &&
+                    newState.instanceKey && newState.componentKey && newState.sessionKey){
+                    console.log("starttttttt");
+
+                    this._terminalInterfaces.push(new terminalInterface({
+                        _instanceKey:newState.instanceKey,
+                        _componentKey:newState.componentKey,
+                        _sessionKey:newState.sessionKey}))
                 }
             }
         });

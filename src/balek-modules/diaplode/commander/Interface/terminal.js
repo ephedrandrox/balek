@@ -14,12 +14,12 @@ define(['dojo/_base/declare',
         "dijit/Viewport",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-        'dojo/text!balek-modules/diaplode/commander/resources/html/console.html',
-        'dojo/text!balek-modules/diaplode/commander/resources/css/console.css',
-        //Diaplode ui components
-        "balek-modules/diaplode/ui/input/getUserInput",
+        'dojo/text!balek-modules/diaplode/commander/resources/html/terminal.html',
+        'dojo/text!balek-modules/diaplode/commander/resources/css/terminal.css',
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
+        "balek-modules/diaplode/ui/containers/movable"
+
     ],
     function (declare,
               lang,
@@ -39,21 +39,19 @@ define(['dojo/_base/declare',
               _TemplatedMixin,
               template,
               mainCss,
-              //Diaplode ui components
-              getUserInput,
               //Balek Interface Includes
-              _syncedCommanderInterface) {
-        return declare("moduleDiaplodeCommanderInterfaceConsole", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface], {
+              _syncedCommanderInterface,
+              _diaplodeMovableContainer) {
+        return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeMovableContainer], {
             _instanceKey: null,
 
             templateString: template,
             _mainCssString: mainCss,
-            baseClass: "diaplodeCommanderInterfaceConsole",
+            baseClass: "diaplodeCommanderInterfaceTerminal",
 
-            _consoleInputNode: null,
-            _consoleOutputNode: null,
+            _terminalInputNode: null,
+            _terminalOutputNode: null,
 
-            _consoleOnLoadSettingNode: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -63,21 +61,22 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-                dijitViewPort.on("resize", lang.hitch(this, this._onViewportResize));
             },
             postCreate: function () {
-               // domConstruct.place(this.domNode, this._ContactsListDomNode);
+                // domConstruct.place(this.domNode, this._ContactsListDomNode);
                 topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
-                let dockedState = this._interfaceState.get("consoleDocked");
+                let dockedState = this._interfaceState.get("terminalDocked");
 
                 if(dockedState === 'false')
                 {
-                    this.dockConsole();
+                    this.dockTerminal();
                 }
                 else
                 {
-                    this.unDockConsole();
+                    this.unDockTerminal();
                 }
+                this.makeMovable();
+
             },
             //##########################################################################################################
             //Event Functions Section
@@ -87,23 +86,23 @@ define(['dojo/_base/declare',
                 if (name === "Status" && newState === "Ready") {
                     console.log("Instance Status:", newState);
                 }
-                else if( name==="consoleDocked") {
-                    console.log("consoleDocked Status:", newState);
+                else if( name==="terminalDocked") {
+                    console.log("terminalDocked Status:", newState);
 
                     if(newState==='true'){
-                        this.dockConsole();
+                        this.dockTerminal();
 
                     }else
                     {
-                        this.unDockConsole();
+                        this.unDockTerminal();
                     }
-                }else if (name === "consoleOutput" ) {
-                    this._consoleOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
+                }else if (name === "terminalOutput" ) {
+                    this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
 
-                    this._consoleOutputNode.scrollTop = this._consoleOutputNode.scrollHeight;
+                    this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
                 }
                 console.log(name, newState);
-                },
+            },
             _onKeyUp: function(keyUpEvent){
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ENTER:
@@ -120,8 +119,6 @@ define(['dojo/_base/declare',
 
                         } else {
 
-                            this._instanceCommands.dockInterface();
-                            keyUpEvent.stopPropagation();
                         }
                         break;
                     case dojoKeys.SHIFT:
@@ -142,21 +139,21 @@ define(['dojo/_base/declare',
             _onFocus: function(event){
 
             },
-            _onConsoleInputKeyUp: function(keyUpEvent){
+            _onTerminalInputKeyUp: function(keyUpEvent){
                 console.log("Key up code an dstuff---------------------------",keyUpEvent);
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ENTER:
                         keyUpEvent.preventDefault();
                         if (this._shiftDown) {
-                            this._instanceCommands.sendConsoleInput(this._consoleInputNode.value);
-                            this._instanceCommands.sendConsoleInput( "\n");
+                            this._instanceCommands.sendTerminalInput(this._terminalInputNode.value);
+                            this._instanceCommands.sendTerminalInput( "\n");
                         } else {
-                            if (this._consoleInputNode.value === "") {
-                                this._instanceCommands.sendConsoleInput( "\n");
+                            if (this._terminalInputNode.value === "") {
+                                this._instanceCommands.sendTerminalInput( "\n");
                             }else
                             {
-                                this._instanceCommands.sendConsoleInput(this._consoleInputNode.value);
-                                this._consoleInputNode.value = "";
+                                this._instanceCommands.sendTerminalInput(this._terminalInputNode.value);
+                                this._terminalInputNode.value = "";
                             }
                         }
                         break;
@@ -164,8 +161,8 @@ define(['dojo/_base/declare',
                         keyUpEvent.preventDefault();
                         if (this._shiftDown) {
                         } else {
-                            if(this._consoleInputNode.value != ""){
-                                this._consoleInputNode.value = "";
+                            if(this._terminalInputNode.value != ""){
+                                this._terminalInputNode.value = "";
                                 keyUpEvent.stopPropagation();
                             }
                         }
@@ -175,109 +172,56 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            _consoleOnLoadToggleClicked: function(clickEvent){
+            _terminalOnLoadToggleClicked: function(clickEvent){
 
-                let currentSetting = this._interfaceState.get("consoleDocked");
+                let currentSetting = this._interfaceState.get("terminalDocked");
                 if(currentSetting === "docked")
                 {
 
                 }else
                 {
-                    this._commanderInstanceCommands.saveSettings({consoleDockedOnLoad: false}).then(
+                    this._commanderInstanceCommands.saveSettings({terminalDockedOnLoad: false}).then(
                         function(results){
-                        console.log("got results", results);
+                            console.log("got results", results);
                         });
                 }
             },
-            _onConsoleUndockButtonClicked: function(clickEvent)
+            _onTerminalUndockButtonClicked: function(clickEvent)
             {
                 this._instanceCommands.undockInterface();
             },
-            _onConsoleNewNoteButtonClicked: function(clickEvent){
-                console.log("New Note clicked");
-
-                let getDataForNote = new getUserInput({question: "Start Note with...",
-                                inputReplyCallback: lang.hitch(this, function(newNoteData){
-                        console.log("Requesting new Note with", newNoteData);
-
-                        topic.publish("createNewDiaplodeNote", newNoteData);
-
-
-
-                                    getDataForNote.unload();
-                    }) });
-
-            },
-            _onConsoleNewTaskButtonClicked: function(clickEvent){
-                console.log("New Task clicked");
-
-                let getNameForTask = new getUserInput({question: "Name Task",
-                    inputReplyCallback: lang.hitch(this, function(newTaskName){
-                        console.log("Requesting new Task with", newTaskName);
-
-                        topic.publish("createNewDiaplodeTask", newTaskName);
-
-                        getNameForTask.unload();
-                    }) });
-
-            },
-            _onConsoleNewCommandButtonClicked: function(clickEvent){
-                console.log("New Command clicked");
-
-                let getNameForCommand = new getUserInput({question: "Name Command",
-                    inputReplyCallback: lang.hitch(this, function(newCommandName){
-                        console.log("Requesting new Command with Name ", newCommandName);
-
-                        //topic.publish("createNewDiaplodeCommand", newCommandName);
-                        //this could be something the commander handles
-
-                        getNameForCommand.unload();
-                    }) });
-
-            },
-            _onConsoleNewTerminalButtonClicked: function(clickEvent){
-                console.log("New Terminal clicked");
-
-               this._commanderInstanceCommands.newTerminal().then(function(remoteCommandResult){
-                   console.log(remoteCommandResult);
-               });
-
-            },
-            _onConsoleKillClicked: function(clickEvent)
+            _onTerminalKillClicked: function(clickEvent)
             {
-                this._instanceCommands.sendConsoleInput("\u0004");
-            },
-            _onSettingButtonClicked: function(clickEvent){
-                alert("put console settings here");
+                this._instanceCommands.sendTerminalInput("\u0004");
             },
             _onViewportResize: function(resizeEvent)
             {
-                    if(this._interfaceState.get("consoleDocked") === 'true'){
-                        console.log("resized docked");
-                        let elementBox = domGeometry.getContentBox(this.domNode);
-                        domStyle.set(this.domNode, {"top":(30-elementBox.h) + "px"});
+                if(this._interfaceState.get("terminalDocked") === 'true'){
+                    console.log("resized docked");
+                    let elementBox = domGeometry.getContentBox(this.domNode);
+                    domStyle.set(this.domNode, {"top":(30-elementBox.h) + "px"});
 
-                    }else {
-                        console.log("resized undocked");
+                }else {
+                    console.log("resized undocked");
 
-                    }
+                }
             },
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
-            unDockConsole: function(){
+            unDockTerminal: function(){
                 fx.slideTo({
-                        node: this.domNode,
-                        top: "0",
-                        left: "0",
-                        unit: "px",
-                        duration: 200,
-                        onBegin: lang.hitch(this, function(){
-                            domStyle.set(this.domNode, {"visibility": "visible"});
-                        })
-                    }).play();
+                    node: this.domNode,
+                    top: "0",
+                    left: "0",
+                    unit: "px",
+                    duration: 200,
+                    onBegin: lang.hitch(this, function(){
+                        domStyle.set(this.domNode, {"visibility": "visible"});
+                    })
+                }).play();
             },
-            dockConsole: function(){
+            dockTerminal: function(){
                 let elementBox = domGeometry.getContentBox(this.domNode);
 
                 console.log(elementBox);

@@ -1,17 +1,19 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-
+        //Diaplode Instance Includes
+        'balek-modules/diaplode/commander/Instance/terminal',
         'balek-modules/diaplode/commander/Instance/console',
         'balek-modules/diaplode/commander/Database/settings',
         'balek-modules/components/syncedCommander/Instance'
 
     ],
-    function (declare, lang, topic,  consoleInstance, settingsDatabase, _syncedCommanderInstance) {
+    function (declare, lang, topic, terminalInstance, consoleInstance, settingsDatabase, _syncedCommanderInstance) {
         return declare("moduleDiaplodeCommanderModuleInstance", _syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
 
+            _terminalInstances: [],
             _consoleInstance: null,
 
             _settingsDatabase: null,
@@ -21,10 +23,12 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-
+                this._terminalInstances = [];
                 //set syncedCommander commands
                 this._commands={
-                    "saveSettings" : lang.hitch(this, this.saveSettings)
+                    "saveSettings" : lang.hitch(this, this.saveSettings),
+                    "newTerminal" : lang.hitch(this, this.newTerminal)
+
                 };
                 //activate syncedCommander commands
                 this.setInterfaceCommands();
@@ -84,6 +88,15 @@ define(['dojo/_base/declare',
                 }).catch(function(errorResult){
                     remoteCommanderCallback({error: errorResult});
                 });
+            },
+            newTerminal: function(remoteCommandCallback){
+                remoteCommandCallback({success: "creating new Terminal Instance..."})
+                let newTerminalInstance = new terminalInstance({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: this._userKey});
+                this._terminalInstances.push( newTerminalInstance );
+                this._interfaceState.set("commanderTerminalInstanceKeys"+this._terminalInstances.length, {instanceKey: newTerminalInstance._instanceKey,
+                    sessionKey: newTerminalInstance._sessionKey,
+                    userKey: newTerminalInstance._userKey,
+                    componentKey: newTerminalInstance._componentKey});
             },
             _end: function () {
                     return new Promise(lang.hitch(this, function(Resolve, Reject){

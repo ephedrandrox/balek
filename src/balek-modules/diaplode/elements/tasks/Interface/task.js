@@ -45,8 +45,8 @@ function (declare,
           getUserInput,
           //Balek Interface Includes
           _syncedCommanderInterface,
-          diaplodeMovableContainer) {
-    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, diaplodeMovableContainer], {
+          _diaplodeMovableContainer) {
+    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeMovableContainer], {
         _instanceKey: null,
 
         templateString: template,

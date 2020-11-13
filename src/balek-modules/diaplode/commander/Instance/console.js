@@ -1,13 +1,14 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
 
+        //Diaplode Service Includes
         'balek-modules/diaplode/services/system/process/base/command',
         //Balek Instance Includes
         'balek-modules/components/syncedCommander/Instance',
+
     ],
     function (declare,
               lang,
-
               systemCommand,
               //Balek Instance Includes
               _syncedCommanderInstance) {
