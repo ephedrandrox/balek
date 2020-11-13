@@ -194,7 +194,7 @@ define(['dojo/_base/declare',
                 this._instanceCommands.undockInterface();
             },
             _onConsoleNewNoteButtonClicked: function(clickEvent){
-                console.log("clicked");
+                console.log("New Note clicked");
 
                 let getDataForNote = new getUserInput({question: "Start Note with...",
                                 inputReplyCallback: lang.hitch(this, function(newNoteData){
@@ -205,6 +205,47 @@ define(['dojo/_base/declare',
 
 
                                     getDataForNote.unload();
+                    }) });
+
+            },
+            _onConsoleNewTaskButtonClicked: function(clickEvent){
+                console.log("New Task clicked");
+
+                let getNameForTask = new getUserInput({question: "Name Task",
+                    inputReplyCallback: lang.hitch(this, function(newTaskName){
+                        console.log("Requesting new Task with", newTaskName);
+
+                        topic.publish("createNewDiaplodeTask", newTaskName);
+
+                        getNameForTask.unload();
+                    }) });
+
+            },
+            _onConsoleNewCommandButtonClicked: function(clickEvent){
+                console.log("New Command clicked");
+
+                let getNameForCommand = new getUserInput({question: "Name Command",
+                    inputReplyCallback: lang.hitch(this, function(newCommandName){
+                        console.log("Requesting new Command with Name ", newCommandName);
+
+                        //topic.publish("createNewDiaplodeCommand", newCommandName);
+                        //this could be something the commander handles
+
+                        getNameForCommand.unload();
+                    }) });
+
+            },
+            _onConsoleNewTerminalButtonClicked: function(clickEvent){
+                console.log("New Terminal clicked");
+
+                let getNameForTerminal = new getUserInput({question: "Terminal Name",
+                    inputReplyCallback: lang.hitch(this, function(newTerminalName){
+                        console.log("Requesting new Terminal with Name ", newTerminalName);
+
+                        //topic.publish("createNewDiaplodeCommand", newCommandName);
+                        //this could be something the commander handles
+
+                        getNameForTerminal.unload();
                     }) });
 
             },
