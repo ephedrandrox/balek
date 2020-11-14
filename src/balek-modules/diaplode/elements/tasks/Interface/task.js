@@ -20,7 +20,7 @@ define(['dojo/_base/declare',
     "balek-modules/diaplode/ui/input/getUserInput",
     //Balek Interface Includes
     'balek-modules/components/syncedCommander/Interface',
-    "balek-modules/diaplode/ui/containers/movable"
+        "balek-modules/diaplode/ui/containers/workspaceContainer"
 
 ],
 function (declare,
@@ -45,8 +45,8 @@ function (declare,
           getUserInput,
           //Balek Interface Includes
           _syncedCommanderInterface,
-          _diaplodeMovableContainer) {
-    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeMovableContainer], {
+          _diaplodeWorkspaceContainer) {
+    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeWorkspaceContainer], {
         _instanceKey: null,
 
         templateString: template,
@@ -73,8 +73,7 @@ function (declare,
             }));
         },
         postCreate: function () {
-            topic.publish("addToMainContentLayer", this.domNode);
-            this.makeMovable();
+            this.makeWorkspaceContainer();
         },
         //##########################################################################################################
         //Event Functions Section

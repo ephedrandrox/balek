@@ -21,7 +21,7 @@ define(['dojo/_base/declare',
 
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
-        "balek-modules/diaplode/ui/containers/movable"
+        "balek-modules/diaplode/ui/containers/workspaceContainer"
 
     ],
     function (declare,
@@ -45,8 +45,8 @@ define(['dojo/_base/declare',
               getUserInput,
               //Balek Interface Includes
               _syncedCommanderInterface,
-              _diaplodeMovableContainer) {
-        return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeMovableContainer], {
+              _diaplodeWorkspaceContainer) {
+        return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeWorkspaceContainer], {
             _instanceKey: null,
 
             templateString: template,
@@ -68,7 +68,7 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 // domConstruct.place(this.domNode, this._ContactsListDomNode);
-                topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
+               // topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                 let dockedState = this._interfaceState.get("terminalDocked");
 
                 if(dockedState === 'false')
@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
                 {
                     //this.unDockTerminal();
                 }
-                this.makeMovable();
+                this.makeWorkspaceContainer();
 
             },
             //##########################################################################################################
