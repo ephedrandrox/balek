@@ -19,6 +19,7 @@ define([ 	'dojo/_base/declare',
             _instances: null,
 
             constructor: function(args){
+                //todo audit/comment this file
 
 
                 declare.safeMixin(this, args);
@@ -113,29 +114,28 @@ define([ 	'dojo/_base/declare',
             },
             sessionRequest: function(request, messageReplyCallback)
             {
-                if(request.workspaceRequest && request.workspaceRequest.requestType === "new")
-                {
-                   this.getNewWorkspace();
-                }else if(request.interfaceLoadRequest && request.interfaceLoadRequest.requestType === "all"){
 
+                if(request.workspaceRequest && request.workspaceRequest.requestType === "new")
+                {//todo remove this workspace request
+                  // this.getNewWorkspace();
+                }else if(request.workspaceManagerRequest )
+                {
+                    this._workspaceManager.sessionRequest(request.workspaceManagerRequest, messageReplyCallback);
+                }else if(request.interfaceLoadRequest && request.interfaceLoadRequest.requestType === "all"){
                     messageReplyCallback( this.getInterfaceLoadObject());
                 }else if(request.interfaceConnectSyncedStateRequest){
                     this.setNewInterfaceCallback(messageReplyCallback);
-
                 }else if(request.moduleUnloadRequest && request.moduleUnloadRequest.sessionModuleInstanceKey !== undefined){
-
                     this.unloadModuleInstance(request.moduleUnloadRequest.sessionModuleInstanceKey).then(unloadResult =>{
                         messageReplyCallback(unloadResult);
                     }).catch(errorResult =>{
                         messageReplyCallback(errorResult);
                     });
-
                 }
                 else
                 {
-                    console.log("session request unkown.");
+                    console.log("session request uknown.");
                 }
-
             },
             unloadModuleInstance: function(sessionModuleInstanceKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
@@ -158,15 +158,17 @@ define([ 	'dojo/_base/declare',
 
                 }));
             },
-            getNewWorkspace: function(){
-
+           /* getNewWorkspace: function(){
+                //todo delte this after workspace state update
                 this.sendWorkspacesUpdate("new", this._workspaceManager.getNewWorkspace());
             },
             sendWorkspaces: function(){
-
+                //todo delete this after workspace state update
                 this.sendWorkspacesUpdate("all",  this._workspaceManager.getWorkspaces());
 
             },
+
+            */
             getInterfaceLoadObject: function(){
 
                 let interfaceData = {};
@@ -206,8 +208,9 @@ define([ 	'dojo/_base/declare',
 
                     return instancesToReturn;
             },
+            /*
             sendWorkspacesUpdate: function(updateType, workspacesData){
-
+                    //todo move this to workspaces or delete after state update
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {
                     sessionMessage: {
                         sessionKey: this._sessionKey,
@@ -217,7 +220,7 @@ define([ 	'dojo/_base/declare',
                             }
                     }
                 });
-            },
+            },*/
             unload: function(){
 
                 //unload all instances

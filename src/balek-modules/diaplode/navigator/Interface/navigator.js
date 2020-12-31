@@ -96,7 +96,7 @@ define(['dojo/_base/declare',
 
             },
             postCreate: function () {
-                topic.publish("addToMainContentLayer", this.domNode);
+                //topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
 
                 this.makeMovable();
@@ -109,7 +109,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             onInterfaceStateChange: function (name, oldState, newState) {
-                console.log(name, newState);
+               // console.log(name, newState);
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
@@ -126,7 +126,7 @@ define(['dojo/_base/declare',
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommandKey
                 if (name === "interfaceRemoteCommandKey") {
-                    console.log("Remote COmmander Key!");
+                  //  console.log("Remote COmmander Key!");
                     this._interfaceRemoteCommanderKey = newState;
 
                 }
@@ -137,7 +137,7 @@ define(['dojo/_base/declare',
                 }
 
                 if (name === "log") {
-                    console.log("adding to log", newState);
+                  //  console.log("adding to log", newState);
 
 
                     this._mainLogDiv.innerHTML += "<br/>" + newState;

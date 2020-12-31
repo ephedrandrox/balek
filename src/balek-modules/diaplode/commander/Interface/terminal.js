@@ -21,7 +21,7 @@ define(['dojo/_base/declare',
 
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
-        "balek-modules/diaplode/ui/containers/workspaceContainer"
+        'balek-client/session/workspace/container/containable'
 
     ],
     function (declare,
@@ -45,8 +45,8 @@ define(['dojo/_base/declare',
               getUserInput,
               //Balek Interface Includes
               _syncedCommanderInterface,
-              _diaplodeWorkspaceContainer) {
-        return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeWorkspaceContainer], {
+              _balekWorkspaceContainerContainable) {
+        return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _balekWorkspaceContainerContainable], {
             _instanceKey: null,
 
             templateString: template,
@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
                 {
                     //this.unDockTerminal();
                 }
-                this.makeWorkspaceContainer();
+                this.initializeContainable();
 
             },
             //##########################################################################################################
@@ -88,10 +88,10 @@ define(['dojo/_base/declare',
             onInterfaceStateChange: function (name, oldState, newState) {
                 this.inherited(arguments);     //this has to be done so remoteCommander works
                 if (name === "Status" && newState === "Ready") {
-                    console.log("Instance Status:", newState);
+                   // console.log("Instance Status:", newState);
                 }
                 else if( name==="terminalDocked") {
-                    console.log("terminalDocked Status:", newState);
+                   // console.log("terminalDocked Status:", newState);
 
                     if(newState==='true'){
                      //   this.dockTerminal();
@@ -105,7 +105,7 @@ define(['dojo/_base/declare',
 
                     this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
                 }
-                console.log(name, newState);
+               // console.log(name, newState);
             },
             _onKeyUp: function(keyUpEvent){
                 switch (keyUpEvent.keyCode) {
@@ -141,10 +141,10 @@ define(['dojo/_base/declare',
                 }
             },
             _onFocus: function(event){
-                dijitFocus.focus(this._terminalInputNode);
+              //  dijitFocus.focus(this._terminalInputNode);
             },
             _onClick: function(event){
-                dijitFocus.focus(this._terminalInputNode);
+             //   dijitFocus.focus(this._terminalInputNode);
             },
             _onTerminalInputKeyUp: function(keyUpEvent){
                 console.log("Key up code an dstuff---------------------------",keyUpEvent);

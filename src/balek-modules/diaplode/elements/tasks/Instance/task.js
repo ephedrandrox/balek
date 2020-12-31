@@ -26,7 +26,7 @@ define(['dojo/_base/declare',
                 {
                     this._tasksDatabase.getUserTask(this._taskKey).then(
                         lang.hitch(this, function(userTaskResult){
-                            console.log("user Task Retrieval",userTaskResult);
+               //             console.log("user Task Retrieval",userTaskResult);
                             this._interfaceState.set("taskContent",userTaskResult.taskContent);
 
 
@@ -42,7 +42,7 @@ define(['dojo/_base/declare',
             {
                 this._tasksDatabase.updateUserTask(this._taskKey, content).then(
                     lang.hitch(this, function(userTaskResult){
-                        console.log("user Task Set",userTaskResult);
+                 //       console.log("user Task Set",userTaskResult);
                         this._interfaceState.set("taskContent", content);
                     })
                 ).catch(lang.hitch(this, function(userTaskError){

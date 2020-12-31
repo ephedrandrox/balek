@@ -39,7 +39,6 @@ define(['dojo/_base/declare',
                             }
                             if( moduleMessage.messageData.request === "Component State Connect" &&
                                 moduleMessage.messageData.componentKey) {
-                                debugger;
                                 this.connectComponentInterface(this._instanceKey,
                                     moduleMessage.messageData.componentKey,
                                     moduleMessage.messageData.stateName,
@@ -48,11 +47,18 @@ define(['dojo/_base/declare',
                             }
                             if( moduleMessage.messageData.request === "Component State Update" &&
                                 moduleMessage.messageData.componentKey) {
-                                debugger;
                                 this.updateComponentInterface(this._instanceKey,
                                     moduleMessage.messageData.componentKey,
                                     moduleMessage.messageData.stateName,
                                     moduleMessage.messageData.update);
+
+                            }
+                            if( moduleMessage.messageData.request === "Component State Default" &&
+                                moduleMessage.messageData.componentKey) {
+                                this.updateComponentStateDefaultValue(this._instanceKey,
+                                    moduleMessage.messageData.componentKey,
+                                    moduleMessage.messageData.stateName,
+                                    moduleMessage.messageData.default);
 
                             }
                         }

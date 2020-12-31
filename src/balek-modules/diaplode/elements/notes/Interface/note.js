@@ -6,13 +6,19 @@ define(['dojo/_base/declare',
     'dojo/dom-construct',
     "dojo/dom-geometry",
     "dojo/dom-style",
-    "dojo/_base/window",
+        "dojo/dom-class",
+        "dojo/_base/window",
     "dojo/ready",
     "dojo/fx",
     "dojo/keys",
     //Dijit widget includes
-    "dijit/Viewport",
-    "dijit/_WidgetBase",
+       // "dijit/Editor",
+        //"dojo/parser",
+       // "dijit/_editor/plugins/AlwaysShowToolbar",
+       // "dijit/_editor/plugins/FontChoice",
+       // "dijit/_editor/plugins/TextColor",
+
+        "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
     'dojo/text!balek-modules/diaplode/elements/notes/resources/html/note.html',
     'dojo/text!balek-modules/diaplode/elements/notes/resources/css/note.css',
@@ -20,7 +26,7 @@ define(['dojo/_base/declare',
     "balek-modules/diaplode/ui/input/getUserInput",
     //Balek Interface Includes
     'balek-modules/components/syncedCommander/Interface',
-        "balek-modules/diaplode/ui/containers/workspaceContainer"
+        'balek-client/session/workspace/container/containable'
 
 ],
 function (declare,
@@ -31,12 +37,17 @@ function (declare,
           domConstruct,
           domGeometry,
           domStyle,
+          domClass,
           win,
           dojoReady,
           fx,
           dojoKeys,
           //Dijit widget includes
-          dijitViewPort,
+         // dijitEditor,
+        //  dojoParser,
+        //  AlwaysShowToolbar,
+        // dijitEditorFontChoice,
+        //  dijitEditorTextColor,
           _WidgetBase,
           _TemplatedMixin,
           template,
@@ -45,9 +56,9 @@ function (declare,
           getUserInput,
           //Balek Interface Includes
           _syncedCommanderInterface,
-          _diaplodeWorkspaceContainer
+          _balekWorkspaceContainerContainable
 ) {
-    return declare("moduleDiaplodeElementsNotesInterfaceNote", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeWorkspaceContainer
+    return declare("moduleDiaplodeElementsNotesInterfaceNote", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _balekWorkspaceContainerContainable
     ], {
         _instanceKey: null,
 
@@ -60,6 +71,13 @@ function (declare,
 
         _consoleOnLoadSettingNode: null,
 
+        _viewNode: null,
+        _viewNodePre: null,
+
+        _dijitEditor: null,
+        _dijitEditorNode: null,
+
+
         //##########################################################################################################
         //Startup Functions Section
         //##########################################################################################################
@@ -67,15 +85,24 @@ function (declare,
         constructor: function (args) {
             declare.safeMixin(this, args);
 
+
             domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-            dojoReady(lang.hitch(this, function () {
+
+           // domConstruct.place(domConstruct.toDom("<style src='dijit/themes/claro/claro.css'></style>"), win.body());
+
+            domConstruct.place(domConstruct.toDom("<link rel=\"stylesheet\" href=\"/dijit/themes/claro/claro.css\">"), win.body());
+
+
+                dojoReady(lang.hitch(this, function () {
                 if (this._componentKey) {
                     this.askToConnectInterface();
                 }
             }));
         },
         postCreate: function () {
-            this.makeWorkspaceContainer();
+
+                this.initializeContainable();
+
         },
         //##########################################################################################################
         //Event Functions Section
@@ -86,31 +113,61 @@ function (declare,
                 console.log("Instance Status:", newState);
             }
             if (name === "noteContent") {
-               this.domNode.innerHTML = newState;
+               this._viewNodePre.innerHTML =  newState ;
             }
-            console.log(name, newState);
+           // console.log(name, newState);
         },
         _onDoubleClick: function(clickEvent)
         {
-            let getDataForNote = new getUserInput({question: "Change Note to...",
-                inputReplyCallback: lang.hitch(this, function(newnoteContent){
-                    console.log("Requesting Note Data Change with", newnoteContent);
+/*
+            this._dijitEditorNode = domConstruct.create("div");
+            this._dijitEditorNode.innerHTML = this._viewNode.innerHTML;
 
-                    this._instanceCommands.addContent(newnoteContent).then(function(commandResult){
-                        console.log(commandResult);
-                    });
+            domClass.add(this._dijitEditorNode, [this.baseClass+ "EditorDiv"]);
 
+            domConstruct.place(this._dijitEditorNode, this.domNode, "only");
 
+            dojoReady(lang.hitch(this, function(){
+                this._dijitEditor = new dijitEditor({
+                    // plugins: ["bold","italic","|","insertUnorderedList"],
 
-                    getDataForNote.unload();
-                }) });
+                    extraPlugins: ['foreColor', 'hiliteColor']
+                }, this._dijitEditorNode);
+
+                //
+                this._dijitEditor.onLoadDeferred.then(lang.hitch(this, function(){
+                    this._dijitEditor.set("value", "<b>This is new content.</b>");
+                }));
+                this._dijitEditor.startup();
+
+            }))
+*/
+            if(this._dijitEditorNode === null)
+            {
+                this._dijitEditorNode = domConstruct.create("textarea");
+            }
+
+            this._dijitEditorNode.value = this._viewNodePre.innerHTML;
+            domClass.add(this._dijitEditorNode, [this.baseClass+ "EditorTextArea"]);
+            domConstruct.place(this._dijitEditorNode, this.domNode, "only");
+
 
         },
         _onKeyUp: function(keyUpEvent){
             switch (keyUpEvent.keyCode) {
                 case dojoKeys.ENTER:
+
+
                     break;
                 case dojoKeys.ESCAPE:
+                    if(this._dijitEditorNode.value.toString() === this._viewNodePre.innerHTML.toString())
+                    {
+                        domConstruct.place( this._viewNode, this.domNode, "only");
+                    }else {
+                        this._viewNodePre.innerHTML = "waiting for changes"
+                        this._instanceCommands.addContent(this._dijitEditorNode.value);
+                    }
+                    domConstruct.place( this._viewNode, this.domNode, "only");
                     break;
                 case dojoKeys.SHIFT:
                     break;

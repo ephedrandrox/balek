@@ -127,7 +127,7 @@ define(['dojo/_base/declare',
             },
             connectInterface: function(instanceKey, componentKey, interfaceCallback) {
                 if (this._components[componentKey] && this._components[componentKey]._instanceKey === instanceKey) {
-                    console.log("connecting component to interface");
+             //       console.log("connecting component to interface");
                     this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
                 }
                 else{
@@ -137,7 +137,7 @@ define(['dojo/_base/declare',
             },
             connectComponentInterface:function(instanceKey, componentKey, stateName, interfaceCallback){
                 if (this._components[componentKey] && this._components[componentKey]._instanceKey === instanceKey) {
-                    console.log("connecting component to interface");
+                //    console.log("connecting component to interface");
                     this._components[componentKey].setNewComponentInterfaceCallback(stateName,interfaceCallback);
                 }
                 else{
@@ -194,6 +194,16 @@ define(['dojo/_base/declare',
 
 
             },
+            _componentDefaultStateSet: function(stateName, objectName, object){
+                this.sendInstanceMessage({
+                    request: "Component State Default",
+                    stateName: stateName,
+                    componentKey: this._componentKey,
+                    default: {name: objectName, state: object}
+                });
+
+
+            },
             updateComponentInterface: function(instanceKey, componentKey, stateName, stateUpdate){
                 //this is hwere I should be starting
                if( this._components[componentKey]){
@@ -203,6 +213,29 @@ define(['dojo/_base/declare',
                        component._componentStates[stateName].set(stateUpdate.name, stateUpdate.state);
                    }
                }
+            },
+            updateComponentStateDefaultValue:function(instanceKey, componentKey, stateName, stateUpdate){
+                //this is hwere I should be starting
+               // console.log(stateUpdate.name, stateUpdate.state);
+
+                if( this._components[componentKey]){
+                    let component = this._components[componentKey];
+                    if(component._componentStates[stateName] !== undefined)
+                    {
+                        if(component._componentStates[stateName].get(stateUpdate.name) === undefined)
+                        {
+                            console.log(stateUpdate.name, stateUpdate.state);
+                            component._componentStates[stateName].set(stateUpdate.name, stateUpdate.state);
+                        }
+                    }else
+                    {
+                        let componentState = declare([Stateful], {
+                        });
+                        component._componentStates[stateName] =new componentState({
+                        });
+                        component._componentStates[stateName].set(stateUpdate.name, stateUpdate.state);
+                    }
+                }
             },
             setNewInterfaceCallback: function(newInterfaceCallback){
                 this._stateChangeInterfaceCallback = newInterfaceCallback;
@@ -245,11 +278,14 @@ define(['dojo/_base/declare',
             getUniqueComponentKey: function () {
                 let crypto = require('dojo/node!crypto');
                 do {
-                    let id = crypto.randomBytes(20).toString('hex');
+                    let id = "CK" + crypto.randomBytes(20).toString('hex');
                     if (typeof this._components[id] == "undefined")
                         this._components[id] = "Waiting for Object";
                     return id;
                 } while (true);
             },
+            getComponentInterface(componentKey){
+                return this._components[componentKey];
+            }
         });
     });

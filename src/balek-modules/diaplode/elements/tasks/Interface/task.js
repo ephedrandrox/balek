@@ -20,7 +20,7 @@ define(['dojo/_base/declare',
     "balek-modules/diaplode/ui/input/getUserInput",
     //Balek Interface Includes
     'balek-modules/components/syncedCommander/Interface',
-        "balek-modules/diaplode/ui/containers/workspaceContainer"
+        'balek-client/session/workspace/container/containable'
 
 ],
 function (declare,
@@ -45,8 +45,8 @@ function (declare,
           getUserInput,
           //Balek Interface Includes
           _syncedCommanderInterface,
-          _diaplodeWorkspaceContainer) {
-    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _diaplodeWorkspaceContainer], {
+          _balekWorkspaceContainerContainable) {
+    return declare("moduleDiaplodeElementsTasksInterfaceTask", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _balekWorkspaceContainerContainable], {
         _instanceKey: null,
 
         templateString: template,
@@ -73,7 +73,7 @@ function (declare,
             }));
         },
         postCreate: function () {
-            this.makeWorkspaceContainer();
+            this.initializeContainable();
         },
         //##########################################################################################################
         //Event Functions Section
@@ -86,7 +86,7 @@ function (declare,
             if (name === "taskContent") {
                this.domNode.innerHTML = newState;
             }
-            console.log(name, newState);
+           // console.log(name, newState);
         },
         _onDoubleClick: function(clickEvent)
         {

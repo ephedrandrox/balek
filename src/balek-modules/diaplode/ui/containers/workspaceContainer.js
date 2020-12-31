@@ -77,7 +77,15 @@ define(['dojo/_base/declare',
                    // this.moveTo(Math.round(newState.t), Math.round(newState.l));
                    // this.resizeTo(Math.round(newState.w), Math.round(newState.h));
                 }
+                if(name === 'workspaceInfo' && oldState === undefined){
+                    this.updateWidgetWorkspaceInfo(newState);
+                    // this.moveTo(Math.round(newState.t), Math.round(newState.l));
+                    // this.resizeTo(Math.round(newState.w), Math.round(newState.h));
+                }
 
+            },
+            updateWidgetWorkspaceInfo: function(workspaceInfo){
+                console.log("workspace Info", workspaceInfo);
             },
             updateWidgetWithElementBox: function(elementBox)
             {
@@ -92,9 +100,12 @@ define(['dojo/_base/declare',
                 console.log("Making Workspace Container");
 
                 this._workspaceContainerWidget = new workspaceContainerWidget({
+                    _instanceKey: this._instanceKey,
+                    _componentKey: this._componentKey,
                     _contentNodeToContain: this.domNode,
                     _workspaceContainer: this,
-                    _onMoveStop:lang.hitch(this, this.onMoved) });
+                    _onMoveStop:lang.hitch(this, this.onMoved),
+                    _onResizeStop:lang.hitch(this, this.onResized)});
 
 
 
@@ -119,9 +130,20 @@ define(['dojo/_base/declare',
                 }
             },
             onMoved: function(MoveEvent){
+                this.updateInstanceElementBox();
+            },
+            onResized: function(MoveEvent){
+               this.updateInstanceElementBox();
+            },
+            updateInstanceElementBox: function(){
                 let elementBox = domGeometry.getContentBox(this._workspaceContainerWidget.domNode);
-                console.log("sending Box", elementBox);
+                console.log("resized sending Box", elementBox);
                 this._componentStateSet("diaplodeWorkspaceContainer", "elementBox", elementBox);
-            }
+            },
+
+            getWorkspaceDomNode: function () {
+                console.log("getting Dom Node");
+                return this._workspaceContainerWidget.domNode;
+            },
         });
     });

@@ -3,13 +3,13 @@
 }
 
 .diaplodeElementsTasksInterfaceTask {
-    position: absolute;
-    background: black;
+    position: relative;
+    background: #000000;
     display: inline-block;
     padding: 0;
     margin: 0;
     border: none;
-
+    color: yellow;
     visibility: visible;
     top: 0;
     left:0;

@@ -90,7 +90,6 @@ define(['dojo/_base/declare',
                                         Reject(error);
                                     }
                                     else if(collection){
-                                        debugger;
                                         collection.updateOne(settingID, {$set: {userSettings: userSettings}}, lang.hitch(this, function (error, response) {
                                             if(error){
                                                 Reject(error);

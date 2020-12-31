@@ -117,15 +117,15 @@ define(['dojo/_base/declare',
                     this._workspacesStoreActiveWorkspaceWatch = this._workspacesStore.watch("activeWorkspace", lang.hitch(this, this.onActiveWorkspaceChange));
                 }
             },
-            onActiveWorkspaceChange: function (name, oldWorkspaceKey, newWorkspaceKey) {
-                let workspaces = this._workspacesStore.get("workspaces");
+            /* onActiveWorkspaceChange: function (name, oldWorkspaceKey, newWorkspaceKey) {
+               let workspaces = this._workspacesStore.get("workspaces");
                 if (oldWorkspaceKey === null) {
                     this.addToMainContentLayer(workspaces[newWorkspaceKey].domNode);
                 } else {
 
                     domConstruct.place(workspaces[newWorkspaceKey].domNode, workspaces[oldWorkspaceKey].domNode, "replace");
                 }
-            },
+            },*/
             loadBackground: function (background) {
                 let backgroundInterfacePath = "balek-modules/ui/backgrounds/" + background;
                 try {

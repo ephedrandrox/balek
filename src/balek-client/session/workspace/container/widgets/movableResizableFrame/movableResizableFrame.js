@@ -15,8 +15,8 @@ define(['dojo/_base/declare',
         "dijit/focus",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-        'dojo/text!balek-modules/diaplode/ui/containers/workspaceContainer/resources/html/workspaceContainer.html',
-        'dojo/text!balek-modules/diaplode/ui/containers/workspaceContainer/resources/css/workspaceContainer.css',
+        'dojo/text!balek-client/session/workspace/container/widgets/movableResizableFrame/resources/html/movableResizableFrame.html',
+        'dojo/text!balek-client/session/workspace/container/widgets/movableResizableFrame/resources/css/movableResizableFrame.css',
         'dojo/text!dojox/layout/resources/ResizeHandle.css',
         "dojox/layout/ResizeHandle",
         "dojo/dnd/Moveable",
@@ -44,32 +44,32 @@ define(['dojo/_base/declare',
               ResizeHandle,
               Moveable
               ) {
-        return declare("moduleDiaplodeUIContainerWorkspaceContainerWidget", [_WidgetBase, _TemplatedMixin], {
+        return declare("balekWorkspaceContainerWidgetMovableResizableFrame", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
+            _containedInterfaceHandle: null,
+            _containerState: null,
 
             templateString: template,
             _mainCssString: mainCss,
             _resizeHandleCssString: resizeHandleCSS,
-            baseClass: "diaplodeUIContainerWorkspaceContainerWidget",
+            baseClass: "balekWorkspaceContainerWidgetMovableResizableFrame",
 
 
             _topBarNode: null,
             _bottomBarNode: null,
             _contentNode: null,
 
-            _contentNodeToContain: null,
 
-            _workspaceContainer: null,
             _dnd: null,
-            _onMoveStop: null,
             _resizeHandle: null,
-            _onResizeStop: null,
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+                console.log("Initializing Balek Workspace Manager Container Manager Movable Widget...");
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
@@ -77,14 +77,23 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
 
-                if(this._contentNodeToContain != null)
+                if(this._containedInterfaceHandle != null)
                 {
-                   domConstruct.place(this._contentNodeToContain, this._contentNode);
+                   domConstruct.place(this._containedInterfaceHandle.domNode, this._contentNode);
+                }
 
+                let elementBox =  this._containerState.get("movableContainerElementBox");
+
+                if(elementBox !== undefined)
+                {
+                    this.updateWidgetWithElementBox(elementBox);
+                }else
+                {
+                console.log("no element Box");
                 }
                // topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
 
-               // topic.publish("addToCurrentWorkspace", this);
+                //topic.publish("addToCurrentWorkspace", this);
 
                 this._dnd = new Moveable(this.domNode, {handle: this._topBarNode});
 
@@ -93,23 +102,58 @@ define(['dojo/_base/declare',
                     activeResize: true
                 }).placeAt(this._bottomBarNode);
 
-                if(this._onMoveStop != null && this._workspaceContainer != null){
-                    this._dnd.on("MoveStop", this._onMoveStop);
-                }
 
-                if(this._onResizeStop != null && this._workspaceContainer != null){
-                    this._resizeHandle.on("resize", this._onResizeStop);
-                }
+                    this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
+
+
+
+                    this._resizeHandle.on("resize", lang.hitch(this, this.onWidgetResizeStop));
+
 
             },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+             onWidgetMoveStop: function (){
+                this.updateMovableContainerElementBox()
+             },
+            onWidgetResizeStop: function (){
+                this.updateMovableContainerElementBox();
+            },
+
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
+             updateWidgetWithElementBox: function(elementBox)
+             {
+              if(elementBox && elementBox.t !== undefined && elementBox.l !== undefined  ){
+                                                 this.moveTo(Math.round(elementBox.t), Math.round(elementBox.l));
+                                             }
+                                             if(elementBox && elementBox.w !== undefined && elementBox.h !== undefined  ){
+                                                 this.resizeTo(Math.round(elementBox.w), Math.round(elementBox.h));
+                                             }
+             },
+             moveTo: function(t,l){
+                            //todo check that we are moving somewhere on screen
+                            if(this.domNode){
+                                domStyle.set(this.domNode, "top", t+"px");
+                                domStyle.set(this.domNode, "left", l+"px");
+                            }
+                        },
+                         resizeTo: function(w,h){
+                                        if(this.domNode){
+                                            domStyle.set(this.domNode, "width", w+"px");
+                                            domStyle.set(this.domNode, "height", h+"px");
+                                        }
+                                    },
             //no UI Functions
             //##########################################################################################################
+
+            updateMovableContainerElementBox: function()
+            {
+                            let elementBox = domGeometry.getContentBox(this.domNode);
+                            this.setContainerState("movableContainerElementBox", elementBox);
+            },
             //Interface Functions Section
             //##########################################################################################################
             unload: function () {

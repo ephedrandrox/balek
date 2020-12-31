@@ -23,7 +23,7 @@
     min-height: 125px;
     max-height: 80%;
     outline: none;
-    opacity: .6;
+    opacity: .9;
 
     grid-template-columns: 80% 20%;
     grid-template-rows: 30px 1fr 50px 30px;

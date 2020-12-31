@@ -64,7 +64,7 @@ define(['dojo/_base/declare',
                         this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
                     }else
                     {
-                        console.log("Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey);
+                        console.log("Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey, sessionMessage);
                         messageReplyCallback({success: "Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey});
 
                     }
@@ -143,7 +143,7 @@ define(['dojo/_base/declare',
                         _wssConnection: wssConnection
                     });
 
-                    this._sessions[sessionKey].sendWorkspaces();
+                   // this._sessions[sessionKey].sendWorkspaces();
 
                     topic.publish("getMainModuleSettingsWithCallback", lang.hitch(this, function (mainModule) {
                         topic.publish("loadModuleForClient", wssConnection, mainModule, lang.hitch(function (moduleInterface) {
@@ -321,9 +321,14 @@ define(['dojo/_base/declare',
                     this._sessions[sessionKey].updateSessionStatus({sessionStatus: 2});
                 }
             },
+
+
+            //todo delete this after state update
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();
             },
+
+
             getSessionsForUser: function (username, sessionReturn) {
 
                 let sessionsToReturn = [];

@@ -18,13 +18,13 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 this._interfaces = [];
-                console.log("moduleDiaplodeElementsNotesInterface started", this._instanceKey);
+             //   console.log("moduleDiaplodeElementsNotesInterface started", this._instanceKey);
 
                this._createNoteSubscribeHandle=  topic.subscribe("createNewDiaplodeNote", lang.hitch(this, function(noteContent){
-                    console.log("createNewDiaplodeNote topic Command Called");
+                //    console.log("createNewDiaplodeNote topic Command Called");
                     this._instanceCommands.createNote(noteContent).then(function(commandReturnResults){
                         debugger;
-                        console.log("Create Note Received Command Response", commandReturnResults);
+                 //       console.log("Create Note Received Command Response", commandReturnResults);
                     }).catch(function(commandErrorResults){
                         console.log("Create Note Received Error Response", commandErrorResults);
                     });
@@ -34,16 +34,30 @@ define(['dojo/_base/declare',
             onInterfaceStateChange: function (name, oldState, newState) {
                 //this has to inherited() so remoteCommander works
                 this.inherited(arguments);
-                console.log(name,newState);
+               // console.log(name,newState);
 
                 if(name.toString().substr(0,12) === "noteInstance" &&
                     newState.instanceKey && newState.componentKey && newState.sessionKey){
-                    console.log("starttttttt");
+                   // console.log("starttttttt");
 
-                    this._noteInterfaces.push(new noteInterface({
-                                    _instanceKey:newState.instanceKey,
-                                    _componentKey:newState.componentKey,
-                                    _sessionKey:newState.sessionKey}))
+                    let newNoteInterface = new noteInterface({
+                        _instanceKey:newState.instanceKey,
+                        _componentKey:newState.componentKey,
+                        _sessionKey:newState.sessionKey});
+
+                    newNoteInterface.getContainerKeys().then(lang.hitch(this, function(containerKeys){
+                      //  console.log(containerKeys, typeof containerKeys );
+                        if(Array.isArray(containerKeys) && containerKeys.length === 0)
+                        {
+                            topic.publish("addToCurrentWorkspace",newNoteInterface );
+                        }else
+                        {
+                      //      console.log(containerKeys.length);
+                        }
+                    })).catch(lang.hitch(this, function(error){
+                        console.log(error);
+                    }));
+                    this._noteInterfaces.push(newNoteInterface);
                 }
 
             },
@@ -55,6 +69,7 @@ define(['dojo/_base/declare',
                     this._noteInterfaces[noteInterfaceIndex].unload();
                 }
             }
+
         });
     }
 );

@@ -9,6 +9,7 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
 
         'balek-modules/diaplode/navigator/Interface/navigator',
+
     ],
     function (declare,
               lang,

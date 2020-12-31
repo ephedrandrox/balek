@@ -15,7 +15,7 @@ define(['dojo/_base/declare',
                     this.sendInstanceCallbackMessage({
                         request: "Component Key",
                     }, lang.hitch(this, function (requestResults) {
-                        console.log("got command return results", requestResults);
+                      //  console.log("got command return results", requestResults);
                         this._componentKey = requestResults.componentKey
                         this.askToConnectInterface();
 

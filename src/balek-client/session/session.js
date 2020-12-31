@@ -78,11 +78,6 @@ define(['dojo/_base/declare',
 
                         this.loadInterfacesForSession(interfaceData)
                             .then(lang.hitch(this, function () {
-                                this.loadWorkspacesForSession(workspaceData)
-                                    .then(lang.hitch(this, function () {
-                                    })).catch(lang.hitch(this, function (error) {
-                                    console.log("Error Loading Workspaces", error);
-                                }));
                             })).catch(lang.hitch(this, function (error) {
                             console.log("Error Loading Interfaces", error);
                         }));
@@ -122,12 +117,6 @@ define(['dojo/_base/declare',
 
                     }
                     //todo could set a timeout to reject after enough loading time
-                }));
-            },
-            loadWorkspacesForSession(workspaceLoadData) {
-                return new Promise(lang.hitch(this, function (Resolve, Reject) {
-                    this._workspaceManager.workspacesUpdate(workspaceLoadData);
-                    Resolve();
                 }));
             },
             updateSessionState: function (args) {

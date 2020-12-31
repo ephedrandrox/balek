@@ -19,6 +19,7 @@ define(['dojo/_base/declare',
                 };
 
 
+
                 this._interfaceState.set("noteContent","Loading...");
 
 
@@ -26,7 +27,7 @@ define(['dojo/_base/declare',
                 {
                     this._notesDatabase.getUserNote(this._noteKey).then(
                         lang.hitch(this, function(userNoteResult){
-                            console.log("user Note Retrieval",userNoteResult);
+                     //       console.log("user Note Retrieval",userNoteResult);
                             this._interfaceState.set("noteContent",userNoteResult.noteContent);
 
 

@@ -1,0 +1,36 @@
+.balekWorkspaceContainerMovableWidget * {
+
+}
+
+
+.balekWorkspaceContainerMovableWidget {
+    position: absolute;
+    background: none;
+
+    display: block;
+
+
+    padding: 0;
+    margin: auto;
+    border: none;
+
+    visibility: visible;
+    top: 300px;
+    left: 300px;
+
+
+
+
+    outline: none;
+    opacity: 1;
+
+
+
+    text-align: left;
+}
+
+.balekWorkspaceContainerMovableWidgetContentDiv {
+    position: relative;
+  border: solid white 2px;
+
+}
