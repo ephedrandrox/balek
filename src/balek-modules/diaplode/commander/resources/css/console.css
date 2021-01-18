@@ -26,7 +26,7 @@
     opacity: .9;
 
     grid-template-columns: 80% 20%;
-    grid-template-rows: 30px 1fr 50px 30px;
+    grid-template-rows: 30px 1fr 10px 30px;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 
@@ -61,26 +61,31 @@
     padding: 0;
     margin: 0;
     grid-area: 3 / 1 / 4 / 3;
-    background: white;
+    background: none;
+    background: rgba(62, 32, 107, 0.5);
+
 }
 .diaplodeCommanderInterfaceConsoleInput {
     width: 100%;
     height: 100%;
     font-size: 40px;
-    background: blue;
+    background: none;
+    background: rgba(62, 32, 107, .3);
+
 }
 .diaplodeCommanderInterfaceConsoleOutputDiv {
-    padding: 0;
+    padding: 5px;
     margin: 0;
     grid-area: 2 / 1 / 3 / 2;
     background: black;
     overflow: auto;
 }
 .diaplodeCommanderInterfaceConsoleMenuDiv {
-    padding: 0;
+    padding: 10px;
     margin: 0;
     grid-area: 2 / 2 / 3 / 3;
-    background: purple;
+    background: #400440;
+    border-left: solid 3px black;
     overflow: auto;
 }
 
@@ -89,13 +94,28 @@
     margin: 0;
     grid-area: 4 / 1 / 5 / 3;
     height: 30px;
-    background: #000280;
+    background: none;
+    background: rgba(62, 32, 107, 0.5);
+
+
 }
 .diaplodeCommanderInterfaceConsoleDockMenuButtonDiv {
-    padding: 0;
+    padding: 2px;
     margin: 0;
     display: inline-block;
-    border: solid #615561 3px;
+    border: none;
+    box-shadow: #0d1721;
+    border-radius: 5px;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    width: 20px;
+    height: 20px;
+text-align: center;
+
+    background: rgba(62, 32, 107, .3);
+
 }
 
 .diaplodeCommanderInterfaceConsoleOnLoadSettingButtonDiv {

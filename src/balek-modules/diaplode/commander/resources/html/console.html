@@ -9,19 +9,22 @@
     </div>
 
     <div class="${baseClass}MenuDiv">
-        <b>Keys:</b> </br>
-        <b>Return:</b> Nothing </br>
-        <b>Return + Shift :</b> Request Session Menu Module </br>
+        <b>Status:</b> Need to connect to system Manager</br>
+        <b>&nbsp&nbsp&nbsp&nbsp&nbspLoad:</b> &nbsp0MB </br>
+        <b>&nbsp&nbsp&nbsp&nbsp&nbspMemory:</b> &nbsp0MB </br>
+        <b>&nbsp&nbsp&nbsp&nbsp&nbspStorage:</b> &nbsp0MB </br>
         </br>
-        <b>esc:</b> Hide/show Navigator </br>
-        <b>esc+shift:</b> request Admin System Module </br>
-        <div  class="${baseClass}OnLoadSettingButtonDiv" data-dojo-attach-point='_consoleOnLoadSettingNode' data-dojo-attach-event="onclick:_consoleOnLoadToggleClicked">Console Undocked On Load</div>
+        </br>
+        </br>
+        </br>
+        <div  class="${baseClass}OnLoadSettingButtonDiv" data-dojo-attach-point='_consoleOnLoadSettingNode' data-dojo-attach-event="onclick:_consoleOnLoadToggleClicked">Console Undocked On Load - <b>Remove this</b></div>
     </div>
 
     <div class="${baseClass}InputDiv">
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleKillClicked">X</div>
-        <input data-dojo-attach-point='_consoleInputNode' type="text" autocomplete="off" class="${baseClass}Input"
+        <!--  <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleKillClicked">X</div>
+      <input data-dojo-attach-point='_consoleInputNode' type="text" autocomplete="off" class="${baseClass}Input"
                data-dojo-attach-event="onkeyup:_onConsoleInputKeyUp" />
+               -->
     </div>
 
     <div class="${baseClass}DockMenuDiv" >

@@ -44,7 +44,7 @@ define(['dojo/_base/declare',
                 if(this._interfaceConnectionCallback != null)
                 {
                     let interfaceStateObject = {[String(name)]: newState};
-                    debugger;
+                    //debugger;
                     this._interfaceConnectionCallback({stateUpdate:{containerState: JSON.stringify(interfaceStateObject)}});
                 }
             },

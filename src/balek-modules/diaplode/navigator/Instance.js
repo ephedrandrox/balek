@@ -73,7 +73,7 @@ define(['dojo/_base/declare',
                                 }
                             if( moduleMessage.messageData.request === "Component State Update" &&
                                 moduleMessage.messageData.componentKey) {
-                                debugger;
+                                //debugger;
                                 this._stateSyncer.updateComponentInterface(this._instanceKey,
                                     moduleMessage.messageData.componentKey,
                                     moduleMessage.messageData.stateName,

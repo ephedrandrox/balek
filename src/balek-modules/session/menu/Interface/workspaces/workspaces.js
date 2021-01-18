@@ -65,7 +65,9 @@ define(['dojo/_base/declare',
             },
             requestNewWorkspace: function () {
                 console.log("Requesting new workspace");
-                topic.publish("requestNewWorkspace");
+                //topic.publish("requestNewWorkspace");
+                console.log( this.workspaceManagerCommands);
+                this.workspaceManagerCommands.requestNewWorkspace();
             },
             addOrRefreshAvailableWorkspace: function(workspaceInfo){
                 let workspaceKey = workspaceInfo.workspaceKey;

@@ -1,15 +1,4 @@
 <div class="${baseClass}"  data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus,onblur:onBlur,onclick:_onClick" tabindex="1">
  <div class="${baseClass}OutputDiv" data-dojo-attach-point='_terminalOutputNode'></div>
 
-   <div class="${baseClass}InputFrame">
-      <div class="${baseClass}InputFrameInputDiv">
-         <textarea data-dojo-attach-point='_terminalInputNode' autocomplete="off" class="${baseClass}Input"
-                   data-dojo-attach-event="onkeyup:_onTerminalInputKeyUp" ></textarea>
-      </div>
-      <div class="${baseClass}InputFrameButtonsDiv">
-         <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onTerminalKillClicked">X</div>
-         <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onTerminalConnectClicked">☎️</div>
-      </div>
-
-   </div>
 </div>

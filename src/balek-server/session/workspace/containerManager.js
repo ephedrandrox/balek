@@ -31,16 +31,16 @@ define([ 	'dojo/_base/declare',
             },
             getContainer: function(containerKey)
             {
-                debugger;
+                //debugger;
                 if(this._containers[String(containerKey)] === undefined)
                 {
-                    debugger;
+                  //  debugger;
 
                     this._containers[String(containerKey)] = {}
 
 
                 }else if(this._containers[String(containerKey)]){
-                    debugger;
+                  //  debugger;
 
                 }
                 return this._containers[String(containerKey)]
@@ -54,7 +54,7 @@ define([ 	'dojo/_base/declare',
                                                         _containerWidgetPath: containerWidgetPath,
                                                         containerManager: this}  );
 
-                debugger;
+             //   debugger;
 
                 return newContainerKey;
 

@@ -83,8 +83,12 @@ define(['dojo/_base/declare',
                                 Reject(error);
                             }
                             else if(collection){
+                                //todo is there a better way to this function?
+                                //maybe make object of functions in base class
+                                taskID = collection.s.pkFactory.ObjectID(taskID);
+
                                 collection.find({_userKey: this._userKey,
-                                                _id: taskID},
+                                                _id:  taskID },
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);

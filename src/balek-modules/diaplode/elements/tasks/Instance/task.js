@@ -26,13 +26,13 @@ define(['dojo/_base/declare',
                 {
                     this._tasksDatabase.getUserTask(this._taskKey).then(
                         lang.hitch(this, function(userTaskResult){
-               //             console.log("user Task Retrieval",userTaskResult);
+                            console.log("user Task Retrieval",userTaskResult);
                             this._interfaceState.set("taskContent",userTaskResult.taskContent);
 
 
                         })
                     ).catch(lang.hitch(this, function(userTaskError){
-                        console.log("user Task Retrieval error",userTaskError);
+                        console.log("user Task Retrieval error",userTaskError,this._taskKey );
                     }));
                 }
                 this.prepareSyncedState();

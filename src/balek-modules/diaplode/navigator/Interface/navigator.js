@@ -26,6 +26,8 @@ define(['dojo/_base/declare',
 
 
         "balek-modules/diaplode/navigator/Interface/radialMenu",
+        "balek-modules/diaplode/navigator/Interface/menus/systemMenuWidget",
+
 
         "balek-modules/diaplode/ui/input/getUserInput",
 
@@ -54,6 +56,7 @@ define(['dojo/_base/declare',
               stateSynced,
               remoteCommander,
               radialMenu,
+              systemMenuWidget,
               getUserInput,
               diaplodeMovableContainer) {
 
@@ -67,6 +70,9 @@ define(['dojo/_base/declare',
             _mainLogDiv: null,
 
 
+            _navigatorSystemMenuWidgets: null,
+            _navigatorSystemMenusState: null,
+            _navigatorSystemMenusStateWatchHandle: null,
 
 
 
@@ -77,6 +83,8 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                this._navigatorSystemMenuWidgets = {};
 
                 this._availableMenus = {};
                 this._newMenus = [];
@@ -91,15 +99,67 @@ define(['dojo/_base/declare',
 
                     on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
+
+
                 }));
 
 
             },
+            onNavigatorSystemMenusStateChange: function(name, oldState, newState){
+                console.log("system Menu", name, oldState, newState);
+                let menuName = name.toString()
+                let systemMenu = newState;
+                if(this._navigatorSystemMenuWidgets[menuName] === undefined)
+                {
+                    debugger;
+
+                    let systemMenu = this._navigatorSystemMenusState.get(menuName);
+                    this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
+                    debugger;
+                    console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
+                    console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
+                }
+            },
+            loadAndWatchNavigatorSystemMenus: function(){
+               // debugger;
+
+                let menuNames =Object.keys(this._navigatorSystemMenusState);
+               // debugger;
+
+                for(menuNameIndex in menuNames)
+                {
+                   // debugger;
+                    let menuName = menuNames[menuNameIndex];
+
+                    if(this._navigatorSystemMenuWidgets[menuName] === undefined)
+                    {
+                    //    debugger;
+
+                        let systemMenu = this._navigatorSystemMenusState.get(menuName);
+
+
+                        this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
+                       // debugger;
+                        console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
+                        console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
+                    }
+
+
+
+                }
+                this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenusState.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
+
+            },
             postCreate: function () {
-                //topic.publish("addToMainContentLayer", this.domNode);
+
+                this.loadAndWatchNavigatorSystemMenus();
+
+                topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
 
                 this.makeMovable();
+
+
 
             },
 
@@ -327,6 +387,9 @@ define(['dojo/_base/declare',
                 });
             },
             unload() {
+                   this._navigatorSystemMenusStateWatchHandle.unwatch();
+                   this._navigatorSystemMenusStateWatchHandle.remove();
+
                 this.unloadAllMenus();
                 console.log("destroying navigator");
                 this.inherited(arguments);

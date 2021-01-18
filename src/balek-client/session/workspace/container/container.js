@@ -77,6 +77,10 @@ define(['dojo/_base/declare',
 
 
             },
+            startup: function()
+            {
+                this._workspaceContainerWidget.startup();
+            },
             connectToContainerInstance: function(){
 
                 if(this._containerKey && this._sessionKey){
@@ -117,7 +121,7 @@ define(['dojo/_base/declare',
             refreshContainerWidget: function(){
                 if(this._workspaceContainerWidget === null)
                 {
-                    //create wisdget
+                    //create widget
 
                     let containerWidgetPath = this._containerState.get("containerWidgetPath");
                     if(containerWidgetPath !== undefined && this._containedInterfaceHandle !== null && this._containedInterfaceHandle.isContainable)
@@ -130,9 +134,11 @@ define(['dojo/_base/declare',
 
 
                                this._workspaceContainerWidget = new containerWidget({_sessionKey: this._sessionKey,
+                                   _containerKey: this._containerKey,
                                    _containedInterfaceHandle:this._containedInterfaceHandle,
                                   _containerState: this._containerState,
-                                   setContainerState: lang.hitch(this, this.setContainerState)
+                                   setContainerState: lang.hitch(this, this.setContainerState),
+                                   workspaceManagerCommands: this.workspaceManagerCommands
 
                                });
 
@@ -153,7 +159,7 @@ define(['dojo/_base/declare',
                         }));
                     }else
                     {
-                       // console.log("Cannot make widget without path and interface", containerWidgetPath,this._containedInterfaceHandle );
+                        console.log("Cannot make widget without path and interface", containerWidgetPath,this._containedInterfaceHandle );
                     }
                 }
             },
@@ -182,6 +188,7 @@ define(['dojo/_base/declare',
 
                             if(this.setContainedInterfaceHandle(containedInterfaceHandle))
                             {
+                                //debugger;
                                 this.refreshContainerWidget();
                             };
                         })).catch(function(getInterfaceError){
@@ -236,6 +243,7 @@ define(['dojo/_base/declare',
                     // this.resizeTo(Math.round(newState.w), Math.round(newState.h));
                 }
                 if(name === 'containerWidgetPath' ){
+                    //debugger;
                    this.refreshContainerWidget();
                 }
                 //if instance and component Keyare up then get interface we can load our widget?

@@ -131,7 +131,7 @@ define(['dojo/_base/declare',
                     this._components[componentKey].setNewInterfaceCallback(interfaceCallback);
                 }
                 else{
-                    console.log("THe component does not match");
+                    console.log("THe component does not match", instanceKey, componentKey, this._components);
 
                 }
             },

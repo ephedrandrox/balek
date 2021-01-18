@@ -83,6 +83,7 @@ define(['dojo/_base/declare',
                                 Reject(error);
                             }
                             else if(collection){
+                                noteID = collection.s.pkFactory.ObjectID(noteID);
                                 collection.find({_userKey: this._userKey,
                                                 _id: noteID},
                                     lang.hitch(this, function (error, response) {
@@ -136,7 +137,7 @@ define(['dojo/_base/declare',
                         Reject(error);
                     }
                     else if(collection){
-                        debugger;
+                        //debugger;
                         collection.updateOne({_id: noteId}, {$set: {noteContent: noteContent}}, lang.hitch(this, function (error, response) {
                             if(error){
                                 Reject(error);

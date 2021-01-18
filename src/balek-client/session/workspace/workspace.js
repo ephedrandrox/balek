@@ -2,11 +2,12 @@ define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
+        'dojo/dom',
         'dojo/dom-construct',
         'dojo/dom-style',
         'dojo/dom-class',
         'balek/session/workspace/workspace'],
-    function (declare, lang, topic, Stateful, domConstruct, domStyle, domClass, balekWorkspaceManagerWorkspace) {
+    function (declare, lang, topic, Stateful, dom, domConstruct, domStyle, domClass, balekWorkspaceManagerWorkspace) {
 
 
         return declare("balekClientWorkspaceManagerWorkspace", balekWorkspaceManagerWorkspace, {
@@ -19,6 +20,8 @@ define(['dojo/_base/declare',
             _workspaceState: null,
             _workspaceStateWatchHandle: null,
 
+
+            _activeContainerKey: null,
 
             _workspaceContainers: null,
             _workspaceContainersState: null,
@@ -139,6 +142,8 @@ define(['dojo/_base/declare',
             onActivated: function()
             {
                 let workspaceContainers = this._workspaceContainers;
+
+                this._activeContainerKey = null;
                 for(const containerKey in workspaceContainers)
                 {
                     this.activateContainer(containerKey);
@@ -150,9 +155,34 @@ define(['dojo/_base/declare',
 
                 if(workspaceContainers[containerKey]){
                     let workspaceContainerDomNode =  workspaceContainers[containerKey].getWorkspaceDomNode();
-                    domConstruct.place(workspaceContainerDomNode, this.domNode);
+
+                    if(dom.isDescendant(workspaceContainerDomNode, this.domNode))
+                    {
+                        if(this._activeContainerKey !== containerKey){
+                            this.placeAndRefreshContainer(containerKey);
+                        }else {
+                            //Workspace Container already placed and active
+                        }
+                    }else {
+                        this.placeAndRefreshContainer(containerKey);
+                    }
+
                 }else {
-                    console.log("Invalid Container Key!", workspaceContainers,containerKey )
+                    console.log("Invalid Container Key or already active!", workspaceContainers,containerKey )
+                }
+
+            },
+            placeAndRefreshContainer: function(containerKey){
+                let workspaceContainers = this._workspaceContainers;
+
+                if(workspaceContainers[containerKey] && workspaceContainers[containerKey].getWorkspaceDomNode) {
+
+                    let workspaceContainerDomNode =  workspaceContainers[containerKey].getWorkspaceDomNode();
+
+                    domConstruct.place(workspaceContainerDomNode, this.domNode);
+                    this._activeContainerKey = containerKey;
+                    debugger;
+                    workspaceContainers[containerKey].startup();
                 }
 
             },

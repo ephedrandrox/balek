@@ -29,7 +29,7 @@ define([ 	'dojo/_base/declare',
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject)
                     {
-                        debugger;
+                    //    debugger;
                    //     console.log("getContainableInterfaceState", containableInterfaceKeys);
 
                         let containableInterfaceState = this._containables.getContainableInterfaceState(containableInterfaceKeys.componentKey);
@@ -40,16 +40,16 @@ define([ 	'dojo/_base/declare',
                         if(containableInterface === undefined)
                         {
                             //watch state for interfaceObject
-                            debugger;
+                        //    debugger;
                             let containableInterfaceStateWatchHandle = containableInterfaceState.watch(lang.hitch(this,
                                 function(name, oldValue, newValue){
-                                    debugger;
+                             //       debugger;
 
                                  //   console.log(name, oldValue, newValue)      ;
                                     containableInterfaceStateWatchHandle.unwatch();
                                     Resolve(newValue);
                                 }));
-                            debugger;
+                          //  debugger;
 
                         }else
                         {

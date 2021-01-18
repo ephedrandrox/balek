@@ -24,6 +24,7 @@
     outline: none;
     opacity: 1;
 
+    cursor: move;
 
 
     text-align: left;
@@ -31,6 +32,6 @@
 
 .balekWorkspaceContainerMovableWidgetContentDiv {
     position: relative;
-  border: solid white 2px;
+    border: none;
 
 }

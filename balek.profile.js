@@ -1,5 +1,36 @@
 var profile = (function () {
+    var nodeModules = /^balek-modules\/node-modules\//,
+     copyOnly = function(filename, mid){
+        var list = {
+            'balek-modules/node-modules/xterm/lib/xterm.js': true,
+            'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit.js': true
+        };
+        return (mid in list) ||
+            (/^app\/resources\//.test(mid)
+                && !/\.css$/.test(filename)) ||
+            /(png|jpg|jpeg|gif|tiff)$/.test(filename);
+        // Check if it is one of the special files, if it is in
+        // app/resource (but not CSS) or is an image
+    };
+    //need to make this work for balek
+    //#####################################################################
+    //todo make webpack prebuild for node_modules needed in client build
+    //todo xterm has to be manually copied after build to work
+    //put build modules package script in balek-modules
+    //then run npm install and npm build in balek-modules directory
+    //#####################################################################
     return {
+        resourceTags: {
+            copyOnly: function(filename, mid){
+                return copyOnly(filename, mid);
+                // Tag our copy only files
+            },
+            miniExclude: function(filename, mid){
+                return nodeModules.test(mid)  ;
+                // Tag our copy only files
+            }
+        },
+
         basePath: "./",
         releaseDir: "./release",
         releaseName: "balek",
@@ -78,7 +109,8 @@ var profile = (function () {
         }, {
             name: "balek-client",
             location: "./src/balek-client"
-        }],
+        }
+        ],
 
         layers: {
             "dojo/dojo": {
@@ -116,6 +148,14 @@ var profile = (function () {
             },
             "balek-modules/diaplode/navigator/Interface": {
                 include: [  "balek-modules/diaplode/navigator/Interface"]
+            },
+            "balek-modules/diaplode/commander/Interface": {
+                    include: [  "balek-modules/diaplode/commander/Interface"]
+            },
+            "balek-modules/diaplode/commander/Interface/terminal": {
+                include: [  "balek-modules/diaplode/commander/Interface/terminal"],
+                exclude:[ 'balek-modules/node-modules/xterm/lib/xterm',
+                    'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit']
             }
         }
     };

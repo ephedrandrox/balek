@@ -22,7 +22,7 @@ define(['dojo/_base/declare',
 
                 //set setRemoteCommander commands
                 this._commands={
-                    "connectTerminal": lang.hitch(this, this.connectTerminal),
+                  //  "connectTerminal": lang.hitch(this, this.connectTerminal),
                     "sendTerminalInput": lang.hitch(this, this.sendTerminalInput),
                     "dockInterface" : lang.hitch(this, this.dockInterface),
                     "undockInterface" : lang.hitch(this, this.undockInterface)
@@ -39,18 +39,32 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("Status", "Ready");
 
 
+                this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
+                    _onOutputCallback: lang.hitch(this, function(data){
+                        this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
+                    })});
+
+               // this.connectTerminal();
+
             },
             //##########################################################################################################
             //Remote Command Functions Section
             //##########################################################################################################
             connectTerminal:  function(remoteCommandCallback)
             {
-                remoteCommandCallback({success: "Connecting Terminal"});
 
-                this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
-                    _onOutputCallback: lang.hitch(this, function(data){
-                        this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
-                    })});
+
+                if( this._sshService === null){
+                    this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
+                        _onOutputCallback: lang.hitch(this, function(data){
+                            this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
+                        })});
+                    remoteCommandCallback({success: "Connecting Terminal"});
+
+                }else {
+                    remoteCommandCallback({success: "Terminal already connected"});
+
+                }
 
             },
             sendTerminalInput: function( input){

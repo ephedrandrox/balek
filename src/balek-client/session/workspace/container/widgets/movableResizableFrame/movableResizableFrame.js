@@ -48,6 +48,7 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _containedInterfaceHandle: null,
             _containerState: null,
+            _containerKey: null,
 
             templateString: template,
             _mainCssString: mainCss,
@@ -75,11 +76,17 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
 
             },
+            startup: function(){
+               console.log("balekWorkspaceContainerWidgetMovableResizableFrame startup called");
+
+               this._containedInterfaceHandle.startup();
+            },
             postCreate: function () {
 
-                if(this._containedInterfaceHandle != null)
+               if(this._containedInterfaceHandle != null)
                 {
                    domConstruct.place(this._containedInterfaceHandle.domNode, this._contentNode);
+
                 }
 
                 let elementBox =  this._containerState.get("movableContainerElementBox");
@@ -97,14 +104,20 @@ define(['dojo/_base/declare',
 
                 this._dnd = new Moveable(this.domNode, {handle: this._topBarNode});
 
+
+
                 this._resizeHandle = new ResizeHandle({
                     targetContainer: this.domNode,
                     activeResize: true
                 }).placeAt(this._bottomBarNode);
 
 
-                    this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
+                this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
 
+                this._dnd.on("MoveStart", lang.hitch(this, function(){
+                    console.log("onMoveStart");
+                    this.workspaceManagerCommands.activateContainerInWorkspace(this.workspaceManagerCommands.getActiveWorkspace(), this._containerKey);
+                }));
 
 
                     this._resizeHandle.on("resize", lang.hitch(this, this.onWidgetResizeStop));
@@ -114,7 +127,11 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
-             onWidgetMoveStop: function (){
+            _onTopMouseDown: function(mouseEvent){
+                this.workspaceManagerCommands.activateContainerInWorkspace(this.workspaceManagerCommands.getActiveWorkspace(), this._containerKey);
+                console.log("Mousedown");
+            },
+            onWidgetMoveStop: function (){
                 this.updateMovableContainerElementBox()
              },
             onWidgetResizeStop: function (){

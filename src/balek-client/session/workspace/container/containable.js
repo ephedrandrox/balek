@@ -59,7 +59,7 @@ define([ 	'dojo/_base/declare',
 
                     this.getComponentState("workspaceContainable").then(lang.hitch(this, function(workspaceContainableState){
                          let containerKeys = workspaceContainableState.get("containerKeys");
-                         debugger;
+                       //  debugger;
 
                          if(containerKeys === undefined)
                          {

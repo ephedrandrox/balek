@@ -12,6 +12,7 @@ define(['dojo/_base/declare',
         "dojo/keys",
         //Dijit widget includes
         "dijit/focus",
+        'dijit/registry',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         'dojo/text!balek-modules/diaplode/commander/resources/html/terminal.html',
@@ -21,7 +22,12 @@ define(['dojo/_base/declare',
 
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
-        'balek-client/session/workspace/container/containable'
+        'balek-client/session/workspace/container/containable',
+
+        //xTerm
+        'balek-modules/node-modules/xterm/lib/xterm',
+        'dojo/text!balek-modules/node-modules/xterm/css/xterm.css',
+        'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit'
 
     ],
     function (declare,
@@ -38,6 +44,7 @@ define(['dojo/_base/declare',
               dojoKeys,
               //Dijit widget includes
               dijitFocus,
+              dijitRegistry,
               _WidgetBase,
               _TemplatedMixin,
               template,
@@ -45,16 +52,24 @@ define(['dojo/_base/declare',
               getUserInput,
               //Balek Interface Includes
               _syncedCommanderInterface,
-              _balekWorkspaceContainerContainable) {
+              _balekWorkspaceContainerContainable,
+              xTerm,
+              xTermCss,
+              xTermAddOnFit) {
         return declare("moduleDiaplodeCommanderInterfaceTerminal", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _balekWorkspaceContainerContainable], {
             _instanceKey: null,
 
             templateString: template,
             _mainCssString: mainCss,
+
+
             baseClass: "diaplodeCommanderInterfaceTerminal",
 
             _terminalInputNode: null,
             _terminalOutputNode: null,
+
+            _xTermData: "",
+            _xTerm: null,
 
 
             //##########################################################################################################
@@ -65,11 +80,142 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
+                domConstruct.place(domConstruct.toDom("<style>" + xTermCss + "</style>"), win.body());
+
+                console.log("xtermCSS",this._xTermCssString );
+
+
+            },
+            startup: function()
+            {
+                console.log("startup terminal",this,  this.domNode);
+
+debugger;
+                this.startupXTerm();
+            },
+            startupXTerm: function(){
+                console.log("startup X terminal",this,  this.domNode);
+
+
+
+                if( this._xTerm === null && this.domNode && dom.isDescendant(this.domNode, window.document)){
+
+                    console.log("xterm", xTerm,
+                        xTermCss,
+                        xTermAddOnFit);
+
+                    this._xTerm = new xTerm.Terminal({'theme': { background: '#477573',  foreground: '#c39213' }});
+
+                    this._xTermAddOnFit = new xTermAddOnFit.FitAddon();
+
+                    console.log("xterm",  this._xTerm);
+                    this._xTerm.loadAddon(this._xTermAddOnFit);
+                    this._xTerm.open(this._terminalOutputNode);
+
+                    //this._xTermAddOnFit.fit();
+                    // this._xTerm.fit();
+                    this._xTerm.resize(80,24);
+                    // this._xTerm.refresh();
+                    let initialTerminalState =  this._interfaceState.get("terminalOutput");
+                    if(initialTerminalState)
+                    {
+                        this._xTerm.write(initialTerminalState);
+                    }
+
+                    this._xTerm.onKey(lang.hitch(this, function(xTermKeyEvent){
+                        console.log("xterm",xTermKeyEvent);
+
+                        //this._instanceCommands.sendTerminalInput(xTermKeyEvent.key);
+
+                    }));
+
+                    this._xTerm.onResize(lang.hitch(this, function(xTermResizeEvent){
+                        console.log("xterm", "xTermResizeEvent", xTermResizeEvent);
+
+                        //this._instanceCommands.sendTerminalInput(xTermKeyEvent.key);
+
+                    }));
+                    this._xTerm.onData(lang.hitch(this, function(xTermDataEvent){
+                        console.log("xterm","xTermDataEvent", xTermDataEvent);
+
+                        this._instanceCommands.sendTerminalInput(xTermDataEvent);
+
+
+                        //this._instanceCommands.sendTerminalInput(xTermKeyEvent.key);
+
+                    }));
+
+                    this._xTerm.onBinary(lang.hitch(this, function(xTermBinaryEvent){
+                        console.log("xterm","xTermBinaryEvent", xTermBinaryEvent);
+
+                        //  this._instanceCommands.sendTerminalInput(xTermDataEvent);
+
+
+                        //this._instanceCommands.sendTerminalInput(xTermKeyEvent.key);
+
+                    }));
+
+
+                    this._xTerm.parser.addCsiHandler({final: 't'}, params => {
+                        const ps = params[0];
+                        console.log("xterm", "ps", ps);
+                        return false;      // any Ps that was not handled
+                    });
+
+                    console.log("xterm",  this._xTerm);
+
+
+                }else
+                {
+                    console.log("startup Xterm not ready",this._xTerm , this.domNode , dom.isDescendant(this.domNode, window.document) );
+                }
+
+
+
+
+
+
+
+
+            },
+            writeToXterm: function(data)
+            {
+                if(this._xTerm === null)
+                {
+
+                    let placedWidgetDomNode = dom.byId(this.id);
+                    console.log("xterm",  placedWidgetDomNode);
+
+                    if(placedWidgetDomNode)
+                    {
+                        this.startupXTerm();
+                        this._xTerm.write(data);
+                    }else {
+                        console.log("xterm",  "No Dom Node", placedWidgetDomNode);
+
+                    }
+                }else {
+                    console.log("xterm",  this._xTerm);
+
+                    this._xTerm.write(data);
+
+                }
+
+
+
             },
             postCreate: function () {
                 // domConstruct.place(this.domNode, this._ContactsListDomNode);
                // topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                 let dockedState = this._interfaceState.get("terminalDocked");
+                dojoReady(lang.hitch(this, function(){
+                    this.startup();
+                }));
+
+                console.log("xterm",  this._xTerm);
+
+
+
 
                 if(dockedState === 'false')
                 {
@@ -80,6 +226,8 @@ define(['dojo/_base/declare',
                     //this.unDockTerminal();
                 }
                 this.initializeContainable();
+
+
 
             },
             //##########################################################################################################
@@ -101,9 +249,13 @@ define(['dojo/_base/declare',
                      //   this.unDockTerminal();
                     }
                 }else if (name === "terminalOutput" ) {
-                    this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
+                   // this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
 
-                    this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
+                   // this._xTerm.write(newState);
+                    console.log("xterm", oldState, newState);
+                this.writeToXterm(newState);
+
+                    // this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
                 }
                // console.log(name, newState);
             },
@@ -140,8 +292,11 @@ define(['dojo/_base/declare',
 
                 }
             },
-            _onFocus: function(event){
-              //  dijitFocus.focus(this._terminalInputNode);
+            _onFocus: function(event) {
+                //  dijitFocus.focus(this._terminalInputNode);
+                if (this._xTerm === null) {
+                this.startupXTerm();
+                }
             },
             _onClick: function(event){
              //   dijitFocus.focus(this._terminalInputNode);
@@ -167,6 +322,11 @@ define(['dojo/_base/declare',
                     case dojoKeys.ESCAPE:
                         keyUpEvent.preventDefault();
                         if (this._shiftDown) {
+                            console.log("Connecting Terminal");
+
+                            this._instanceCommands.connectTerminal().then(function(remoteCommandResult){
+                                console.log(remoteCommandResult);
+                            })
                         } else {
                             if(this._terminalInputNode.value != ""){
                                 this._terminalInputNode.value = "";
@@ -183,13 +343,20 @@ define(['dojo/_base/declare',
             {
                 console.log("Connecting Terminal");
 
+                this.startupXTerm();
+
                this._instanceCommands.connectTerminal().then(function(remoteCommandResult){
                    console.log(remoteCommandResult);
                })
             },
             _onTerminalKillClicked: function(clickEvent)
             {
-                this._instanceCommands.sendTerminalInput("\u0004");
+
+                this._xTerm.resize( 132, 50);
+
+
+                // this._xTermAddOnFit.fit();
+                //this._instanceCommands.sendTerminalInput("\u0004");
             },
             //##########################################################################################################
             //UI Functions Section

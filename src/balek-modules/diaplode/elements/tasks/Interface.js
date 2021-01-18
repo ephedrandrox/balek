@@ -5,23 +5,37 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'balek-modules/diaplode/elements/tasks/Interface/task',
         'balek-modules/components/syncedCommander/Interface',
-    'balek-client/session/workspace/workspaceManagerInterfaceCommands'
+
+        'balek-client/session/workspace/workspaceManagerInterfaceCommands',
+        'balek-modules/diaplode/navigator/interfaceCommands',
+        'balek-modules/components/syncedMap/Interface'
+
 
 
     ],
-    function (declare, lang,  topic, domConstruct, win, taskInterface, syncedCommanderInterface, balekWorkspaceManagerInterfaceCommands) {
+    function (declare, lang,  topic, domConstruct, win, taskInterface, syncedCommanderInterface, balekWorkspaceManagerInterfaceCommands, navigatorInterfaceCommands, syncedMapInterface ) {
 
         return declare("moduleDiaplodeElementsTasksInterface", syncedCommanderInterface, {
             _instanceKey: null,
             _createTaskSubscribeHandle: null,
             _taskInterfaces: [],
+
+            _availableTasks: null,
+
             workspaceManagerCommands: null,
+            navigatorCommands: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
+
+
+                this.navigatorCommands = new navigatorInterfaceCommands();
+
+
+
 
 
                 this._interfaces = [];
@@ -71,14 +85,8 @@ define(['dojo/_base/declare',
                                        .catch(lang.hitch(this, function(error){
                                            console.log("Error adding container to workspace", error);
                                        }));
-
                             })).catch(lang.hitch(this, function(error){
-
                             }));
-
-
-
-
                             //topic.publish("addToCurrentWorkspace",newTaskInterface );
                         }else
                         {
@@ -90,11 +98,44 @@ define(['dojo/_base/declare',
                     }));
 
                     this._taskInterfaces.push(newTaskInterface);
+                }else if(name.toString() === "availableTasksComponentKey")
+                {
+                    if(this._availableTasks === null){
+                        this._availableTasks = new syncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+
+
+                        this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+                         /*   navigatorCommands.addSyncedMap(this._availableTasks, {
+                                onLoadItem: lang.hitch(this, this._instanceCommands.loadTask)
+
+                            });
+*/
+
+                            navigatorCommands.addSystemMenuList( this._availableTasks,  {
+                                name: "Tasks",
+                                load: this._instanceCommands.loadTask
+                            });
+                            //todo send commands to load, along with objects info
+
+                        })).catch(function(errorResult){
+                            console.log(errorResult);
+                        });
+                        console.log(this._availableTasks);
+                    }
                 }
 
             },
+           // availableTaskStateChange: function(taskKey, oldState, newState){
+          //          console.log("Tasks",taskKey, oldState, newState );
+
+          //      this._instanceCommands.loadTask(taskKey).then().catch();
+
+
+          //  },
             unload: function () {
                 this._createTaskSubscribeHandle.remove();
+
+                this._availableTasks.unload();
 
                 for(taskInterfaceIndex in this._taskInterfaces)
                 {

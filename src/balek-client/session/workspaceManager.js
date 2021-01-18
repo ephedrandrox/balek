@@ -55,6 +55,9 @@ define(['dojo/_base/declare',
 
                 this._commandsForInterface.setCommand('changeWorkspaceName', lang.hitch(this, this.changeWorkspaceName));
                 this._commandsForInterface.setCommand('changeActiveWorkspace', lang.hitch(this, this.changeActiveWorkspace));
+                this._commandsForInterface.setCommand('activateContainerInWorkspace', lang.hitch(this, this.activateContainerInWorkspace));
+
+
 
 
                 this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey});
@@ -232,6 +235,12 @@ define(['dojo/_base/declare',
                     }
                 }));
 
+            },
+            activateContainerInWorkspace: function(workspace, containerKey){
+
+
+                console.log("setting focused container in workspace",workspace, containerKey );
+                workspace.activateContainer(containerKey);
             },
             getAvailableWorkspacesState: function()
             {

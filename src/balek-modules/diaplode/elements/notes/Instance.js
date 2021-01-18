@@ -5,7 +5,9 @@ define(['dojo/_base/declare',
         'balek-modules/diaplode/elements/notes/Instance/note',
         'balek-modules/diaplode/elements/notes/Database/notes',
 
-        'balek-modules/components/syncedCommander/Instance'
+        'balek-modules/components/syncedCommander/Instance',
+        'balek-modules/components/syncedMap/Instance'
+
     ],
     function (declare,
               lang,
@@ -14,7 +16,8 @@ define(['dojo/_base/declare',
               noteInstance,
               notesDatabase,
 
-              syncedCommanderInstance) {
+              syncedCommanderInstance,
+              syncedMapInstance) {
         return declare("moduleDiaplodeElementsNotesInstance", syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
@@ -22,12 +25,16 @@ define(['dojo/_base/declare',
             _notesDatabase: null,
             _noteInstances: [],
 
+            _availableNotes: null,
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
                 this._noteInstances = [];
 
                 this._commands={
-                    "createNote" : lang.hitch(this, this.createNote)
+                    "createNote" : lang.hitch(this, this.createNote),
+                    "loadNote" : lang.hitch(this, this.loadNote)
                 };
 
                 this._interfaceState.set("moduleName","moduleDiaplodeElementsNotesInstance");
@@ -42,7 +49,9 @@ define(['dojo/_base/declare',
 
                             if (userNotesArray.length > 0) {
                                for( userNotesArrayKey in userNotesArray ) {
-                                   this.createNoteInstance(userNotesArray[userNotesArrayKey]._id);
+                                  // this.createNoteInstance(userNotesArray[userNotesArrayKey]._id);
+                                   this._availableNotes.add(userNotesArray[userNotesArrayKey]._id, userNotesArray[userNotesArrayKey]);
+
                                }
 
                             } else {
@@ -53,6 +62,17 @@ define(['dojo/_base/declare',
                         console.log(error);
                     });
                 }));
+
+
+                this._availableNotes  = new syncedMapInstance({_instanceKey: this._instanceKey});
+
+
+                this._interfaceState.set("availableNotesComponentKey", this._availableNotes._componentKey);
+
+                console.log(this._availableNotes);
+
+
+
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
             },
@@ -93,6 +113,10 @@ define(['dojo/_base/declare',
                 });
 
 
+            },
+            loadNote: function(noteKey, remoteCommanderCallback)
+            {
+                this.createNoteInstance(noteKey);
             }
         });
     }
