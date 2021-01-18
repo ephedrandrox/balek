@@ -138,6 +138,8 @@ define(['dojo/_base/declare',
                     }
                     else if(collection){
                         //debugger;
+                        noteId = collection.s.pkFactory.ObjectID(noteId);
+
                         collection.updateOne({_id: noteId}, {$set: {noteContent: noteContent}}, lang.hitch(this, function (error, response) {
                             if(error){
                                 Reject(error);

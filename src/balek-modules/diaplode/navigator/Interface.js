@@ -58,11 +58,14 @@ define(['dojo/_base/declare',
                     request: "Navigator Component Key",
                 }, lang.hitch(this, function (requestResults) {
                     console.log("got command return results");
+
                     this._navigatorMainWidget = new navigatorMainWidget({
                         _instanceKey: this._instanceKey,
                         _componentKey: requestResults.componentKey,
                         _navigatorSystemMenusState: this._navigatorSystemMenusState
                     });
+
+
                 }));
             },
             addSystemMenuList:function( syncedMap, menuCompanion){

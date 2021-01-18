@@ -140,7 +140,8 @@ define(['dojo/_base/declare',
                         Reject(error);
                     }
                     else if(collection){
-                        debugger;
+                        taskId = collection.s.pkFactory.ObjectID(taskId);
+
                         collection.updateOne({_id: taskId}, {$set: {taskContent: taskContent}}, lang.hitch(this, function (error, response) {
                             if(error){
                                 Reject(error);
