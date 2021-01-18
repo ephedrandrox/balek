@@ -14,7 +14,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("moduleBaseSyncedMapInterface started");
-                console.log("moduleBaseSyncedMapInterface started", this._componentKey, this._instanceKey);
+              //  console.log("moduleBaseSyncedMapInterface started", this._componentKey, this._instanceKey);
 
                 this._objects = {};
 
@@ -37,7 +37,7 @@ define(['dojo/_base/declare',
             },
             onInterfaceStateChange: function (name, oldState, newState) {
 
-                console.log("SyncedMap",name, oldState, newState);
+                //console.log("SyncedMap",name, oldState, newState);
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "componentKey") {
@@ -45,7 +45,7 @@ define(['dojo/_base/declare',
                 }else if (name === "Module") {
 
                 }else {
-                    console.log("Got a list Item",name, newState);
+                    //console.log("Got a list Item",name, newState);
                     //Got a list Item
                     this._objects[name.toString()] =newState;
 

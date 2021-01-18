@@ -64,7 +64,7 @@ define(['dojo/_base/declare',
                     domConstruct.place(this.domNode, this._menuWidget.domNode);
                 }else
                 {
-                    console.log("no place to go", this);
+                   // console.log("no place to go", this);
                 }
 
             },
@@ -74,7 +74,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             onInterfaceStateChange: function(name, oldState, newState){
-               console.log("menu Items State change", name, newState);
+               //console.log("menu Items State change", name, newState);
 
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
@@ -93,7 +93,7 @@ define(['dojo/_base/declare',
                    this._nameDiv.innerHTML = newState;
                 }
                 else{
-                    console.log("state unaccounted for....", name, newState);
+                    //console.log("state unaccounted for....", name, newState);
                 }
             },
 
@@ -102,7 +102,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             _onClick: function(){
-                console.log(this._menuCompanion, this._itemKey);
+                //console.log(this._menuCompanion, this._itemKey);
                 this._menuCompanion.load(this._itemKey);
             },
             _onFocus: function () {

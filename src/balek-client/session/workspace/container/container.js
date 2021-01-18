@@ -115,7 +115,7 @@ define(['dojo/_base/declare',
                         }
                     }
                 },function(reply){
-                    console.log(reply)
+                   // console.log(reply)
                 });
             },
             refreshContainerWidget: function(){
@@ -251,7 +251,7 @@ define(['dojo/_base/declare',
 
             },
             updateWidgetWorkspaceInfo: function(workspaceInfo){
-                console.log("workspace Info", workspaceInfo);
+               // console.log("workspace Info", workspaceInfo);
             },
             updateWidgetWithElementBox: function(elementBox)
             {
@@ -310,12 +310,12 @@ define(['dojo/_base/declare',
             },
             updateInstanceElementBox: function(){
                 let elementBox = domGeometry.getContentBox(this._workspaceContainerWidget.domNode);
-                console.log("resized sending Box", elementBox);
+             //   console.log("resized sending Box", elementBox);
                 this._componentStateSet("diaplodeWorkspaceContainer", "elementBox", elementBox);
             },
 
             getWorkspaceDomNode: function () {
-                console.log("getting Dom Node");
+               // console.log("getting Dom Node");
                 if(this._workspaceContainerWidget && this._workspaceContainerWidget.domNode)
                 {
                     return this._workspaceContainerWidget.domNode;

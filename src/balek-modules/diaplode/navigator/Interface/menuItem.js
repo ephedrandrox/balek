@@ -65,7 +65,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             onInterfaceStateChange: function(name, oldState, newState){
-               console.log("menu Items State change", name, newState);
+              // console.log("menu Items State change", name, newState);
 
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
@@ -84,7 +84,7 @@ define(['dojo/_base/declare',
                    this._nameDiv.innerHTML = newState;
                 }
                 else{
-                    console.log("state unaccounted for....", name, newState);
+                   // console.log("state unaccounted for....", name, newState);
                 }
             },
 

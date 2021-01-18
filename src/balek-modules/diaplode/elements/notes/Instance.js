@@ -69,7 +69,7 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("availableNotesComponentKey", this._availableNotes._componentKey);
 
-                console.log(this._availableNotes);
+                //console.log(this._availableNotes);
 
 
 

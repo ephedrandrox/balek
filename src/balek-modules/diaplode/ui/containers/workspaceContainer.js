@@ -57,7 +57,7 @@ define(['dojo/_base/declare',
                         this._diaplodeWorkspaceContainerState = stateResult;
                         this._diaplodeWorkspaceContainerState.watch(lang.hitch(this, this.onStateReceived));
                         //set and watch the state
-                        console.log(this._diaplodeWorkspaceContainerState);
+                        //console.log(this._diaplodeWorkspaceContainerState);
                     })).catch(lang.hitch(this, function(errorResult){
                         console.log(this._diaplodeWorkspaceContainerState);
                     }));
@@ -71,7 +71,7 @@ define(['dojo/_base/declare',
             {
                 console.log("COmponent State Received!");
 
-                console.log(name, oldState, newState);
+                //console.log(name, oldState, newState);
                 if(name === 'elementBox' && oldState === undefined){
                     this.updateWidgetWithElementBox(newState);
                    // this.moveTo(Math.round(newState.t), Math.round(newState.l));
@@ -137,7 +137,7 @@ define(['dojo/_base/declare',
             },
             updateInstanceElementBox: function(){
                 let elementBox = domGeometry.getContentBox(this._workspaceContainerWidget.domNode);
-                console.log("resized sending Box", elementBox);
+                //console.log("resized sending Box", elementBox);
                 this._componentStateSet("diaplodeWorkspaceContainer", "elementBox", elementBox);
             },
 

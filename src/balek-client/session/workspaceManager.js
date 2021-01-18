@@ -102,7 +102,7 @@ define(['dojo/_base/declare',
 
               let workspace = this._workspaces[workspaceKey];
               let workspaceContainers = null;
-              console.log(workspace, workspaceKey );
+              //console.log(workspace, workspaceKey );
 
 
                 if(workspace !== undefined && workspace !== null)
@@ -129,7 +129,7 @@ define(['dojo/_base/declare',
                 }
             },
             onWorkspaceManagerInterfaceStateUpdate: function(name, oldState, newState){
-                console.log(name, oldState, newState);
+               // console.log(name, oldState, newState);
 
                 if(String(name) === "activeWorkspace")
                 {
@@ -137,7 +137,7 @@ define(['dojo/_base/declare',
                 }
             },
             onActiveWorkspaceChange: function (name, oldWorkspaceKey, newWorkspaceKey) {
-                console.log(name, oldWorkspaceKey, newWorkspaceKey);
+               // console.log(name, oldWorkspaceKey, newWorkspaceKey);
                 let workspaces =  this._workspaces;
                 if (oldWorkspaceKey === null) {
                     topic.publish("addToMainContentLayer", workspaces[newWorkspaceKey].domNode );
@@ -239,7 +239,7 @@ define(['dojo/_base/declare',
             activateContainerInWorkspace: function(workspace, containerKey){
 
 
-                console.log("setting focused container in workspace",workspace, containerKey );
+               // console.log("setting focused container in workspace",workspace, containerKey );
                 workspace.activateContainer(containerKey);
             },
             getAvailableWorkspacesState: function()

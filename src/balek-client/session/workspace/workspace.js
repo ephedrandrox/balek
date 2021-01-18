@@ -187,7 +187,7 @@ define(['dojo/_base/declare',
 
             },
             onWorkspaceStateUpdate: function (name, oldState, newState) {
-                console.log(name, oldState, newState);
+               // console.log(name, oldState, newState);
 /*
                 if(name === "instances"){
                    for (instanceKey in newState) {
@@ -207,7 +207,7 @@ define(['dojo/_base/declare',
 
             },
             onWorkspaceContainersStateUpdate: function (name, oldState, newState) {
-                console.log(name, oldState, newState);
+              //  console.log(name, oldState, newState);
 
                 if(this._workspaceContainers[String(name)] === undefined)
                 {

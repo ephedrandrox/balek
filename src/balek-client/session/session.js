@@ -63,7 +63,7 @@ define(['dojo/_base/declare',
 
             },
             onSyncedStateChange: function(name, oldState, newState){
-               console.log(name, newState);
+               //console.log(name, newState);
             },
             onInterfaceLoadRequestReply(interfaceLoadRequest) {
                 let sessionMessage = interfaceLoadRequest.sessionMessage;

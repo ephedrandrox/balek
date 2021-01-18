@@ -40,7 +40,7 @@ define([ 	'dojo/_base/declare',
             },
             addContainerKey(containerKey)
             {
-                console.log("containerKey:", containerKey);
+               // console.log("containerKey:", containerKey);
                 this._componentStateSet("workspaceContainable", "containerKeys", containerKey);
 
             },
@@ -65,7 +65,7 @@ define([ 	'dojo/_base/declare',
                          {
                              let workspaceContainableStateWatchHandle = workspaceContainableState.watch("containerKeys",
                                  lang.hitch(this, function(name, oldState, newState){
-                                     console.log(name, oldState, newState);
+                                   //  console.log(name, oldState, newState);
                                      Resolve(newState);
                                      workspaceContainableStateWatchHandle.unwatch();
                                      workspaceContainableStateWatchHandle.remove();

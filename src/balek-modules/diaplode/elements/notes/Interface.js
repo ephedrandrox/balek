@@ -99,7 +99,7 @@ define(['dojo/_base/declare',
                         })).catch(function(errorResult){
                             console.log(errorResult);
                         });
-                        console.log(this._availableNotes);
+                      //  console.log(this._availableNotes);
                     }
                 }
             },

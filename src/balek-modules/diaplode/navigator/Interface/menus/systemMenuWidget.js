@@ -81,7 +81,7 @@ define(['dojo/_base/declare',
                 }));
             },
             onSystemMenuStateChange: function(name, oldState, newState){
-                console.log("system Menu", name, oldState, newState);
+                //console.log("system Menu", name, oldState, newState);
 
                 if(oldState === undefined && this._menuItemWidgets[name.toString()] === undefined)
                 {
@@ -125,7 +125,7 @@ define(['dojo/_base/declare',
                 for(keyIndex in menuItemKeys){
 
                     let menuItemKey = menuItemKeys[keyIndex];
-                    console.log(menuItemKeys, menuItemKey);
+                    //console.log(menuItemKeys, menuItemKey);
 
                     domConstruct.place(this._menuItemWidgets[menuItemKey].domNode, this.domNode);
 
@@ -146,7 +146,8 @@ define(['dojo/_base/declare',
 
                 console.log("showing subs");
                 for(const menuItem in this._availableMenuItems)
-                {                            console.log("showing subs");
+                {
+                    //console.log("showing subs");
 
                     this._availableMenuItems[menuItem].introAnimation();
                 }

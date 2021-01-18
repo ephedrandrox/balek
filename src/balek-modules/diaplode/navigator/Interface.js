@@ -84,7 +84,7 @@ define(['dojo/_base/declare',
             },
             toggleShowView: function () {
                 let currentStateToggle = {"block": "none", "none": "block"};
-                console.log(domStyle.get(this._navigatorMainWidget.domNode, "display"));
+               // console.log(domStyle.get(this._navigatorMainWidget.domNode, "display"));
                 domStyle.set(this._navigatorMainWidget.domNode, {"display": currentStateToggle[domStyle.get(this._navigatorMainWidget.domNode, "display")]});
             },
             unload: function () {

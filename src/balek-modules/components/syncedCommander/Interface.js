@@ -32,7 +32,7 @@ define(['dojo/_base/declare',
                 }
                 //We Also Check for interfaceRemoteCommandKey so we can send commands
                 if (name === "interfaceRemoteCommandKey") {
-                    console.log("Remote COmmander Key!");
+                   // console.log("Remote COmmander Key!");
                     this._interfaceRemoteCommanderKey = newState;
                 }
 

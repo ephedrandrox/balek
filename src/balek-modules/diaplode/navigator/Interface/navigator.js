@@ -140,8 +140,8 @@ define(['dojo/_base/declare',
 
                         this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
                        // debugger;
-                        console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
-                        console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
+                      //  console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
+                       // console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
                     }
 
 

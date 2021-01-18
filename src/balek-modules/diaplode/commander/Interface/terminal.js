@@ -82,33 +82,31 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + xTermCss + "</style>"), win.body());
 
-                console.log("xtermCSS",this._xTermCssString );
+               // console.log("xtermCSS",this._xTermCssString );
 
 
             },
             startup: function()
             {
-                console.log("startup terminal",this,  this.domNode);
-
-debugger;
+               // console.log("startup terminal",this,  this.domNode);
                 this.startupXTerm();
             },
             startupXTerm: function(){
-                console.log("startup X terminal",this,  this.domNode);
+               // console.log("startup X terminal",this,  this.domNode);
 
 
 
                 if( this._xTerm === null && this.domNode && dom.isDescendant(this.domNode, window.document)){
 
-                    console.log("xterm", xTerm,
-                        xTermCss,
-                        xTermAddOnFit);
+                  //  console.log("xterm", xTerm,
+                   //     xTermCss,
+                  //      xTermAddOnFit);
 
                     this._xTerm = new xTerm.Terminal({'theme': { background: '#477573',  foreground: '#c39213' }});
 
                     this._xTermAddOnFit = new xTermAddOnFit.FitAddon();
 
-                    console.log("xterm",  this._xTerm);
+                    //console.log("xterm",  this._xTerm);
                     this._xTerm.loadAddon(this._xTermAddOnFit);
                     this._xTerm.open(this._terminalOutputNode);
 
@@ -162,12 +160,12 @@ debugger;
                         return false;      // any Ps that was not handled
                     });
 
-                    console.log("xterm",  this._xTerm);
+                  //  console.log("xterm",  this._xTerm);
 
 
                 }else
                 {
-                    console.log("startup Xterm not ready",this._xTerm , this.domNode , dom.isDescendant(this.domNode, window.document) );
+                   // console.log("startup Xterm not ready",this._xTerm , this.domNode , dom.isDescendant(this.domNode, window.document) );
                 }
 
 
@@ -182,20 +180,20 @@ debugger;
             {
                 if(this._xTerm === null)
                 {
-
+                    //todo make isDomNodePlaced function
                     let placedWidgetDomNode = dom.byId(this.id);
-                    console.log("xterm",  placedWidgetDomNode);
+                    //console.log("xterm",  placedWidgetDomNode);
 
                     if(placedWidgetDomNode)
                     {
                         this.startupXTerm();
                         this._xTerm.write(data);
                     }else {
-                        console.log("xterm",  "No Dom Node", placedWidgetDomNode);
+                      //  console.log("xterm",  "No Dom Node", placedWidgetDomNode);
 
                     }
                 }else {
-                    console.log("xterm",  this._xTerm);
+                  //  console.log("xterm",  this._xTerm);
 
                     this._xTerm.write(data);
 
@@ -212,7 +210,7 @@ debugger;
                     this.startup();
                 }));
 
-                console.log("xterm",  this._xTerm);
+               // console.log("xterm",  this._xTerm);
 
 
 
@@ -252,7 +250,7 @@ debugger;
                    // this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
 
                    // this._xTerm.write(newState);
-                    console.log("xterm", oldState, newState);
+                  //  console.log("xterm", oldState, newState);
                 this.writeToXterm(newState);
 
                     // this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
@@ -376,7 +374,7 @@ debugger;
             dockTerminal: function(){
                 let elementBox = domGeometry.getContentBox(this.domNode);
 
-                console.log(elementBox);
+               // console.log(elementBox);
                 fx.slideTo({
                     node: this.domNode,
                     top:  30-elementBox.h,

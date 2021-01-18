@@ -176,7 +176,7 @@ define(['dojo/_base/declare',
             },
             _componentStateChangeInterfaceCallback: function(stateName, name, oldState, newState){
                 let interfaceCallback = this._componentStateInterfaceCallbacks[stateName];
-                console.log(stateName, interfaceCallback);
+               // console.log(stateName, interfaceCallback);
 
                 if(this._componentStates[stateName] !== undefined)
                 {
@@ -224,7 +224,7 @@ define(['dojo/_base/declare',
                     {
                         if(component._componentStates[stateName].get(stateUpdate.name) === undefined)
                         {
-                            console.log(stateUpdate.name, stateUpdate.state);
+                            //console.log(stateUpdate.name, stateUpdate.state);
                             component._componentStates[stateName].set(stateUpdate.name, stateUpdate.state);
                         }
                     }else

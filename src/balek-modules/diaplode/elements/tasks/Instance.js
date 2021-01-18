@@ -66,7 +66,7 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("availableTasksComponentKey", this._availableTasks._componentKey);
 
-                console.log(this._availableTasks);
+               // console.log(this._availableTasks);
 
 
 

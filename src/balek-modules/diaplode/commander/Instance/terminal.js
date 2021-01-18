@@ -68,7 +68,7 @@ define(['dojo/_base/declare',
 
             },
             sendTerminalInput: function( input){
-                console.log(input);
+              //  console.log(input);
                 this._sshService.sendInput(input);
             },
             dockInterface: function()

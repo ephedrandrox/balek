@@ -85,10 +85,10 @@ define(['dojo/_base/declare',
             onInterfaceStateChange: function (name, oldState, newState) {
                 this.inherited(arguments);     //this has to be done so remoteCommander works
                 if (name === "Status" && newState === "Ready") {
-                    console.log("Instance Status:", newState);
+                   // console.log("Instance Status:", newState);
                 }
                 else if( name==="consoleDocked") {
-                    console.log("consoleDocked Status:", newState);
+                    //console.log("consoleDocked Status:", newState);
 
                     if(newState==='true'){
                         this.dockConsole();
@@ -102,7 +102,7 @@ define(['dojo/_base/declare',
 
                     this._consoleOutputNode.scrollTop = this._consoleOutputNode.scrollHeight;
                 }
-                console.log(name, newState);
+               // console.log(name, newState);
                 },
             _onKeyUp: function(keyUpEvent){
                 switch (keyUpEvent.keyCode) {
@@ -143,7 +143,7 @@ define(['dojo/_base/declare',
 
             },
             _onConsoleInputKeyUp: function(keyUpEvent){
-                console.log("Key up code an dstuff---------------------------",keyUpEvent);
+               // console.log("Key up code an dstuff---------------------------",keyUpEvent);
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ENTER:
                         keyUpEvent.preventDefault();
@@ -185,7 +185,7 @@ define(['dojo/_base/declare',
                 {
                     this._commanderInstanceCommands.saveSettings({consoleDockedOnLoad: false}).then(
                         function(results){
-                        console.log("got results", results);
+                      //  console.log("got results", results);
                         });
                 }
             },
@@ -280,7 +280,7 @@ define(['dojo/_base/declare',
             dockConsole: function(){
                 let elementBox = domGeometry.getContentBox(this.domNode);
 
-                console.log(elementBox);
+               // console.log(elementBox);
                 fx.slideTo({
                     node: this.domNode,
                     top:  30-elementBox.h,

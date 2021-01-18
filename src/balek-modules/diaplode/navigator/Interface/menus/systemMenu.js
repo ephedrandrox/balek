@@ -23,7 +23,7 @@ define([ 	'dojo/_base/declare',
                 {
                     console.log("Menu Could not be initialized");
                 }else {
-                    console.log("creating System Menu", this._syncedMap , this._menuCompanion);
+                   // console.log("creating System Menu", this._syncedMap , this._menuCompanion);
 
 
                    // this._syncedMap.setStateWatcher(lang.hitch(this, this.syncedMapItemStateChange));
@@ -34,10 +34,10 @@ define([ 	'dojo/_base/declare',
             },
             syncedMapItemStateChange: function(itemKey, oldState, newState)
             {
-                console.log("item", itemKey, oldState, newState);
+                //console.log("item", itemKey, oldState, newState);
             },
             loadItem: function(itemKey){
-                console.log("Load item", itemKey);
+             //   console.log("Load item", itemKey);
                 if(this._menuCompanion && this._menuCompanion.load)
                 {
                     this._menuCompanion.load(itemKey).then().catch();

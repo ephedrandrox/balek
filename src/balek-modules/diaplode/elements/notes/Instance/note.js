@@ -43,7 +43,7 @@ define(['dojo/_base/declare',
             {
                 this._notesDatabase.updateUserNote(this._noteKey, content).then(
                     lang.hitch(this, function(userNoteResult){
-                        console.log("user Note Set",userNoteResult);
+                      //  console.log("user Note Set",userNoteResult);
                         this._interfaceState.set("noteContent", content);
                     })
                 ).catch(lang.hitch(this, function(userNoteError){
