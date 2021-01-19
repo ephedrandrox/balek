@@ -15,7 +15,8 @@ define(['dojo/_base/declare',
 
         'balek-modules/diaplode/navigator/Interface/navigator',
         'balek-modules/diaplode/navigator/Interface/menus/systemMenu',
-
+//Balek Interface Extensions
+        'balek-modules/components/syncedCommander/Interface'
 
     ],
     function (declare,
@@ -28,9 +29,10 @@ define(['dojo/_base/declare',
               Stateful,
               navigatorInterfaceCommands,
               navigatorMainWidget,
-              navigatorSystemMenu) {
+              navigatorSystemMenu,
+              _syncedCommanderInterface) {
 
-        return declare("moduleDiaplodeNavigatorModuleInterface", baseInterface, {
+        return declare("moduleDiaplodeNavigatorModuleInterface", _syncedCommanderInterface, {
             _instanceKey: null,
             _navigatorMainWidget: null,
 
@@ -48,28 +50,34 @@ define(['dojo/_base/declare',
                 });
 
                // this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenus.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
-
+              //  console.log("navigator", this);
 
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
                 this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList))
                 this._commandsForOtherInterfaces.setNavigatorReady();
 
-                this.sendInstanceCallbackMessage({
-                    request: "Navigator Component Key",
-                }, lang.hitch(this, function (requestResults) {
-                    console.log("got command return results");
 
-                    this._navigatorMainWidget = new navigatorMainWidget({
-                        _instanceKey: this._instanceKey,
-                        _componentKey: requestResults.componentKey,
-                        _navigatorSystemMenusState: this._navigatorSystemMenusState
-                    });
-
-
-                }));
             },
-            addSystemMenuList:function( syncedMap, menuCompanion){
+            onInterfaceStateChange: function (name, oldState, newState) {
+                //this has to be here so remoteCommander works
+                this.inherited(arguments);
+                console.log("navigator", name, oldState, newState);
+                if (name === "navigatorInstanceKeys") {
+                    if(this._navigatorMainWidget === null)
+                    {
+                        this._navigatorMainWidget = new navigatorMainWidget({
+                            _instanceKey: this._instanceKey,
+                            _componentKey: newState.componentKey,
+                            _navigatorSystemMenusState: this._navigatorSystemMenusState
+                        });
+                    }
 
+                }
+
+            },
+
+            addSystemMenuList:function( syncedMap, menuCompanion){
+                //This function is
                // lang.hitch(this, this.availableTaskStateChange);
 
 

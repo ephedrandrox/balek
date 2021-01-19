@@ -358,7 +358,7 @@ define(['dojo/_base/declare',
                 }
             },
             addMenu: function (availableMenuComponentKey) {
-                let newMenu = radialMenu({_instanceKey: this._instanceKey, _componentKey: availableMenuComponentKey});
+               let newMenu = radialMenu({_instanceKey: this._instanceKey, _componentKey: availableMenuComponentKey});
                 //add widget to newMenu array that will be searched when available menu state is changed
 
                 if (!availableMenuComponentKey) {

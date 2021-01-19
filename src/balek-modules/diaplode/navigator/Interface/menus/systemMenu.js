@@ -1,17 +1,11 @@
 define([ 	'dojo/_base/declare',
         "dojo/_base/lang"
-
-
     ],
     function (declare, lang ) {
 
         return declare( "diaplodeNavigatorInterfaceSystemMenu",null, {
             _syncedMap: null,
             _menuCompanion: null,
-
-
-
-
 
             constructor: function (args) {
 
@@ -24,12 +18,8 @@ define([ 	'dojo/_base/declare',
                     console.log("Menu Could not be initialized");
                 }else {
                    // console.log("creating System Menu", this._syncedMap , this._menuCompanion);
-
-
                    // this._syncedMap.setStateWatcher(lang.hitch(this, this.syncedMapItemStateChange));
                 }
-
-
 
             },
             syncedMapItemStateChange: function(itemKey, oldState, newState)
