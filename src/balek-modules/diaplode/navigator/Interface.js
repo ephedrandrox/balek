@@ -36,7 +36,7 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _navigatorMainWidget: null,
 
-            _navigatorSystemMenusState: null, //make this stateful
+            _navigatorSystemMenusState: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);

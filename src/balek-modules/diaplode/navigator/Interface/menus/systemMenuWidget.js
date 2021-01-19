@@ -98,7 +98,7 @@ define(['dojo/_base/declare',
             },
             postCreate: function()
             {
-                console.log("systemMenuWidget postCreate");
+                console.log("systemMenuWidget postCreate",this._systemMenu );
 
                 if(this._systemMenu && this._systemMenu._menuCompanion && this._systemMenu._menuCompanion.name)
                 {

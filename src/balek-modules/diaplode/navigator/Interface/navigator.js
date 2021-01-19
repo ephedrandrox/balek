@@ -21,18 +21,17 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/navigator/resources/css/navigator.css',
 
         'balek-modules/Interface',
-        'balek-modules/base/state/synced',
-        'balek-modules/base/command/remote',
 
 
-        "balek-modules/diaplode/navigator/Interface/radialMenu",
-        "balek-modules/diaplode/navigator/Interface/menus/systemMenuWidget",
+        "balek-modules/diaplode/navigator/Interface/radialMenu",//todo remove
+        "balek-modules/diaplode/navigator/Interface/menus/systemMenuWidget",//todo remove
 
 
         "balek-modules/diaplode/ui/input/getUserInput",
 
-    "balek-modules/diaplode/ui/containers/movable"
+        "balek-modules/diaplode/ui/containers/movable",  //todo remove
 
+        'balek-modules/components/syncedCommander/Interface'
     ],
     function (declare,
               lang,
@@ -53,14 +52,13 @@ define(['dojo/_base/declare',
               template,
               templateCSS,
               baseInterface,
-              stateSynced,
-              remoteCommander,
               radialMenu,
               systemMenuWidget,
               getUserInput,
-              diaplodeMovableContainer) {
+              diaplodeMovableContainer,
+              _syncedCommanderInterface) {
 
-        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander, diaplodeMovableContainer], {
+        return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin,  _syncedCommanderInterface, diaplodeMovableContainer], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeNavigatorInterface",
@@ -93,9 +91,6 @@ define(['dojo/_base/declare',
 
                 dojoReady(lang.hitch(this, function () {
 
-                    if (this._componentKey) {
-                        this.askToConnectInterface();
-                    }
 
                     on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
@@ -159,7 +154,7 @@ define(['dojo/_base/declare',
 
                 this.makeMovable();
 
-
+                this.introAnimation();
 
             },
 
@@ -172,24 +167,9 @@ define(['dojo/_base/declare',
                // console.log(name, newState);
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
-                if (name === "interfaceRemoteCommands") {
-                    this.linkRemoteCommands(newState);
-                   // this._instanceCommands.changeName("ThisNavigatorName").then(function (results) {
-                   //     console.log(results);
-                   // });
-                    // ready to show widget now that we have our
-                    // interface linked and received our remote commands;
-                    this.introAnimation();
 
-                }
+                this.inherited(arguments);
 
-                //Since We are extending with the remoteCommander
-                //We Check for interfaceRemoteCommandKey
-                if (name === "interfaceRemoteCommandKey") {
-                  //  console.log("Remote COmmander Key!");
-                    this._interfaceRemoteCommanderKey = newState;
-
-                }
 
                 if (name === "availableMenus") {
                     this.updateAvailableMenus();

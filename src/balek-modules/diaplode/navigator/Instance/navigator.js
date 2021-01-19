@@ -4,13 +4,12 @@ define(['dojo/_base/declare',
 
         'dojo/node!crypto',
 
-        'balek-modules/Instance',
-        'balek-modules/base/state/synced',
-        'balek-modules/base/command/remote',
+
         'balek-modules/diaplode/navigator/Database/navigator/menus',
 
 
-        'balek-modules/diaplode/navigator/Instance/radialMenu',
+        'balek-modules/diaplode/navigator/Instance/radialMenu',//todo remove
+        'balek-modules/components/syncedCommander/Instance'
 
     ],
     function (declare,
@@ -19,13 +18,12 @@ define(['dojo/_base/declare',
 
               crypto,
 
-              baseInstance,
-              stateSynced,
-              remoteCommander,
+
               menuDatabaseController,
 
-              radialMenu) {
-        return declare("moduleDiaplodeNavigatorInstance", [baseInstance,stateSynced,remoteCommander], {
+              radialMenu,
+              _syncedCommanderInstance) {
+        return declare("moduleDiaplodeNavigatorInstance", _syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
             _userKey: null,
