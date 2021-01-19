@@ -288,7 +288,7 @@ define(['dojo/_base/declare',
                     unit: "px",
                     duration: 200,
                     onEnd: lang.hitch(this,function(){
-                        domStyle.set(this.domNode, {"visibility": "visible"});
+                        domStyle.set(this.domNode, {"visibility": "visible", "top": (30-domGeometry.getContentBox(this.domNode).h)+ "px" });
                     })
                 }).play();
             },
