@@ -35,6 +35,15 @@ body {
 border: solid #50d1d1 3px;
 }
 
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+    position: relative;
+
+
+    border: solid white 5px;
+}
+diaplodeNavigatorInterfaceWorkspaceButtonDiv{
+cursor: pointer;
+}
 
 .diaplodeNavigatorInterfaceImage {
     width: 0px;
@@ -63,6 +72,8 @@ font-size: 50px;
 .diaplodeNavigatorInterfaceCommandsDiv {
    color: white;
     border: solid black 2px;
+    position: absolute;
+    top: 0;
 }
 
 

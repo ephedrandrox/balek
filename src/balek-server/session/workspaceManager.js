@@ -84,9 +84,9 @@ define([ 	'dojo/_base/declare',
                 interfaceCallback({availableWorkspacesState: JSON.stringify(this._availableWorkspacesState)});
                 interfaceCallback({workspaceManagerState: JSON.stringify(this._workspaceManagerState)});
             },
-            getNewWorkspace: function(){
+            getNewWorkspace: function(newWorkspaceName = "Untitled"){
                 let newWorkspaceKey = this.getUniqueWorkspaceKey();
-                this._workspaces[newWorkspaceKey] =new balekWorkspace({_workspaceKey:newWorkspaceKey, containerManager: this.containerManager });
+                this._workspaces[newWorkspaceKey] =new balekWorkspace({_workspaceKey:newWorkspaceKey, _workspaceName: newWorkspaceName, containerManager: this.containerManager });
 
                 let workspacesToReturn ={
                     workspaceKey: newWorkspaceKey,
@@ -149,6 +149,11 @@ define([ 	'dojo/_base/declare',
 
                         this.changeWorkspaceName(workspaceMessage.messageData.changeWorkspaceName, messageReplyCallback);
 
+                    }else if(workspaceMessage.messageData.newWorkspace){
+                        console.log("Creating New Workspace" ,workspaceMessage);
+
+                        this.newWorkspaceRequest(workspaceMessage.messageData.newWorkspace, messageReplyCallback);
+
                     }else if(workspaceMessage.messageData.connectWorkspaceInterface){
                         //      console.log("connecting Workspace Interface" ,workspaceMessage);
                         this.connectWorkspaceInterface(workspaceMessage.messageData.connectWorkspaceInterface, messageReplyCallback);
@@ -182,7 +187,10 @@ define([ 	'dojo/_base/declare',
                     messageReplyCallback({error: "connectWorkspaceInterface Message did not contain a workspace Key"});
                 }
             },
-
+            newWorkspaceRequest:function(newWorkspaceRequest, messageReplyCallback){
+                console.log(this.getNewWorkspace(newWorkspaceRequest.workspaceName));
+                messageReplyCallback({success: "Created New Workspace"});
+            },
             changeWorkspaceName: function(changeWorkspaceName, messageReplyCallback){
                 if(changeWorkspaceName.workspaceKey && this._workspaces[changeWorkspaceName.workspaceKey] && changeWorkspaceName.workspaceName ){
 

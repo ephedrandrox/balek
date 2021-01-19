@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
         return declare("balekServerWorkspaceManagerWorkspace", balekWorkspaceManagerWorkspace, {
             instances: null,
             containers: null,
-            _workspaceName: null,
+            _workspaceName: "Untitled Workspace",
             _workspaceKey: null,
 
             _workspaceState: null,
@@ -29,7 +29,6 @@ define(['dojo/_base/declare',
                 this.containers = {};
                 this._containers = {};
 
-                this._workspaceName = "Untitled Workspace";
 
                 let workspaceState = declare([Stateful], {
                     name: "",

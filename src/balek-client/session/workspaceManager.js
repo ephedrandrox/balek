@@ -58,6 +58,9 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('activateContainerInWorkspace', lang.hitch(this, this.activateContainerInWorkspace));
 
 
+                this._commandsForInterface.setCommand('requestNewWorkspace', lang.hitch(this, this.requestNewWorkspace));
+
+
 
 
                 this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey});
@@ -92,7 +95,26 @@ define(['dojo/_base/declare',
 
                 this.connectToInstance();
             },
+            requestNewWorkspace: function(newWorkspaceName){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                        workspaceMessage: {
+                            sessionKey: this._sessionKey, messageData: {
+                                newWorkspace: {
+                                    workspaceName: newWorkspaceName
+                                }
+                            }
+                        }
+                    }, lang.hitch(this, function (returnMessage) {
+                        if (returnMessage.error) {
+                            Reject(returnMessage.error);
+                        } else {
+                            Resolve(returnMessage);
+                        }
+                    }));
+                }));
 
+            },
             getActiveWorkspace: function(){
                 let activeWorkspaceKey = this._workspaceManagerState.get("activeWorkspace");
                 let activeWorkspace = this._workspaces[activeWorkspaceKey];
