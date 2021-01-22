@@ -39,7 +39,7 @@ border: solid #50d1d1 3px;
     position: relative;
 
 
-    border: solid white 5px;
+
 }
 diaplodeNavigatorInterfaceWorkspaceButtonDiv{
 cursor: pointer;
@@ -49,6 +49,8 @@ cursor: pointer;
     width: 0px;
     width: 300px;
     height: 300px;
+visibility: hidden;
+
 }
 
 
@@ -66,10 +68,7 @@ cursor: pointer;
     left: calc(50% - 50px);
 font-size: 50px;
     border: solid white 2px;
-}
 
-
-.diaplodeNavigatorInterfaceCommandsDiv {
    color: white;
     border: solid black 2px;
     position: absolute;

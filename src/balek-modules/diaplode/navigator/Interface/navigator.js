@@ -6,6 +6,7 @@ define(['dojo/_base/declare',
         'dojo/dom-construct',
         "dojo/_base/window",
         'dojo/on',
+        "dojo/aspect",
         "dojo/dom-attr",
         "dojo/keys",
         "dijit/focus",
@@ -30,7 +31,9 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/ui/input/getUserInput",
 
         "balek-modules/diaplode/ui/containers/movable",  //todo remove
-        'balek-client/session/workspace/workspaceManagerInterfaceCommands',
+
+        "balek-modules/diaplode/navigator/Interface/menus/workspacesMenu/navigatorMainWidget",
+
 
 
         'balek-modules/components/syncedCommander/Interface'
@@ -43,6 +46,7 @@ define(['dojo/_base/declare',
               domConstruct,
               win,
               on,
+              aspect,
               domAttr,
               dojoKeys,
               dijitFocus,
@@ -58,7 +62,7 @@ define(['dojo/_base/declare',
               systemMenuWidget,
               getUserInput,
               diaplodeMovableContainer,
-              balekWorkspaceManagerInterfaceCommands,
+              workspacesMenu,
               _syncedCommanderInterface) {
 
         return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin,  _syncedCommanderInterface, diaplodeMovableContainer], {
@@ -75,12 +79,8 @@ define(['dojo/_base/declare',
             _navigatorSystemMenusState: null,
             _navigatorSystemMenusStateWatchHandle: null,
 
-            _navigatorWorkspaceMenuWidgets: null,
 
-            workspaceManagerCommands: null,
-            _availableWorkspacesState: null,
-            _availableWorkspacesStateWatchHandle: null,
-            _workspaceManagerState: null,
+             _workspacesMenu: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -96,12 +96,6 @@ define(['dojo/_base/declare',
                 this._newMenus = [];
 
 
-                let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
-                this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
-
-                this._availableWorkspacesState = this.workspaceManagerCommands.getAvailableWorkspacesState();
-                this._workspaceManagerState = this.workspaceManagerCommands.getWorkspaceManagerState();
-
 
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
@@ -113,6 +107,8 @@ define(['dojo/_base/declare',
 
 
                 }));
+
+
 
 
             },
@@ -161,56 +157,11 @@ define(['dojo/_base/declare',
                 this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenusState.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
 
             },
-            loadAndWatchWorkspaces: function(){
-                let availableWorkspacesInState = JSON.parse(JSON.stringify(this._availableWorkspacesState));
-                this._availableWorkspacesStateWatchHandle = this._availableWorkspacesState.watch(lang.hitch(this, this.onAvailableWorkspacesStateChange));
-                for (const name in availableWorkspacesInState)
-                {
-                    console.log("navigator", name, availableWorkspacesInState[name]);
-                    this._navigatorWorkspaceMenuWidgets[name.toString()] =  availableWorkspacesInState[name];
-                }
 
-                this.refreshWidget();
-            },
-            onAvailableWorkspacesStateChange: function(name, oldState, newState){
-                console.log("navigator", name, oldState, newState);
-                let workspaceName = newState.workspaceName;
-                let workspaceKey = name.toString();
-                if(this._navigatorWorkspaceMenuWidgets[workspaceKey] === undefined){
-                    this._navigatorWorkspaceMenuWidgets[workspaceKey] = newState;
-                }else
-                {
-                    this._navigatorWorkspaceMenuWidgets[workspaceKey] = newState;
-                }
-
-                this.refreshWidget();
-            },
-            refreshWidget: function() {
-                console.log("navigator",this._navigatorWorkspaceMenuWidgets);
-                this._mainWorkspacesDiv.innerHTML = "";
-                for( const workspaceKey in this._navigatorWorkspaceMenuWidgets )
-                {
-                    let workspaceState = this._navigatorWorkspaceMenuWidgets[workspaceKey];
-
-                    let newWorkspaceInfo = domConstruct.create("div");
-
-                    newWorkspaceInfo.innerHTML = workspaceState.workspaceName;
-                    domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspaceButtonDiv");
-                    on(newWorkspaceInfo, 'click', lang.hitch(workspaceKey, function (changeActiveWorkspace, evt) {
-                        evt.stopPropagation();
-                        changeActiveWorkspace(workspaceKey);
-                    }, this.workspaceManagerCommands.changeActiveWorkspace));
-
-                    domConstruct.place(newWorkspaceInfo, this._mainWorkspacesDiv);
-
-                   // this._mainWorkspacesDiv.innerHTML += workspaceState.workspaceName + "<br>";
-                }
-            },
 
             postCreate: function () {
 
                 this.loadAndWatchNavigatorSystemMenus();
-                this.loadAndWatchWorkspaces();
 
                 topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
@@ -219,6 +170,16 @@ define(['dojo/_base/declare',
 
                 this.introAnimation();
 
+                this._workspaceMenu = new workspacesMenu({_targetNode: this._mainWorkspacesDiv});
+
+                if(this._workspaceMenu.domNode){
+                    console.log("navigator", "no aspect after", this.domNode,this._mainWorkspacesDiv, this._workspaceMenu.domNode );
+                    domConstruct.place(this._workspaceMenu.domNode, this._mainWorkspacesDiv);
+                }else {
+                    aspect.after(this._workspaceMenu, "postCreate", lang.hitch(this, function(){
+                        domConstruct.place(this._workspaceMenu.domNode, this._mainWorkspacesDiv);
+                    }));
+                }
             },
 
 
@@ -309,19 +270,6 @@ define(['dojo/_base/declare',
                             console.log(results);
                         });
                         getNameForMenu.unload();
-                    }) });
-
-            },
-            onAddWorkspaceClicked: function (event){
-                console.log(event);
-                let getNameForWorkspace = new getUserInput({question: "Choose a Workspace Name", inputReplyCallback: lang.hitch(this, function(newWorkspaceName){
-                        console.log("Requesting new menu", newWorkspaceName, this.workspaceManagerCommands);
-                        this.workspaceManagerCommands.requestNewWorkspace(newWorkspaceName).then(function(result){
-                            console.log("navigator", "New Workspace create", result);
-                        }).catch(function(errorResult){
-                            alert(errorResult);
-                        });
-                        getNameForWorkspace.unload();
                     }) });
 
             },

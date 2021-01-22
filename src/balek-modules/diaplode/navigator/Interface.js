@@ -15,6 +15,8 @@ define(['dojo/_base/declare',
 
         'balek-modules/diaplode/navigator/Interface/navigator',
         'balek-modules/diaplode/navigator/Interface/menus/systemMenu',
+
+
 //Balek Interface Extensions
         'balek-modules/components/syncedCommander/Interface'
 
@@ -36,7 +38,10 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _navigatorMainWidget: null,
 
+
             _navigatorSystemMenusState: null,
+
+
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
@@ -49,7 +54,8 @@ define(['dojo/_base/declare',
 
                 });
 
-               // this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenus.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
+
+                // this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenus.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
               //  console.log("navigator", this);
 
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
