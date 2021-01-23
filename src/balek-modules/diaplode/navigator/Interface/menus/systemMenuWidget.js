@@ -73,19 +73,14 @@ define(['dojo/_base/declare',
                     this._systemMenu._syncedMap.setStateWatcher(lang.hitch(this, this.onSystemMenuStateChange));
                 }
 
-                dojoReady(lang.hitch(this, function () {
-                    if(  this._componentKey )
-                    {
-                      //  this.askToConnectInterface();
-                    }
-                }));
+
             },
             onSystemMenuStateChange: function(name, oldState, newState){
-                //console.log("system Menu", name, oldState, newState);
+                console.log("system Menu", name, oldState, newState);
 
                 if(oldState === undefined && this._menuItemWidgets[name.toString()] === undefined)
                 {
-                    let newMenuItem =  menuItem({_itemKey: name.toString(), _userKey: newState._userKey, _menuCompanion: this._systemMenu._menuCompanion});
+                    let newMenuItem =  menuItem({_itemKey: name.toString(), _userKey: newState._userKey, _menuCompanion: this._systemMenu._menuCompanion, _name: newState.name});
 
                     this._menuItemWidgets[name.toString()] = newMenuItem;
 
@@ -104,7 +99,12 @@ define(['dojo/_base/declare',
                 {
                     this._mainTitle.innerHTML = this._systemMenu._menuCompanion.name;
                 }
+
+                this._navigatorWidget.arrangeSystemMenus();
+
                 domConstruct.place(this.domNode, this._navigatorWidget.domNode);
+
+
                 //topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                 //only do this then reset
                 //

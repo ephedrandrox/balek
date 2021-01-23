@@ -9,6 +9,8 @@ define(['dojo/_base/declare',
 
 
         'balek-modules/diaplode/navigator/Instance/radialMenu',//todo remove
+        'balek-modules/diaplode/navigator/Instance/menus/systemMenu',
+
         'balek-modules/components/syncedCommander/Instance'
 
     ],
@@ -22,15 +24,20 @@ define(['dojo/_base/declare',
               menuDatabaseController,
 
               radialMenu,
+              systemMenu,
               _syncedCommanderInstance) {
         return declare("moduleDiaplodeNavigatorInstance", _syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
             _userKey: null,
 
-            _menus: {},
+            _systemMenuNames: {},
+            _systemMenus: {},
 
-            _menusFromDatabase: {},
+            _menus: {}, //todo remove
+
+
+            _menusFromDatabase: {}, //todo change to user menus
 
 
             _menusDatabaseController: {},
@@ -40,6 +47,9 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 this._menus = {}; //new Menus object for this instance
+                this._systemMenus = {};
+                this._systemMenuNames=  {};
+
                 this._menusFromDatabase = {};
                 if(this._instanceKey !== null && this._sessionKey !== null && this._userKey !== null )
                 {
@@ -72,6 +82,7 @@ define(['dojo/_base/declare',
                                 this._commands={
                                     "changeName" : lang.hitch(this, this.changeName),
                                     "newMenu" : lang.hitch(this, this.newMenu),
+                                    "requestSystemMenuInstance" : lang.hitch(this, this.requestSystemMenuInstance)
                                 };
 
                                 //set state
@@ -125,6 +136,29 @@ define(['dojo/_base/declare',
                 }));
 
 
+
+            },
+            requestSystemMenuInstance: function(name, remoteCommanderCallback){
+
+                let systemMenuName = name.toString();
+            if(this._systemMenuNames[systemMenuName] === undefined){
+                let newSystemMenuInstance = new systemMenu({_sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                    _userKey: this._userKey,
+                    _menuName: systemMenuName});
+
+                this._systemMenus[newSystemMenuInstance.getComponentKey()] = newSystemMenuInstance;
+                this._systemMenuNames[systemMenuName] = newSystemMenuInstance;
+                this._interfaceState.set("availableSystemMenus", Object.keys(this._systemMenus));
+
+
+                remoteCommanderCallback({"success":"new System menu Instance creates",
+                    "componentKey":newSystemMenuInstance.getComponentKey()});
+
+            }else{
+                remoteCommanderCallback({"error":"System Menu Name already taken",
+                    "systemMenuName":systemMenuName});
+
+            }
 
             },
             _end: function(){

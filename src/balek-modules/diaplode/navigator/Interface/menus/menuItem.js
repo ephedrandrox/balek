@@ -58,9 +58,11 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 //topic.publish("addToMainContentLayer", this.domNode);
+                this._nameDiv.innerHTML = this._name;
 
                 if(this._menuWidget && this._menuWidget.domNode)
                 {
+
                     domConstruct.place(this.domNode, this._menuWidget.domNode);
                 }else
                 {

@@ -16,8 +16,8 @@ position: absolute;
 
     padding:0;
     margin: 0;
-    width: 9vw;
-    height:9vw;
+    width: 100px;
+    height:100px;
 }
 
 .diaplodeNavigatorInterfaceRadialMenu:focus{
@@ -25,17 +25,19 @@ position: absolute;
 }
 
 .diaplodeNavigatorInterfaceRadialMenuImage{
-    position:relative;
+    position: absolute;
     top:0;
     left: 0;
     padding: 0;
     margin: 0;
-    width: 9vw;
-    height: 9vw;
+    width: 100px;
+    height: 100px;
 }
 
 .diaplodeNavigatorInterfaceRadialMenuTitle{
-   position: absolute;
+
+    color: white;
+    position: absolute;
     top: 0;
     left: 0;
 }

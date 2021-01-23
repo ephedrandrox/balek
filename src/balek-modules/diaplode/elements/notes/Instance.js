@@ -50,6 +50,12 @@ define(['dojo/_base/declare',
                             if (userNotesArray.length > 0) {
                                for( userNotesArrayKey in userNotesArray ) {
                                   // this.createNoteInstance(userNotesArray[userNotesArrayKey]._id);
+                                   if( !userNotesArray[userNotesArrayKey].name ){
+                                       let noteContent = userNotesArray[userNotesArrayKey].noteContent;
+                                       let noteName = noteContent.toString().trim().substr(0,32);
+                                       userNotesArray[userNotesArrayKey].name = noteName;
+
+                                   }
                                    this._availableNotes.add(userNotesArray[userNotesArrayKey]._id, userNotesArray[userNotesArrayKey]);
 
                                }
@@ -76,6 +82,12 @@ define(['dojo/_base/declare',
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
             },
+            getNameFromNoteContent: function(noteContent)
+            {
+                //let noteName = noteContent.toString.trim();
+                return noteContent;
+            },
+
             createNoteInstance: function(noteID){
                 let newNote = new noteInstance({_instanceKey: this._instanceKey,
                     _sessionKey: this._sessionKey,

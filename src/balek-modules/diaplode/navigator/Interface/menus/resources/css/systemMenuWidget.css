@@ -1,6 +1,6 @@
 .diaplodeNavigatorInterfaceSystemMenuWidget{
     position: relative;
-display: inline-block;
+    display: block;
     top:0;
     left: 0;
     background: none;
@@ -17,8 +17,8 @@ display: inline-block;
 
     padding:0;
     margin: 0;
-    width: 9vw;
-    height:9vw;
+    width: 100px;
+    height:100px;
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidget:focus{
@@ -26,17 +26,25 @@ display: inline-block;
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidgetImage{
-    position:relative;
+    position: absolute;
     top:0;
     left: 0;
     padding: 0;
     margin: 0;
-    width: 9vw;
-    height: 9vw;
+    width: 100px;
+    height: 100px;
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidgetTitle{
     position: absolute;
+    color: white;
+    position: absolute;
+    padding: 5px;
+    border-radius: 5px;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border: solid white 3px;
+
+    background: rgba(17, 89, 98, 0.4);
 }

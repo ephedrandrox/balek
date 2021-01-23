@@ -29,6 +29,9 @@ define(['dojo/_base/declare',
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
+                    if(this.onRemoteCommandsInitiated){
+                        this.onRemoteCommandsInitiated();
+                    }
                 }
                 //We Also Check for interfaceRemoteCommandKey so we can send commands
                 if (name === "interfaceRemoteCommandKey") {

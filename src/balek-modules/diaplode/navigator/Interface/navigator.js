@@ -27,6 +27,7 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/navigator/Interface/radialMenu",//todo remove
         "balek-modules/diaplode/navigator/Interface/menus/systemMenuWidget",//todo remove
 
+        "balek-modules/diaplode/navigator/Interface/menus/systemMenu",
 
         "balek-modules/diaplode/ui/input/getUserInput",
 
@@ -60,6 +61,7 @@ define(['dojo/_base/declare',
               baseInterface,
               radialMenu,
               systemMenuWidget,
+              systemMenu,
               getUserInput,
               diaplodeMovableContainer,
               workspacesMenu,
@@ -79,6 +81,10 @@ define(['dojo/_base/declare',
             _navigatorSystemMenusState: null,
             _navigatorSystemMenusStateWatchHandle: null,
 
+            _systemMenus: null,
+
+
+
 
              _workspacesMenu: null,
 
@@ -95,6 +101,8 @@ define(['dojo/_base/declare',
                 this._availableMenus = {};
                 this._newMenus = [];
 
+
+                this._systemMenus = {};
 
 
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
@@ -121,12 +129,17 @@ define(['dojo/_base/declare',
                     debugger;
 
                     let systemMenu = this._navigatorSystemMenusState.get(menuName);
-                    this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
+                    this.requestSystemMenuInstance(menuName);
+
+
                     debugger;
                     console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
                     console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
+
+                    this.arrangeSystemMenus();
                 }
             },
+
             loadAndWatchNavigatorSystemMenus: function(){
                // debugger;
 
@@ -145,7 +158,10 @@ define(['dojo/_base/declare',
                         let systemMenu = this._navigatorSystemMenusState.get(menuName);
 
 
-                        this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
+                       // this._navigatorSystemMenuWidgets[menuName] = new systemMenuWidget({_systemMenu: systemMenu, _navigatorWidget: this});
+                        this.requestSystemMenuInstance(menuName);
+
+
                        // debugger;
                       //  console.log("system Menu", menuName, Object.keys(this._navigatorSystemMenusState));
                        // console.log("system Menu", menuName, this._navigatorSystemMenusState.get(menuName));
@@ -156,12 +172,19 @@ define(['dojo/_base/declare',
                 }
                 this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenusState.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
 
+
+            },
+            requestSystemMenuInstance: function(menuName){
+
+                console.log("navigator", this._instanceCommands )
+                this._instanceCommands.requestSystemMenuInstance(menuName).then(function (results) {
+                    console.log("navigator" , results);
+                });
+
             },
 
 
             postCreate: function () {
-
-                this.loadAndWatchNavigatorSystemMenus();
 
                 topic.publish("addToMainContentLayer", this.domNode);
                 dijitFocus.focus(this.domNode);
@@ -180,15 +203,22 @@ define(['dojo/_base/declare',
                         domConstruct.place(this._workspaceMenu.domNode, this._mainWorkspacesDiv);
                     }));
                 }
+
+
             },
 
 
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+            onRemoteCommandsInitiated: function(){
+                console.log("navigator" , this._instanceCommands);
+                this.loadAndWatchNavigatorSystemMenus();
+
+            },
 
             onInterfaceStateChange: function (name, oldState, newState) {
-               // console.log(name, newState);
+                console.log("navigator" , name, newState);
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
 
@@ -198,6 +228,13 @@ define(['dojo/_base/declare',
                 if (name === "availableMenus") {
                     this.updateAvailableMenus();
                     this.arrangeMenus();
+                }
+
+                if (name === "availableSystemMenus") {
+                    console.log("navigator", "availableSystemMenus", newState);
+
+                    this.updateAvailableSystemMenus();
+
                 }
 
                 if (name === "log") {
@@ -290,15 +327,7 @@ define(['dojo/_base/declare',
                     }
                 }).play();
 
-                fx.animateProperty({
-                    node: this._mainImage,
-                    duration: 300,
-                    properties: {
-                        width: {start: 0, end: 500},
-                        transform: {end: 'rotate(0deg)', start: 'rotate(-100deg)'},
-                        opacity: {start: 0, end: 1}
-                    }
-                }).play();
+
 
                 fx.animateProperty({
                     node: this.domNode,
@@ -318,6 +347,21 @@ define(['dojo/_base/declare',
                 let count = 0;
                 for (const menuToArrange in this._availableMenus) {
                     this._availableMenus[menuToArrange].moveTo(placementArray[count].x, placementArray[count].y);
+                    count++;
+                }
+            },
+            arrangeSystemMenus: function(){
+                console.log("navigator", "Rearrangin System menus")
+
+                let placementArray = [
+                    {x: 50, y: 10}, {x: 66, y: 30}, {x: 66, y: 70},
+                    {x: 50, y: 90}, {x: 34, y: 70}, {x: 34, y: 30},
+                    {x: 42, y: 20}, {x: 58, y: 20}, {x: 66, y: 50},
+                    {x: 58, y: 80}, {x: 42, y: 80}, {x: 33, y: 50}];
+                let count = 0;
+                for (const menuToArrange in this._navigatorSystemMenuWidgets) {
+                    console.log("navigator", "Rearrangin System menus",  this._navigatorSystemMenuWidgets[menuToArrange]);
+                    //this._navigatorSystemMenuWidgets[menuToArrange].moveTo(placementArray[count].x+30,    placementArray[count].y+300);
                     count++;
                 }
             },
@@ -344,6 +388,30 @@ define(['dojo/_base/declare',
                         //this is when we should make a new menu and update the addmenu function
                         this._availableMenus[availableMenuComponentKey] = this.addMenu(availableMenuComponentKey);
 
+                    }
+                }
+
+            },
+            updateAvailableSystemMenus: function () {
+                console.log("navigator", "updateAvailableSystemMenus");
+
+                let availableSystemMenusState = this._interfaceState.get("availableSystemMenus");
+
+                console.log("navigator", "updateAvailableSystemMenus", availableSystemMenusState);
+
+                for (const index in availableSystemMenusState ) {
+                    let availableSystemMenuComponentKey = availableSystemMenusState[index];
+                    if (!this._navigatorSystemMenuWidgets[availableSystemMenuComponentKey]) {
+                        console.log("navigator", "_navigatorSystemMenuWidgets", availableSystemMenuComponentKey);
+                        console.log("navigator", "_navigatorSystemMenuWidgets", this._navigatorSystemMenuWidgets);
+
+                        this._navigatorSystemMenuWidgets[availableSystemMenuComponentKey] = new systemMenu({
+                            _sessionKey: this._sessionKey,
+                            _instanceKey: this._instanceKey,
+                            _componentKey: availableSystemMenuComponentKey,
+                            _navigatorWidget: this,
+                            _navigatorSystemMenusState: this._navigatorSystemMenusState
+                        });
                     }
                 }
 
