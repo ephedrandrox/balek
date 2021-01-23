@@ -12,6 +12,8 @@ RUN apt-get update
 RUN apt-get install -y default-jre
 
 RUN npm run build
+RUN npm --prefix ./src/balek-modules run buildRelease
+
 
 # Run loadServer.js when the container launches
 CMD ["node", "loadServer.js"]

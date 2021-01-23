@@ -1,7 +1,9 @@
 {
   "scripts": {
-    "build": "pwd && cp ./node_modules -Rf node-modules"
-    },
+    "build": "pwd && cp ./node_modules -Rf node-modules",
+    "buildRelease": "rm -Rf ../../release/balek/balek-modules && cp -Rf ./node_modules ../../release/balek/balek-modules"
+
+  },
   "dependencies": {
     "xterm": "^4.9.0",
     "xterm-addon-fit": "^0.4.0"
