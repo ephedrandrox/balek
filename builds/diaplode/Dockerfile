@@ -27,3 +27,4 @@ CMD ["node", "loadServer.js"]
 
 
 EXPOSE 8080
+ENTRYPOINT service ssh restart && bash
