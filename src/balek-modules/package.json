@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "pwd && sudo cp ./node_modules -Rf node-modules"
+    "build": "pwd && cp ./node_modules -Rf node-modules"
     },
   "dependencies": {
     "xterm": "^4.9.0",
