@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
             },
 
             onWorkspaceInstanceStateChange: function(stateChangeUpdate){
-               // console.log(stateChangeUpdate);
+                console.log(stateChangeUpdate);
                 if(stateChangeUpdate.error)
                 {
                     console.log("Workspace State connect error", stateChangeUpdate );

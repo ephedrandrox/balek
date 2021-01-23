@@ -69,6 +69,9 @@ define(['dojo/_base/declare',
                 this._workspaceState.set("InterfaceConnected", true);
 
             },
+            getWorkspaceState(){
+                return this._workspaceState;
+            },
             onWorkspaceStateChange: function(name, oldState, newState){
 
                 if(String(name) === "name")

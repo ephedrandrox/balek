@@ -5,12 +5,16 @@ body {
 .diaplodeNavigatorInterface * {
 
 }
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+border: solid red 2px;
+}
+
 
 .diaplodeNavigatorInterface {
     position: absolute;
     width: 300px;
     height: 300px;
-    background: rgba(77, 164, 164, 0.17);
+    background: rgb(131, 77, 164);
     display: inline;
     display: inline-block;
     text-align: center;
@@ -63,16 +67,25 @@ visibility: hidden;
 
 
 .diaplodeNavigatorInterfaceCommandsDiv {
-    position: absolute;
-    top: 50%;
-    left: calc(50% - 50px);
-font-size: 50px;
+    position: relative;
+
+
+    font-size: 50px;
     border: solid white 2px;
 
    color: white;
     border: solid black 2px;
-    position: absolute;
+
+    background: rgba(0,0,0,.5);
     top: 0;
+}
+.diaplodeNavigatorInterfaceCommandDiv {
+
+    border: solid white 2px;
+
+    color: white;
+    border: solid white 2px;
+
 }
 
 

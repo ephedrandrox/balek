@@ -70,10 +70,29 @@ define(['dojo/_base/declare',
                 console.log("navigator", "on workspaces main widget click");
 
             },
+            onWorkspaceMenuClick: function (workspaceKey, changeActiveWorkspace, event) {
+                event.stopPropagation();
+                console.log(event);
+                if(event.altKey){
+                    let getNameForWorkspace = new getUserInput({question: "Choose a Workspace Name", inputReplyCallback: lang.hitch(this, function(newWorkspaceName){
+                            console.log("Requesting new workspace name", newWorkspaceName, this.workspaceManagerCommands);
+                            this.workspaceManagerCommands.changeWorkspaceName(workspaceKey, newWorkspaceName, function(result){
+                                console.log("navigator", "Workspace name changed", result);
+                            });
+                            getNameForWorkspace.unload();
+                        }) });
+                }else
+                {
+                    changeActiveWorkspace(workspaceKey, function(result){
+                        console.log("navigator", result);
+                    });
+                }
+
+            },
             onAddWorkspaceClicked: function (event){
                 console.log(event);
                 let getNameForWorkspace = new getUserInput({question: "Choose a Workspace Name", inputReplyCallback: lang.hitch(this, function(newWorkspaceName){
-                        console.log("Requesting new menu", newWorkspaceName, this.workspaceManagerCommands);
+                        console.log("Requesting new Workspace", newWorkspaceName, this.workspaceManagerCommands);
                         this.workspaceManagerCommands.requestNewWorkspace(newWorkspaceName).then(function(result){
                             console.log("navigator", "New Workspace create", result);
                         }).catch(function(errorResult){
@@ -114,10 +133,7 @@ define(['dojo/_base/declare',
 
                         newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
                         domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv");
-                        on(newWorkspaceInfo, 'click', lang.hitch(workspaceKey, function (changeActiveWorkspace, evt) {
-                            evt.stopPropagation();
-                            changeActiveWorkspace(workspaceKey);
-                        }, this.workspaceManagerCommands.changeActiveWorkspace));
+                        on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
 
                         domConstruct.place(newWorkspaceInfo, this.domNode);
 

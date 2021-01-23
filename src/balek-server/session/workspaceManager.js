@@ -15,6 +15,8 @@ define([ 	'dojo/_base/declare',
             containerManager: null,
 
             _workspaces: null,
+            _workspacesStateWatchHandles: null,
+
             _activeWorkspace: null,
 
 
@@ -27,6 +29,8 @@ define([ 	'dojo/_base/declare',
 
                 //todo audit/comment this file
                 declare.safeMixin(this, args);
+                this._workspacesStateWatchHandles = {};
+                //todo make sure we stop this on session unload
 
                 this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey});
 
@@ -84,9 +88,23 @@ define([ 	'dojo/_base/declare',
                 interfaceCallback({availableWorkspacesState: JSON.stringify(this._availableWorkspacesState)});
                 interfaceCallback({workspaceManagerState: JSON.stringify(this._workspaceManagerState)});
             },
+            onWorkspaceStateChange: function(workspaceKey, name, oldState,newState){
+                //console.log(name, oldState,newState);
+                if(name.toString() === "name" )
+                {
+                    let workspaceInfo ={
+                        workspaceKey: workspaceKey,
+                        workspaceName: newState
+                    };
+
+                    this._availableWorkspacesState.set(workspaceKey,workspaceInfo );
+                }
+            },
             getNewWorkspace: function(newWorkspaceName = "Untitled"){
                 let newWorkspaceKey = this.getUniqueWorkspaceKey();
                 this._workspaces[newWorkspaceKey] =new balekWorkspace({_workspaceKey:newWorkspaceKey, _workspaceName: newWorkspaceName, containerManager: this.containerManager });
+
+                this._workspacesStateWatchHandles[newWorkspaceKey] = this._workspaces[newWorkspaceKey].getWorkspaceState().watch(lang.hitch(this, this.onWorkspaceStateChange, newWorkspaceKey));
 
                 let workspacesToReturn ={
                     workspaceKey: newWorkspaceKey,
