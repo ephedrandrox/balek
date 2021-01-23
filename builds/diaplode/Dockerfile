@@ -15,6 +15,7 @@ RUN npm run build
 RUN npm --prefix ./src/balek-modules run buildRelease
 
 RUN ssh-keygen -q -t rsa -N '' -f /id_rsa
+RUN mkdir ~/.ssh
 RUN cp /id_rsa.pub ~/.ssh/authorized_keys
 
 # Run loadServer.js when the container launches
