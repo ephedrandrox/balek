@@ -100,7 +100,7 @@ define([ 	'dojo/_base/declare',
                     this._availableWorkspacesState.set(workspaceKey,workspaceInfo );
                 }
             },
-            getNewWorkspace: function(newWorkspaceName = "Untitled"){
+            getNewWorkspace: function(newWorkspaceName = "Workspace"){
                 let newWorkspaceKey = this.getUniqueWorkspaceKey();
                 this._workspaces[newWorkspaceKey] =new balekWorkspace({_workspaceKey:newWorkspaceKey, _workspaceName: newWorkspaceName, containerManager: this.containerManager });
 

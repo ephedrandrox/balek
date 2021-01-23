@@ -48,6 +48,12 @@ define(['dojo/_base/declare',
                         userTasks.toArray().then(lang.hitch(this, function (userTasksArray) {
                             if (userTasksArray.length > 0) {
                                for( userTasksArrayKey in userTasksArray ) {
+                                   if( !userTasksArray[userTasksArrayKey].name ){
+                                       let taskContent = userTasksArray[userTasksArrayKey].taskContent;
+                                       let taskName = taskContent.toString().trim().substr(0,32);
+                                       userTasksArray[userTasksArrayKey].name = taskName;
+
+                                   }
                                   // this.createTaskInstance(userTasksArray[userTasksArrayKey]._id);
                                    this._availableTasks.add(userTasksArray[userTasksArrayKey]._id, userTasksArray[userTasksArrayKey]);
                                }

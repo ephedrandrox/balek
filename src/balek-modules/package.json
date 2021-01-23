@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "./node_modules -Rf node-modules"
+    },
+  "dependencies": {
+    "xterm": "^4.9.0",
+    "xterm-addon-fit": "^0.4.0"
+  },
+  "author": "Blake Glanville",
+  "license": "BSD-3-Clause"
+}

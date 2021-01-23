@@ -1,7 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
 
-
+'dojo/dom',
         'dojo/dom-construct',
         "dojo/_base/window",
         'dojo/on',
@@ -30,7 +30,7 @@ define(['dojo/_base/declare',
 
 
     ],
-    function (declare, lang,
+    function (declare, lang, dom,
               domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss, baseInterface,
@@ -118,9 +118,13 @@ define(['dojo/_base/declare',
 
             _onClick: function(){
                 //this.setName("ThisMenuNameFROMCOMMAND");
-                //this.setActive();
+               // this.setActive();
+
+
+
 
                 let menuItemKeys =  Object.keys(this._menuItemWidgets);
+
 
                 for(keyIndex in menuItemKeys){
 
