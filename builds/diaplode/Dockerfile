@@ -20,6 +20,8 @@ RUN cp /id_rsa.pub ~/.ssh/authorized_keys
 
 # Run loadServer.js when the container launches
 
+USER root
+CMD [ "sh", "/etc/init.d/ssh", "start"]
 
 CMD ["node", "loadServer.js"]
 
@@ -27,4 +29,3 @@ CMD ["node", "loadServer.js"]
 
 
 EXPOSE 8080
-ENTRYPOINT service ssh restart && bash
