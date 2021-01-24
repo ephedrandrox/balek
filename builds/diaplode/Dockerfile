@@ -20,7 +20,7 @@ RUN cp /id_rsa.pub ~/.ssh/authorized_keys
 
 # Run loadServer.js when the container launches
 
-RUN sudo /etc/init.d/ssh start
+RUN /etc/init.d/ssh start
 
 CMD ["node", "loadServer.js"]
 
