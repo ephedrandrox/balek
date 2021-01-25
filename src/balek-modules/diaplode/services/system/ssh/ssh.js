@@ -26,7 +26,8 @@ define(['dojo/_base/declare',
                 //ToDO have it check for ssh version and ability to connect
                 console.log("diaplodeSystemSSHService starting...");
                 if(this.sshUsername != null && this.sshHostname != null && this._onOutputCallback != null) {
-                    let sshArguments = ["-tt","localhost"];
+                   // let sshArguments = ["-tt", "localhost"];
+                    let sshArguments = ["-tt", "-p", "2222","-l", "diaplode",  "-i", "./builds/diaplode/conf/ssh/id_rsa", "balek-openssh"];
                     this._systemCommand = new systemCommand({_command: "ssh",
                         _arguments: sshArguments,
                         _onOutputCallback: this._onOutputCallback});

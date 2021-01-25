@@ -65,6 +65,16 @@ define(['dojo/_base/declare',
                             {
                                 command: "docker",
                                 arguments: ["--version"]
+                            },
+                            {
+                                command: "whoami",
+                                arguments: []
+
+                            },
+                            {
+                                command: "cat",
+                                arguments: ["builds/diaplode/conf/ssh/id_rsa.pub"]
+
                             }],
                             _onOutputCallback: lang.hitch(this, function(data){
                                 this._interfaceState.set("consoleOutput",  this._interfaceState.get("consoleOutput")+data);

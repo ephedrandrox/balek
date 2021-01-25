@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "docker build -f ./Dockerfile .  -t balek-openssh:develop",
+    "restart": "docker-compose restart",
+    "stop": "docker-compose down",
+    "start": "docker-compose up -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

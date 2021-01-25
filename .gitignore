@@ -16,3 +16,4 @@ builds/diaplode/mysqlDB/
 builds/diaplode/mongoDB/
 
 src/balek-modules/node-modules
+/builds/diaplode/docker/openssh/config/
