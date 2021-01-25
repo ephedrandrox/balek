@@ -45,6 +45,10 @@ define(['dojo/_base/declare',
                         //execution array gets executed in order after each command
                         //returns successfully. If error, commands are stopped
                         let newCommandMap =  new commandMap({executionArray : [{
+                                command: "uname",
+                                arguments: ["-a"]
+
+                            },{
                                 command: "pwd",
                                 arguments: []
 
@@ -84,10 +88,11 @@ define(['dojo/_base/declare',
                         newCommandMap.runCommands().then(lang.hitch(this, function(commandMapResult){
                             // all commands executed
                             // //console.log(commandMapResult);
+                            /*
                             this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
                                 _onOutputCallback: lang.hitch(this, function(data){
                                     this._interfaceState.set("consoleOutput",  this._interfaceState.get("consoleOutput")+data);
-                                })});
+                                })});*/
                         })).catch(lang.hitch(this, function(commandMapError){
                             console.log(commandMapError);
                         }));

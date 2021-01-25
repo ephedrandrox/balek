@@ -221,17 +221,32 @@ define(['dojo/_base/declare',
                     }) });
 
             },
-            _onConsoleNewCommandButtonClicked: function(clickEvent){
+            _onLoadModuleButtonClicked: function(clickEvent){
                 console.log("New Command clicked");
 
-                let getNameForCommand = new getUserInput({question: "Name Command",
-                    inputReplyCallback: lang.hitch(this, function(newCommandName){
-                        console.log("Requesting new Command with Name ", newCommandName);
+                let getModuleName = new getUserInput({question: "Module Name",
+                    inputReplyCallback: lang.hitch(this, function(loadModuleName){
+                        console.log("Requesting Module ", loadModuleName);
 
                         //topic.publish("createNewDiaplodeCommand", newCommandName);
                         //this could be something the commander handles
+                        let moduleID = loadModuleName;
+                        topic.publish("isModuleLoaded", moduleID, function (moduleIsLoaded) {
 
-                        getNameForCommand.unload();
+                            topic.publish("getAvailableModulesState", lang.hitch(this, function (availableModulesStore) {
+                               console.log("getAvailableModulesState", availableModulesStore);
+                            }));
+
+                            console.log("isModuleLoaded ", moduleIsLoaded);
+                            if (moduleIsLoaded) {
+                                moduleIsLoaded.toggleShowView();
+                            } else {
+                                topic.publish("requestModuleLoad", moduleID);
+                            }
+                        });
+
+
+                        getModuleName.unload();
                     }) });
 
             },
