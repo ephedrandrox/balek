@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "pwd && cp ./node_modules -Rf node-modules",
-    "buildRelease": "rm -Rf ../../release/balek/balek-modules && cp -Rf ./node_modules ../../release/balek/balek-modules"
+    "buildRelease": "rm -Rf ../../release/balek/balek-modules/node-modules && cp -Rf ./node_modules ../../release/balek/balek-modules/node-modules"
 
   },
   "dependencies": {

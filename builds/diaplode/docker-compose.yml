@@ -32,3 +32,19 @@ services:
     volumes:
       - ./dbInit:/docker-entrypoint-initdb.d/
       - ./mongoDB:/data/db
+  openssh:
+    image: "balek-openssh:release"
+    build: "docker/openssh"
+    hostname: balek-openssh
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=PST
+      - PASSWORD_ACCESS=false
+      - PUBLIC_KEY_FILE=../../conf/cert/ssh/id_rsa.pub
+      - USER_NAME=diaplode
+    volumes:
+      - ./config:/config
+    ports:
+      - 2222:2222
+    restart: unless-stopped
