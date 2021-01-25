@@ -27,7 +27,7 @@ define(['dojo/_base/declare',
                 console.log("diaplodeSystemSSHService starting...");
                 if(this.sshUsername != null && this.sshHostname != null && this._onOutputCallback != null) {
                    // let sshArguments = ["-tt", "localhost"];
-                    let sshArguments = ["-tt","-v", "-p", "2222","-l", "diaplode",  "-i", "./builds/diaplode/conf/ssh/id_rsa", "openssh"];
+                    let sshArguments = ["-tt","-v", "-o" ,"StrictHostKeyChecking=no","-p", "2222","-l", "diaplode",  "-i", "./builds/diaplode/conf/ssh/id_rsa", "openssh"];
                     this._systemCommand = new systemCommand({_command: "ssh",
                         _arguments: sshArguments,
                         _onOutputCallback: this._onOutputCallback});
