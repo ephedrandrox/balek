@@ -23,14 +23,14 @@ define(['dojo/_base/declare',
             _sessionKey: null,
 
             _tasksDatabase: null,
-            _taskInstances: [],
+            _taskInstances: {},
 
             _availableTasks: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                this._taskInstances = [];
+                this._taskInstances = {};
 
                 this._commands={
                     "createTask" : lang.hitch(this, this.createTask),
@@ -80,18 +80,26 @@ define(['dojo/_base/declare',
                 this.setInterfaceCommands();
             },
             createTaskInstance: function(taskID){
-                let newTask = new taskInstance({_instanceKey: this._instanceKey,
-                    _sessionKey: this._sessionKey,
-                    _userKey: this._userKey,
-                    _taskKey: taskID,
-                    _tasksDatabase: this._tasksDatabase});
+                if(this._taskInstances[taskID] === undefined)
+                {
+                    let newTask = new taskInstance({_instanceKey: this._instanceKey,
+                        _sessionKey: this._sessionKey,
+                        _userKey: this._userKey,
+                        _taskKey: taskID,
+                        _tasksDatabase: this._tasksDatabase});
 
-                this._taskInstances.push(newTask);
 
-                this._interfaceState.set("taskInstance"+taskID , {instanceKey: newTask._instanceKey,
-                    sessionKey: newTask._sessionKey,
-                    userKey: newTask._userKey,
-                    componentKey: newTask._componentKey});
+                    this._taskInstances[taskID] = newTask ;
+
+                    this._interfaceState.set("taskInstance"+taskID , {instanceKey: newTask._instanceKey,
+                        sessionKey: newTask._sessionKey,
+                        userKey: newTask._userKey,
+                        componentKey: newTask._componentKey});
+                    return true;
+                }else {
+                    return false;
+                }
+
             },
             //##########################################################################################################
             //Remote Commands Functions Section
@@ -119,7 +127,13 @@ define(['dojo/_base/declare',
             },
             loadTask: function(taskKey, remoteCommanderCallback)
             {
-                this.createTaskInstance(taskKey);
+
+                if( this.createTaskInstance(taskKey) === true)
+                {
+                    remoteCommanderCallback({success: "Created Instance"});
+                }else {
+                    remoteCommanderCallback({error: "Instance already created"});
+                }
             }
         });
     }
