@@ -2,15 +2,30 @@
 .diaplodeUIInputGetUserInput {
     position: absolute;
 
+    padding: 10px;
+    margin: 10px;
     opacity: 1;
 
 
     border: solid black 2px;
-
+color: black;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
+    background: rgba(84, 153, 25, .8);
+}
+
+
+.diaplodeUIInputGetUserInputImage {
+   width: 20px;
+    height: 20px;
+}
+
+.diaplodeUIInputGetUserInputUserInputField{
+    width: 250px;
     background: grey;
+    border: grey ;
+
 }
 

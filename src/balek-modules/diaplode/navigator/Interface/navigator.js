@@ -110,7 +110,7 @@ define(['dojo/_base/declare',
                 dojoReady(lang.hitch(this, function () {
 
 
-                    on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
+                   // on(document.body, "keyup", lang.hitch(this, this._onDocumentKeyUp));
 
 
 

@@ -53,6 +53,10 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 topic.publish("displayAsDialog", this);
+
+            },
+            _onFocus: function(){
+                this.userInputValue.focus();
             },
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
