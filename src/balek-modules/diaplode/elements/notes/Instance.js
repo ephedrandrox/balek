@@ -23,14 +23,14 @@ define(['dojo/_base/declare',
             _sessionKey: null,
 
             _notesDatabase: null,
-            _noteInstances: [],
+            _noteInstances: {},
 
             _availableNotes: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                this._noteInstances = [];
+                this._noteInstances = {};
 
                 this._commands={
                     "createNote" : lang.hitch(this, this.createNote),
@@ -89,18 +89,26 @@ define(['dojo/_base/declare',
             },
 
             createNoteInstance: function(noteID){
-                let newNote = new noteInstance({_instanceKey: this._instanceKey,
-                    _sessionKey: this._sessionKey,
-                    _userKey: this._userKey,
-                    _noteKey: noteID,
-                    _notesDatabase: this._notesDatabase});
+                if(this._noteInstances[noteID] === undefined)
+                {
+                    let newNote = new noteInstance({_instanceKey: this._instanceKey,
+                        _sessionKey: this._sessionKey,
+                        _userKey: this._userKey,
+                        _noteKey: noteID,
+                        _notesDatabase: this._notesDatabase});
 
-                this._noteInstances.push(newNote);
+                    this._noteInstances[noteID] =newNote ;
 
-                this._interfaceState.set("noteInstance"+noteID , {instanceKey: newNote._instanceKey,
-                    sessionKey: newNote._sessionKey,
-                    userKey: newNote._userKey,
-                    componentKey: newNote._componentKey});
+                    this._interfaceState.set("noteInstance"+noteID , {instanceKey: newNote._instanceKey,
+                        sessionKey: newNote._sessionKey,
+                        userKey: newNote._userKey,
+                        componentKey: newNote._componentKey});
+
+                    return true;
+                }else {
+                    return false;
+                }
+
             },
             //##########################################################################################################
             //Remote Commands Functions Section
@@ -128,7 +136,12 @@ define(['dojo/_base/declare',
             },
             loadNote: function(noteKey, remoteCommanderCallback)
             {
-                this.createNoteInstance(noteKey);
+                if(this.createNoteInstance(noteKey) === true)
+                {
+                    remoteCommanderCallback({success: "Created Instance"});
+                }else {
+                    remoteCommanderCallback({error: "Instance already created"});
+                }
             }
         });
     }

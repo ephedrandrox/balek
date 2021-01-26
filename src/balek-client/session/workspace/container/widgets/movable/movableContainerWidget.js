@@ -75,11 +75,19 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
 
             },
+            _onClick: function(event)
+            {
+                console.log("systemMenu",event );
+            },
             postCreate: function () {
 
-                if(this._containedInterfaceHandle != null)
+                if(this._containedInterfaceHandle != null && this._containedInterfaceHandle.getDomNode)
                 {
-                   domConstruct.place(this._containedInterfaceHandle.domNode, this._contentNode);
+                   domConstruct.place(this._containedInterfaceHandle.getDomNode(), this._contentNode);
+                }else
+                {
+                                console.log("no getDomNode function for _containedInterfaceHandle");
+
                 }
 
                 let elementBox =  this._containerState.get("movableContainerElementBox");
@@ -95,15 +103,19 @@ define(['dojo/_base/declare',
 
                 //topic.publish("addToCurrentWorkspace", this);
 
-                this._dnd = new Moveable(this.domNode);
 
 
-                    this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
+               this._dnd = new Moveable(this.domNode);
 
 
+                this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
 
 
+            },
+            makeClickMovable: function(){
 
+            },
+            removeClickMovable: function(){
             },
             //##########################################################################################################
             //Event Functions Section

@@ -33,6 +33,8 @@ define(['dojo/_base/declare',
                 topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
                 topic.subscribe("getSessionsForUser", lang.hitch(this, this.getSessionsForUser));
                 topic.subscribe("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey));
+                topic.subscribe("getSessionByKey", lang.hitch(this, this.getSessionByKey));
+
 
 
                 topic.subscribe("setSessionDisconnected", lang.hitch(this, this.setSessionDisconnected));
@@ -327,7 +329,9 @@ define(['dojo/_base/declare',
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();
             },
-
+            getSessionByKey: function(sessionKey, returnCallback){
+                returnCallback(this._sessions[sessionKey]);
+            },
 
             getSessionsForUser: function (username, sessionReturn) {
 

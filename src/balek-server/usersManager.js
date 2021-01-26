@@ -144,6 +144,14 @@ define(['dojo/_base/declare',
                                 //what is the point of this?
                             }
 
+                            topic.publish("getSessionByKey", sessionKey, lang.hitch(this, function (session) {
+                                //todo update user state which session watches
+                                session.updateSessionStatus({
+                                    userName: updateUserData.userName
+                                });
+                            }));
+
+
                             this._dbController.updateUserInDatabase(updateUserData).then(function (results) {
                                 //todo update User Store
                                 Resolve(results);
