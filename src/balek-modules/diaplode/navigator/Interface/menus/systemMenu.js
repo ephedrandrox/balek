@@ -1,9 +1,14 @@
 define([ 	'dojo/_base/declare',
         "dojo/_base/lang",
+        'dojo/dom-construct',
 
         "dojo/dom-style",
+        "dojo/aspect",
+
 
         "balek-modules/diaplode/navigator/Interface/menus/systemMenuWidget",
+
+        'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
@@ -11,22 +16,33 @@ define([ 	'dojo/_base/declare',
 
     ],
     function (declare, lang,
+              domConstruct,
               domStyle,
+              aspect,
               systemMenuWidget,
+              balekWorkspaceManagerInterfaceCommands,
               //Balek Interface Includes
               _syncedCommanderInterface,
               _balekWorkspaceContainerContainable ) {
 
-        return declare( "diaplodeNavigatorInterfaceSystemMenu",[_syncedCommanderInterface], {
+        return declare( "diaplodeNavigatorInterfaceSystemMenu",[_syncedCommanderInterface,_balekWorkspaceContainerContainable], {
+            _instanceKey: null,
             _syncedMap: null,
             _menuCompanion: null,
             _navigatorSystemMenusState: null,
+
+            workspaceManagerCommands: null,
+
 
             constructor: function (args) {
 
 
                 declare.safeMixin(this, args);
+                console.log("systemMenu",this._instanceKey)
+
                 console.log("Initializing Diaplode Navigator Interface System Menu...");
+                let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
+                this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
 
 
 
@@ -45,8 +61,63 @@ define([ 	'dojo/_base/declare',
                 let systemMenuName = this._interfaceState.get("name");
                 let systemMap = this._navigatorSystemMenusState.get(systemMenuName);
 
-                this._systemMenuWidget = new systemMenuWidget({_systemMenu: systemMap, _navigatorWidget: this._navigatorWidget});
 
+                this._systemMenuWidget = new systemMenuWidget({_instanceKey: this._instanceKey, _systemMenu: systemMap, _navigatorWidget: this._navigatorWidget});
+
+                if(this._systemMenuWidget.domNode){
+                    console.log("systemMenu", "no aspect after", this._systemMenuWidget.domNode );
+                    this.putMenuInWorkspaceContainer();
+                }else {
+                    console.log("systemMenu", "aspect after", this._systemMenuWidget.domNode );
+
+                    aspect.after(this._systemMenuWidget, "postCreate", lang.hitch(this, function(){
+                        console.log("systemMenu", "aspect after", this._systemMenuWidget.domNode );
+
+                        this.putMenuInWorkspaceContainer();
+                    }));
+                }
+
+            },
+            putMenuInWorkspaceContainer: function(){
+                this.initializeContainable();
+                console.log("systemMenu", this );
+
+                this.getContainerKeys().then(lang.hitch(this, function(containerKeys) {
+                    //this waits until the containable has component state for container Keys
+                    //               console.log(containerKeys, typeof containerKeys );
+                    console.log("systemMenu", containerKeys );
+                    if (Array.isArray(containerKeys) && containerKeys.length === 0) {
+                        //the containable has not been added to a container
+                        //adding it to the workspace puts it in a
+                        // console.log("users", containerKeys);
+
+                        let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget";
+                        let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
+
+                        this.workspaceManagerCommands.addToWorkspaceContainer(this, workspaceContainerWidgetPath)
+                            .then(lang.hitch(this, function (workspaceContainerKey) {
+                                //console.log("users", "gotWorkspaceContainerKey", workspaceContainerKey);
+                                this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
+                                    .then(lang.hitch(this, function (addContainerToWorkspaceResponse) {
+                                        console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                    }))
+                                    .catch(lang.hitch(this, function (error) {
+                                        console.log( "Error adding container to workspace", error);
+                                    }));
+                            })).catch(lang.hitch(this, function (error) {
+                             console.log("systemMenu", "workspaces container error", error);
+                        }));
+
+                    } else {
+                        //component containable is already in a container
+                        console.log("systemMenu","already in a container", containerKeys);
+                    }
+                })).catch(lang.hitch(this, function (error) {
+                    console.log( "systemMenu","getting container keys error", error);
+                }));
+
+
+               // domConstruct.place(this._systemMenuWidget.domNode, this._navigatorWidget.domNode);
             },
             onInterfaceStateChange: function (name, oldState, newState) {
                 console.log("navigator onInterfaceStateChange" , name, newState);
@@ -57,7 +128,7 @@ define([ 	'dojo/_base/declare',
 
                 if (name.toString() === "name") {
                     console.log("navigator" , "got name, getting syncedmap");
-this.loadWidget();
+                    this.loadWidget();
                 }
 
 
@@ -77,16 +148,6 @@ this.loadWidget();
             getDomNode: function()
             {
                 return this._systemMenuWidget.domNode;
-            },
-            moveTo: function(t, l){
-                console.log("navigator moveTo" , t, l);
-                console.log("navigator moveTo" , this._systemMenuWidget);
-
-                if(this._systemMenuWidget && this._systemMenuWidget.domNode){
-                    domStyle.set(this._systemMenuWidget.domNode, "top", t+"px");
-                    domStyle.set(this._systemMenuWidget.domNode, "left", l+"px");
-                }
-
             }
 
         });

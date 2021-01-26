@@ -42,6 +42,7 @@ services:
       - TZ=PST
       - PASSWORD_ACCESS=false
       - PUBLIC_KEY_FILE=conf/cert/ssh/id_rsa.pub
+      - SUDO_ACCESS=true
       - USER_NAME=diaplode
     volumes:
       - ./config:/config

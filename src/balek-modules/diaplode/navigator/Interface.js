@@ -89,7 +89,7 @@ define(['dojo/_base/declare',
 
                 if(menuCompanion.name && this._navigatorSystemMenusState.get(menuCompanion.name.toString()) === undefined)
                 {
-                    this._navigatorSystemMenusState.set(menuCompanion.name.toString(),navigatorSystemMenu({_syncedMap: syncedMap, _menuCompanion: menuCompanion}) ) ;
+                    this._navigatorSystemMenusState.set(menuCompanion.name.toString(),navigatorSystemMenu({_instanceKey: this._instanceKey, _syncedMap: syncedMap, _menuCompanion: menuCompanion}) ) ;
                 }
 
                 //todo create object that stores synced Maps with their state watchers

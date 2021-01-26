@@ -67,9 +67,12 @@ define(['dojo/_base/declare',
                 console.log("systemMenuWidget");
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
+//this is bad
+                console.log("systemMenuState", "state", this._systemMenu);
 
                 if(this._systemMenu && this._systemMenu._syncedMap && this._systemMenu._syncedMap.setStateWatcher)
                 {
+                console.log("systemMenuState", "state", this._systemMenu._syncedMap);
                     this._systemMenu._syncedMap.setStateWatcher(lang.hitch(this, this.onSystemMenuStateChange));
                 }
 
@@ -102,7 +105,8 @@ define(['dojo/_base/declare',
 
                 this._navigatorWidget.arrangeSystemMenus();
 
-                domConstruct.place(this.domNode, this._navigatorWidget.domNode);
+
+               //
 
 
                 //topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
@@ -116,15 +120,16 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
 
-            _onClick: function(){
+            _onClick: function(event){
                 //this.setName("ThisMenuNameFROMCOMMAND");
                // this.setActive();
 
-
+                console.log("systemMenu",event );
 
 
                 let menuItemKeys =  Object.keys(this._menuItemWidgets);
 
+                console.log("systemMenu",menuItemKeys );
 
                 for(keyIndex in menuItemKeys){
 
