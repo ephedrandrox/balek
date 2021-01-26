@@ -59,7 +59,8 @@ define(['dojo/_base/declare',
               //  console.log("navigator", this);
 
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
-                this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList))
+                this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
+                this._commandsForOtherInterfaces.setCommand("toggleShowView", lang.hitch(this, this.toggleShowView))
                 this._commandsForOtherInterfaces.setNavigatorReady();
 
 
@@ -81,7 +82,6 @@ define(['dojo/_base/declare',
                 }
 
             },
-
             addSystemMenuList:function( syncedMap, menuCompanion){
                 //This function is
                // lang.hitch(this, this.availableTaskStateChange);

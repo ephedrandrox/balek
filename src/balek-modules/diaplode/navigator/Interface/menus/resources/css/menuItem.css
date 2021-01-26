@@ -1,6 +1,8 @@
 
 .diaplodeNavigatorInterfaceMenuItem {
     position: relative;
+    padding: 3px;
+    margin: 3px;
     display: block;
    left: 100px;
     width: 200px;
@@ -10,6 +12,17 @@
     border: solid white 3px;
     font-size: 12px;
     border-radius: 5px;
+cursor: pointer;
+    background: rgba(7, 20, 107, .8);
+}
+
+.diaplodeNavigatorInterfaceMenuItem:hover {
+
+    color: white;
+    border: solid white 3px;
+
+
+    background: rgba(83, 5, 35, .8);
 }
 
 .diaplodeNavigatorInterfaceMenuItemNameDiv {

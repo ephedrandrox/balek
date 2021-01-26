@@ -16,6 +16,8 @@ define(['dojo/_base/declare',
         "dijit/_TemplatedMixin",
         'dojo/text!balek-modules/diaplode/commander/resources/html/console.html',
         'dojo/text!balek-modules/diaplode/commander/resources/css/console.css',
+        'balek-modules/diaplode/navigator/interfaceCommands',
+
         //Diaplode ui components
         "balek-modules/diaplode/ui/input/getUserInput",
         //Balek Interface Includes
@@ -39,6 +41,7 @@ define(['dojo/_base/declare',
               _TemplatedMixin,
               template,
               mainCss,
+              navigatorInterfaceCommands,
               //Diaplode ui components
               getUserInput,
               //Balek Interface Includes
@@ -55,12 +58,16 @@ define(['dojo/_base/declare',
 
             _consoleOnLoadSettingNode: null,
 
+            navigatorCommands: null,
+
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+                this.navigatorCommands = new navigatorInterfaceCommands();
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 dijitViewPort.on("resize", lang.hitch(this, this._onViewportResize));
@@ -258,6 +265,21 @@ define(['dojo/_base/declare',
                });
 
             },
+            _onNavigatorToggleShowViewButtonClicked: function(clickEvent){
+                console.log("Toggle Navigator");
+
+                this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+
+                    navigatorCommands.toggleShowView();
+
+                })).catch(function(errorResult){
+                    console.log(errorResult);
+                });
+
+
+
+            },
+
             _onConsoleKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendConsoleInput("\u0004");
