@@ -279,7 +279,22 @@ define(['dojo/_base/declare',
 
 
             },
+            _onRunCommandClicked: function(clickEvent)
+            {
+                let getCommand = new getUserInput({question: "Enter Command",
+                    inputReplyCallback: lang.hitch(this, function(userCommand){
+                        console.log("Executing Command ", userCommand);
 
+                       this._instanceCommands.executeCommand(userCommand).then(function(reply){
+                            console.log(reply);
+                        }).catch(function(error){
+                           console.log(error);
+                       });
+
+
+                        getCommand.unload();
+                    }) });
+            },
             _onConsoleKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendConsoleInput("\u0004");

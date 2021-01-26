@@ -1,14 +1,19 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
+        'dojo/topic',
+        "dojo/_base/array",
 
         //Diaplode Service Includes
-        'balek-modules/diaplode/services/system/process/base/command',
+        'balek-modules/diaplode/services/system/process/commandMap',
         //Balek Instance Includes
         'balek-modules/components/syncedCommander/Instance',
 
     ],
     function (declare,
               lang,
+              topic,
+              dojoArray,
+
               systemCommand,
               //Balek Instance Includes
               _syncedCommanderInstance) {
@@ -22,6 +27,7 @@ define(['dojo/_base/declare',
                 //set setRemoteCommander commands
                 this._commands={
                     "sendConsoleInput": lang.hitch(this, this.sendConsoleInput),
+                    "executeCommand": lang.hitch(this, this.executeCommand),
                     "dockInterface" : lang.hitch(this, this.dockInterface),
                     "undockInterface" : lang.hitch(this, this.undockInterface)
                 };
@@ -97,6 +103,39 @@ define(['dojo/_base/declare',
                             console.log(commandMapError);
                         }));
                 }));
+
+            },
+            executeCommand: function(command, interfaceCallback){
+                topic.publish("getSessionUserGroups", this._sessionKey, lang.hitch(this, function(userGroups){
+
+                        if(dojoArray.indexOf(userGroups, "admin") !== -1)
+                        {
+
+                            let commandArray = command.split(" ");
+
+                            let newCommand =  new systemCommand({executionArray : [{
+                                    command: commandArray[0],
+                                    arguments: commandArray.slice(1)
+
+                                }],
+                                _onOutputCallback: lang.hitch(this, function(data){
+                                    this._interfaceState.set("consoleOutput",  this._interfaceState.get("consoleOutput")+data);
+                                })});
+
+                            console.log(newCommand);
+
+                            newCommand.runCommands().then(function(result){
+                                interfaceCallback({success: result, data:command, groups: userGroups });
+                            }).catch(function(errorResult){
+                                interfaceCallback({error: errorResult, data:command, groups: userGroups });
+
+                            });
+
+                        }else {
+                            interfaceCallback({error: "not an administrator", data:command, groups: userGroups });
+                        }
+                }));
+
 
             },
             sendConsoleInput: function( input){
