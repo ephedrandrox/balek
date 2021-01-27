@@ -9,7 +9,7 @@
 
     display: block;
 
-
+pointer-events: auto;
     padding: 0;
     margin: auto;
     border: none;
@@ -28,6 +28,7 @@
 
 
     text-align: left;
+
 }
 
 .balekWorkspaceContainerMovableWidgetContentDiv {

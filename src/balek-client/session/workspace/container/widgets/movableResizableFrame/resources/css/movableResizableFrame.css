@@ -5,6 +5,7 @@
 
 .balekWorkspaceContainerWidgetMovableResizableFrame {
     position: absolute;
+    pointer-events: auto;
     background: rgb(95, 60, 44);
 
     display: grid;

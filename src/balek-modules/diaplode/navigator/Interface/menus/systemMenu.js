@@ -92,20 +92,21 @@ define([ 	'dojo/_base/declare',
                         // console.log("users", containerKeys);
 
                         let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget";
-                        let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
+                        let activeOverlayWorkspaceKey = this.workspaceManagerCommands.getActiveOverlayWorkspace().getWorkspaceKey();
+                        console.log("workspaceUpdate", activeOverlayWorkspaceKey);
 
                         this.workspaceManagerCommands.addToWorkspaceContainer(this, workspaceContainerWidgetPath)
                             .then(lang.hitch(this, function (workspaceContainerKey) {
                                 //console.log("users", "gotWorkspaceContainerKey", workspaceContainerKey);
-                                this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
+                                this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeOverlayWorkspaceKey)
                                     .then(lang.hitch(this, function (addContainerToWorkspaceResponse) {
-                                        console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                        console.log("workspaceUpdate","Container added to workspace", addContainerToWorkspaceResponse);
                                     }))
                                     .catch(lang.hitch(this, function (error) {
-                                        console.log( "Error adding container to workspace", error);
+                                        console.log( "workspaceUpdate","Error adding container to workspace", error);
                                     }));
                             })).catch(lang.hitch(this, function (error) {
-                             console.log("systemMenu", "workspaces container error", error);
+                             console.log("workspaceUpdate", "workspaces container error", error);
                         }));
 
                     } else {

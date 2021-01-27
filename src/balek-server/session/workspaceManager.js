@@ -20,6 +20,7 @@ define([ 	'dojo/_base/declare',
             _activeWorkspace: null,
 
 
+
             _workspaceManagerState: null,
             _availableWorkspacesState: null,
             _availableWorkspacesStateWatchHandle: null,
@@ -59,6 +60,8 @@ define([ 	'dojo/_base/declare',
 
                 //Creates initial workspace and sets it to active
                 this._workspaceManagerState.set("activeWorkspace", this.getNewWorkspace().workspaceKey);
+                this._workspaceManagerState.set("activeOverlayWorkspace", this.getNewOverlayWorkspace().workspaceKey);
+
             },
             sessionRequest: function(workspaceManagerRequest, messageCallback){
                     if(workspaceManagerRequest.interfaceConnectSyncedStateRequest){
@@ -112,6 +115,21 @@ define([ 	'dojo/_base/declare',
                 };
 
                 this._availableWorkspacesState.set(newWorkspaceKey,workspacesToReturn );
+                //todo watch for changes on new workspace state and update
+                return workspacesToReturn;
+            },
+            getNewOverlayWorkspace: function(newWorkspaceName = "Workspace"){
+                let newWorkspaceKey = this.getUniqueWorkspaceKey();
+                this._workspaces[newWorkspaceKey] =new balekWorkspace({_workspaceKey:newWorkspaceKey, _workspaceName: newWorkspaceName, containerManager: this.containerManager });
+
+                this._workspacesStateWatchHandles[newWorkspaceKey] = this._workspaces[newWorkspaceKey].getWorkspaceState().watch(lang.hitch(this, this.onWorkspaceStateChange, newWorkspaceKey));
+
+                let workspacesToReturn ={
+                    workspaceKey: newWorkspaceKey,
+                    workspaceName: this._workspaces[newWorkspaceKey]._workspaceName
+                };
+
+
                 //todo watch for changes on new workspace state and update
                 return workspacesToReturn;
             },

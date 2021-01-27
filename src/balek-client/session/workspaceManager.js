@@ -52,10 +52,14 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('addToWorkspaceContainer' , lang.hitch(this, this.addToWorkspaceContainer));
                 this._commandsForInterface.setCommand('addContainerToWorkspace' , lang.hitch(this, this.addContainerToWorkspace));
 
+                this._commandsForInterface.setCommand('getActiveOverlayWorkspace' , lang.hitch(this, this.getActiveOverlayWorkspace));
+
 
                 this._commandsForInterface.setCommand('changeWorkspaceName', lang.hitch(this, this.changeWorkspaceName));
                 this._commandsForInterface.setCommand('changeActiveWorkspace', lang.hitch(this, this.changeActiveWorkspace));
                 this._commandsForInterface.setCommand('activateContainerInWorkspace', lang.hitch(this, this.activateContainerInWorkspace));
+
+
 
 
                 this._commandsForInterface.setCommand('requestNewWorkspace', lang.hitch(this, this.requestNewWorkspace));
@@ -120,6 +124,11 @@ define(['dojo/_base/declare',
                 let activeWorkspace = this._workspaces[activeWorkspaceKey];
                 return activeWorkspace;
             },
+            getActiveOverlayWorkspace: function(){
+                let activeOverlayWorkspaceKey = this._workspaceManagerState.get("activeOverlayWorkspace");
+                let activeOverlayWorkspace = this._workspaces[activeOverlayWorkspaceKey];
+                return activeOverlayWorkspace;
+            },
             getWorkspaceContainers: function(workspaceKey){
 
               let workspace = this._workspaces[workspaceKey];
@@ -156,6 +165,15 @@ define(['dojo/_base/declare',
                 if(String(name) === "activeWorkspace")
                 {
                         this.onActiveWorkspaceChange(name, oldState, newState);
+                }
+                if(String(name) === "activeOverlayWorkspace")
+                {
+                    if(this._workspaces[newState.toString()] === undefined){
+                        console.log("workspaceUpdate", "Creating workspace overlay");
+                        this.createWorkspaceInterface(newState.toString(),  "Active Overlay");
+                        topic.publish("addToMainContentLayerAlwaysOnTop", this._workspaces[newState.toString()].domNode );
+                        this._workspaces[newState.toString()].onActivate();
+                    }
                 }
             },
             onActiveWorkspaceChange: function (name, oldWorkspaceKey, newWorkspaceKey) {

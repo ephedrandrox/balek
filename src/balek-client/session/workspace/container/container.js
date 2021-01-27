@@ -143,17 +143,30 @@ define(['dojo/_base/declare',
                                });
 
                                let activeWorkspace = this.workspaceManagerCommands.getActiveWorkspace();
+                               let activeOverlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
 
                                let activeWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeWorkspace.getWorkspaceKey());
+                               let activeOverlayWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeOverlayWorkspace.getWorkspaceKey());
+
+                                console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
 
                                if(activeWorkspaceContainers !== null && activeWorkspaceContainers[this._containerKey]){
                                    activeWorkspace.activateContainer(this._containerKey);
+                                   console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+
+                               }else if( activeOverlayWorkspaceContainers !== null && activeOverlayWorkspaceContainers[this._containerKey]){
+                                   activeOverlayWorkspace.activateContainer(this._containerKey);
+                                   console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+
                                }
                              else
                                {
-                                   console.log("no!",this._containerKey, activeWorkspaceContainers );
+                                   console.log("workspaceUpdate", "no");
 
+                                   console.log("no!",this._containerKey, activeWorkspaceContainers );
                                }
+
+
                                //todo check if container is in any workspace
                             }));
                         }));
