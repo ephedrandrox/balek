@@ -7,13 +7,12 @@ define([ 	'dojo/_base/declare',
 
 
 
-        "balek-modules/diaplode/navigator/Interface/menus/workspacesMenu/navigatorMainWidget",
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
     ],
     function (declare, lang,  domClass,
               domConstruct,
-              on, navigatorMainWidget,  balekWorkspaceManagerInterfaceCommands ) {
+              on, balekWorkspaceManagerInterfaceCommands ) {
 
         return declare( "diaplodeNavigatorInterfaceWorkspacesMenu",null, {
              _actions: null,

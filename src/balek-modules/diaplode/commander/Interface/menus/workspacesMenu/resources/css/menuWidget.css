@@ -1,0 +1,55 @@
+.diaplodeNavigatorInterfaceWorkspacesMenuMenuWidget{
+    position: absolute;
+    display: none;
+    top:30px;
+    right: 0;
+    background: none;
+    z-index: 500;
+    color: white;
+    outline: none;
+    opacity: 1;
+
+    border: solid #050530 3px;
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
+    border-radius: 0 0 15px 15px;
+
+    border: solid black 3px;
+    padding:5px;
+    margin: 0;
+    background: rgba(11, 36, 72, .6);
+
+    font-size: 12pt;
+
+
+
+
+}
+
+.diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetAddCommandDiv{
+
+    border: solid white 3px;
+
+    cursor: pointer;
+}
+
+
+.diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv{
+
+    border: solid white 3px;
+    white-space: nowrap;
+    cursor: pointer;
+margin: 5px;
+    padding:5px;
+    padding-left: 10px;
+    padding-right: 10px;
+border-radius: 5px;
+}
+
+
+.diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv:hover{
+
+    border: solid black 3px;
+    white-space: nowrap;
+    cursor: pointer;
+}

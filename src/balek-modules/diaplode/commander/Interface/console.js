@@ -20,6 +20,7 @@ define(['dojo/_base/declare',
 
         //Diaplode ui components
         "balek-modules/diaplode/ui/input/getUserInput",
+        "balek-modules/diaplode/commander/Interface/menus/workspacesMenu/menuWidget",
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
     ],
@@ -44,6 +45,8 @@ define(['dojo/_base/declare',
               navigatorInterfaceCommands,
               //Diaplode ui components
               getUserInput,
+              workspaceMenu,
+
               //Balek Interface Includes
               _syncedCommanderInterface) {
         return declare("moduleDiaplodeCommanderInterfaceConsole", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface], {
@@ -61,6 +64,12 @@ define(['dojo/_base/declare',
             navigatorCommands: null,
 
 
+            _workspacesMenuDiv: null,
+
+            _workspaceMenuWidget: null,
+            _workspaceManagerState: null,
+            _workspaceStateList: null,
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -69,13 +78,21 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 this.navigatorCommands = new navigatorInterfaceCommands();
 
+                this._workspaceMenuWidget = new workspaceMenu();
+
+                this._workspaceManagerState = null;
+                this._workspaceStateList =  null;
+
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 dijitViewPort.on("resize", lang.hitch(this, this._onViewportResize));
+
+
             },
             postCreate: function () {
                // domConstruct.place(this.domNode, this._ContactsListDomNode);
                 topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                 let dockedState = this._interfaceState.get("consoleDocked");
+                topic.publish("addToMainContentLayerAlwaysOnTop",  this._workspaceMenuWidget.domNode );
 
                 if(dockedState === 'false')
                 {
@@ -277,6 +294,14 @@ define(['dojo/_base/declare',
                 });
 
 
+
+            },
+            _onWorkspacesClicked: function(event){
+                console.log("Workspaces Clicked");
+
+                let workspacesMenu = this._workspaceMenuWidget;
+                workspacesMenu.toggleShowView();
+               // console.log(workspacesMenu);
 
             },
             _onRunCommandClicked: function(clickEvent)
