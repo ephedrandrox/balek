@@ -102,10 +102,48 @@ define(['dojo/_base/declare',
                 {
                     this.unDockConsole();
                 }
+
+                this.checkForWorkspaceStates();
+            },
+            checkForWorkspaceStates: function() {
+                if (this._workspaceManagerState === null){
+
+                    this._workspaceManagerState = this._workspaceMenuWidget.getWorkspaceManagerState();
+                    this._workspaceManagerStateWatchHandle = this._workspaceManagerState.watch(lang.hitch(this, this.onWorkspaceManagerStateChange));
+
+                }
+
+                if (this._workspaceStateList === null){
+                    this._workspaceStateList = this._workspaceMenuWidget.getWorkspacesStateList();
+                    this.updateWorkspaceNameDiv();
+                }
+
+
             },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+            updateWorkspaceNameDiv: function()
+            {
+                if(this._workspaceManagerState !== null && this._workspaceStateList !== null )
+                {
+                    let activeWorkspaceKey = this._workspaceManagerState.get("activeWorkspace");
+                    if (activeWorkspaceKey){
+                        let activeWorkspaceInfo = this._workspaceStateList.get(activeWorkspaceKey);
+                       this._workspacesMenuDiv.innerHTML = activeWorkspaceInfo.workspaceName +" - ❖" ;
+                    }
+                }else {
+                    this.checkForWorkspaceStates();
+                }
+            },
+            onWorkspaceManagerStateChange: function(name, oldState, newState){
+                console.log("workspaceMenu", name, oldState, newState);
+
+                if(name.toString() ==="activeWorkspace"){
+                    this.updateWorkspaceNameDiv();
+                }
+            },
+
             onInterfaceStateChange: function (name, oldState, newState) {
                 this.inherited(arguments);     //this has to be done so remoteCommander works
                 if (name === "Status" && newState === "Ready") {
@@ -298,8 +336,12 @@ define(['dojo/_base/declare',
             },
             _onWorkspacesClicked: function(event){
                 console.log("Workspaces Clicked");
+                this.checkForWorkspaceStates();
+
 
                 let workspacesMenu = this._workspaceMenuWidget;
+
+
                 workspacesMenu.toggleShowView();
                // console.log(workspacesMenu);
 

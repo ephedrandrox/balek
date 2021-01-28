@@ -15,11 +15,12 @@
     border-radius: 0 0 15px 15px;
 
     border: solid black 3px;
-    padding:5px;
+    padding:0;
     margin: 0;
     background: rgba(11, 36, 72, .6);
-
+padding-top: 10px;
     font-size: 12pt;
+    background: grey;
 
 
 
@@ -28,28 +29,31 @@
 
 .diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetAddCommandDiv{
 
-    border: solid white 3px;
+    border: none;
 
     cursor: pointer;
 }
 
 
 .diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv{
+    border: none;
 
-    border: solid white 3px;
+    border-bottom: solid white 3px;
     white-space: nowrap;
     cursor: pointer;
-margin: 5px;
+margin: 0;
     padding:5px;
     padding-left: 10px;
     padding-right: 10px;
-border-radius: 5px;
+    text-align: left;
+    color: white;
 }
 
 
 .diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv:hover{
 
-    border: solid black 3px;
+    border-bottom: solid black 3px;
     white-space: nowrap;
     cursor: pointer;
+    color: black;
 }

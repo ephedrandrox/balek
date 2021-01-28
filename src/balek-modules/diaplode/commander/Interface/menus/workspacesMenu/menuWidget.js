@@ -39,7 +39,8 @@ define(['dojo/_base/declare',
             baseClass: "diaplodeNavigatorInterfaceWorkspacesMenuMenuWidget",
 
 
-
+            _workspaceManagerState: null,
+            _availableWorkspacesState: null,
 
             _mainCssString: mainCss,
 
@@ -65,6 +66,13 @@ define(['dojo/_base/declare',
 
             },
 
+            getWorkspaceManagerState: function()
+            {
+               return this._workspaceManagerState;
+            },
+            getWorkspacesStateList: function(){
+                return this._availableWorkspacesState;
+            },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
@@ -75,6 +83,7 @@ define(['dojo/_base/declare',
             },
             onWorkspaceMenuClick: function (workspaceKey, changeActiveWorkspace, event) {
                 event.stopPropagation();
+                this.hide();
                 console.log(event);
                 if(event.altKey){
                     let getNameForWorkspace = new getUserInput({question: "Choose a Workspace Name", inputReplyCallback: lang.hitch(this, function(newWorkspaceName){
@@ -90,6 +99,8 @@ define(['dojo/_base/declare',
                         console.log("navigator", result);
                     });
                 }
+
+
 
             },
             onAddWorkspaceClicked: function (event){
@@ -126,8 +137,8 @@ define(['dojo/_base/declare',
                         this.onAddWorkspaceClicked();
                     }));
 
-                    domConstruct.place(newWorkspaceButton, this.domNode);
-
+                    //domConstruct.place(newWorkspaceButton, this.domNode);
+                    let lastPlacedDiv = null;
                     for( const workspaceKey in this._navigatorWorkspaceMenuWidgets )
                     {
                         let workspaceState = this._navigatorWorkspaceMenuWidgets[workspaceKey];
@@ -135,21 +146,28 @@ define(['dojo/_base/declare',
                         let newWorkspaceInfo = domConstruct.create("div");
 
                         newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
-                        domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv");
+                        domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv");
                         on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
 
                         domConstruct.place(newWorkspaceInfo, this.domNode);
-
+                        lastPlacedDiv = newWorkspaceInfo;
                         // this._mainWorkspacesDiv.innerHTML += workspaceState.workspaceName + "<br>";
                     }
+                    domStyle.set(lastPlacedDiv, {"border": "none"});
                 }
 
             },
 
             toggleShowView: function(){
                 let currentStateToggle = {"block": "none", "none": "block"};
+                domStyle.set(this.domNode, {"z-index": 100});
+
                 domStyle.set(this.domNode, {"display": currentStateToggle[domStyle.get(this.domNode, "display")]});
 
+
+            },
+            hide(){
+                domStyle.set(this.domNode, {"display": "none"});
 
             },
             //##########################################################################################################
