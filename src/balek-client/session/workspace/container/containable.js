@@ -1,11 +1,12 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'balek-client/session/workspace/container/containables'
+        'balek-client/session/workspace/container/containables',
+        'balek-client/session/workspace/workspaceManagerInterfaceCommands'
 
 
     ],
-    function (declare, lang, topic, balekWorkspaceContainables  ) {
+    function (declare, lang, topic,  balekWorkspaceContainables, balekWorkspaceManagerInterfaceCommands  ) {
 
         return declare( "balekClientWorkspaceManagerContainerManagerContainables",null, {
 
@@ -15,16 +16,19 @@ define([ 	'dojo/_base/declare',
 
             _containables: null,
 
+            _assignedContainer: null,
+
 
             _workspaceContainableState: null,
             _workspaceContainableStateWatchHandle: null,
 
-
+            workspaceManagerCommands: null,
             constructor: function (args) {
-
 
                 declare.safeMixin(this, args);
                 this._containables = new balekWorkspaceContainables();
+                let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
+                this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
                 console.log("Initializing Balek Workspace Manager Container Manager Containable Client...");
 
                 this._componentDefaultStateSet("workspaceContainable", "containerKeys", []);
@@ -42,6 +46,7 @@ define([ 	'dojo/_base/declare',
             {
                // console.log("containerKey:", containerKey);
                 this._componentStateSet("workspaceContainable", "containerKeys", containerKey);
+                this._assignedContainer = this.workspaceManagerCommands.getContainer(containerKey);
 
             },
             initializeContainable: function(){
@@ -82,6 +87,12 @@ define([ 	'dojo/_base/declare',
 
 
                 }));
+            },
+            toggleShowView: function()
+            {
+                if(this._assignedContainer !== null){
+                    this._assignedContainer.toggleShowView();
+                }
             },
             getDomNode: function()
             {

@@ -326,7 +326,14 @@ define(['dojo/_base/declare',
              //   console.log("resized sending Box", elementBox);
                 this._componentStateSet("diaplodeWorkspaceContainer", "elementBox", elementBox);
             },
-
+            toggleShowView: function()
+            {
+                let domNode =this.getWorkspaceDomNode();
+                if(domNode){
+                    let currentStateToggle = {"block": "none", "none": "block"};
+                    domStyle.set(domNode, {"display": currentStateToggle[domStyle.get(domNode, "display")]});
+                }
+            },
             getWorkspaceDomNode: function () {
                // console.log("getting Dom Node");
                 if(this._workspaceContainerWidget && this._workspaceContainerWidget.domNode)

@@ -8,6 +8,7 @@ define(['dojo/_base/declare',
         'dojo/on',
         "dojo/aspect",
         "dojo/dom-attr",
+        "dojo/dom-style",
         "dojo/keys",
         "dijit/focus",
         "dojo/ready",
@@ -49,6 +50,7 @@ define(['dojo/_base/declare',
               on,
               aspect,
               domAttr,
+              domStyle,
               dojoKeys,
               dijitFocus,
               dojoReady,
@@ -457,6 +459,15 @@ define(['dojo/_base/declare',
                         topic.publish("requestModuleLoad", moduleID);
                     }
                 });
+            },
+            toggleShowView: function(){
+                let currentStateToggle = {"block": "none", "none": "block"};
+                domStyle.set(this.domNode, {"display": currentStateToggle[domStyle.get(this.domNode, "display")]});
+
+                for (const menuToToggle in this._navigatorSystemMenuWidgets) {
+                    this._navigatorSystemMenuWidgets[menuToToggle].toggleShowView();
+                }
+
             },
             unload() {
                    this._navigatorSystemMenusStateWatchHandle.unwatch();

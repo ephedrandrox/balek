@@ -100,9 +100,7 @@ define(['dojo/_base/declare',
                 console.log("You shouldn't be seeing this", moduleMessage);
             },
             toggleShowView: function () {
-                let currentStateToggle = {"block": "none", "none": "block"};
-               // console.log(domStyle.get(this._navigatorMainWidget.domNode, "display"));
-                domStyle.set(this._navigatorMainWidget.domNode, {"display": currentStateToggle[domStyle.get(this._navigatorMainWidget.domNode, "display")]});
+               this._navigatorMainWidget.toggleShowView();
             },
             unload: function () {
              //   this._navigatorSystemMenusStateWatchHandle.unwatch();

@@ -49,6 +49,9 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('getActiveWorkspace' , lang.hitch(this, this.getActiveWorkspace));
                 this._commandsForInterface.setCommand('getWorkspaceContainers' , lang.hitch(this, this.getWorkspaceContainers));
 
+                this._commandsForInterface.setCommand('getContainer' , lang.hitch(this, this.getContainer));
+
+
                 this._commandsForInterface.setCommand('addToWorkspaceContainer' , lang.hitch(this, this.addToWorkspaceContainer));
                 this._commandsForInterface.setCommand('addContainerToWorkspace' , lang.hitch(this, this.addContainerToWorkspace));
 
@@ -128,6 +131,9 @@ define(['dojo/_base/declare',
                 let activeOverlayWorkspaceKey = this._workspaceManagerState.get("activeOverlayWorkspace");
                 let activeOverlayWorkspace = this._workspaces[activeOverlayWorkspaceKey];
                 return activeOverlayWorkspace;
+            },
+            getContainer: function(containerKey){
+                return this.containerManager.getContainer(containerKey);
             },
             getWorkspaceContainers: function(workspaceKey){
 
