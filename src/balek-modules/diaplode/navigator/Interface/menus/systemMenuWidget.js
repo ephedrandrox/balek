@@ -105,7 +105,19 @@ define(['dojo/_base/declare',
 
                 this._navigatorWidget.arrangeSystemMenus();
 
+                let menuItemKeys =  Object.keys(this._menuItemWidgets);
 
+                console.log("systemMenu",menuItemKeys );
+
+                for(keyIndex in menuItemKeys){
+
+                    let menuItemKey = menuItemKeys[keyIndex];
+                    //console.log(menuItemKeys, menuItemKey);
+                    domStyle.set(this._menuItemWidgets[menuItemKey].domNode);
+
+                    domConstruct.place(this._menuItemWidgets[menuItemKey].domNode, this._menuItems);
+
+                }
                //
 
 
@@ -126,19 +138,12 @@ define(['dojo/_base/declare',
 
                 console.log("systemMenu",event );
 
+                let currentStateToggle = {"block": "none", "none": "block"};
 
-                let menuItemKeys =  Object.keys(this._menuItemWidgets);
+                domStyle.set(this._menuItems, {"display": currentStateToggle[domStyle.get(this._menuItems, "display")]});
 
-                console.log("systemMenu",menuItemKeys );
 
-                for(keyIndex in menuItemKeys){
 
-                    let menuItemKey = menuItemKeys[keyIndex];
-                    //console.log(menuItemKeys, menuItemKey);
-
-                    domConstruct.place(this._menuItemWidgets[menuItemKey].domNode, this.domNode);
-
-                }
 
             },
 
