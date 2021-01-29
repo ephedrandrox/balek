@@ -14,7 +14,7 @@ body {
     position: absolute;
     pointer-events: auto;
 
-    background: rgb(131, 77, 164);
+    background: rgba(65, 17, 95, 0.8);
     display: inline;
     display: inline-block;
     text-align: center;
@@ -36,7 +36,7 @@ body {
 }
 
 .diaplodeNavigatorInterface:focus{
-border: solid #50d1d1 3px;
+border: solid #073434 3px;
 }
 
 .diaplodeNavigatorInterfaceWorkspacesDiv {

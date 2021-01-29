@@ -160,7 +160,7 @@ define(['dojo/_base/declare',
 
             toggleShowView: function(){
                 let currentStateToggle = {"block": "none", "none": "block"};
-                domStyle.set(this.domNode, {"z-index": 100});
+                domStyle.set(this.domNode, {"z-index": 70000});
 
                 domStyle.set(this.domNode, {"display": currentStateToggle[domStyle.get(this.domNode, "display")]});
 
