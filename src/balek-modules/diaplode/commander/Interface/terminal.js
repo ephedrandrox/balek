@@ -102,7 +102,7 @@ define(['dojo/_base/declare',
                    //     xTermCss,
                   //      xTermAddOnFit);
 
-                    this._xTerm = new xTerm.Terminal({'theme': { background: '#477573',  foreground: '#c39213' }});
+                    this._xTerm = new xTerm.Terminal({allowTransparency: true, theme: { background: 'rgba(5,95,90, .8)',  foreground: '#c39213' }});
 
                     this._xTermAddOnFit = new xTermAddOnFit.FitAddon();
 
