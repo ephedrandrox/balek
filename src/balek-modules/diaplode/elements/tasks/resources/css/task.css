@@ -5,7 +5,14 @@
 .diaplodeElementsTasksInterfaceTask {
     position: relative;
     background: #000000;
-    display: inline-block;
+
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+
     padding: 5px;
     margin: 0;
     border: none;
@@ -28,4 +35,16 @@
 
     border-radius: 5px;
     text-align: left;
+}
+.diaplodeElementsTasksInterfaceTaskStatus{
+    grid-area: 1 / 1 / 2 / 2;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.diaplodeElementsTasksInterfaceTaskDescription{
+    grid-area: 1 / 2 / 2 / 3;
+    display: inline-block;
+    cursor: pointer;
+padding-top: 5px;
 }

@@ -34,6 +34,7 @@ define(['dojo/_base/declare',
             baseClass: "diaplodeUIInputGetUserInput",
 
             question: null,
+            initialValue: "",
             inputReplyCallback: null,
             userInputValue: null,
 

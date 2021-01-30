@@ -15,12 +15,14 @@ define(['dojo/_base/declare',
 
                 this._commands={
                     "addContent" : lang.hitch(this, this.addContent),
-                    "removeContent" : lang.hitch(this, this.removeContent)
+                    "removeContent" : lang.hitch(this, this.removeContent),
+                    "setStatus": lang.hitch(this, this.setStatus)
                 };
 
 
                 this._interfaceState.set("taskContent","Loading...");
 
+                this._interfaceState.set("taskStatus","☑️");
 
                 if(this._tasksDatabase && this._taskKey)
                 {
@@ -28,6 +30,7 @@ define(['dojo/_base/declare',
                         lang.hitch(this, function(userTaskResult){
                             console.log("user Task Retrieval",userTaskResult);
                             this._interfaceState.set("taskContent",userTaskResult.taskContent);
+                            this._interfaceState.set("taskStatus",userTaskResult.taskStatus);
 
 
                         })
@@ -53,6 +56,24 @@ define(['dojo/_base/declare',
             removeContent: function(contentPosition, remoteCommandCallback){
                 this._interfaceState.set("removeContent", contentPosition);
                 remoteCommandCallback({success: "Content Removed"});
+            },
+            setStatus: function(taskStatus, remoteCommandCallback)
+            {
+
+
+                this._tasksDatabase.updateUserTaskStatus(this._taskKey, taskStatus).then(
+                    lang.hitch(this, function(userTaskUpdateResult){
+
+                        this._interfaceState.set("taskStatus", taskStatus);
+                        remoteCommandCallback({success: "Status Updated"});
+
+                    })
+                ).catch(lang.hitch(this, function(userTaskError){
+                    console.log("user Task Set error",userTaskError);
+                    remoteCommandCallback({error: "Status Updated"});
+
+                }));
+
             }
         });
     });

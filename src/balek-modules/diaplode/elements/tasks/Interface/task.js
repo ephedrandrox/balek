@@ -58,6 +58,9 @@ function (declare,
 
         _consoleOnLoadSettingNode: null,
 
+        _statusNode: null,
+        _descriptionNode: null,
+
         //##########################################################################################################
         //Startup Functions Section
         //##########################################################################################################
@@ -71,6 +74,7 @@ function (declare,
                     this.askToConnectInterface();
                 }
             }));
+
         },
         postCreate: function () {
             this.initializeContainable();
@@ -84,13 +88,32 @@ function (declare,
                 console.log("Instance Status:", newState);
             }
             if (name === "taskContent") {
-               this.domNode.innerHTML = newState;
+               this._descriptionNode.innerHTML = newState;
+            }
+            if (name === "taskStatus") {
+                this._statusNode.innerHTML = newState;
             }
            // console.log(name, newState);
         },
+        _onStatusClick: function(clickEvent){
+
+            let currentStatus = this._interfaceState.get("taskStatus");
+            if(currentStatus !== "✅"){
+                this._instanceCommands.setStatus("✅").then(function(commandResult){
+                    console.log(commandResult);
+                });
+            }else {
+             this._instanceCommands.setStatus("☑️").then(function(commandResult){
+                    console.log(commandResult);
+                });
+            }
+
+        },
         _onDoubleClick: function(clickEvent)
         {
+            let currentValue = this._interfaceState.get("taskContent");
             let getDataForTask = new getUserInput({question: "Change Task to...",
+                initialValue: currentValue,
                 inputReplyCallback: lang.hitch(this, function(newtaskContent){
                     console.log("Requesting Task Data Change with", newtaskContent);
 

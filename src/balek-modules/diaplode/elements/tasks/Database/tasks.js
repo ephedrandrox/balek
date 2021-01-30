@@ -117,7 +117,7 @@ define(['dojo/_base/declare',
                             Reject(error);
                         }
                         else if(collection){
-                            collection.insertOne({_userKey: this._userKey, taskContent: taskContent}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({_userKey: this._userKey, taskContent: taskContent, taskStatus:"☑️"}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
@@ -152,6 +152,33 @@ define(['dojo/_base/declare',
                         }));
                     }
                 }));
+
+
+                }));
+            },
+            updateUserTaskStatus: function(taskId, taskStatus)
+            {
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                    //todo check that the task ID fits the user ID before updateing
+
+                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
+                        if(error){
+                            Reject(error);
+                        }
+                        else if(collection){
+                            taskId = collection.s.pkFactory.ObjectID(taskId);
+
+                            collection.updateOne({_id: taskId}, {$set: {taskStatus: taskStatus}}, lang.hitch(this, function (error, response) {
+                                if(error){
+                                    Reject(error);
+                                }
+                                else if(response){
+                                    Resolve(response);
+                                }
+                            }));
+                        }
+                    }));
 
 
                 }));

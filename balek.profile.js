@@ -44,7 +44,7 @@ var profile = (function () {
         layerOptimize: "closure",
         optimize: "closure",
         mini: true,
-        stripConsole: "none",
+        stripConsole: "all",
         selectorEngine: "lite",
 
         defaultConfig: {
