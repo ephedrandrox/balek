@@ -20,9 +20,13 @@ define(['dojo/_base/declare',
 
         "balek-modules/diaplode/ui/input/getUserInput",
 
+        'balek-modules/components/syncedStream/Interface',
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
+
+
+
 
         //xTerm
         'balek-modules/node-modules/xterm/lib/xterm',
@@ -50,6 +54,8 @@ define(['dojo/_base/declare',
               template,
               mainCss,
               getUserInput,
+
+              syncedStreamInterface,
               //Balek Interface Includes
               _syncedCommanderInterface,
               _balekWorkspaceContainerContainable,
@@ -70,6 +76,8 @@ define(['dojo/_base/declare',
 
             _xTermData: "",
             _xTerm: null,
+
+            _sshSyncedStream: null,
 
 
             //##########################################################################################################
@@ -96,7 +104,7 @@ define(['dojo/_base/declare',
 
 
 
-                if( this._xTerm === null && this.domNode && dom.isDescendant(this.domNode, window.document)){
+                if( this._xTerm === null &&this._sshSyncedStream !== null && this.domNode && dom.isDescendant(this.domNode, window.document)){
 
                   //  console.log("xterm", xTerm,
                    //     xTermCss,
@@ -113,15 +121,14 @@ define(['dojo/_base/declare',
                     //this._xTermAddOnFit.fit();
                     // this._xTerm.fit();
                     this._xTerm.resize(80,24);
-                    // this._xTerm.refresh();
-                    let initialTerminalState =  this._interfaceState.get("terminalOutput");
-                    if(initialTerminalState)
-                    {
-                        this._xTerm.write(initialTerminalState);
-                    }
+
+
+                    this._sshSyncedStream.beginStreaming( lang.hitch(this, this.writeToXterm));
+
+
 
                     this._xTerm.onKey(lang.hitch(this, function(xTermKeyEvent){
-                        console.log("xterm",xTermKeyEvent);
+                       // console.log("xterm",xTermKeyEvent);
 
                         //this._instanceCommands.sendTerminalInput(xTermKeyEvent.key);
 
@@ -134,7 +141,7 @@ define(['dojo/_base/declare',
 
                     }));
                     this._xTerm.onData(lang.hitch(this, function(xTermDataEvent){
-                        console.log("xterm","xTermDataEvent", xTermDataEvent);
+                        //console.log("xterm","xTermDataEvent", xTermDataEvent);
 
                         this._instanceCommands.sendTerminalInput(xTermDataEvent);
 
@@ -187,7 +194,7 @@ define(['dojo/_base/declare',
                     if(placedWidgetDomNode)
                     {
                         this.startupXTerm();
-                        this._xTerm.write(data);
+                       // this._xTerm.write(data);
                     }else {
                       //  console.log("xterm",  "No Dom Node", placedWidgetDomNode);
 
@@ -236,6 +243,14 @@ define(['dojo/_base/declare',
                 if (name === "Status" && newState === "Ready") {
                    // console.log("Instance Status:", newState);
                 }
+                else if( name==="sshOutputComponentKey") {
+                    if(this._sshSyncedStream === null)
+                    {
+                        this._sshSyncedStream = new syncedStreamInterface({_instanceKey: this._instanceKey,
+                                                                    _componentKey : newState.toString()  });
+                    }
+
+                }
                 else if( name==="terminalDocked") {
                    // console.log("terminalDocked Status:", newState);
 
@@ -247,13 +262,7 @@ define(['dojo/_base/declare',
                      //   this.unDockTerminal();
                     }
                 }else if (name === "terminalOutput" ) {
-                   // this._terminalOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
-
-                   // this._xTerm.write(newState);
-                  //  console.log("xterm", oldState, newState);
-                this.writeToXterm(newState);
-
-                    // this._terminalOutputNode.scrollTop = this._terminalOutputNode.scrollHeight;
+                  alert("terminalOutput should not be sent now ");
                 }
                // console.log(name, newState);
             },

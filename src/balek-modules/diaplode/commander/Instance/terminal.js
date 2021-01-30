@@ -2,6 +2,9 @@ define(['dojo/_base/declare',
         'dojo/_base/lang',
         //Balek Service Includes
         'balek-modules/diaplode/services/system/ssh/ssh',
+
+        'balek-modules/components/syncedStream/Instance',
+
         //Balek Instance Includes
         'balek-modules/components/syncedCommander/Instance',
     ],
@@ -11,14 +14,22 @@ define(['dojo/_base/declare',
 
               //Balek Service Includes
               sshService,
+
+              syncedStreamInstance,
               //Balek Instance Includes
               _syncedCommanderInstance) {
         return declare("moduleDiaplodeCommanderInstanceTerminal", [_syncedCommanderInstance], {
 
             _sshService: null,
+
+            _sshSyncedStream: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("starting moduleDiaplodeCommanderInstanceTerminal");
+
+
+                this._sshSyncedStream = new syncedStreamInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("sshOutputComponentKey", this._sshSyncedStream._componentKey);
 
                 //set setRemoteCommander commands
                 this._commands={
@@ -35,13 +46,16 @@ define(['dojo/_base/declare',
 
 
                 this._interfaceState.set("terminalDocked", "false");
-                this._interfaceState.set("terminalOutput", "");
+
                 this._interfaceState.set("Status", "Ready");
+
 
 
                 this._sshService = new sshService({sshUsername: "diaplode", sshHostname: "localhost", sshPort: 2222,
                     _onOutputCallback: lang.hitch(this, function(data){
-                        this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
+
+                        this._sshSyncedStream.appendOutput(data);
+
                     })});
 
                // this.connectTerminal();
@@ -57,7 +71,7 @@ define(['dojo/_base/declare',
                 if( this._sshService === null){
                     this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
                         _onOutputCallback: lang.hitch(this, function(data){
-                            this._interfaceState.set("terminalOutput",  this._interfaceState.get("terminalOutput")+data);
+                            this._sshSyncedStream.appendOutput(data);
                         })});
                     remoteCommandCallback({success: "Connecting Terminal"});
 
