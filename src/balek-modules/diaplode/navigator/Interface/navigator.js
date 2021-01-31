@@ -469,6 +469,22 @@ define(['dojo/_base/declare',
                 }
 
             },
+            hide: function(){
+                domStyle.set(this.domNode, {"display": "none"});
+
+                for (const menuToToggle in this._navigatorSystemMenuWidgets) {
+                    this._navigatorSystemMenuWidgets[menuToToggle].hide();
+                }
+
+            },
+            show: function(){
+                domStyle.set(this.domNode, {"display": "block"});
+
+                for (const menuToToggle in this._navigatorSystemMenuWidgets) {
+                    this._navigatorSystemMenuWidgets[menuToToggle].show();
+                }
+
+            },
             unload() {
                    this._navigatorSystemMenusStateWatchHandle.unwatch();
                    this._navigatorSystemMenusStateWatchHandle.remove();

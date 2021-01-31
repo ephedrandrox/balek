@@ -42,6 +42,8 @@ define(['dojo/_base/declare',
             _navigatorSystemMenusState: null,
 
 
+            _isVisible: true,
+
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
@@ -81,6 +83,12 @@ define(['dojo/_base/declare',
 
                 }
 
+                if(name === "isVisible"){
+                    console.log(oldState, newState);
+                    this._isVisible = newState;
+                    this.refreshView();
+                }
+
             },
             addSystemMenuList:function( syncedMap, menuCompanion){
                 //This function is
@@ -99,8 +107,23 @@ define(['dojo/_base/declare',
             receiveMessage: function (moduleMessage) {
                 console.log("You shouldn't be seeing this", moduleMessage);
             },
+            refreshView: function(){
+                if(this._isVisible)
+                {
+                    this._navigatorMainWidget.show();
+
+                }else
+                {
+                    this._navigatorMainWidget.hide();
+                }
+            },
             toggleShowView: function () {
-               this._navigatorMainWidget.toggleShowView();
+                let isVisible = this._isVisible;
+                this._isVisible = !isVisible;
+
+                this.refreshView();
+
+                this._instanceCommands.setVisibility(this._isVisible);
             },
             unload: function () {
              //   this._navigatorSystemMenusStateWatchHandle.unwatch();

@@ -21,6 +21,9 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("className", "moduleDiaplodeNavigatorModuleInstance");
 
+                this._interfaceState.set("isVisibile",  true);
+
+
 
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
                     this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: userKey});
@@ -32,7 +35,10 @@ define(['dojo/_base/declare',
 
                 this._commands={
                     "newMenu" : lang.hitch(this, this.newMenu),
+                    "setVisibility": lang.hitch(this, this.setVisibility)
                 };
+
+
                 //activate syncedCommander commands
                 this.setInterfaceCommands();
 
@@ -41,12 +47,16 @@ define(['dojo/_base/declare',
             newMenu: function(remoteCommandCallback){
                 remoteCommandCallback({error: "could not create menu..."})
             },
-                _end: function () {
-                return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying navigator Module Interface ");
+            setVisibility: function(isVisible, remoteCommandCallback)
+            {
+                this._interfaceState.set("isVisible",  isVisible);
+            },
+            _end: function () {
+            return new Promise(lang.hitch(this, function(Resolve, Reject){
+                console.log("destroying navigator Module Interface ");
 
-                    Resolve({success: "Unloaded Instance"});
-                }));
+                Resolve({success: "Unloaded Instance"});
+            }));
             }
         });
     }

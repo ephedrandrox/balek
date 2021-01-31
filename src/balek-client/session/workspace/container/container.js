@@ -142,6 +142,13 @@ define(['dojo/_base/declare',
 
                                });
 
+                               let isVisible = this._containerState.get("isVisible");
+
+                               if(isVisible !== true)
+                               {
+                                   this.hide();
+                               }
+
                                let activeWorkspace = this.workspaceManagerCommands.getActiveWorkspace();
                                let activeOverlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
 
@@ -238,6 +245,9 @@ define(['dojo/_base/declare',
                 if(containerState.movableContainerElementBox){
                     this._containerState.set("movableContainerElementBox", containerState.movableContainerElementBox);
                 }
+                if(containerState.isVisible != undefined){
+                    this._containerState.set("isVisible", containerState.isVisible);
+                }
 
             },
             onWorkspaceContainerInterfaceStateUpdate: function(name, oldState, newState)
@@ -259,6 +269,16 @@ define(['dojo/_base/declare',
                     //debugger;
                    this.refreshContainerWidget();
                 }
+                if(name === 'isVisible' ){
+                    if(newState === true)
+                    {
+                        this.show();
+                    }else
+                    {
+                        this.hide();
+                    }
+                }
+
                 //if instance and component Keyare up then get interface we can load our widget?
 
 
@@ -332,6 +352,28 @@ define(['dojo/_base/declare',
                 if(domNode){
                     let currentStateToggle = {"block": "none", "none": "block"};
                     domStyle.set(domNode, {"display": currentStateToggle[domStyle.get(domNode, "display")]});
+                }
+            },
+            hide: function(){
+                let domNode =this.getWorkspaceDomNode();
+                if(domNode){
+                    domStyle.set(domNode, {"display":  "none"});
+                }
+
+
+                let currentState = this._containerState.get("isVisible");
+                if(currentState !== false){
+                    this.setContainerState("isVisible", false);
+                }
+            },
+            show:function(){
+                let domNode =this.getWorkspaceDomNode();
+                if(domNode){
+                    domStyle.set(domNode, {"display":  "inline-block"});
+                }
+                let currentState = this._containerState.get("isVisible");
+                if(currentState !== true){
+                    this.setContainerState("isVisible", true);
                 }
             },
             getWorkspaceDomNode: function () {

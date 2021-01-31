@@ -94,6 +94,17 @@ define([ 	'dojo/_base/declare',
                     this._assignedContainer.toggleShowView();
                 }
             },
+            hide: function()
+            {
+                if(this._assignedContainer !== null){
+                    this._assignedContainer.hide();
+                }
+            },
+            show: function(){
+                if(this._assignedContainer !== null){
+                    this._assignedContainer.show();
+                }
+            },
             getDomNode: function()
             {
                 return this.domNode;

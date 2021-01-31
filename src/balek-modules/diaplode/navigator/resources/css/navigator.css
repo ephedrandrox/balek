@@ -15,7 +15,6 @@ body {
     pointer-events: auto;
 
     background: rgba(65, 17, 95, 0.8);
-    display: inline;
     display: inline-block;
     text-align: center;
     padding: 0px;
