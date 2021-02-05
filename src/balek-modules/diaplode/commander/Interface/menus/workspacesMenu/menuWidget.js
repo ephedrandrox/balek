@@ -122,9 +122,12 @@ define(['dojo/_base/declare',
             refreshWidget: function(){
                 console.log("navigator", "on workspaces main widget refresh");
 
+
                 console.log("navigator", "refreshing from menu", this.domNode);
                 if(this.domNode){
                     this.domNode.innerHTML = "";
+
+                    let activeWorkspace = this._workspaceManagerState.get("activeWorkspace");
 
                     let newWorkspaceButton = domConstruct.create("div");
                     newWorkspaceButton.innerHTML = "❖"
@@ -141,17 +144,21 @@ define(['dojo/_base/declare',
                     let lastPlacedDiv = null;
                     for( const workspaceKey in this._navigatorWorkspaceMenuWidgets )
                     {
-                        let workspaceState = this._navigatorWorkspaceMenuWidgets[workspaceKey];
+                        if(workspaceKey !== activeWorkspace)
+                        {
+                            let workspaceState = this._navigatorWorkspaceMenuWidgets[workspaceKey];
 
-                        let newWorkspaceInfo = domConstruct.create("div");
+                            let newWorkspaceInfo = domConstruct.create("div");
 
-                        newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
-                        domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv");
-                        on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
+                            newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
+                            domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuMenuWidgetWorkspaceNameDiv");
+                            on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
 
-                        domConstruct.place(newWorkspaceInfo, this.domNode);
-                        lastPlacedDiv = newWorkspaceInfo;
-                        // this._mainWorkspacesDiv.innerHTML += workspaceState.workspaceName + "<br>";
+                            domConstruct.place(newWorkspaceInfo, this.domNode);
+                            lastPlacedDiv = newWorkspaceInfo;
+                            // this._mainWorkspacesDiv.innerHTML += workspaceState.workspaceName + "<br>";
+                        }
+
                     }
                     domStyle.set(lastPlacedDiv, {"border": "none"});
                 }

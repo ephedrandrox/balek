@@ -23,6 +23,7 @@ define([ 	'dojo/_base/declare',
             _availableWorkspacesState: null,
             _availableWorkspacesStateWatchHandle: null,
             _workspaceManagerState: null,
+            _workspaceManagerStateWatchHandle: null,
 
             _targetNode: null,
 
@@ -45,6 +46,7 @@ define([ 	'dojo/_base/declare',
                 this._workspaceManagerState = this.workspaceManagerCommands.getWorkspaceManagerState();
 
 
+
             },
             onAvailableWorkspacesStateChange: function(name, oldState, newState){
                 console.log("navigator", name, oldState, newState);
@@ -59,9 +61,18 @@ define([ 	'dojo/_base/declare',
 
                 this.refreshWidget();
             },
+            onWorkspaceManagerStateChange: function(name, oldState, newState){
+
+
+                this.refreshWidget();
+            },
             loadAndWatchWorkspaces: function(){
                 let availableWorkspacesInState = JSON.parse(JSON.stringify(this._availableWorkspacesState));
                 this._availableWorkspacesStateWatchHandle = this._availableWorkspacesState.watch(lang.hitch(this, this.onAvailableWorkspacesStateChange));
+
+                this._workspaceManagerStateWatchHandle = this._workspaceManagerState.watch(lang.hitch(this, this.onWorkspaceManagerStateChange));
+
+
                 for (const name in availableWorkspacesInState)
                 {
                     console.log("navigator", name, availableWorkspacesInState[name]);
@@ -70,9 +81,24 @@ define([ 	'dojo/_base/declare',
 
                 this.refreshWidget();
             },
-
+            isActiveWorkspace: function(workspaceKey){
+                 let activeWorkspace = this._workspaceManagerState.get("activeWorkspace");
+                 console.log("activeWorkspace", activeWorkspace);
+                 if(activeWorkspace === workspaceKey){
+                     return true;
+                 }
+                 else{
+                     return false;
+                 }
+            },
             refreshWidget: function(){
 
+            },
+            unload: function(){
+                this._availableWorkspacesStateWatchHandle.unwatch();
+                this._availableWorkspacesStateWatchHandle.remove();
+                this._workspaceManagerStateWatchHandle.unwatch();
+                this._workspaceManagerStateWatchHandle.remove();
             }
 
         });

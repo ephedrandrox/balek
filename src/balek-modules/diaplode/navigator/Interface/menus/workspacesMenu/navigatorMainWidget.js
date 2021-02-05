@@ -133,6 +133,15 @@ define(['dojo/_base/declare',
 
                         newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
                         domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv");
+
+
+                        if(this.isActiveWorkspace && this.isActiveWorkspace(workspaceKey)){
+                            domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDivActive");
+                        }else {
+                            domClass.remove(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDivActive");
+                        }
+
+
                         on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
 
                         domConstruct.place(newWorkspaceInfo, this.domNode);

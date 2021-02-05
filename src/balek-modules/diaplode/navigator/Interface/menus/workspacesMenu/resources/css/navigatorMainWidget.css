@@ -37,6 +37,7 @@ background: rgba(0,0,0,.5);
 .diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv{
 
     border: solid white 3px;
+
     white-space: nowrap;
     cursor: pointer;
     margin: 10px;
@@ -44,6 +45,13 @@ background: rgba(0,0,0,.5);
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 5px;
+}
+.diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDivActive {
+
+    border: solid black 3px;
+    color: black;
+    background: rgba(255,255,255,.8);
+
 }
 
 

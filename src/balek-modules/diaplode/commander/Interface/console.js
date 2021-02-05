@@ -115,6 +115,8 @@ define(['dojo/_base/declare',
 
                 if (this._workspaceStateList === null){
                     this._workspaceStateList = this._workspaceMenuWidget.getWorkspacesStateList();
+                    this._workspaceManagerStateListWatchHandle = this._workspaceStateList.watch(lang.hitch(this, this.onWorkspaceManagerStateChange));
+
                     this.updateWorkspaceNameDiv();
                 }
 
@@ -139,9 +141,9 @@ define(['dojo/_base/declare',
             onWorkspaceManagerStateChange: function(name, oldState, newState){
                 console.log("workspaceMenu", name, oldState, newState);
 
-                if(name.toString() ==="activeWorkspace"){
+
                     this.updateWorkspaceNameDiv();
-                }
+
             },
 
             onInterfaceStateChange: function (name, oldState, newState) {
@@ -416,6 +418,15 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             unload: function () {
                 this.inherited(arguments);
+
+                this._workspaceManagerStateListWatchHandle.unwatch();
+                this._workspaceManagerStateListWatchHandle.unload();
+
+                this.__workspaceManagerStateWatchHandle.unwatch();
+                this.__workspaceManagerStateWatchHandle.unload();
+
+
+
                 this.destroy();
             }
         });
