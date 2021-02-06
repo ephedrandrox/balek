@@ -160,7 +160,10 @@ define(['dojo/_base/declare',
                         }
 
                     }
-                    domStyle.set(lastPlacedDiv, {"border": "none"});
+                    if(lastPlacedDiv != null)
+                    {
+                        domStyle.set(lastPlacedDiv, {"border": "none"});
+                    }
                 }
 
             },
