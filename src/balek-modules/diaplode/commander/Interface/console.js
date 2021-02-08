@@ -23,6 +23,12 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/commander/Interface/menus/workspacesMenu/menuWidget",
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
+        //xTerm
+        'balek-modules/node-modules/xterm/lib/xterm',
+        'dojo/text!balek-modules/node-modules/xterm/css/xterm.css',
+        'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit'
+
+
     ],
     function (declare,
               lang,
@@ -48,7 +54,10 @@ define(['dojo/_base/declare',
               workspaceMenu,
 
               //Balek Interface Includes
-              _syncedCommanderInterface) {
+              _syncedCommanderInterface,
+              xTerm,
+              xTermCss,
+              xTermAddOnFit) {
         return declare("moduleDiaplodeCommanderInterfaceConsole", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface], {
             _instanceKey: null,
 
@@ -69,6 +78,9 @@ define(['dojo/_base/declare',
             _workspaceMenuWidget: null,
             _workspaceManagerState: null,
             _workspaceStateList: null,
+
+            _xTerm: null,
+
 
             //##########################################################################################################
             //Startup Functions Section
@@ -93,6 +105,7 @@ define(['dojo/_base/declare',
                 topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
                 let dockedState = this._interfaceState.get("consoleDocked");
                 topic.publish("addToMainContentLayerAlwaysOnTop",  this._workspaceMenuWidget.domNode );
+                domConstruct.place(domConstruct.toDom("<style>" + xTermCss + "</style>"), win.body());
 
                 if(dockedState === 'false')
                 {
@@ -105,6 +118,72 @@ define(['dojo/_base/declare',
 
                 this.checkForWorkspaceStates();
             },
+            startup: function()
+            {
+                // console.log("startup terminal",this,  this.domNode);
+                this.startupXTerm();
+            },
+            startupXTerm: function(){
+
+                if( this._xTerm === null  && this.domNode && dom.isDescendant(this.domNode, window.document)){
+
+                    this._xTerm = new xTerm.Terminal({allowTransparency: true, theme: { background: 'rgba(0,0,0, .6)',  foreground: '#c39213', foreground: 'white' }});
+
+
+                    this._xTermAddOnFit = new xTermAddOnFit.FitAddon();
+
+                    //console.log("xterm",  this._xTerm);
+                    this._xTerm.loadAddon(this._xTermAddOnFit);
+
+                    //this._xTerm.resize(150,30);
+                    this._xTerm.open(this._consoleOutputNode);
+
+                    this._xTermAddOnFit.fit();
+                    if (this._interfaceState !== null)
+                    {
+                        this.writeToXterm(this._interfaceState.get("consoleOutput"));
+                    }
+
+                }else
+                {
+                    // console.log("startup Xterm not ready",this._xTerm , this.domNode , dom.isDescendant(this.domNode, window.document) );
+                }
+
+
+
+
+
+
+
+
+            },
+            writeToXterm: function(data)
+            {
+                if(this._xTerm === null)
+                {
+                    //todo make isDomNodePlaced function
+                    let placedWidgetDomNode = dom.byId(this.id);
+
+                    if(placedWidgetDomNode)
+                    {
+                        this.startupXTerm();
+
+                    }else {
+                        //this.domNode Not placed
+                    }
+                }else {
+                    data = data.replace(/\n/g, '\r\n');
+
+                    this._xTerm.reset();
+
+                    this._xTerm.write(data);
+
+                }
+
+
+
+            },
+
             checkForWorkspaceStates: function() {
                 if (this._workspaceManagerState === null){
 
@@ -162,9 +241,11 @@ define(['dojo/_base/declare',
                         this.unDockConsole();
                     }
                 }else if (name === "consoleOutput" ) {
-                    this._consoleOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
+                   // this._consoleOutputNode.innerHTML ="<pre>"+ newState+ "</pre>";
 
-                    this._consoleOutputNode.scrollTop = this._consoleOutputNode.scrollHeight;
+                  //  this._consoleOutputNode.scrollTop = this._consoleOutputNode.scrollHeight;
+
+                    this.writeToXterm(newState);
                 }
                // console.log(name, newState);
                 },

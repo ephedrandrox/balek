@@ -38,15 +38,16 @@ define(['dojo/_base/declare',
                         {
                             currentCommand = nextCommand;
                         }
-                        this._onOutputCallback("<font style='color:red'>"+"Running Command: "+ currentCommand._command + " </font>\n");
+                        this._onOutputCallback("Running "+'\033[0;31m'+currentCommand._command + " " + currentCommand._arguments.join(" ") +'\033[33m' +"\n\n");
                         currentCommand.runCommand().then( lang.hitch(this, function(commandResult){
                             if(currentCommand._nextCommand){
                                 //Run Next Command
-                                this._onOutputCallback("➢➢➢\n");
+                                this._onOutputCallback("\033[0m\n➢➢➢\n\n");
                                 runNextCommand(currentCommand._nextCommand);
                             }else
                             {
                                 //All Commands ran
+                                this._onOutputCallback("\033[0m\n➢➢➢\n\n");
                                 Resolve({success: "Commands all executed"});
                             }
                         })).catch(lang.hitch(this, function(commandError){
