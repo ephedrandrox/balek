@@ -51,6 +51,10 @@ define(['dojo/_base/declare',
                                 Resolve({success: "Commands all executed"});
                             }
                         })).catch(lang.hitch(this, function(commandError){
+
+                            this._onOutputCallback("\033[0;31mCommand Not Found\n\033[0m\n➢➢➢\n\n");
+                            runNextCommand(currentCommand._nextCommand);
+
                             console.log(commandError);
                              Reject({error: commandError});
                         }));
