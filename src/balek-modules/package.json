@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "build": "pwd && cp ./node_modules -Rf node-modules",
+    "build": "pwd && cp -Rf ./node_modules  ./node-modules",
     "buildRelease": "rm -Rf ../../release/balek/balek-modules/node-modules && cp -Rf ./node_modules ../../release/balek/balek-modules/node-modules && chmod 400 ../../builds/diaplode/conf/ssh/id_rsa"
-
   },
   "dependencies": {
+    "codemirror": "^5.59.2",
     "xterm": "^4.9.0",
     "xterm-addon-fit": "^0.4.0"
   },
