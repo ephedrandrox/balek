@@ -12,7 +12,7 @@ RUN apt-get update
 RUN apt-get install -y default-jre openssh-client
 
 RUN npm run buildAll
-RUN npm --prefix ./src/balek-modules run buildRelease
+#RUN npm --prefix ./src/balek-modules run buildRelease
 
 #RUN mkdir
 #RUN ssh-keygen -q -t rsa -N '' -f /id_rsa
