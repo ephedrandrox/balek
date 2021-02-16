@@ -5,8 +5,8 @@ COPY ./ /balek
 
 RUN npm install
 
-RUN npm --prefix ./src/balek-modules install ./src/balek-modules
-RUN npm --prefix ./src/balek-modules run build
+#RUN npm --prefix ./src/balek-modules install ./src/balek-modules
+#RUN npm --prefix ./src/balek-modules run build
 
 RUN apt-get update
 RUN apt-get install -y default-jre openssh-client
