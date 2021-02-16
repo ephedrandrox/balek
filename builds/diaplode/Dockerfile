@@ -9,7 +9,7 @@ RUN npm install
 #RUN npm --prefix ./src/balek-modules run build
 
 RUN apt-get update
-RUN apt-get install -y default-jre openssh-client
+RUN apt-get install -y default-jre openssh-client neofetch
 
 RUN npm run buildAll
 #RUN npm --prefix ./src/balek-modules run buildRelease
