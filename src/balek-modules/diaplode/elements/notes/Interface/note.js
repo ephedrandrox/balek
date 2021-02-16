@@ -90,7 +90,7 @@ function (declare,
 
            // domConstruct.place(domConstruct.toDom("<style src='dijit/themes/claro/claro.css'></style>"), win.body());
 
-            domConstruct.place(domConstruct.toDom("<link rel=\"stylesheet\" href=\"/dijit/themes/claro/claro.css\">"), win.body());
+           // domConstruct.place(domConstruct.toDom("<link rel=\"stylesheet\" href=\"/dijit/themes/claro/claro.css\">"), win.body());
 
 
                 dojoReady(lang.hitch(this, function () {

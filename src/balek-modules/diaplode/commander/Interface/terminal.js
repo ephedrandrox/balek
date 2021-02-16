@@ -29,9 +29,9 @@ define(['dojo/_base/declare',
 
 
         //xTerm
-        'balek-modules/node-modules/xterm/lib/xterm',
-        'dojo/text!balek-modules/node-modules/xterm/css/xterm.css',
-        'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit'
+        'balek-modules/lib/xterm/lib/xterm',
+        'dojo/text!balek-modules/lib/xterm/css/xterm.css',
+        'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit'
 
     ],
     function (declare,

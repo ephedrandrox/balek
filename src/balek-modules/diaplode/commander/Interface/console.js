@@ -24,9 +24,9 @@ define(['dojo/_base/declare',
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
         //xTerm
-        'balek-modules/node-modules/xterm/lib/xterm',
-        'dojo/text!balek-modules/node-modules/xterm/css/xterm.css',
-        'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit'
+        'balek-modules/lib/xterm/lib/xterm',
+        'dojo/text!balek-modules/lib/xterm/css/xterm.css',
+        'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit'
 
 
     ],
@@ -337,6 +337,21 @@ define(['dojo/_base/declare',
             _onConsoleUndockButtonClicked: function(clickEvent)
             {
                 this._instanceCommands.undockInterface();
+            },
+            _onConsoleNewFileButtonClicked: function(clickEvent){
+                console.log("New File clicked");
+
+                let getDataForFile = new getUserInput({question: "Start File with...",
+                    inputReplyCallback: lang.hitch(this, function(newFileData){
+                        console.log("Requesting new File with", newFileData);
+
+                        topic.publish("createNewDiaplodeFile", newFileData);
+
+
+
+                        getDataForFile.unload();
+                    }) });
+
             },
             _onConsoleNewNoteButtonClicked: function(clickEvent){
                 console.log("New Note clicked");

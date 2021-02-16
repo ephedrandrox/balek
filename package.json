@@ -6,7 +6,11 @@
     "startDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
     "stopDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
-    "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
+    "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d",
+    "preBuild":  "npm run buildLibraries --prefix src/balek-modules/",
+    "postBuild": "npm run buildRelease --prefix src/balek-modules/",
+    "buildAll": "npm run preBuild && npm run build && npm run postBuild"
+
   },
   "dependencies": {
     "mongodb": "^3.6.1",

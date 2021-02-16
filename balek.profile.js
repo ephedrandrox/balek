@@ -1,35 +1,10 @@
 var profile = (function () {
-    var nodeModules = /^balek-modules\/node-modules\//,
-     copyOnly = function(filename, mid){
-        var list = {
-            'balek-modules/node-modules/xterm/lib/xterm.js': true,
-            'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit.js': true
-        };
-        return (mid in list) ||
-            (/^app\/resources\//.test(mid)
-                && !/\.css$/.test(filename)) ||
-            /(png|jpg|jpeg|gif|tiff)$/.test(filename);
-        // Check if it is one of the special files, if it is in
-        // app/resource (but not CSS) or is an image
-    };
-    //need to make this work for balek
+
+
     //#####################################################################
-    //todo make webpack prebuild for node_modules needed in client build
-    //todo xterm has to be manually copied after build to work
-    //put build modules package script in balek-modules
-    //then run npm install and npm build in balek-modules directory
+    //todo work on the build and release system
     //#####################################################################
     return {
-        resourceTags: {
-            copyOnly: function(filename, mid){
-                return copyOnly(filename, mid);
-                // Tag our copy only files
-            },
-            miniExclude: function(filename, mid){
-                return nodeModules.test(mid)  ;
-                // Tag our copy only files
-            }
-        },
 
         basePath: "./",
         releaseDir: "./release",
@@ -105,7 +80,27 @@ var profile = (function () {
             location: "./src/balek"
         }, {
             name: "balek-modules",
-            location: "./src/balek-modules"
+            location: "./src/balek-modules",
+            resourceTags: {
+                copyOnly: function(filename, mid){
+
+                    let balekNodeModules = /^balek-modules\/node_modules\//,
+                        codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/;
+
+
+                    return codeMirror.test(mid) || codeMirror.test(filename) || balekNodeModules.test(mid);
+                }
+
+                //todo
+                /*
+                amd: function(filename, mid){
+                   let  balekNodeModuleLibraries = /^balek-modules\/lib\//;
+                   let balekModule = /^balek-modules\/|$.js/;
+                   let javascriptFile =  /$.js/;
+                    return !balekNodeModuleLibraries.test(mid) && balekModule.test(mid) && javascriptFile.test(filename);
+                }
+                */
+            }
         }, {
             name: "balek-client",
             location: "./src/balek-client"
@@ -154,9 +149,15 @@ var profile = (function () {
             },
             "balek-modules/diaplode/commander/Interface/terminal": {
                 include: [  "balek-modules/diaplode/commander/Interface/terminal"],
-                exclude:[ 'balek-modules/node-modules/xterm/lib/xterm',
-                    'balek-modules/node-modules/xterm-addon-fit/lib/xterm-addon-fit']
+                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
+                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
+            },
+            "balek-modules/diaplode/commander/Interface/console": {
+                include: [  "balek-modules/diaplode/commander/Interface/console"],
+                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
+                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
             }
+
         }
     };
 })();

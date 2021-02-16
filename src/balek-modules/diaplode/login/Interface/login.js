@@ -82,6 +82,8 @@ define(['dojo/_base/declare',
                                                 topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
                                             }else
                                             {
+                                                topic.publish("requestModuleLoad", "diaplode/elements/files");
+
                                                 topic.publish("requestModuleLoad", "diaplode/elements/notes");
                                                 topic.publish("requestModuleLoad", "diaplode/elements/tasks");
 
