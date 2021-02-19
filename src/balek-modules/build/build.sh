@@ -24,6 +24,7 @@ cp -Rf node_modules/codemirror lib/
 
 mkdir -p lib/quill
 
+npm install --prefix build/quill/
 npm run build --prefix build/quill/
 #copy main javascript library
 cp -Rf build/quill/dist/quill.js lib/quill/dist
