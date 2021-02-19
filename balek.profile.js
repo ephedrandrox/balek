@@ -84,11 +84,12 @@ var profile = (function () {
             resourceTags: {
                 copyOnly: function(filename, mid){
 
-                    let balekNodeModules = /^balek-modules\/node_modules\//,
-                        codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/;
+                    let balekNodeModules = /^balek-modules\/node_modules\/|^balek-modules\/build\//,
+                        codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/,
+                        quill = /blots\/text.js/;
 
 
-                    return codeMirror.test(mid) || codeMirror.test(filename) || balekNodeModules.test(mid);
+                    return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid);
                 }
 
                 //todo
