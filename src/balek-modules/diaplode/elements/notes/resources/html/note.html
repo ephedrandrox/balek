@@ -1,9 +1,6 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus,onblur:onBlur,ondblclick:_onDoubleClick" tabindex="1">
-    <div class="${baseClass}MainGridDiv" data-dojo-attach-point='_mainGridDivNode'>
-        <div class="${baseClass}ViewGridDiv">
-            <div class="${baseClass}ViewDiv" data-dojo-attach-point='_viewNode' ></div>
-        </div>
-        <div class="${baseClass}ToolBarGridDiv">
+    <div class="${baseClass}MainFlexDiv" data-dojo-attach-point='_mainFlexDivNode'>
+        <div class="${baseClass}ToolBarFlexDiv">
             <div class="${baseClass}ToolBarDiv" data-dojo-attach-point='_toolbarNode' style="padding: 3px; border: none;">
                 <button class="ql-clean"></button>
                 <span >
@@ -44,5 +41,9 @@
                 </span>
             </div>
         </div>
+        <div class="${baseClass}ViewFlexDiv">
+            <div class="${baseClass}ViewDiv" data-dojo-attach-point='_viewNode' ></div>
+        </div>
+
     </div>
 </div>

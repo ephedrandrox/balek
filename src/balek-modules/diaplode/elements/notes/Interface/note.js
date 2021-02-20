@@ -68,7 +68,7 @@ define(['dojo/_base/declare',
 
             _viewNode: null,
 
-            _mainGridDivNode: null,
+            _mainFlexDivNode: null,
             _toolbarNode: null,
 
             _quillEditor: null,
