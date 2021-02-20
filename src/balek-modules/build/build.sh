@@ -30,8 +30,8 @@ npm install --prefix build/quill/
 npm run build --prefix build/quill/
 #copy main javascript library
 cp  build/quill/dist/quill.js lib/quill/dist/quill.js
-cp  build/quill/dist/quill.core.css lib/quill/dist/quill.core.css
-cp  build/quill/dist/quill.snow.css lib/quill/dist/quill.snow.css
+cp  build/quill/node_modules/quill/dist/quill.core.css lib/quill/dist/quill.core.css
+cp  build/quill/node_modules/quill/dist/quill.snow.css lib/quill/dist/quill.snow.css
 
 
 
