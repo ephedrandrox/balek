@@ -138,7 +138,9 @@ define(['dojo/_base/declare',
                                    _containedInterfaceHandle:this._containedInterfaceHandle,
                                   _containerState: this._containerState,
                                    setContainerState: lang.hitch(this, this.setContainerState),
-                                   workspaceManagerCommands: this.workspaceManagerCommands
+                                   workspaceManagerCommands: this.workspaceManagerCommands,
+                                   containerCommands: {hide: lang.hitch(this,this.hide),
+                                                      show: lang.hitch(this,this.show)}
 
                                });
 

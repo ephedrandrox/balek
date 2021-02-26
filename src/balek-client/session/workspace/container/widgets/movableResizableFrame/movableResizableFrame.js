@@ -56,9 +56,15 @@ define(['dojo/_base/declare',
             baseClass: "balekWorkspaceContainerWidgetMovableResizableFrame",
 
 
-            _topBarNode: null,
+            workspaceManagerCommands: null,
+            containerCommands: null,
+
+            _topBarBackgroundNode: null,
             _bottomBarNode: null,
             _contentNode: null,
+
+            _topBarCloseNode: null,
+            _topBarDockNode: null,
 
 
             _dnd: null,
@@ -102,7 +108,7 @@ define(['dojo/_base/declare',
 
                 //topic.publish("addToCurrentWorkspace", this);
 
-                this._dnd = new Moveable(this.domNode, {handle: this._topBarNode});
+                this._dnd = new Moveable(this.domNode, {handle: this._topBarBackgroundNode});
 
 
 
@@ -137,7 +143,28 @@ define(['dojo/_base/declare',
             onWidgetResizeStop: function (){
                 this.updateMovableContainerElementBox();
             },
+            _onDockNodeMouseDown: function(mouseEvent){
 
+                console.log("Mousedown", mouseEvent);
+                mouseEvent.stopPropagation();
+
+                if(this.containerCommands !== null
+                && this.containerCommands.hide && typeof this.containerCommands.hide === "function" ){
+                    console.log("Mousedown", this.containerCommands.hide);
+
+                    this.containerCommands.hide();
+
+                }else {
+                    console.log("Mousedown", this.containerCommands);
+
+                }
+
+            },
+            _onCloseNodeMouseDown: function(mouseEvent){
+                console.log("Mousedown",    mouseEvent);
+
+                mouseEvent.stopPropagation();
+            },
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
