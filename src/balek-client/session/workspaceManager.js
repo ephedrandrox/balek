@@ -50,6 +50,8 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('getWorkspaceContainers' , lang.hitch(this, this.getWorkspaceContainers));
 
                 this._commandsForInterface.setCommand('getContainer' , lang.hitch(this, this.getContainer));
+                this._commandsForInterface.setCommand('unloadContainer' , lang.hitch(this, this.unloadContainer));
+
 
 
                 this._commandsForInterface.setCommand('addToWorkspaceContainer' , lang.hitch(this, this.addToWorkspaceContainer));
@@ -134,6 +136,28 @@ define(['dojo/_base/declare',
             },
             getContainer: function(containerKey){
                 return this.containerManager.getContainer(containerKey);
+            },
+            unloadContainer: function(containerKey){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    //todo check that our keys exist
+                    topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                        workspaceMessage: {
+                            sessionKey: this._sessionKey, messageData: {
+                                unloadWorkspaceContainer: {
+                                    containerKey: containerKey
+                                }
+                            }
+                        }
+                    }, lang.hitch(this, function (returnMessage) {
+                        //   console.log("containerRequest", returnMessage);
+                        if (returnMessage.error) {
+                            Reject(returnMessage.error);
+                        } else{
+                            Resolve(returnMessage);
+                        }
+                    }));
+                })) ;
+
             },
             getWorkspaceContainers: function(workspaceKey){
 

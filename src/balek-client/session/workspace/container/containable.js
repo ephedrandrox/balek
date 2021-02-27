@@ -96,12 +96,12 @@ define([ 	'dojo/_base/declare',
             },
             hide: function()
             {
-                if(this._assignedContainer !== null){
+                if(this._assignedContainer !== null && this._assignedContainer.hide){
                     this._assignedContainer.hide();
                 }
             },
             show: function(){
-                if(this._assignedContainer !== null){
+                if(this._assignedContainer !== null && this._assignedContainer.show){
                     this._assignedContainer.show();
                 }
             },

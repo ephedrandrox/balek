@@ -146,12 +146,27 @@ define(['dojo/_base/declare',
 
                                });
 
+
+
                                let isDocked = this._containerState.get("isDocked");
 
                                if(isDocked === true)
                                {
                                    this.dockContainer();
                                }
+
+                                let isVisible = this._containerState.get("isVisible");
+                                console.log("Mousedown",this, isVisible, isDocked, this._containerState);
+
+                                if(isVisible === true )
+                                {
+                                    this.show();
+                                }
+                                if(isVisible === false )
+                                {
+                                     this.hide();
+                                }
+
 
                                let activeWorkspace = this.workspaceManagerCommands.getActiveWorkspace();
                                let activeOverlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
@@ -235,28 +250,46 @@ define(['dojo/_base/declare',
             },
             onContainerStateUpdateReceived: function(containerState){
                 console.log("Mousedown", containerState);
+                let keysUpdated = false;
                 if(containerState.instanceKey){
                     this._interfaceKeys.instanceKey = containerState.instanceKey;
-                    this.onInterfaceKeyUpdate();
+                    keysUpdated = true;
                 }
                 if(containerState.componentKey){
                     this._interfaceKeys.componentKey = containerState.componentKey;
-                    this.onInterfaceKeyUpdate();
+                    keysUpdated = true;
                 }
                 if(containerState.containerWidgetPath){
-                   this._containerState.set("containerWidgetPath", containerState.containerWidgetPath);
+                    console.log("Mousedown", "in seting");
+
+                    this._containerState.set("containerWidgetPath", containerState.containerWidgetPath);
                 }
                 if(containerState.movableContainerElementBox){
+                    console.log("Mousedown", "in seting");
+
                     this._containerState.set("movableContainerElementBox", containerState.movableContainerElementBox);
                 }
-                if(containerState.isVisible != undefined){
+
+                if(containerState.isVisible !== undefined){
+
                     this._containerState.set("isVisible", containerState.isVisible);
+
+
                 }
 
-                if(containerState.isDocked != undefined){
+                if(containerState.isDocked !== undefined){
+
                     this._containerState.set("isDocked", containerState.isDocked);
                 }
 
+                if(containerState.unloading !== undefined){
+                    this._containerState.set("unloading", containerState.unloading);
+                }
+
+
+                if(keysUpdated){
+                    this.onInterfaceKeyUpdate();
+                }
             },
             onWorkspaceContainerInterfaceStateUpdate: function(name, oldState, newState)
             {
@@ -278,6 +311,8 @@ define(['dojo/_base/declare',
                    this.refreshContainerWidget();
                 }
                 if(name === 'isDocked' ){
+                    console.log("Mousedown", name, oldState, newState);
+
                     if(newState === true)
                     {
                         this.dockContainer();
@@ -285,6 +320,19 @@ define(['dojo/_base/declare',
                     {
                         this.undockContainer();
                     }
+                }
+                if(name === 'isVisible' ){
+                    if(newState === true)
+                    {
+                        this.show();
+                    }else
+                    {
+                        this.hide();
+                    }
+                }
+                if(name === 'unloading' ){
+                   this.unload();
+
                 }
 
                 //if instance and component Keyare up then get interface we can load our widget?
@@ -303,33 +351,6 @@ define(['dojo/_base/declare',
                     this.resizeTo(Math.round(elementBox.w), Math.round(elementBox.h));
                 }
             },
-                /*       makeWorkspaceContainer: function(){
-                           console.log("Making Workspace Container");
-
-
-
-                           require([ 'balek-client/session/workspace/ui/containers/movable/movableContainerWidget'],
-                               lang.hitch(this, function (workspaceContainerWidget) {
-                                   this._workspaceContainerWidget = new workspaceContainerWidget({
-                                       _instanceKey: this._instanceKey,
-                                       _componentKey: this._componentKey,
-                                       _contentNodeToContain: this.domNode,
-                                       _workspaceContainer: this,
-                                       _onMoveStop:lang.hitch(this, this.onMoved),
-                                       _onResizeStop:lang.hitch(this, this.onResized)});
-
-
-
-                                   if(this._diaplodeWorkspaceContainerState){
-                                       let movableState =  this._diaplodeWorkspaceContainerState.get("elementBox");
-                                       this.updateWidgetWithElementBox(movableState);
-                                   }
-
-                            }));
-
-
-
-            },*/
             moveTo: function(t,l){
                 //todo check that we are moving somewhere on screen
                 if(this._workspaceContainerWidget.domNode){
@@ -390,26 +411,30 @@ define(['dojo/_base/declare',
             },
             dockContainer: function(){
                 let domNode =this.getWorkspaceDomNode();
-                this.checkCachedStyle();
+                if(domNode) {
+                    this.checkCachedStyle();
 
-                if(domNode){
-                    domStyle.set(domNode, {"display":  "none"});
+                    if (domNode) {
+                        domStyle.set(domNode, {"display": "none"});
+                    }
                 }
             },
             undockContainer: function(){
                 let domNode =this.getWorkspaceDomNode();
-                this.checkCachedStyle();
+                if(domNode) {
 
-                if(domNode){
-                    domStyle.set(domNode, {"display":  this._cachedDisplayStyle});
+
+                    this.checkCachedStyle();
+
+                    if (domNode) {
+                        domStyle.set(domNode, {"display": this._cachedDisplayStyle});
+                    }
                 }
             },
             unloadContainer: function(){
-                console.log("Mousedown", this);
 
                 if(this.workspaceManagerCommands !== null
                     && this.workspaceManagerCommands.unloadContainer && typeof this.workspaceManagerCommands.unloadContainer === "function" ){
-                    console.log("Mousedown", this.workspaceManagerCommands.unloadContainer);
 
                     let domNode =this.getWorkspaceDomNode();
 
@@ -418,43 +443,55 @@ define(['dojo/_base/declare',
                     }
 
                     this.workspaceManagerCommands.unloadContainer(this._containerKey).then(lang.hitch(this, function(Result){
+                       //unloaded
 
                     })).catch(function(errorResult){
-                        alert("could not unload container!");
+                        alert("sent command but could not unload container!");
                         console.log(errorResult);
                     });
 
                 }else {
                     alert("could not unload container!");
-                    console.log("Mousedown", this.workspaceManagerCommands);
                 }
                 //here we should remove container and unload contained
             },
-            /*
+
             hide: function(){
                 let domNode =this.getWorkspaceDomNode();
-                if(domNode){
-                    domStyle.set(domNode, {"display":  "none"});
-                }
+                if(domNode) {
+                    this.checkCachedStyle();
+
+                    if (domNode) {
+                        domStyle.set(domNode, {"display": "none"});
+                    }
 
 
-                let currentState = this._containerState.get("isVisible");
-                if(currentState !== false){
-                    this.setContainerState("isVisible", false);
+                    let currentState = this._containerState.get("isVisible");
+                    if (currentState !== false) {
+                        this.setContainerState("isVisible", false);
+                    }
                 }
             },
             show:function(){
+                let currentDockedState = this._containerState.get("isDocked");
+
                 let domNode =this.getWorkspaceDomNode();
-                if(domNode){
-                    domStyle.set(domNode, {"display":  "inline-block"});
+
+                if(domNode && currentDockedState === false){
+                    this.checkCachedStyle();
+
+                    if(domNode){
+                        domStyle.set(domNode, {"display":  this._cachedDisplayStyle});
+                    }
+                    let currentState = this._containerState.get("isVisible");
+                    if(currentState !== true){
+                        this.setContainerState("isVisible", true);
+                    }
                 }
-                let currentState = this._containerState.get("isVisible");
-                if(currentState !== true){
-                    this.setContainerState("isVisible", true);
-                }
+
             },
 
-             */
+
             getWorkspaceDomNode: function () {
                // console.log("getting Dom Node");
                 if(this._workspaceContainerWidget && this._workspaceContainerWidget.domNode)
@@ -466,5 +503,11 @@ define(['dojo/_base/declare',
                     return null;
                 }
             },
+            unload: function()
+            {
+                // workspace Manager on server should see container is removed and let client know
+                //instead of receiving state here, it should be sent through the session manager
+                this._workspaceContainerWidget.unload();
+            }
         });
     });

@@ -18,3 +18,5 @@ builds/diaplode/mongoDB/
 src/balek-modules/node-modules
 /builds/diaplode/docker/openssh/config/
 /src/balek-modules/lib/
+
+builds/diaplode/config

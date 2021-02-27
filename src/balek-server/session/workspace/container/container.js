@@ -1,9 +1,8 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
-        'dojo/topic',
         'dojo/Stateful',
     ],
-    function (declare, lang, topic, Stateful) {
+    function (declare, lang,  Stateful) {
         return declare("balekServerWorkspaceManagerContainerManagerContainer", null, {
             _instanceKey: null,
             _componentKey: null,
@@ -43,7 +42,7 @@ define(['dojo/_base/declare',
 
             },
             onContainerStateChange: function(name, oldState, newState){
-               // console.log(name, oldState, newState);
+                console.log(name, oldState, newState);
                 if(this._interfaceConnectionCallback != null)
                 {
                     let interfaceStateObject = {[String(name)]: newState};
@@ -54,6 +53,7 @@ define(['dojo/_base/declare',
             connectWorkspaceInterface(interfaceCallback){
 
                 this._interfaceConnectionCallback = interfaceCallback;
+                console.log("Mousedown", {stateUpdate:{containerState: JSON.stringify(this._containerState)}});
 
 
                 interfaceCallback({stateUpdate:{containerState: JSON.stringify(this._containerState)}});
@@ -63,7 +63,7 @@ define(['dojo/_base/declare',
             },
             connectWorkspaceContainerInterface(interfaceCallback){
 
-               // console.log("ConnectContainer", connectWorkspaceContainerInterfaceMessage);
+                console.log("Mousedown", {stateUpdate:{containerState: JSON.stringify(this._containerState)}});
 
                 this._interfaceConnectionCallback = interfaceCallback;
 
@@ -88,11 +88,34 @@ define(['dojo/_base/declare',
                     let containerState = setStateMessage.containerState;
 
                     for (const name in containerState) {
-                       // console.log("containerState", name, containerState[name]);
+                        console.log("containerState", name, containerState[name]);
 
                         this._containerState.set(name, containerState[name]);
                     }
                 }
+            },
+            unload: function()
+            {
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+
+                    console.log(this);
+
+
+
+                    this.containerStateWatchHandle.unwatch();
+                    this._containerState.set("unloading", true);
+                    if(this._interfaceConnectionCallback !== null){
+                        this._interfaceConnectionCallback({stateUpdate:{containerState: JSON.stringify({
+                                    unloading: true
+                                })}})
+                    }
+                    this.containerStateWatchHandle.remove();
+                    delete this._containerState;
+                    this._containerState = null;
+
+
+                    Resolve({success: "Container " + this._containerKey + " unloaded" });
+                }));
             }
         });
     });

@@ -60,6 +60,27 @@ define([ 	'dojo/_base/declare',
 
                 //todo this creates the container which finds its way to the
             },
+            unloadContainer: function(containerKey){
+
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    if(this._containers[containerKey])
+                    {
+                        const containerToUnload = this._containers[containerKey];
+                        console.log(containerToUnload.unload);
+                        containerToUnload.unload().then(
+                          lang.hitch(this,  function(Result){
+                              this._containers[containerKey] = null;
+
+                              Resolve(Result);
+                            })
+                        ).catch(function(errorResult){
+                            Reject(errorResult);
+                        });
+                    }else {
+                        Reject({error: "No container with key" + containerKey})
+                    }
+                }));
+            },
             connectWorkspaceContainerInterface: function(connectWorkspaceContainerInterfaceMessage, messageReplyCallback) {
 
                 if(connectWorkspaceContainerInterfaceMessage.containerKey)

@@ -175,6 +175,8 @@ define([ 	'dojo/_base/declare',
 
                     }else if(workspaceMessage.messageData.addToWorkspaceContainer){
                         this.addToWorkspaceContainerRequestReceived(workspaceMessage.messageData.addToWorkspaceContainer, messageReplyCallback);
+                    }else if(workspaceMessage.messageData.unloadWorkspaceContainer){
+                        this.unloadWorkspaceContainerRequestReceived(workspaceMessage.messageData.unloadWorkspaceContainer, messageReplyCallback);
                     }else if(workspaceMessage.messageData.changeActiveWorkspace){
                         console.log("changing active Workspace" ,workspaceMessage);
 
@@ -253,6 +255,23 @@ define([ 	'dojo/_base/declare',
                 }
 
 
+            },
+            unloadWorkspaceContainerRequestReceived: function(unloadWorkspaceContainerRequest,messageReplyCallback ){
+
+
+                if(unloadWorkspaceContainerRequest.containerKey){
+                    const containerKeyToUnload = unloadWorkspaceContainerRequest.containerKey;
+                    this.containerManager.unloadContainer(containerKeyToUnload).then(function(Result){
+                        messageReplyCallback(Result);
+                    }).catch(function(errorResult){
+                        messageReplyCallback( errorResult);
+                    });
+                }else {
+                    messageReplyCallback({
+                        error: "Server Session Workspace Manager: no container key sent to unload",
+                        workspaceKey: unloadWorkspaceContainerRequest.containerKey
+                    });
+                }
             },
             addToWorkspaceRequestReceived: function(addToWorkspaceRequest, messageReplyCallback){
               //  console.log("addToWorkspaceRequestReceived manager-", addToWorkspaceRequest);
