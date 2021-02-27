@@ -32,7 +32,9 @@ define(['dojo/_base/declare',
                     instanceKey: this._instanceKey,
                     componentKey: this._componentKey,
                     containerWidgetPath: this._containerWidgetPath,
-                    isVisible: true
+                    isVisible: true,
+                    isDocked: false
+
                 });
 
                 this.containerStateWatchHandle = this._containerState.watch( lang.hitch(this, this.onContainerStateChange));

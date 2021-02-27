@@ -149,14 +149,13 @@ define(['dojo/_base/declare',
                 mouseEvent.stopPropagation();
 
                 if(this.containerCommands !== null
-                && this.containerCommands.hide && typeof this.containerCommands.hide === "function" ){
-                    console.log("Mousedown", this.containerCommands.hide);
+                && this.containerCommands.setDocked && typeof this.containerCommands.setDocked === "function" ){
+                    console.log("Mousedown", this.containerCommands.setDocked);
 
-                    this.containerCommands.hide();
+                    this.containerCommands.setDocked();
 
                 }else {
                     console.log("Mousedown", this.containerCommands);
-
                 }
 
             },
@@ -164,6 +163,16 @@ define(['dojo/_base/declare',
                 console.log("Mousedown",    mouseEvent);
 
                 mouseEvent.stopPropagation();
+
+                if(this.containerCommands !== null
+                    && this.containerCommands.unloadContainer && typeof this.containerCommands.unloadContainer === "function" ){
+                    console.log("Mousedown", this.containerCommands.unloadContainer);
+
+                    this.containerCommands.unloadContainer();
+
+                }else {
+                    console.log("Mousedown", this.containerCommands);
+                }
             },
             //##########################################################################################################
             //UI Functions Section
