@@ -1,11 +1,12 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'dojo/Stateful',
         'balek-client/session/workspace/container/container',
         'balek-client/session/workspace/container/containables',
 
     ],
-    function (declare, lang, topic,  balekWorkspaceContainer, balekWorkspaceContainables  ) {
+    function (declare, lang, topic, Stateful, balekWorkspaceContainer, balekWorkspaceContainables  ) {
 
         return declare( "balekClientWorkspaceManagerContainerManager",null, {
             _containers: null,
@@ -14,6 +15,9 @@ define([ 	'dojo/_base/declare',
 
             _containables: null,
 
+            _availableContainersState: null,
+            _containerManagerState: null,
+
             constructor: function (args) {
 
 
@@ -21,8 +25,90 @@ define([ 	'dojo/_base/declare',
 
                 console.log("Initializing Balek Workspace Manager Container Manager Client...");
 
+
+                let containerManagerState = declare([Stateful], {
+
+                });
+                this._containerManagerState = new containerManagerState({
+
+                });
+
+                this._containerManagerState.set("status", "ready");
+                let availableContainersState = declare([Stateful], {
+
+                });
+                this._availableContainersState = new availableContainersState({
+
+                });
+
+
+
                 this._containers = {};
                 this._containables = new balekWorkspaceContainables();
+
+
+                this.connectToInstance();
+            },
+            connectToInstance: function () {
+
+                topic.publish("sendBalekProtocolMessageWithReplyCallback", {
+                    workspaceMessage: {
+                        sessionKey: this._sessionKey,
+                        messageData: {
+                            connectWorkspaceContainerManagerInterface: {
+                                sessionKey: this._sessionKey
+                            }
+                        }
+                    }
+                }, lang.hitch(this, this.onContainerManagerInstanceStateChange));
+
+            },
+            onContainerManagerInstanceStateChange: function(stateChangeUpdate){
+
+                if(stateChangeUpdate.error)
+                {
+                    console.log("Workspace State connect error",stateChangeUpdate );
+                }
+
+                if(stateChangeUpdate.availableContainersState)
+                {
+                    try{
+                        console.log("AAA", name, stateChangeUpdate.availableContainersState);
+
+                        let availableContainersState = JSON.parse(stateChangeUpdate.availableContainersState);
+
+                        console.log("AAA", name, availableContainersState);
+
+                        for (const name in availableContainersState)
+                        {
+                            this._availableContainersState.set(name, availableContainersState[name]);
+                            console.log("AAA", name, availableContainersState[name]);
+
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
+                }
+                if(stateChangeUpdate.containerManagerState)
+                {
+                    try{
+                        let containerManagerState = JSON.parse(stateChangeUpdate.containerManagerState);
+                        for (const name in containerManagerState)
+                        {
+                            this._containerManagerState.set(name, containerManagerState[name]);
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
+                }
+            },
+            getContainerManagerState: function()
+            {
+                return this._containerManagerState;
+            },
+            getAvailableContainersState: function()
+            {
+                return this._availableContainersState;
 
             },
             getContainableInterface: function(containableInterfaceKeys)
@@ -90,6 +176,8 @@ define([ 	'dojo/_base/declare',
                     _containerKey: containerKey,
                    }  );
 
+
+                this._availableContainersState.set(containerKey,this._containers[containerKey] );
 
                 return this._containers[containerKey];
 

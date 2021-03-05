@@ -74,7 +74,6 @@ define(['dojo/_base/declare',
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
 
 
-
                 this.connectToContainerInstance();
 
 
@@ -397,15 +396,30 @@ define(['dojo/_base/declare',
                         this.setContainerState("isDocked", true);
                     }
                 }
+                else if( isDocked === false){
+                    if(domNode){
+                        domStyle.set(domNode, {"opacity":  ".5"});
+                    }
 
+                    let currentState = this._containerState.get("isDocked");
+                    if(currentState !== false){
+                        this.setContainerState("isDocked", false);
+                    }
+                }
+
+            },
+            getState: function(){
+              return this._containerState;
             },
             checkCachedStyle: function()
             {
                 let domNode =this.getWorkspaceDomNode();
 
                 let displayStyle= domStyle.get(domNode, "display");
+                console.log(this._cachedDisplayStyle, displayStyle);
 
-                if(this._cachedDisplayStyle === null && displayStyle !== "none" && displayStyle !== this._cachedDisplayStyle){
+
+                if(displayStyle !== "none" && displayStyle !== this._cachedDisplayStyle){
                     this._cachedDisplayStyle = displayStyle;
                 }
             },
@@ -423,12 +437,15 @@ define(['dojo/_base/declare',
                 let domNode =this.getWorkspaceDomNode();
                 if(domNode) {
 
-
                     this.checkCachedStyle();
-
+                    console.log(this._cachedDisplayStyle);
                     if (domNode) {
+                        domStyle.set(domNode, {"opacity":  "1"});
+
                         domStyle.set(domNode, {"display": this._cachedDisplayStyle});
                     }
+                }else {
+
                 }
             },
             unloadContainer: function(){
@@ -501,6 +518,30 @@ define(['dojo/_base/declare',
                 else
                 {
                     return null;
+                }
+            },
+            isDocked: function(){
+                let isDocked = this._containerState.get("isDocked");
+                return isDocked;
+            },
+            isInActiveWorkspace: function(){
+                let activeWorkspace = this.workspaceManagerCommands.getWorkspaceManagerState().get("activeWorkspace");
+
+                if(this.workspaceManagerCommands.isContainerInWorkspace(this._containerKey, activeWorkspace)){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            },
+            isInOverlayWorkspace: function(){
+                let overlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
+
+                if(overlayWorkspace.getContainer(this._containerKey)){
+                    return true;
+                }
+                else{
+                    return false;
                 }
             },
             unload: function()

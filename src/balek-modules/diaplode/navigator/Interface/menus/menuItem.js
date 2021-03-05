@@ -105,7 +105,11 @@ define(['dojo/_base/declare',
 
             _onClick: function(){
                 //console.log(this._menuCompanion, this._itemKey);
-                this._menuCompanion.load(this._itemKey);
+                this._menuCompanion.load(this._itemKey).then(function(Result){
+                    console.log("Menu item load result", Result);
+                    //todo decide what to do here, more container to this workspace?
+
+                }).catch(function(errorResult){});
             },
             _onFocus: function () {
                 //todo make it do something

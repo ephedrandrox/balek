@@ -1,14 +1,18 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
+        'dojo/Stateful',
         'dojo/topic',
         'dojo/node!crypto',
         'balek-server/session/workspace/container/container',
     ],
-    function (declare, lang, topic, crypto, balekWorkspaceContainer  ) {
+    function (declare,  lang, Stateful, topic, crypto, balekWorkspaceContainer  ) {
 
         return declare( "balekServerWorkspaceManagerContainerManager",null, {
             _containers: null,
+            _interfaceCallback: null,
 
+            _availableContainersState: null,
+            _availableContainersStateWatchHandle: null,
 
 
             constructor: function (args) {
@@ -20,6 +24,17 @@ define([ 	'dojo/_base/declare',
                 this._activeWorkspace = null;
                 this._containers = {};
 
+
+                let availableContainersState = declare([Stateful], {});
+                this._availableContainersState = new availableContainersState({});
+                this._availableContainersStateWatchHandle = this._availableContainersState.watch( lang.hitch(this, this.onAvailableContainersStateChange));
+
+
+            },
+            onAvailableContainersStateChange: function(name, oldState, newState){
+                if(this._interfaceCallback !== null){
+                    this._interfaceCallback({containerManagerState: JSON.stringify({[name.toString()]:  newState })});
+                }
             },
             getUniqueContainerKey: function()
             {
@@ -56,9 +71,16 @@ define([ 	'dojo/_base/declare',
 
              //   debugger;
 
+                let containerInfo ={
+                    containerKey: newContainerKey,
+                    containerName: "noName"
+                    //todo add getName to container and use here
+                    //todo could also share availability state in info
+                };
+
+                this._availableContainersState.set(newContainerKey, containerInfo );
                 return newContainerKey;
 
-                //todo this creates the container which finds its way to the
             },
             unloadContainer: function(containerKey){
 
@@ -69,8 +91,9 @@ define([ 	'dojo/_base/declare',
                         console.log(containerToUnload.unload);
                         containerToUnload.unload().then(
                           lang.hitch(this,  function(Result){
+                              this.workspaceManager.removeContainerFromAllWorkspaces(containerKey);
                               this._containers[containerKey] = null;
-
+                              this._availableContainersState.set(containerKey, "gone");
                               Resolve(Result);
                             })
                         ).catch(function(errorResult){
@@ -80,6 +103,10 @@ define([ 	'dojo/_base/declare',
                         Reject({error: "No container with key" + containerKey})
                     }
                 }));
+            },
+            connectWorkspaceContainerManagerInterface: function(connectWorkspaceContainerInterfaceMessage, messageReplyCallback){
+                this._interfaceCallback = messageReplyCallback;
+                messageReplyCallback({availableContainersState: JSON.stringify(this._availableContainersState)});
             },
             connectWorkspaceContainerInterface: function(connectWorkspaceContainerInterfaceMessage, messageReplyCallback) {
 

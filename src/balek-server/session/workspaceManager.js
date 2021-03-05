@@ -33,7 +33,7 @@ define([ 	'dojo/_base/declare',
                 this._workspacesStateWatchHandles = {};
                 //todo make sure we stop this on session unload
 
-                this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey});
+                this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey, workspaceManager: this});
 
                 console.log("Initializing Balek Workspace Manager server...");
                 this._activeWorkspace = null;
@@ -195,6 +195,9 @@ define([ 	'dojo/_base/declare',
                     }else if(workspaceMessage.messageData.connectWorkspaceInterface){
                         //      console.log("connecting Workspace Interface" ,workspaceMessage);
                         this.connectWorkspaceInterface(workspaceMessage.messageData.connectWorkspaceInterface, messageReplyCallback);
+                    }else if(workspaceMessage.messageData.connectWorkspaceContainerManagerInterface){
+                        //  console.log("connecting Workspace Container Manager Interface" ,workspaceMessage);
+                        this.containerManager.connectWorkspaceContainerManagerInterface(workspaceMessage.messageData.connectWorkspaceContainerManagerInterface, messageReplyCallback);
                     }else if(workspaceMessage.messageData.connectWorkspaceContainerInterface){
                       //  console.log("connecting Workspace Container Interface" ,workspaceMessage);
                         this.containerManager.connectWorkspaceContainerInterface(workspaceMessage.messageData.connectWorkspaceContainerInterface, messageReplyCallback);
@@ -223,6 +226,13 @@ define([ 	'dojo/_base/declare',
                 }else
                 {
                     messageReplyCallback({error: "connectWorkspaceInterface Message did not contain a workspace Key"});
+                }
+            },
+            removeContainerFromAllWorkspaces: function(containerKey)
+            {
+               for(const workspace in this._workspaces)
+                {
+                    this._workspaces[workspace].removeContainer(containerKey);
                 }
             },
             newWorkspaceRequest:function(newWorkspaceRequest, messageReplyCallback){

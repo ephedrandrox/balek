@@ -72,6 +72,18 @@ define(['dojo/_base/declare',
             getWorkspaceState(){
                 return this._workspaceState;
             },
+            getContainer(containerKey){
+                return this._containers[containerKey];
+            },
+            removeContainer(containerKey){
+                let containerToBeRemoved = this.getContainer(containerKey);
+
+                if(containerToBeRemoved !== undefined || containerToBeRemoved !== null )
+                {
+                    this._containers[containerKey] = null;
+                    this._containersState.set(containerKey, undefined);
+                }
+            },
             onWorkspaceStateChange: function(name, oldState, newState){
 
                 if(String(name) === "name")
@@ -88,7 +100,10 @@ define(['dojo/_base/declare',
                 if(this._interfaceConnectionCallback != null)
                 {
                     let interfaceStateObject = {[String(name)]: newState};
-                    this._interfaceConnectionCallback({containersState: JSON.stringify(interfaceStateObject)});
+                    //send undefined as string so client knows to remove it from workspace
+                    let interfaceJSONObjectString = JSON.stringify(interfaceStateObject, function(k, v) { return v === undefined ? "undefined" : v; });
+                    this._interfaceConnectionCallback({containersState: interfaceJSONObjectString});
+
                 }
             },
             addToWorkspaceRequestReceived: function (addToWorkspaceRequest, messageReplyCallback) {

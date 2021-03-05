@@ -46,12 +46,16 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('getWorkspaceManagerState' , lang.hitch(this, this.getWorkspaceManagerState));
                 this._commandsForInterface.setCommand('getWorkspaceState' , lang.hitch(this, this.getWorkspaceState));
 
+                this._commandsForInterface.setCommand('getAvailableContainersState' , lang.hitch(this, this.getAvailableContainersState));
+                this._commandsForInterface.setCommand('getContainerManagerState' , lang.hitch(this, this.getContainerManagerState));
+
                 this._commandsForInterface.setCommand('getActiveWorkspace' , lang.hitch(this, this.getActiveWorkspace));
                 this._commandsForInterface.setCommand('getWorkspaceContainers' , lang.hitch(this, this.getWorkspaceContainers));
 
                 this._commandsForInterface.setCommand('getContainer' , lang.hitch(this, this.getContainer));
                 this._commandsForInterface.setCommand('unloadContainer' , lang.hitch(this, this.unloadContainer));
 
+                this._commandsForInterface.setCommand('isContainerInWorkspace' , lang.hitch(this, this.isContainerInWorkspace));
 
 
                 this._commandsForInterface.setCommand('addToWorkspaceContainer' , lang.hitch(this, this.addToWorkspaceContainer));
@@ -159,6 +163,17 @@ define(['dojo/_base/declare',
                 })) ;
 
             },
+            isContainerInWorkspace: function(containerKey, workspaceKey){
+                let workspace = this._workspaces[workspaceKey];
+
+                let workspaceContainer = workspace.getContainer(containerKey);
+
+                if(workspaceContainer){
+                    return true;
+                }else {
+                    return false;
+                }
+            },
             getWorkspaceContainers: function(workspaceKey){
 
               let workspace = this._workspaces[workspaceKey];
@@ -213,7 +228,7 @@ define(['dojo/_base/declare',
                     topic.publish("addToMainContentLayer", workspaces[newWorkspaceKey].domNode );
                    // this.addToMainContentLayer(workspaces[newWorkspaceKey].domNode);
                 } else {
-
+                    console.log("AAA", newWorkspaceKey, workspaces );
                     domConstruct.place(workspaces[newWorkspaceKey].domNode, workspaces[oldWorkspaceKey].domNode, "replace");
                 }
                 workspaces[newWorkspaceKey].onActivated();
@@ -330,6 +345,12 @@ define(['dojo/_base/declare',
                     return null;
                 }
 
+            },
+            getAvailableContainersState: function(){
+                return this.containerManager.getAvailableContainersState();
+            },
+            getContainerManagerState: function(){
+                return this.containerManager.getContainerManagerState();
             },
             addContainerToWorkspace: function(containerKey, workspaceKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){

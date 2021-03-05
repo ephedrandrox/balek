@@ -35,6 +35,7 @@ define(['dojo/_base/declare',
         "balek-modules/diaplode/ui/containers/movable",  //todo remove
 
         "balek-modules/diaplode/navigator/Interface/menus/workspacesMenu/navigatorMainWidget",
+        "balek-modules/diaplode/navigator/Interface/menus/containersMenu/navigatorMainWidget",
 
 
 
@@ -67,6 +68,7 @@ define(['dojo/_base/declare',
               getUserInput,
               diaplodeMovableContainer,
               workspacesMenu,
+              containersMenu,
               _syncedCommanderInterface) {
 
         return declare("moduleDiaplodeNavigatorInterface", [_WidgetBase, _TemplatedMixin,  _syncedCommanderInterface, diaplodeMovableContainer], {
@@ -87,7 +89,7 @@ define(['dojo/_base/declare',
 
 
 
-
+             _containersMenu: null,
              _workspacesMenu: null,
 
             //##########################################################################################################
@@ -206,6 +208,16 @@ define(['dojo/_base/declare',
                     }));
                 }
 
+
+                this._containersMenu = new containersMenu({_targetNode: this._mainWorkspacesDiv});
+
+                if(this._containersMenu.domNode){
+                    domConstruct.place(this._containersMenu.domNode, this._mainWorkspacesDiv);
+                }else {
+                    aspect.after(this._containersMenu, "postCreate", lang.hitch(this, function(){
+                        domConstruct.place(this._containersMenu.domNode, this._mainWorkspacesDiv);
+                    }));
+                }
 
             },
 

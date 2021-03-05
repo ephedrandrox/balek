@@ -65,6 +65,9 @@ define(['dojo/_base/declare',
             getContainers: function(){
                 return this._workspaceContainers;
             },
+            getContainer: function(containerKey){
+                return this._workspaceContainers[containerKey];
+            },
             connectToWorkspaceInstanceState: function () {
                 topic.publish("sendBalekProtocolMessageWithReplyCallback", {
                     workspaceMessage: {
@@ -79,7 +82,7 @@ define(['dojo/_base/declare',
             },
 
             onWorkspaceInstanceStateChange: function(stateChangeUpdate){
-                console.log(stateChangeUpdate);
+              //  console.log(stateChangeUpdate);
                 if(stateChangeUpdate.error)
                 {
                     console.log("Workspace State connect error", stateChangeUpdate );
@@ -107,7 +110,13 @@ define(['dojo/_base/declare',
                         for (const name in containersState)
                         {
                             //console.log("containerState", name, containersState[name]);
-                            this._workspaceContainersState.set(name, containersState[name]);
+                            if(containersState[name] === "undefined")
+                            {
+                                this._workspaceContainersState.set(name, undefined);
+
+                            }else {
+                                this._workspaceContainersState.set(name, containersState[name]);
+                            }
                         }
                     }catch(error){
                         console.log(error);
@@ -163,20 +172,23 @@ define(['dojo/_base/declare',
 
                 if(workspaceContainers[containerKey]){
                     let workspaceContainerDomNode =  workspaceContainers[containerKey].getWorkspaceDomNode();
-
-                    if(dom.isDescendant(workspaceContainerDomNode, this.domNode))
-                    {
-                        if(this._activeContainerKey !== containerKey){
+                    if(workspaceContainerDomNode !== null) {
+                        if (dom.isDescendant(workspaceContainerDomNode, this.domNode)) {
+                            if (this._activeContainerKey !== containerKey) {
+                                this.placeAndRefreshContainer(containerKey);
+                            } else {
+                                //Workspace Container already placed and active
+                            }
+                        } else {
                             this.placeAndRefreshContainer(containerKey);
-                        }else {
-                            //Workspace Container already placed and active
                         }
                     }else {
-                        this.placeAndRefreshContainer(containerKey);
+                        console.log("Container Key Exists but no DOMNode", "Should Not See This!", workspaceContainers,containerKey );
+                        alert("Container not removed from server workspace, fix this!");
                     }
 
                 }else {
-                    console.log("Invalid Container Key or already active!", workspaceContainers,containerKey )
+                    console.log("Invalid Container Key or already active!", workspaceContainers,containerKey );
                 }
 
             },
@@ -190,7 +202,6 @@ define(['dojo/_base/declare',
 
                     domConstruct.place(workspaceContainerDomNode, this.domNode);
                     this._activeContainerKey = containerKey;
-                    debugger;
                     workspaceContainers[containerKey].startup();
                 }
 
@@ -217,10 +228,11 @@ define(['dojo/_base/declare',
             },
             onWorkspaceContainersStateUpdate: function (name, oldState, newState) {
               //  console.log(name, oldState, newState);
-                console.log("workspaceUpdate", name );
 
-
-                if(this._workspaceContainers[String(name)] === undefined)
+                if(newState === undefined){
+                    this._workspaceContainers[String(name)] = undefined;
+                   delete this._workspaceContainers[String(name)];
+                } else if(this._workspaceContainers[String(name)] === undefined )
                 {
                     this._workspaceContainers[String(name)] = this.containerManager.getContainer(String(name));
                     console.log("workspaceUpdate", name, this._workspaceContainers );
