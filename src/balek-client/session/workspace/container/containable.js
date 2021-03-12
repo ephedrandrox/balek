@@ -14,13 +14,14 @@ define([ 	'dojo/_base/declare',
             _instanceKey: null,
             _componentKey: null,
 
+
+            _containerName: null,
             _containables: null,
 
             _assignedContainer: null,
 
 
             _workspaceContainableState: null,
-            _workspaceContainableStateWatchHandle: null,
 
             workspaceManagerCommands: null,
             constructor: function (args) {
@@ -59,10 +60,14 @@ define([ 	'dojo/_base/declare',
                     console.log("not enough keys in object to become containable", this._instanceKey, this._componentKey);
                 }
             },
+            setContainerName: function(containerName){
+                this._componentStateSet("workspaceContainable", "containerName", containerName);
+            },
             getContainerKeys: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
 
                     this.getComponentState("workspaceContainable").then(lang.hitch(this, function(workspaceContainableState){
+                        this._workspaceContainableState = workspaceContainableState;
                          let containerKeys = workspaceContainableState.get("containerKeys");
                        //  debugger;
 
@@ -108,7 +113,19 @@ define([ 	'dojo/_base/declare',
             getDomNode: function()
             {
                 return this.domNode;
+            },
+            getWorkspaceContainableState: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    if (this._workspaceContainableState !== null) {
+                        Resolve(this._workspaceContainableState);
+                    } else {
+                        this.getContainerKeys().then(lang.hitch(this, function (Result) {
+                           Resolve(this._workspaceContainableState);
+                        })).catch(lang.hitch(this, function (errorResult) {
+                            Reject(errorResult);
+                        }));
+                    }
+                }));
             }
-
         });
     });

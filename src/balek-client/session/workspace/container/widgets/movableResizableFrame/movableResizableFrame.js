@@ -56,6 +56,10 @@ define(['dojo/_base/declare',
             baseClass: "balekWorkspaceContainerWidgetMovableResizableFrame",
 
 
+            _workspaceContainableState: null,
+
+            _containerName: "",
+
             workspaceManagerCommands: null,
             containerCommands: null,
 
@@ -80,6 +84,16 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
+
+
+                if (this._workspaceContainableState !== null)
+                {
+                    let containerName = this._workspaceContainableState.get("containerName");
+                    if(containerName)
+                    {
+                        this._containerName = containerName;
+                    }
+                }
 
             },
             startup: function(){

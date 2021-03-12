@@ -20,3 +20,5 @@ src/balek-modules/node-modules
 /src/balek-modules/lib/
 
 builds/diaplode/config
+
+lib/dojo-release-src/

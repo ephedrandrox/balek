@@ -128,73 +128,82 @@ define(['dojo/_base/declare',
                     if(containerWidgetPath !== undefined && this._containedInterfaceHandle !== null && this._containedInterfaceHandle.isContainable)
                     {
                         this._containedInterfaceHandle.addContainerKey(this._containerKey);
-                        this._workspaceContainerWidget = "Creating Widget";
 
-                        require(["dojo/ready", containerWidgetPath], lang.hitch(this, function(ready, containerWidget){
-                            ready(lang.hitch(this, function(){
+                        this._containedInterfaceHandle.getWorkspaceContainableState().then(lang.hitch(this, function(workspaceContainableState){
+                            this._workspaceContainerWidget = "Creating Widget";
 
-
-                               this._workspaceContainerWidget = new containerWidget({_sessionKey: this._sessionKey,
-                                   _containerKey: this._containerKey,
-                                   _containedInterfaceHandle:this._containedInterfaceHandle,
-                                  _containerState: this._containerState,
-                                   setContainerState: lang.hitch(this, this.setContainerState),
-                                   workspaceManagerCommands: this.workspaceManagerCommands,
-                                   containerCommands: {setDocked: lang.hitch(this,this.setDocked),
-                                                      unloadContainer: lang.hitch(this,this.unloadContainer)}
-
-                               });
+                            require(["dojo/ready", containerWidgetPath], lang.hitch(this, function(ready, containerWidget){
+                                ready(lang.hitch(this, function(){
 
 
+                                    this._workspaceContainerWidget = new containerWidget({_sessionKey: this._sessionKey,
+                                        _containerKey: this._containerKey,
+                                        _containedInterfaceHandle:this._containedInterfaceHandle,
+                                        _containerState: this._containerState,
+                                        _workspaceContainableState: workspaceContainableState,
+                                        setContainerState: lang.hitch(this, this.setContainerState),
+                                        workspaceManagerCommands: this.workspaceManagerCommands,
+                                        containerCommands: {setDocked: lang.hitch(this,this.setDocked),
+                                            unloadContainer: lang.hitch(this,this.unloadContainer)}
 
-                               let isDocked = this._containerState.get("isDocked");
-
-                               if(isDocked === true)
-                               {
-                                   this.dockContainer();
-                               }
-
-                                let isVisible = this._containerState.get("isVisible");
-                                console.log("Mousedown",this, isVisible, isDocked, this._containerState);
-
-                                if(isVisible === true )
-                                {
-                                    this.show();
-                                }
-                                if(isVisible === false )
-                                {
-                                     this.hide();
-                                }
+                                    });
 
 
-                               let activeWorkspace = this.workspaceManagerCommands.getActiveWorkspace();
-                               let activeOverlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
 
-                               let activeWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeWorkspace.getWorkspaceKey());
-                               let activeOverlayWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeOverlayWorkspace.getWorkspaceKey());
+                                    let isDocked = this._containerState.get("isDocked");
 
-                                console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+                                    if(isDocked === true)
+                                    {
+                                        this.dockContainer();
+                                    }
 
-                               if(activeWorkspaceContainers !== null && activeWorkspaceContainers[this._containerKey]){
-                                   activeWorkspace.activateContainer(this._containerKey);
-                                   console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+                                    let isVisible = this._containerState.get("isVisible");
+                                    console.log("Mousedown",this, isVisible, isDocked, this._containerState);
 
-                               }else if( activeOverlayWorkspaceContainers !== null && activeOverlayWorkspaceContainers[this._containerKey]){
-                                   activeOverlayWorkspace.activateContainer(this._containerKey);
-                                   console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
-
-                               }
-                             else
-                               {
-                                   console.log("workspaceUpdate", "no");
-
-                                   console.log("no!",this._containerKey, activeWorkspaceContainers );
-                               }
+                                    if(isVisible === true )
+                                    {
+                                        this.show();
+                                    }
+                                    if(isVisible === false )
+                                    {
+                                        this.hide();
+                                    }
 
 
-                               //todo check if container is in any workspace
+                                    let activeWorkspace = this.workspaceManagerCommands.getActiveWorkspace();
+                                    let activeOverlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
+
+                                    let activeWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeWorkspace.getWorkspaceKey());
+                                    let activeOverlayWorkspaceContainers =  this.workspaceManagerCommands.getWorkspaceContainers(activeOverlayWorkspace.getWorkspaceKey());
+
+                                    console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+
+                                    if(activeWorkspaceContainers !== null && activeWorkspaceContainers[this._containerKey]){
+                                        activeWorkspace.activateContainer(this._containerKey);
+                                        console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+
+                                    }else if( activeOverlayWorkspaceContainers !== null && activeOverlayWorkspaceContainers[this._containerKey]){
+                                        activeOverlayWorkspace.activateContainer(this._containerKey);
+                                        console.log("workspaceUpdate", activeWorkspace, activeWorkspaceContainers);
+
+                                    }
+                                    else
+                                    {
+                                        console.log("workspaceUpdate", "no");
+
+                                        console.log("no!",this._containerKey, activeWorkspaceContainers );
+                                    }
+
+
+                                    //todo check if container is in any workspace
+                                }));
                             }));
+                        })).catch(lang.hitch(this, function(errorResult){
+                            console.log("Error getting containable state", errorResult,this._containedInterfaceHandle );
+
                         }));
+
+
                     }else
                     {
                         console.log("Cannot make widget without path and interface", containerWidgetPath,this._containedInterfaceHandle );

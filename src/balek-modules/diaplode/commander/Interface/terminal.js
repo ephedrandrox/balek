@@ -91,6 +91,7 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + xTermCss + "</style>"), win.body());
 
                // console.log("xtermCSS",this._xTermCssString );
+                this.setContainerName(" 📺 - Terminal - ");
 
 
             },

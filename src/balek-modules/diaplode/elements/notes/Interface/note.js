@@ -91,6 +91,10 @@ define(['dojo/_base/declare',
 
                  console.log("quill", QuillBalek);
 
+
+                this.setContainerName("🗒 - Note");
+
+
                 dojoReady(lang.hitch(this, function () {
                     if (this._componentKey) {
                         this.askToConnectInterface();

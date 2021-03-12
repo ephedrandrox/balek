@@ -90,6 +90,7 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
+                this.setContainerName("💎 - File - Export - Menu");
 
                 dojoReady(lang.hitch(this, function () {
                     if (this._componentKey) {
