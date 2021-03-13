@@ -61,6 +61,8 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('addToWorkspaceContainer' , lang.hitch(this, this.addToWorkspaceContainer));
                 this._commandsForInterface.setCommand('addContainerToWorkspace' , lang.hitch(this, this.addContainerToWorkspace));
 
+
+
                 this._commandsForInterface.setCommand('getActiveOverlayWorkspace' , lang.hitch(this, this.getActiveOverlayWorkspace));
 
 
@@ -322,10 +324,24 @@ define(['dojo/_base/declare',
 
             },
             activateContainerInWorkspace: function(workspace, containerKey){
+                //check workspace has container, if not, move it
+                let container = workspace.getContainer(containerKey);
+                if(workspace.getContainer(containerKey)){
+                    //Container is in workspace!
+                    workspace.activateContainer(containerKey);
+                }else {
+                    //Container is not in workspace, add it!
+                    let workspaceKey = workspace.getWorkspaceKey();
+                    //todo remove from workspace
+                    this.addContainerToWorkspace(containerKey,workspaceKey ).then(lang.hitch(this, function(Result){
+                        console.log("Added Container to WOrkspace", Result);
+                        workspace.activateContainer(containerKey);
+                    }))
+                    .catch(lang.hitch(this, function(errorResult){
+                        console.log("Added Container to WOrkspace Error", errorResult);
 
-
-               // console.log("setting focused container in workspace",workspace, containerKey );
-                workspace.activateContainer(containerKey);
+                    }));
+                }
             },
             getAvailableWorkspacesState: function()
             {

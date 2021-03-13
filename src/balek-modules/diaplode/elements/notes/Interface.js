@@ -18,7 +18,7 @@ define(['dojo/_base/declare',
         return declare("moduleDiaplodeElementsNotesInterface", syncedCommanderInterface, {
             _instanceKey: null,
             _createNoteSubscribeHandle: null,
-            _noteInterfaces: [],
+            _noteInterfaces: {},
 
             _availableNotes: null,
 
@@ -59,6 +59,8 @@ define(['dojo/_base/declare',
                     newState.instanceKey && newState.componentKey && newState.sessionKey){
                    // console.log("starttttttt");
 
+                    let elementKey = name.toString().substr(12);
+                    console.log("Elemtne Key from string:", elementKey)
                     let newNoteInterface = new noteInterface({
                         _instanceKey:newState.instanceKey,
                         _componentKey:newState.componentKey,
@@ -76,7 +78,7 @@ define(['dojo/_base/declare',
                     })).catch(lang.hitch(this, function(error){
                         console.log(error);
                     }));
-                    this._noteInterfaces.push(newNoteInterface);
+                    this._noteInterfaces[elementKey] = newNoteInterface;
                 }else if(name.toString() === "availableNotesComponentKey")
                 {
                     if(this._availableNotes === null){
@@ -92,7 +94,7 @@ define(['dojo/_base/declare',
 
                             navigatorCommands.addSystemMenuList( this._availableNotes,  {
                                 name: "Notes",
-                                load: this._instanceCommands.loadNote
+                                load: lang.hitch(this,this.loadNote)
                             });
                             //todo send commands to load, along with objects info
 
@@ -102,6 +104,60 @@ define(['dojo/_base/declare',
                       //  console.log(this._availableNotes);
                     }
                 }
+            },
+            loadNote: function(elementId){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                   let elementInterface = this.getElementInterface(elementId);
+
+
+
+
+
+                if(elementInterface){
+                    console.log("already Loaded ", elementId, elementInterface);
+
+                    let workspace = this.workspaceManagerCommands.getActiveWorkspace();
+
+                    let containerKey = elementInterface._assignedContainer._containerKey;
+
+                    console.log("already Loaded ", workspace,containerKey);
+
+                    this.workspaceManagerCommands.activateContainerInWorkspace(workspace, containerKey);
+
+                }else
+                {
+                    //check loaded
+                    console.log("Loading Element ", elementId, elementInterface);
+                    this._instanceCommands.loadNote(elementId).then(function(Result){
+
+                        if(Result.error){
+                            console.log("reject", elementId);
+
+                            Reject({error: Result});
+                        }else {
+                            console.log("Accept", elementId, Result);
+
+                            Resolve({success: Result});
+
+                        }
+
+                    }).catch(function(errorResult){
+                        console.log("reject", elementId);
+
+                        Reject({error: errorResult});
+
+                    });
+
+                }
+
+
+                }));
+                //load: this._instanceCommands.loadNote
+
+            },
+            getElementInterface: function(elementId){
+                return this._noteInterfaces[elementId];
             },
             unload: function () {
                 this._createNoteSubscribeHandle.remove();
