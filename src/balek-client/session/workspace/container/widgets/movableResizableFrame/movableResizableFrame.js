@@ -178,6 +178,20 @@ define(['dojo/_base/declare',
 
                 mouseEvent.stopPropagation();
 
+                let containerKey= this._containerKey;
+                let workspaceKey = this.workspaceManagerCommands.getActiveWorkspace()._workspaceKey;
+
+
+                this.workspaceManagerCommands.removeContainerFromWorkspace(containerKey, workspaceKey)
+                    .then(lang. hitch(this, function(Result){
+                    console.log("Container Removed From Workspace", Result);
+                })).catch(lang. hitch(this, function(errorResult){
+                    console.log("Could not remove on server!", errorResult);
+                }));
+
+
+               /*
+               todo: use unloadContainer command if container not on any workspace
                 if(this.containerCommands !== null
                     && this.containerCommands.unloadContainer && typeof this.containerCommands.unloadContainer === "function" ){
                     console.log("Mousedown", this.containerCommands.unloadContainer);
@@ -187,6 +201,8 @@ define(['dojo/_base/declare',
                 }else {
                     console.log("Mousedown", this.containerCommands);
                 }
+
+                */
             },
             //##########################################################################################################
             //UI Functions Section

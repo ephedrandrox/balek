@@ -173,6 +173,8 @@ define([ 	'dojo/_base/declare',
                     if(workspaceMessage.messageData.addToWorkspace){
                         this.addToWorkspaceRequestReceived(workspaceMessage.messageData.addToWorkspace, messageReplyCallback);
 
+                    }else if(workspaceMessage.messageData.removeFromWorkspace){
+                        this.removeFromWorkspaceRequestReceived(workspaceMessage.messageData.removeFromWorkspace, messageReplyCallback);
                     }else if(workspaceMessage.messageData.addToWorkspaceContainer){
                         this.addToWorkspaceContainerRequestReceived(workspaceMessage.messageData.addToWorkspaceContainer, messageReplyCallback);
                     }else if(workspaceMessage.messageData.unloadWorkspaceContainer){
@@ -291,6 +293,16 @@ define([ 	'dojo/_base/declare',
                 {
                     messageReplyCallback({error: "Server Session Workspace Manager: not a valid workspace key when adding to Workspace",
                         workspaceKey: addToWorkspaceRequest.workspaceKey});
+                }
+
+            },
+            removeFromWorkspaceRequestReceived: function(removeFromWorkspaceRequest, messageReplyCallback){
+                if(removeFromWorkspaceRequest.workspaceKey && this._workspaces[removeFromWorkspaceRequest.workspaceKey]){
+                    this._workspaces[removeFromWorkspaceRequest.workspaceKey].removeFromWorkspaceRequestReceived(removeFromWorkspaceRequest,messageReplyCallback );
+                }else
+                {
+                    messageReplyCallback({error: "Server Session Workspace Manager: not a valid workspace key when adding to Workspace",
+                        workspaceKey: removeFromWorkspaceRequest.workspaceKey});
                 }
 
             },

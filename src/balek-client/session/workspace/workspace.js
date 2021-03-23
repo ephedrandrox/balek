@@ -206,6 +206,23 @@ define(['dojo/_base/declare',
                 }
 
             },
+            removeContainer: function(containerKey){
+
+                let workspaceContainers = this._workspaceContainers;
+                let containerToRemove = workspaceContainers[containerKey];
+                if(containerToRemove !== undefined)
+                {
+                    let workspaceContainerDomNode =  containerToRemove.getWorkspaceDomNode();
+
+                    if(this._workspaceContainers[containerKey] != undefined && workspaceContainerDomNode){
+                       workspaceContainerDomNode.remove();
+
+                        this._workspaceContainers[containerKey] = undefined;
+                        delete this._workspaceContainers[containerKey];
+                    }
+                }
+
+            },
             onWorkspaceStateUpdate: function (name, oldState, newState) {
                // console.log(name, oldState, newState);
 /*
@@ -227,11 +244,10 @@ define(['dojo/_base/declare',
 
             },
             onWorkspaceContainersStateUpdate: function (name, oldState, newState) {
-              //  console.log(name, oldState, newState);
+                console.log(name, oldState, newState);
 
                 if(newState === undefined){
-                    this._workspaceContainers[String(name)] = undefined;
-                   delete this._workspaceContainers[String(name)];
+                  this.removeContainer(String(name));
                 } else if(this._workspaceContainers[String(name)] === undefined )
                 {
                     this._workspaceContainers[String(name)] = this.containerManager.getContainer(String(name));

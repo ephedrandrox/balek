@@ -154,6 +154,27 @@ define(['dojo/_base/declare',
                     });
                 }
             },
+            removeFromWorkspaceRequestReceived: function(removeFromWorkspaceRequest,messageReplyCallback ){
+                if(removeFromWorkspaceRequest.workspaceKey && removeFromWorkspaceRequest.workspaceContainerKey )
+                {
+                    let workspaceKey = removeFromWorkspaceRequest.workspaceKey;
+                    let containerKey = removeFromWorkspaceRequest.workspaceContainerKey;
+                    this.removeContainer(containerKey);
+                    messageReplyCallback({
+                        success: "removedFromWorkspace",
+                        workspaceKey: workspaceKey,
+                        containerKey: containerKey
+                    });
+                }else
+                {
+                    messageReplyCallback({
+                        error: "removedFromWorkspace - server error",
+                        workspaceKey: removeFromWorkspaceRequest.workspaceKey,
+                        containerKey: removeFromWorkspaceRequest.containerKey
+                    });
+                }
+
+            },
             changeWorkspaceNameReceived: function (workspaceName, messageReplyCallback) {
                 if (workspaceName) {
                     this._workspaceState.set("name", workspaceName)
