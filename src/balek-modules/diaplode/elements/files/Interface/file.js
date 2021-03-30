@@ -127,7 +127,9 @@ define(['dojo/_base/declare',
                     }), {
                         value: "loading", lineNumbers: true,
                         mode: "javascript",
+                        lineWrapping: true,
                         autoRefresh: true,
+                        singleCursorHeightPerLine: true,
                         theme: 'ayu-dark'
                     });
 

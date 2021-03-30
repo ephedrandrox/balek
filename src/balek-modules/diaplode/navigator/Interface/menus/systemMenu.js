@@ -58,24 +58,46 @@ define([ 	'dojo/_base/declare',
 
             },
             loadWidget: function(){
+
+
                 let systemMenuName = this._interfaceState.get("name");
                 let systemMap = this._navigatorSystemMenusState.get(systemMenuName);
 
 
-                this._systemMenuWidget = new systemMenuWidget({_instanceKey: this._instanceKey, _systemMenu: systemMap, _navigatorWidget: this._navigatorWidget});
+                let finishLoading = lang.hitch(this, function(){
 
-                if(this._systemMenuWidget.domNode){
-                    console.log("systemMenu", "no aspect after", this._systemMenuWidget.domNode );
-                    this.putMenuInWorkspaceContainer();
-                }else {
-                    console.log("systemMenu", "aspect after", this._systemMenuWidget.domNode );
+                    this._systemMenuWidget = new systemMenuWidget({_instanceKey: this._instanceKey, _systemMenu: systemMap, _navigatorWidget: this._navigatorWidget});
 
-                    aspect.after(this._systemMenuWidget, "postCreate", lang.hitch(this, function(){
+                    if(this._systemMenuWidget.domNode){
+                        console.log("systemMenu", "no aspect after", this._systemMenuWidget.domNode );
+                        this.putMenuInWorkspaceContainer();
+                    }else {
                         console.log("systemMenu", "aspect after", this._systemMenuWidget.domNode );
 
-                        this.putMenuInWorkspaceContainer();
+                        aspect.after(this._systemMenuWidget, "postCreate", lang.hitch(this, function(){
+                            console.log("systemMenu", "aspect after", this._systemMenuWidget.domNode );
+
+                            this.putMenuInWorkspaceContainer();
+                        }));
+                    }
+                });
+
+                if(systemMap)
+                {
+                     finishLoading();
+                }else
+                {
+                    let watchHandle = this._navigatorSystemMenusState.watch(lang.hitch(this, function(name, oldState, newState){
+                        console.log("No systemMap uyet!",systemMenuName, systemMap, name, oldState, newState );
+                        if(name.toString() === systemMenuName.toString()){
+                            watchHandle.unwatch();
+                            watchHandle.remove();
+                            systemMap = this._navigatorSystemMenusState.get(systemMenuName);
+                            finishLoading();
+                        }
                     }));
                 }
+
 
             },
             putMenuInWorkspaceContainer: function(){

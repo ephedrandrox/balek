@@ -87,20 +87,22 @@ define(['dojo/_base/declare',
 
                     this._menuItemWidgets[name.toString()] = newMenuItem;
 
-
+                    if(this.domNode)
+                    {
+                        this.refreshView();
+                    }
 
                 }else
                 {
                     //check that menuItem needs updated probably here
                 }
             },
-            postCreate: function()
-            {
-                console.log("systemMenuWidget postCreate",this._systemMenu );
-
+            refreshView: function(){
                 if(this._systemMenu && this._systemMenu._menuCompanion && this._systemMenu._menuCompanion.name)
                 {
                     this._mainTitle.innerHTML = this._systemMenu._menuCompanion.name;
+                }else {
+                    console.log( "SystemMenu error", this, this._systemMenu);
                 }
 
                 this._navigatorWidget.arrangeSystemMenus();
@@ -118,6 +120,12 @@ define(['dojo/_base/declare',
                     domConstruct.place(this._menuItemWidgets[menuItemKey].domNode, this._menuItems);
 
                 }
+            },
+            postCreate: function()
+            {
+                console.log("systemMenuWidget postCreate",this._systemMenu );
+
+              this.refreshView();
                //
 
 
