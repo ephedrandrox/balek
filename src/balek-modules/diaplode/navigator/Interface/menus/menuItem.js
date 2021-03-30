@@ -48,12 +48,7 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-                dojoReady(lang.hitch(this, function () {
-                    if(  this._componentKey )
-                    {
-                        this.askToConnectInterface();
-                    }
-                }));
+
 
             },
             postCreate: function () {
@@ -74,30 +69,10 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //State Functions Section
             //##########################################################################################################
-
-            onInterfaceStateChange: function(name, oldState, newState){
-               //console.log("menu Items State change", name, newState);
-
-                if (name === "interfaceRemoteCommands") {
-                    this.linkRemoteCommands(newState);
-                    //ready to show widget;
-                    this.introAnimation();
-
-                }
-
-                //Since We are extending with the remoteCommander
-                //We Check for interfaceRemoteCommandKey
-                else if (name === "interfaceRemoteCommandKey") {
-                    console.log("Remote COmmander Key!");
-                    this._interfaceRemoteCommanderKey = newState;
-
-                }else if (name === "name") {
-                   this._nameDiv.innerHTML = newState;
-                }
-                else{
-                    //console.log("state unaccounted for....", name, newState);
-                }
-            },
+           setName: function(name){
+                this._name = name;
+               this._nameDiv.innerHTML = this._name;
+           },
 
             //##########################################################################################################
             //Event Functions Section

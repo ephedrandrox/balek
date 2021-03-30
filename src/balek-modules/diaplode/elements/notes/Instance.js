@@ -6,7 +6,8 @@ define(['dojo/_base/declare',
         'balek-modules/diaplode/elements/notes/Database/notes',
 
         'balek-modules/components/syncedCommander/Instance',
-        'balek-modules/components/syncedMap/Instance'
+        'balek-modules/components/syncedMap/Instance',
+        "dojo/node!sanitize-html"
 
     ],
     function (declare,
@@ -17,7 +18,8 @@ define(['dojo/_base/declare',
               notesDatabase,
 
               syncedCommanderInstance,
-              syncedMapInstance) {
+              syncedMapInstance,
+              nodeSanitizeHtml) {
         return declare("moduleDiaplodeElementsNotesInstance", syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
@@ -52,7 +54,9 @@ define(['dojo/_base/declare',
                                   // this.createNoteInstance(userNotesArray[userNotesArrayKey]._id);
                                    if( !userNotesArray[userNotesArrayKey].name ){
                                        let noteContent = userNotesArray[userNotesArrayKey].noteContent;
-                                       let noteName = noteContent.toString().trim().substr(0,32);
+                                       let noteName = this.getNameFromNoteContent(noteContent);
+
+
                                        userNotesArray[userNotesArrayKey].name = noteName;
 
                                    }
@@ -84,8 +88,32 @@ define(['dojo/_base/declare',
             },
             getNameFromNoteContent: function(noteContent)
             {
-                //let noteName = noteContent.toString.trim();
-                return noteContent;
+                let noteName = "Unable To Get Name!";
+                let noteString = "";
+
+                if(typeof noteContent === "string"){
+                    noteString =  noteContent.toString();
+                }else if(typeof noteContent === "object"){
+                    if(Array.isArray( noteContent.ops))
+                    {
+
+                        noteString = noteContent.ops.find(function(element){
+                            if(element.insert && typeof element.insert === "string"){
+                                return true;
+                            }else {
+                                console.log(element);
+                                return false;
+                            }
+
+                        }).insert.toString();
+                    }else {
+                        noteString = JSON.stringify(noteContent);
+                    }
+
+                }
+
+                noteName =  nodeSanitizeHtml(noteString.toString().trim().substr(0,32));
+                return noteName;
             },
 
             createNoteInstance: function(noteID){
@@ -95,7 +123,7 @@ define(['dojo/_base/declare',
                         _sessionKey: this._sessionKey,
                         _userKey: this._userKey,
                         _noteKey: noteID,
-                        _notesDatabase: this._notesDatabase});
+                        _notesInstance: this});
 
                     this._noteInstances[noteID] =newNote ;
 
@@ -117,6 +145,8 @@ define(['dojo/_base/declare',
 
                 this._notesDatabase.newUserNote(noteContent).then(lang.hitch(this, function(newNoteID){
                     this.createNoteInstance(newNoteID);
+
+                    this._availableNotes.add(newNoteID, {_id: newNoteID, _userKey: this._userKey, noteContent: noteContent, name: this.getNameFromNoteContent(noteContent) });
                     if(remoteCommanderCallback)
                     {
                         remoteCommanderCallback({success: "Note Created",
@@ -133,6 +163,35 @@ define(['dojo/_base/declare',
                 });
 
 
+            },
+            updateNote: function(noteKey, noteContent){
+
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    this._notesDatabase.updateUserNote(noteKey, noteContent).then(
+                        lang.hitch(this, function(userNoteResult){
+                            //  console.log("user Note Set",userNoteResult);
+                            this._availableNotes.add(noteKey, {_id: noteKey, _userKey: this._userKey, noteContent: noteContent, name: this.getNameFromNoteContent(noteContent) });
+
+                            Resolve(userNoteResult);
+                        })
+                    ).catch(lang.hitch(this, function(userNoteError){
+                        console.log("user Note Set error",userNoteError);
+                    }));
+                }));
+
+            },
+            getNote: function(noteKey){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    this._notesDatabase.getUserNote(noteKey).then(
+                        lang.hitch(this, function (noteResult) {
+                            console.log("system menu", noteResult);
+                            Resolve(noteResult);
+                        })
+                    ).catch(lang.hitch(this, function (noteError) {
+                        Reject(noteError);
+                        console.log("user Note Retrieval error", noteError);
+                    }));
+                }));
             },
             loadNote: function(noteKey, remoteCommanderCallback)
             {

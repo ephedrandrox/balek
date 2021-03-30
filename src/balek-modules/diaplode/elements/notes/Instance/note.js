@@ -23,17 +23,14 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("noteContent","Loading...");
 
 
-                if(this._notesDatabase && this._noteKey)
+                if(this._notesInstance && this._noteKey)
                 {
-                    this._notesDatabase.getUserNote(this._noteKey).then(
-                        lang.hitch(this, function(userNoteResult){
-                     //       console.log("user Note Retrieval",userNoteResult);
-                            this._interfaceState.set("noteContent",userNoteResult.noteContent);
-
-
+                    this._notesInstance.getNote(this._noteKey).then(
+                        lang.hitch(this, function(noteResult){
+                            this._interfaceState.set("noteContent",noteResult.noteContent);
                         })
-                    ).catch(lang.hitch(this, function(userNoteError){
-                        console.log("user Note Retrieval error",userNoteError);
+                    ).catch(lang.hitch(this, function(noteError){
+                        console.log("user Note Retrieval error",noteError);
                     }));
                 }
                 this.prepareSyncedState();
@@ -41,15 +38,14 @@ define(['dojo/_base/declare',
             },
             addContent: function(content, remoteCommandCallback)
             {
-                this._notesDatabase.updateUserNote(this._noteKey, content).then(
-                    lang.hitch(this, function(userNoteResult){
-                      //  console.log("user Note Set",userNoteResult);
-                        this._interfaceState.set("noteContent", content);
-                    })
-                ).catch(lang.hitch(this, function(userNoteError){
-                    console.log("user Note Set error",userNoteError);
-                }));
-                remoteCommandCallback({success: "Content Added"});
+               this._notesInstance.updateNote(this._noteKey, content).then(lang.hitch(this, function(userNoteResult){
+
+                   this._interfaceState.set("noteContent", content);
+                   remoteCommandCallback({success: "Content Added"});
+               })).catch(lang.hitch(this, function(errorResult){
+                    console.log("error updateing note", errorResult);
+               }));
+
             },
             removeContent: function(contentPosition, remoteCommandCallback){
                 this._interfaceState.set("removeContent", contentPosition);

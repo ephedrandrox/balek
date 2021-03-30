@@ -92,6 +92,7 @@ define(['dojo/_base/declare',
 
                             navigatorCommands.addSystemMenuList( this._availableFiles,  {
                                 name: "Files",
+                                emoji: "💎",
                                 load: this._instanceCommands.loadFile
                             });
                             //todo send commands to load, along with objects info

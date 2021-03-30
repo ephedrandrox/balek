@@ -1,6 +1,6 @@
 .diaplodeNavigatorInterfaceSystemMenuWidget{
     position: relative;
-    display: block;
+    display: inline-block;
     top:0;
     left: 0;
     background: none;
@@ -19,6 +19,15 @@
     margin: 0;
     width: 100px;
     height:100px;
+pointer-events: auto;
+
+    border: solid transparent 3px;
+
+}
+
+.diaplodeNavigatorInterfaceSystemMenuWidget:hover{
+    border: solid purple 3px;
+
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidget:focus{
@@ -43,8 +52,33 @@
     border-radius: 5px;
     top: 0;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(-20px);
     border: solid white 3px;
 
+
     background: rgba(17, 89, 98, 0.4);
+}
+
+.diaplodeNavigatorInterfaceSystemMenuWidgetEmoji{
+    position: absolute;
+
+    position: absolute;
+    padding: 5px;
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+font-size: 50px;
+    background: none;
+
+
+}
+
+
+.diaplodeNavigatorInterfaceSystemMenuWidgetMenuItems{
+    position: relative;
+    display: inline-block;
+    width: 70vw;
+    height: 70vh;
+    pointer-events: none;
 }

@@ -95,12 +95,18 @@ define(['dojo/_base/declare',
                 }else
                 {
                     //check that menuItem needs updated probably here
+                    //but each menuitem should be watching their element state
+                }
+
+                if( this._menuItemWidgets[name.toString()] !== undefined && newState.name){
+                    this._menuItemWidgets[name.toString()].setName(newState.name);
                 }
             },
             refreshView: function(){
                 if(this._systemMenu && this._systemMenu._menuCompanion && this._systemMenu._menuCompanion.name)
                 {
                     this._mainTitle.innerHTML = this._systemMenu._menuCompanion.name;
+                    this._mainEmoji.innerHTML = this._systemMenu._menuCompanion.emoji;
                 }else {
                     console.log( "SystemMenu error", this, this._systemMenu);
                 }

@@ -94,6 +94,7 @@ define(['dojo/_base/declare',
 
                             navigatorCommands.addSystemMenuList( this._availableNotes,  {
                                 name: "Notes",
+                                emoji: "🗒",
                                 load: lang.hitch(this,this.loadNote)
                             });
                             //todo send commands to load, along with objects info

@@ -1,6 +1,9 @@
-<div class="${baseClass}"  tabindex="0" >
+<div class="${baseClass}"  tabindex="0"  data-dojo-attach-event="onclick:_onClick" >
     <img data-dojo-attach-point="_mainImage" class="${baseClass}Image" src="balek-modules/diaplode/navigator/resources/images/compass.svg" />
-    <div data-dojo-attach-point="_mainTitle" data-dojo-attach-event="onclick:_onClick" class="${baseClass}Title"></div>
+    <div data-dojo-attach-point="_mainEmoji"  class="${baseClass}Emoji"></div>
+
+    <div data-dojo-attach-point="_mainTitle" class="${baseClass}Title"></div>
+
 
     <div data-dojo-attach-point="_menuItems" style="display: none" class="${baseClass}MenuItems"></div>
 </div>

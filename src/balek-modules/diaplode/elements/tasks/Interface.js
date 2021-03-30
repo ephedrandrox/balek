@@ -113,6 +113,7 @@ define(['dojo/_base/declare',
 
                             navigatorCommands.addSystemMenuList( this._availableTasks,  {
                                 name: "Tasks",
+                                emoji: "🎯️",
                                 load: this._instanceCommands.loadTask
                             });
                             //todo send commands to load, along with objects info
