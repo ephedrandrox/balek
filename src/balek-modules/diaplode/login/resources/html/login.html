@@ -1,11 +1,16 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onfocus:_onFocus" tabindex="0">
     Diaplode <br/> <br/>
-    <input class=${baseClass}UsernameField type="text" data-dojo-attach-point='_usernameField'
-           data-dojo-attach-event="onfocus:_onInputFocus" value="" tabindex="1"><br>
+    <input title="Username" id="username" class=${baseClass}UsernameField type="text" data-dojo-attach-point='_usernameField'
+           data-dojo-attach-event="onfocus:_onInputFocus" value="Demo" tabindex="0"><br>
     <br>
-    <input class=${baseClass}PasswordField type="password" data-dojo-attach-point='_passwordField'
-           data-dojo-attach-event="onfocus:_onInputFocus" value="" tabindex="2"><br>
+    <input title="Password" id="password" class=${baseClass}PasswordField type="password" data-dojo-attach-point='_passwordField'
+           data-dojo-attach-event="onfocus:_onInputFocus" value="demoPassword" tabindex="0"><br>
     <br>
-    <input class=${baseClass}LoginButton type=submit value="Login"
-           data-dojo-attach-event="onclick:_onClickSendLoginButton" tabindex="3">
+    <input title="Log In" id="submit" class=${baseClass}LoginButton type=submit value="Login"
+           data-dojo-attach-event="onclick:_onClickSendLoginButton" tabindex="0">
+
+    <label style="display: none" for="username">Enter your Username</label>
+    <label style="display: none" for="password">Enter your Password</label>
+    <label style="display: none" for="submit">Activate to log in</label>
+
 </div>

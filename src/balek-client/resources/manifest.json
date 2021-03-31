@@ -13,6 +13,9 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/",
-  "display": "standalone"
+  "start_url": "/release/",
+  "display": "standalone",
+  "background_color": "#7a33d6",
+  "scope": "/",
+  "theme_color": "#7a33d6"
 }
