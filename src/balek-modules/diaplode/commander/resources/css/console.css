@@ -25,7 +25,7 @@
     outline: none;
     opacity: .9;
 
-    grid-template-columns: 80% 20%;
+    grid-template-columns: 1fr 5px;
     grid-template-rows: 30px 1fr 10px 30px;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -93,15 +93,20 @@
 
 .diaplodeCommanderInterfaceConsoleDockMenuDiv {
     padding: 0;
+    padding-left: 5px;
     margin: 0;
     grid-area: 4 / 1 / 5 / 3;
     height: 30px;
     background: none;
     background: rgba(62, 32, 107, 0.5);
 
-
+float: bottom;
 }
 .diaplodeCommanderInterfaceConsoleDockMenuButtonDiv {
+
+    position: relative;
+    float: bottom;
+    line-height: 20px;
     padding: 2px;
     margin: 0;
     display: inline-block;
@@ -109,16 +114,19 @@
     box-shadow: #0d1721;
     border-radius: 5px;
     font-size: 12px;
-
     cursor: pointer;
-
     width: 20px;
     height: 20px;
-text-align: center;
-
-    background: rgba(62, 32, 107, .3);
-
+    text-align: center;
+    background: rgba(62, 32, 107, .6);
+    border: solid #858383 1px;
 }
+
+.diaplodeCommanderInterfaceConsoleDockMenuButtonDiv:hover{
+    background: rgba(94, 91, 98, 0.6);
+    border: solid #722626 1px;
+}
+
 
 
 
@@ -160,3 +168,7 @@ text-align: center;
     display: inline-block;
     border: solid #615561 3px;
 }
+
+
+
+

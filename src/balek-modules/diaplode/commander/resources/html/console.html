@@ -1,6 +1,6 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus,onblur:onBlur" tabindex="1">
     <div class="${baseClass}TopBarDiv" data-dojo-attach-point='_consoleOutputNode' >
-        Diaplode Console:
+        Diaplode Console: <span style="color: red;">Hit ESC to retract console</span>
 
         <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onSettingButtonClicked">❖</div>
     </div>
@@ -32,17 +32,19 @@
     </div>
 
     <div class="${baseClass}DockMenuDiv" >
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleUndockButtonClicked">⬇︎</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewFileButtonClicked">💎</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewNoteButtonClicked">🗒</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewTaskButtonClicked">🎯</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewTerminalButtonClicked">📺</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onLoadModuleButtonClicked">🎬</div>
-        <div class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onRunCommandClicked">☎️</div>
+        <div title="Show Console - Use Esc Key to retract" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleUndockButtonClicked">⬇︎</div>
+        <div title="Create a new Note" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewNoteButtonClicked">🗒</div>
+        <div title="Create a new File" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewFileButtonClicked">💎</div>
+        <div title="Create a new Task" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewTaskButtonClicked">🎯</div>
+        <div title="Open a new Terminal" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onConsoleNewTerminalButtonClicked">📺</div>
+        <div title="Load a Balek Module" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onLoadModuleButtonClicked">🎬</div>
+        <div title="Run command in Console" class="${baseClass}DockMenuButtonDiv" data-dojo-attach-event="onclick:_onRunCommandClicked">☎️</div>
 
-        <div class="${baseClass}DockWorkspacesMenuButtonDiv" data-dojo-attach-point='_workspacesMenuDiv' style="float: right" data-dojo-attach-event="onclick:_onWorkspacesClicked">❖</div>
+        <div  title="Workspaces Menu" class="${baseClass}DockWorkspacesMenuButtonDiv" data-dojo-attach-point='_workspacesMenuDiv' style="float: right" data-dojo-attach-event="onclick:_onWorkspacesClicked">❖</div>
 
-        <div class="${baseClass}DockMenuButtonDiv" style="float: right" data-dojo-attach-event="onclick:_onNavigatorToggleShowViewButtonClicked">🗺</div>
+        <div title="Show Workspaces Overlay" class="${baseClass}DockMenuButtonDiv" style="float: right" data-dojo-attach-event="onclick:_onNavigatorToggleShowViewButtonClicked">🗺</div>
+        <div title="Show Elements Overlay" class="${baseClass}DockMenuButtonDiv" style="float: right" data-dojo-attach-event="onclick:_onNavigatorToggleShowViewButtonClicked">🗺</div>
+        <div title="Show Containers Overlay" class="${baseClass}DockMenuButtonDiv" style="float: right" data-dojo-attach-event="onclick:_onNavigatorToggleShowViewButtonClicked">🗺</div>
 
 
     </div>

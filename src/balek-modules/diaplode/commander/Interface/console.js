@@ -96,7 +96,14 @@ define(['dojo/_base/declare',
                 this._workspaceStateList =  null;
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-                dijitViewPort.on("resize", lang.hitch(this, this._onViewportResize));
+
+                let timeout;
+
+                dijitViewPort.on( 'resize', lang.hitch(this, function(event){
+                    clearTimeout(timeout);
+                    timeout = setTimeout(lang.hitch(this, this._onViewportResize), 500)
+                }));
+
 
 
             },
@@ -143,6 +150,9 @@ define(['dojo/_base/declare',
                     {
                         this.writeToXterm(this._interfaceState.get("consoleOutput"));
                     }
+
+
+
 
                 }else
                 {
@@ -472,11 +482,15 @@ define(['dojo/_base/declare',
                     if(this._interfaceState.get("consoleDocked") === 'true'){
                         console.log("resized docked");
                         let elementBox = domGeometry.getContentBox(this.domNode);
-                        domStyle.set(this.domNode, {"top":(30-elementBox.h) + "px"});
+                        domStyle.set(this.domNode, {"top":(35-elementBox.h) + "px"});
 
                     }else {
                         console.log("resized undocked");
 
+                    }
+
+                    if(this._xTermAddOnFit !== null){
+                        this._xTermAddOnFit.fit();
                     }
             },
             //##########################################################################################################
@@ -500,12 +514,12 @@ define(['dojo/_base/declare',
                // console.log(elementBox);
                 fx.slideTo({
                     node: this.domNode,
-                    top:  30-elementBox.h,
+                    top:  35-elementBox.h,
                     left: "0",
                     unit: "px",
                     duration: 200,
                     onEnd: lang.hitch(this,function(){
-                        domStyle.set(this.domNode, {"visibility": "visible", "top": (30-domGeometry.getContentBox(this.domNode).h)+ "px" });
+                        domStyle.set(this.domNode, {"visibility": "visible", "top": (35-domGeometry.getContentBox(this.domNode).h)+ "px" });
                     })
                 }).play();
             },
