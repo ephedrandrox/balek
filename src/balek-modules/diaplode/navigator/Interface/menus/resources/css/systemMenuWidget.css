@@ -14,11 +14,10 @@
     box-shadow: 0px 0px 15px 8px #050530;
     border-radius: 50%;
 
-    cursor: pointer;
     padding:0;
     margin: 0;
-    width: 100px;
-    height:100px;
+    width: 75px;
+    height:75px;
 pointer-events: auto;
 
     border: solid transparent 3px;
@@ -40,8 +39,9 @@ pointer-events: auto;
     left: 0;
     padding: 0;
     margin: 0;
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height:75px;
+
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidgetTitle{
@@ -68,10 +68,14 @@ pointer-events: auto;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-font-size: 50px;
+    font-size: 50px;
     background: none;
+    height: 50px;
+    cursor: pointer;
 
+    border-radius: 50%;
 
+    vertical-align: top;
 }
 
 
