@@ -62,7 +62,11 @@ define(['dojo/_base/declare',
 
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
                 this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
-                this._commandsForOtherInterfaces.setCommand("toggleShowView", lang.hitch(this, this.toggleShowView))
+                this._commandsForOtherInterfaces.setCommand("toggleShowView", lang.hitch(this, this.toggleShowView));
+                this._commandsForOtherInterfaces.setCommand("toggleWorkspaceShowView", lang.hitch(this, this.toggleWorkspaceShowView));
+                this._commandsForOtherInterfaces.setCommand("toggleElementShowView", lang.hitch(this, this.toggleElementShowView))
+                this._commandsForOtherInterfaces.setCommand("toggleContainerShowView", lang.hitch(this, this.toggleContainerShowView))
+
                 this._commandsForOtherInterfaces.setNavigatorReady();
 
 
@@ -124,6 +128,21 @@ define(['dojo/_base/declare',
                 this.refreshView();
 
                 this._instanceCommands.setVisibility(this._isVisible);
+            },
+            toggleWorkspaceShowView: function () {
+                console.log("toggleWorkspaceShowView ");
+
+                this._navigatorMainWidget.toggleWorkspaceShowView();
+            },
+            toggleElementShowView: function () {
+                console.log("toggleElementShowView ");
+
+                this._navigatorMainWidget.toggleElementShowView();
+            },
+            toggleContainerShowView: function () {
+                console.log("toggleContainerShowView ");
+
+                this._navigatorMainWidget.toggleContainerShowView();
             },
             unload: function () {
              //   this._navigatorSystemMenusStateWatchHandle.unwatch();

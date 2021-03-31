@@ -428,12 +428,54 @@ define(['dojo/_base/declare',
                });
 
             },
-            _onNavigatorToggleShowViewButtonClicked: function(clickEvent){
-                console.log("Toggle Navigator");
+            _onNavigatorToggleShowNavigatorViewButtonClicked: function(clickEvent){
+                console.log("Toggle  Navigator overlay");
 
                 this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
 
                     navigatorCommands.toggleShowView();
+
+                })).catch(function(errorResult){
+                    console.log(errorResult);
+                });
+
+
+
+            },
+            _onNavigatorToggleShowWorkspaceViewButtonClicked: function(clickEvent){
+                console.log("Toggle Workspace Navigator");
+
+                this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+
+                    navigatorCommands.toggleWorkspaceShowView();
+
+                })).catch(function(errorResult){
+                    console.log(errorResult);
+                });
+
+
+
+            },
+            _onNavigatorToggleShowElementViewButtonClicked: function(clickEvent){
+                console.log("Toggle Element Navigator");
+
+                this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+
+                    navigatorCommands.toggleElementShowView();
+
+                })).catch(function(errorResult){
+                    console.log(errorResult);
+                });
+
+
+
+            },
+            _onNavigatorToggleShowContainerViewButtonClicked: function(clickEvent){
+                console.log("Toggle Container Navigator");
+
+                this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+
+                    navigatorCommands.toggleContainerShowView();
 
                 })).catch(function(errorResult){
                     console.log(errorResult);

@@ -81,6 +81,8 @@ define(['dojo/_base/declare',
             _mainLogDiv: null,
 
 
+            _elementMenuToggle: true,
+
             _navigatorSystemMenuWidgets: null,
             _navigatorSystemMenusState: null,
             _navigatorSystemMenusStateWatchHandle: null,
@@ -476,11 +478,25 @@ define(['dojo/_base/declare',
                 let currentStateToggle = {"block": "none", "none": "block"};
                 domStyle.set(this.domNode, {"display": currentStateToggle[domStyle.get(this.domNode, "display")]});
 
-                for (const menuToToggle in this._navigatorSystemMenuWidgets) {
-                    this._navigatorSystemMenuWidgets[menuToToggle].toggleShowView();
+            },
+            toggleWorkspaceShowView: function () {
+                this._workspaceMenu.toggleShowView();
+            },
+            toggleElementShowView: function () {
+            //todo rewrite navigator system menus as element menus and add user menus
+                for (const elementMenuKey in this._navigatorSystemMenuWidgets )
+                {
+                    let elementMenu =  this._navigatorSystemMenuWidgets[elementMenuKey].toggleShowView() ;
+                    console.log("elements", elementMenu);
                 }
 
             },
+            toggleContainerShowView: function () {
+                console.log("toggleContainerShowView");
+
+                this._containersMenu.toggleShowView();
+            },
+
             hide: function(){
                 domStyle.set(this.domNode, {"display": "none"});
 

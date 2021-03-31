@@ -2,13 +2,15 @@ define(['dojo/_base/declare',
         "dojo/_base/lang",
 
         'dojo/dom-class',
+        "dojo/dom-style",
+
         'dojo/dom-construct',
         'dojo/on',
 
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
     ],
-    function (declare, lang, domClass,
+    function (declare, lang, domClass, domStyle,
               domConstruct,
               on, balekWorkspaceManagerInterfaceCommands) {
 
@@ -90,6 +92,10 @@ define(['dojo/_base/declare',
                     this.refreshWidget();
                 }
 
+            },
+            toggleShowView: function(){
+                let currentStateToggle = {"inline-block": "none", "none": "inline-block"};
+                domStyle.set(this.domNode, {"display": currentStateToggle[domStyle.get(this.domNode, "display")]});
             },
             refreshWidget: function () {
                 console.log("You should overwrite this function after extending your widget with this class");
