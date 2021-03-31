@@ -168,15 +168,6 @@ define([ 	'dojo/_base/declare',
                     this._menuCompanion.load(itemKey).then().catch();
                 }
             },
-            toggleShowView: function(){
-
-                //todo use the container to hide
-                let currentStateToggle = {"inline-block": "none", "none": "inline-block"};
-                domStyle.set(this.getDomNode(), {"display": currentStateToggle[domStyle.get(this.getDomNode(), "display")]});
-
-
-
-            },
             getDomNode: function()
             {
                 return this._systemMenuWidget.domNode;
