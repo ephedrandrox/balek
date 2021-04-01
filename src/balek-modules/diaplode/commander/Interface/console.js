@@ -148,7 +148,11 @@ define(['dojo/_base/declare',
                     this._xTermAddOnFit.fit();
                     if (this._interfaceState !== null)
                     {
-                        this.writeToXterm(this._interfaceState.get("consoleOutput"));
+                        let consoleOutput = this._interfaceState.get("consoleOutput");
+                        if(consoleOutput)
+                        {
+                            this.writeToXterm(this._interfaceState.get("consoleOutput"));
+                        }
                     }
 
 

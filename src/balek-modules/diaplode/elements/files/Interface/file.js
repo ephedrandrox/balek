@@ -128,10 +128,22 @@ define(['dojo/_base/declare',
                                 this._viewNodeCodeMirror.setValue(currentFileContent);
                                 this._viewNodeCodeMirror.refresh();
 
+                                setTimeout(lang.hitch(this, function(){
+                                    this._viewNodeCodeMirror.refresh();
+                                }), 2000);
                                 this.updateContainerName();
                             }
                         }));
+                        let currentFileContent = this._interfaceState.get("fileContent");
+                        if (currentFileContent) {
+                            this._viewNodeCodeMirror.setValue(currentFileContent);
+                            this._viewNodeCodeMirror.refresh();
 
+                            setTimeout(lang.hitch(this, function(){
+                                this._viewNodeCodeMirror.refresh();
+                            }), 2000);
+                            this.updateContainerName();
+                        }
                     }), {
                         value: "loading", lineNumbers: true,
                         mode: "javascript",
@@ -162,6 +174,8 @@ define(['dojo/_base/declare',
                     this.updateContainerName();
                     if (this._viewNodeCodeMirror !== null) {
                         this._viewNodeCodeMirror.setValue(newState);
+                        this._viewNodeCodeMirror.refresh();
+
                     }
                 }
                 // console.log(name, newState);
