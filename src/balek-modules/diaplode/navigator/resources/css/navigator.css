@@ -31,6 +31,8 @@ body {
 
 border: none;
     cursor: move;
+
+    text-align: left;
 }
 
 .diaplodeNavigatorInterface:focus{
