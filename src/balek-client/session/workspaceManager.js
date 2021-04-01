@@ -46,6 +46,10 @@ define(['dojo/_base/declare',
                 this._commandsForInterface.setCommand('getWorkspaceManagerState' , lang.hitch(this, this.getWorkspaceManagerState));
                 this._commandsForInterface.setCommand('getWorkspaceState' , lang.hitch(this, this.getWorkspaceState));
 
+                this._commandsForInterface.setCommand('getContainerManager' , lang.hitch(this, this.getContainerManager));
+
+
+
                 this._commandsForInterface.setCommand('getAvailableContainersState' , lang.hitch(this, this.getAvailableContainersState));
                 this._commandsForInterface.setCommand('getContainerManagerState' , lang.hitch(this, this.getContainerManagerState));
 
@@ -351,6 +355,10 @@ define(['dojo/_base/declare',
             getWorkspaceManagerState: function()
             {
                 return this._workspaceManagerState;
+            },
+            getContainerManager: function()
+            {
+                return this.containerManager;
             },
             getWorkspaceState: function(workspaceKey)
             {

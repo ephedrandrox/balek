@@ -89,7 +89,7 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-                 console.log("quill", QuillBalek);
+                 console.log("quill", this);
 
 
                 this.setContainerName("🗒 - Note");
@@ -135,6 +135,8 @@ define(['dojo/_base/declare',
                     let oldContentLength = this._quillEditor.getLength();
 
                     this._quillEditor.setContents(noteContentsDelta);
+
+                    this.setContainerName("🗒 - " + this._quillEditor.getText(0, 32));
 
                     if(oldContentLength === 1)
                     {

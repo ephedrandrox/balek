@@ -86,7 +86,11 @@ define(['dojo/_base/declare',
 
                 console.log("AAA", "refreshing from menu", this.domNode, this._containers);
                 if (this.domNode) {
+
+                    this.domNode.innerHTML = "🍟"
                     for (const containerKey in this._containers) {
+
+                        //todo this should be  a state watch thing to add widgets
                         // let containerState = this._containers[containerKey].getState();
 
                         let container = this._containers[containerKey];
@@ -95,15 +99,33 @@ define(['dojo/_base/declare',
                             if (this._containerWidgets[containerKey] === undefined) {
                                 console.log("AAA", "container being created", containerKey);
 
-                                this._containerWidgets[containerKey] = new containerMenuItem({_container: container});
+                                this._containerWidgets[containerKey] = new containerMenuItem({_container: container , _containerMenu: this});
 
-                                domConstruct.place(this._containerWidgets[containerKey].domNode, this.domNode);
+
+
                                 // this.domNode.innerHTML= "hi";
 
                             } else {
-                                this._containerWidgets[containerKey].refreshWidget();
+                               // this._containerWidgets[containerKey].refreshWidget();
                                 //check if in domnode
                             }
+
+
+
+                            if (this._containerWidgets[containerKey].domNode) {
+
+                                if (this._containerWidgets[containerKey]._container.isInActiveWorkspace()) {
+
+                                    if (this._containerWidgets[containerKey]._container.isDocked()) {
+                                        domConstruct.place(this._containerWidgets[containerKey].domNode, this.domNode);
+                                    }
+                                } else if (this._containerWidgets[containerKey]._container.isInOverlayWorkspace()) {
+                                    //dont add anywhere yet
+                                } else {
+                                    // not in active workspace dont add anywhere yet
+                                }
+                            }
+
 
                         } else {
                             console.log("AAA", "container gone", containerKey);

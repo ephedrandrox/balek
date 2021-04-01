@@ -78,7 +78,7 @@ define(['dojo/_base/declare',
             _shiftDown: false,
             _availableMenus: {},
             _newMenus: [],
-            _mainLogDiv: null,
+         //   _mainLogDiv: null,
 
 
             _elementMenuToggle: true,
@@ -211,13 +211,13 @@ define(['dojo/_base/declare',
                 }
 
 
-                this._containersMenu = new containersMenu({_targetNode: this._mainWorkspacesDiv});
+                this._containersMenu = new containersMenu({_targetNode: this._mainContainersDiv});
 
                 if(this._containersMenu.domNode){
-                    domConstruct.place(this._containersMenu.domNode, this._mainWorkspacesDiv);
+                    domConstruct.place(this._containersMenu.domNode, this._mainContainersDiv);
                 }else {
                     aspect.after(this._containersMenu, "postCreate", lang.hitch(this, function(){
-                        domConstruct.place(this._containersMenu.domNode, this._mainWorkspacesDiv);
+                        domConstruct.place(this._containersMenu.domNode, this._mainContainersDiv);
                     }));
                 }
 
@@ -257,7 +257,7 @@ define(['dojo/_base/declare',
                   //  console.log("adding to log", newState);
 
 
-                    this._mainLogDiv.innerHTML += "<br/>" + newState;
+                 //   this._mainLogDiv.innerHTML += "<br/>" + newState;
                 }
 
 

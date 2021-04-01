@@ -113,7 +113,10 @@ define(['dojo/_base/declare',
                     this.domNode.innerHTML = "";
 
                     let newWorkspaceButton = domConstruct.create("div");
-                    newWorkspaceButton.innerHTML = "❖"
+                    newWorkspaceButton.setAttribute("title", "New Workspace");
+                    newWorkspaceButton.setAttribute("id", "addWorkspaceCommand");
+
+                    newWorkspaceButton.innerHTML = "New ❖"
                     domClass.add(newWorkspaceButton, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetAddCommandDiv");
 
                     on(newWorkspaceButton, 'click', lang.hitch(this, function (evt) {
@@ -132,6 +135,9 @@ define(['dojo/_base/declare',
                         let newWorkspaceInfo = domConstruct.create("div");
 
                         newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
+
+                        newWorkspaceInfo.setAttribute("title", "Switch to " +workspaceState.workspaceName + " workspace \n(Opt + Click) to rename");
+
                         domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv");
 
 

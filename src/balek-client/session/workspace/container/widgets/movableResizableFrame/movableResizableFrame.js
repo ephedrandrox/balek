@@ -69,7 +69,7 @@ define(['dojo/_base/declare',
 
             _topBarCloseNode: null,
             _topBarDockNode: null,
-
+            _workspaceContainableStateWatchHandle: null,
 
             _dnd: null,
             _resizeHandle: null,
@@ -85,16 +85,27 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
 
-
+                console.log("quill", this._workspaceContainableState );
                 if (this._workspaceContainableState !== null)
                 {
+                    this._workspaceContainableStateWatchHandle = this._workspaceContainableState.watch(lang.hitch(this, this.onWorkspaceContainableStateUpdate));
+
                     let containerName = this._workspaceContainableState.get("containerName");
+
+                    console.log("quill", this._workspaceContainableState );
+
                     if(containerName)
                     {
                         this._containerName = containerName;
                     }
                 }
 
+            },
+            onWorkspaceContainableStateUpdate: function(name, oldState,newState){
+                if(name.toString() === "containerName")
+                {
+                   this._containerNameDiv.innerHTML = newState;
+                }
             },
             startup: function(){
                console.log("balekWorkspaceContainerWidgetMovableResizableFrame startup called");

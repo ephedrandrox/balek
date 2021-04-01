@@ -543,6 +543,10 @@ define(['dojo/_base/declare',
                     return false;
                 }
             },
+            getContainable: function(){
+               return this._containedInterfaceHandle;
+            },
+
             isInOverlayWorkspace: function(){
                 let overlayWorkspace = this.workspaceManagerCommands.getActiveOverlayWorkspace();
 

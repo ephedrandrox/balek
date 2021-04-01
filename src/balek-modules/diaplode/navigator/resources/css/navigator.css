@@ -14,13 +14,10 @@ body {
     position: absolute;
     pointer-events: auto;
 
-    background: rgba(65, 17, 95, 0.8);
+    background: none;
     display: inline-block;
     text-align: center;
     padding: 0px;
-    border: solid #050530 3px;
-    -webkit-box-shadow: 0px 0px 15px 8px #050530;
-    box-shadow: 0px 0px 15px 8px #050530;
     border-radius: 50%;
     visibility: visible;
     z-index: 5;
@@ -32,10 +29,11 @@ body {
     outline: none;
     opacity: 0;
 
+border: none;
+    cursor: move;
 }
 
 .diaplodeNavigatorInterface:focus{
-border: solid #073434 3px;
 }
 
 .diaplodeNavigatorInterfaceWorkspacesDiv {
@@ -43,6 +41,18 @@ border: solid #073434 3px;
 
 
 
+}
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+    position: relative;
+display: inline-block;
+border:none;
+background: none;
+}
+.diaplodeNavigatorInterfaceContainersDiv {
+    position: relative;
+    display: inline-block;
+    border:none;
+    background: none;
 }
 diaplodeNavigatorInterfaceWorkspaceButtonDiv{
 cursor: pointer;
@@ -73,7 +83,7 @@ visibility: hidden;
     border: solid white 2px;
 
    color: white;
-    border: solid black 2px;
+
 
     background: rgba(0,0,0,.5);
     top: 0;

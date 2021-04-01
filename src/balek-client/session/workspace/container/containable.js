@@ -61,13 +61,42 @@ define([ 	'dojo/_base/declare',
                 }
             },
             setContainerName: function(containerName){
+                console.log("quill - setContainerName", this,  containerName, this._componentStateSet);
+
                 this._componentStateSet("workspaceContainable", "containerName", containerName);
+
+                if(this._workspaceContainableState){
+                    this._workspaceContainableState.set("containerName", containerName);
+                }
+            },
+            getContainerName: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                    this.getComponentState("workspaceContainable").then(lang.hitch(this, function(workspaceContainableState){
+                        this._workspaceContainableState = workspaceContainableState;
+                        let containerName = workspaceContainableState.get("containerName");
+                        //  debugger;
+
+                            Resolve(containerName);
+
+
+
+                    })).catch(lang.hitch(this, function(errorResult){
+                        Reject({error: "Could not get componentState", result: errorResult});
+                    }));
+
+
+                }));
             },
             getContainerKeys: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
 
                     this.getComponentState("workspaceContainable").then(lang.hitch(this, function(workspaceContainableState){
-                        this._workspaceContainableState = workspaceContainableState;
+                       if(this._workspaceContainableState === null){
+
+                           this._workspaceContainableState = workspaceContainableState;
+                        }
+
                          let containerKeys = workspaceContainableState.get("containerKeys");
                        //  debugger;
 

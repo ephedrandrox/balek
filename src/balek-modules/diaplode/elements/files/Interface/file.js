@@ -90,7 +90,7 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-                this.setContainerName("💎 - File - Export - Menu");
+                this.setContainerName("💎 - File");
 
                 dojoReady(lang.hitch(this, function () {
                     if (this._componentKey) {
@@ -117,12 +117,20 @@ define(['dojo/_base/declare',
 
                         console.log("elelment", element);
 
-                        let currentFileContent = this._interfaceState.get("fileContent");
-                        if (currentFileContent) {
-                            //  this._viewNodeCodeMirror.setValue(currentFileContent);
-                        }
+
 
                         domConstruct.place(element, this._viewNode, "only");
+
+
+                        dojoReady(lang.hitch(this, function () {
+                            let currentFileContent = this._interfaceState.get("fileContent");
+                            if (currentFileContent) {
+                                this._viewNodeCodeMirror.setValue(currentFileContent);
+                                this._viewNodeCodeMirror.refresh();
+
+                                this.updateContainerName();
+                            }
+                        }));
 
                     }), {
                         value: "loading", lineNumbers: true,
@@ -137,6 +145,11 @@ define(['dojo/_base/declare',
                 }
 
             },
+            updateContainerName: function()
+            {
+                let newName = "💎 -" + this._interfaceState.get("fileContent").toString().substr(0,32);
+              this.setContainerName(newName);
+            },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
@@ -146,8 +159,7 @@ define(['dojo/_base/declare',
                     console.log("Instance Status:", newState);
                 }
                 if (name === "fileContent") {
-                    //  this._viewNodeTextArea.innerHTML =  newState ;
-
+                    this.updateContainerName();
                     if (this._viewNodeCodeMirror !== null) {
                         this._viewNodeCodeMirror.setValue(newState);
                     }
