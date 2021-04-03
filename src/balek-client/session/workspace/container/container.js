@@ -51,6 +51,7 @@ define(['dojo/_base/declare',
             _containedInterfaceHandle: null,
             _workspaceContainerWidget: null,
 
+            _containableCallbackOnMove: null,
 
             _cachedDisplayStyle: null,
 
@@ -138,6 +139,7 @@ define(['dojo/_base/declare',
 
                                     this._workspaceContainerWidget = new containerWidget({_sessionKey: this._sessionKey,
                                         _containerKey: this._containerKey,
+                                        _containerOnMoved: lang.hitch(this, this.onMoved),
                                         _containedInterfaceHandle:this._containedInterfaceHandle,
                                         _containerState: this._containerState,
                                         _workspaceContainableState: workspaceContainableState,
@@ -373,7 +375,14 @@ define(['dojo/_base/declare',
                 }
             },
             onMoved: function(MoveEvent){
-                this.updateInstanceElementBox();
+                if(this._containableCallbackOnMove !== null)
+                {
+                    this._containableCallbackOnMove(MoveEvent);
+                }
+            },
+            setCallbackOnMove: function(callbackFunction)
+            {
+                this._containableCallbackOnMove = callbackFunction;
             },
             onResized: function(MoveEvent){
                 this.updateInstanceElementBox();

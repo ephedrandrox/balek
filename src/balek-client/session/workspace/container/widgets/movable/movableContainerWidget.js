@@ -49,6 +49,8 @@ define(['dojo/_base/declare',
             _containedInterfaceHandle: null,
             _containerState: null,
 
+
+            _containerOnMoved: null,
             templateString: template,
             _mainCssString: mainCss,
             _resizeHandleCssString: resizeHandleCSS,
@@ -103,13 +105,13 @@ define(['dojo/_base/declare',
 
                 //topic.publish("addToCurrentWorkspace", this);
 
-
-
                this._dnd = new Moveable(this.domNode);
-
 
                 this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
 
+                if(this._containerOnMoved !== null){
+                 this._dnd.on("Move", this._containerOnMoved);
+                }
 
             },
             makeClickMovable: function(){

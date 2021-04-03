@@ -31,8 +31,10 @@ define([ 	'dojo/_base/declare',
             _menuCompanion: null,
             _navigatorSystemMenusState: null,
 
+
             workspaceManagerCommands: null,
 
+            _systemMenuWidget: null,
 
             constructor: function (args) {
 
@@ -102,12 +104,10 @@ define([ 	'dojo/_base/declare',
             },
             putMenuInWorkspaceContainer: function(){
                 this.initializeContainable();
-                console.log("systemMenu", this );
-
                 this.getContainerKeys().then(lang.hitch(this, function(containerKeys) {
                     //this waits until the containable has component state for container Keys
                     //               console.log(containerKeys, typeof containerKeys );
-                    console.log("systemMenu", containerKeys );
+
                     if (Array.isArray(containerKeys) && containerKeys.length === 0) {
                         //the containable has not been added to a container
                         //adding it to the workspace puts it in a
@@ -117,9 +117,14 @@ define([ 	'dojo/_base/declare',
                         let activeOverlayWorkspaceKey = this.workspaceManagerCommands.getActiveOverlayWorkspace().getWorkspaceKey();
                         console.log("workspaceUpdate", activeOverlayWorkspaceKey);
 
+
+
                         this.workspaceManagerCommands.addToWorkspaceContainer(this, workspaceContainerWidgetPath)
                             .then(lang.hitch(this, function (workspaceContainerKey) {
                                 //console.log("users", "gotWorkspaceContainerKey", workspaceContainerKey);
+
+                                this.connectContainerEvents(workspaceContainerKey);
+
                                 this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeOverlayWorkspaceKey)
                                     .then(lang.hitch(this, function (addContainerToWorkspaceResponse) {
                                         console.log("workspaceUpdate","Container added to workspace", addContainerToWorkspaceResponse);
@@ -133,6 +138,7 @@ define([ 	'dojo/_base/declare',
 
                     } else {
                         //component containable is already in a container
+                        this.connectContainerEvents(containerKeys);
                         console.log("systemMenu","already in a container", containerKeys);
                     }
                 })).catch(lang.hitch(this, function (error) {
@@ -141,6 +147,18 @@ define([ 	'dojo/_base/declare',
 
 
                // domConstruct.place(this._systemMenuWidget.domNode, this._navigatorWidget.domNode);
+            },
+            connectContainerEvents: function(containerKey){
+                let containerManager  =  this.workspaceManagerCommands.getContainerManager();
+                let workspaceContainer = containerManager.getContainer(containerKey);
+                workspaceContainer.setCallbackOnMove(lang.hitch(this, this.onContainerMove));
+
+            },
+            onContainerMove: function(MoveEvent)
+            {
+                   if (this._systemMenuWidget){
+                       this._systemMenuWidget._onMove();
+                   }
             },
             onInterfaceStateChange: function (name, oldState, newState) {
                 console.log("navigator onInterfaceStateChange" , name, newState);

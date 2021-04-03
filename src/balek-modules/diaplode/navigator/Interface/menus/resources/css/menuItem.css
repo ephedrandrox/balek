@@ -1,27 +1,31 @@
 
 .diaplodeNavigatorInterfaceMenuItem {
-    position: relative;
+    position: absolute;
     padding: 3px;
     margin: 3px;
     display: inline-block;
    left: 100px;
-    width: 200px;
-    height: 30px;
+    width: 75px;
+    height: 75px;
     opacity: 1;
     color: white;
-    border: solid white 3px;
+    border: solid #451818 3px;
     font-size: 12px;
     border-radius: 5px;
 cursor: pointer;
-    background: rgba(7, 20, 107, .8);
+    background: rgba(24, 29, 62, 0.8);
 
     pointer-events: auto;
+
+    border-radius: 20%;
+
+    overflow: hidden;
 }
 
 .diaplodeNavigatorInterfaceMenuItem:hover {
 
     color: white;
-    border: solid white 3px;
+    border: solid #193516 3px;
 
 
     background: rgba(83, 5, 35, .8);
@@ -29,15 +33,31 @@ cursor: pointer;
 
 .diaplodeNavigatorInterfaceMenuItemNameDiv {
     position: absolute;
-    height: 30px;
-    width: 180px;
+    top: 0px;
+    left: 0px;
+    height: 75px;
+    width: 75px;
+
+    padding: 8px;
+
 }
 
 
 
+
+.diaplodeNavigatorInterfaceMenuItemEmojiDiv {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    height: 27px;
+    width: 27px;
+    border-radius: 20%;
+    font-size: 24px;
+}
 .diaplodeNavigatorInterfaceMenuItemImage {
     position: absolute;
     top: 0;
     left: 0;
-    width: 20px;
+    height: 75px;
+    width: 75px;
 }

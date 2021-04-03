@@ -64,6 +64,8 @@ define(['dojo/_base/declare',
                    // console.log("no place to go", this);
                 }
 
+
+                this._mainEmoji.innerHTML = this._menuCompanion.emoji;
             },
 
             //##########################################################################################################
