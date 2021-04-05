@@ -155,6 +155,26 @@ define([ 	'dojo/_base/declare',
                         }));
                     }
                 }));
+            },
+            getContainer: function() {
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    this.getContainerKeys().then(lang.hitch(this, function (containerKeys) {
+                        if (Array.isArray(containerKeys) && containerKeys.length === 0) {
+                            //There is no Container!
+                            //todo, if argument is true, create a container!
+                            //for now if lets only use this when we expect a container
+                            Reject("There is no container, Make one in containable.js getContainer()")
+                        }
+                        else
+                        {
+                            let containerManager  =  this.workspaceManagerCommands.getContainerManager();
+                            let workspaceContainer = containerManager.getContainer(containerKeys);
+                            Resolve(workspaceContainer);
+                        }
+                    })).catch(lang.hitch(this, function (error) {
+                        Reject({"getting container keys error": error});
+                    }));
+                }));
             }
         });
     });

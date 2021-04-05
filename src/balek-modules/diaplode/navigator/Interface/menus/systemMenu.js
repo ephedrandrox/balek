@@ -123,7 +123,7 @@ define([ 	'dojo/_base/declare',
                             .then(lang.hitch(this, function (workspaceContainerKey) {
                                 //console.log("users", "gotWorkspaceContainerKey", workspaceContainerKey);
 
-                                this.connectContainerEvents(workspaceContainerKey);
+                                this.connectContainer(workspaceContainerKey);
 
                                 this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeOverlayWorkspaceKey)
                                     .then(lang.hitch(this, function (addContainerToWorkspaceResponse) {
@@ -138,7 +138,7 @@ define([ 	'dojo/_base/declare',
 
                     } else {
                         //component containable is already in a container
-                        this.connectContainerEvents(containerKeys);
+                        this.connectContainer(containerKeys);
                         console.log("systemMenu","already in a container", containerKeys);
                     }
                 })).catch(lang.hitch(this, function (error) {
@@ -148,11 +148,15 @@ define([ 	'dojo/_base/declare',
 
                // domConstruct.place(this._systemMenuWidget.domNode, this._navigatorWidget.domNode);
             },
+            connectContainer: function(containerKey){
+                //todo put this in containable
+                this.connectContainerEvents(containerKey);
+            },
             connectContainerEvents: function(containerKey){
+                //todo put this in containable to be extended
                 let containerManager  =  this.workspaceManagerCommands.getContainerManager();
                 let workspaceContainer = containerManager.getContainer(containerKey);
                 workspaceContainer.setCallbackOnMove(lang.hitch(this, this.onContainerMove));
-
             },
             onContainerMove: function(MoveEvent)
             {

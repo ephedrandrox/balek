@@ -146,6 +146,9 @@ define(['dojo/_base/declare',
             },
 
             arrangeWidgets : function(widgets, anchorObject){
+
+                //todo, put this in layout
+                //use component to store the needed state
                 let animations = new Array();
 
                 let windowDimensions = dojoWindow.getBox();
