@@ -14,15 +14,15 @@
     box-shadow: 0px 0px 15px 8px #050530;
     border-radius: 15px;
 
-    border: solid black 3px;
-    padding:0px;
-    margin: 0px;
+    border: solid rgb(111,111,111) 3px;
+    padding:10px;
+    margin: 20px;
 
 
     font-size: 14pt;
 
 text-align: center;
-background: rgba(0,0,0,.5);
+background: rgba(0,0,0,.6);
 
     cursor: move;
 }

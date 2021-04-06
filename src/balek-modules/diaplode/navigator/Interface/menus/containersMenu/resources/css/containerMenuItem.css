@@ -10,8 +10,8 @@
     opacity: 1;
 
 
+    border: solid rgb(111,111,111) 3px;
 
-    border: solid black 3px;
     padding:5px;
     margin: 4px;
     cursor: pointer;
@@ -19,6 +19,8 @@
 
     background: rgba(0,0,0,.5);
 
+
+border-radius: 5px;
 
 }
 

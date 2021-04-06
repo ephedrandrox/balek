@@ -22,6 +22,7 @@ pointer-events: auto;
 
     border: solid transparent 3px;
 
+background: rgba(111,111,111, .8);
 }
 
 .diaplodeNavigatorInterfaceSystemMenuWidget:hover{
