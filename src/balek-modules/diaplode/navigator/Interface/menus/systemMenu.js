@@ -68,7 +68,10 @@ define([ 	'dojo/_base/declare',
 
                 let finishLoading = lang.hitch(this, function(){
 
-                    this._systemMenuWidget = new systemMenuWidget({_instanceKey: this._instanceKey, _systemMenu: systemMap, _navigatorWidget: this._navigatorWidget});
+                    this._systemMenuWidget = new systemMenuWidget({_instanceKey: this._instanceKey, _systemMenu: systemMap,
+                                                                    _navigatorWidget: this._navigatorWidget,
+                                                                    _instanceCommands: this._instanceCommands,
+                                                                    _menuInterfaceState: this._interfaceState});
 
                     if(this._systemMenuWidget.domNode){
                         console.log("systemMenu", "no aspect after", this._systemMenuWidget.domNode );
@@ -165,8 +168,7 @@ define([ 	'dojo/_base/declare',
                    }
             },
             onInterfaceStateChange: function (name, oldState, newState) {
-                console.log("navigator onInterfaceStateChange" , name, newState);
-                //Since We are extending with the remoteCommander
+               //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
 
                 this.inherited(arguments);
@@ -177,7 +179,12 @@ define([ 	'dojo/_base/declare',
                 }
 
 
-
+            },
+            startupContainable: function(){
+                if(this._systemMenuWidget && this._systemMenuWidget.startup)
+                {
+                    this._systemMenuWidget.startup();
+                }
             },
             syncedMapItemStateChange: function(itemKey, oldState, newState)
             {

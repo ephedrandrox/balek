@@ -82,6 +82,10 @@ define(['dojo/_base/declare',
             startup: function()
             {
                 this._workspaceContainerWidget.startup();
+                if(this._containedInterfaceHandle !== null){
+                    this._containedInterfaceHandle.startupContainable();
+                }
+
             },
             connectToContainerInstance: function(){
 

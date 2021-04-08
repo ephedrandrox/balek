@@ -139,6 +139,9 @@ define([ 	'dojo/_base/declare',
                     this._assignedContainer.show();
                 }
             },
+            startupContainable: function(){
+                console.log("Startup Containable: startupContainable() should be ovwritten in Containble Extensions", this);
+            },
             getDomNode: function()
             {
                 return this.domNode;

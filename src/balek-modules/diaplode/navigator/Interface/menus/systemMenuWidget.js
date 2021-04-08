@@ -55,6 +55,8 @@ define(['dojo/_base/declare',
 
             _moveTimeout: null,
 
+            _menuInterfaceState: null,
+            _menuInterfaceStateWatchHandle: null,
 
 
             //##########################################################################################################
@@ -79,22 +81,32 @@ define(['dojo/_base/declare',
                     this._systemMenu._syncedMap.setStateWatcher(lang.hitch(this, this.onSystemMenuStateChange));
                 }
 
+                if(this._menuInterfaceState)
+                {
+                    this._menuInterfaceStateWatchHandle = this._menuInterfaceState.watch(lang.hitch(this, this.onMenuInterfaceStateChange));
+                }
 
             },
 
             postCreate: function()
         {
-            console.log("systemMenuWidget postCreate",this._systemMenu );
-
             this.refreshView();
             //
-
 
             //topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
             //only do this then reset
             //
             // this.makeMovable();
         },
+            startup: function(){
+                this.refreshView();
+            },
+            onMenuInterfaceStateChange: function(name, oldState, newState){
+
+                if (name.toString() === "activeStatus") {
+                   this.refreshView();
+                }
+            },
             onSystemMenuStateChange: function(name, oldState, newState){
                 console.log("system Menu", name, oldState, newState);
 
@@ -119,6 +131,29 @@ define(['dojo/_base/declare',
                     this._menuItemWidgets[name.toString()].setName(newState.name);
                 }
             },
+            isMenuActive: function(){
+                let menuActive = false;
+
+                if( this._menuInterfaceState)
+                {
+                  menuActive = this._menuInterfaceState.get("activeStatus");
+                }
+                if(menuActive === "Active")
+                {
+                    return true;
+                }else
+                {
+                    return false;
+                }
+            },
+            showMenu: function()
+            {
+                domStyle.set(this._menuItems, {"display": "block"});
+            },
+            hideMenu: function()
+            {
+                domStyle.set(this._menuItems, {"display": "none"});
+            },
             refreshView: function(){
                 if(this._systemMenu && this._systemMenu._menuCompanion && this._systemMenu._menuCompanion.name)
                 {
@@ -128,7 +163,17 @@ define(['dojo/_base/declare',
                     console.log( "SystemMenu error", this, this._systemMenu);
                 }
 
-                this._navigatorWidget.arrangeSystemMenus();
+                if(this.isMenuActive())
+                {
+                    this.showMenu();
+                }else {
+                    this.hideMenu();
+                }
+
+                if(this.domNode)
+                {
+                    this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode).play();
+                }
 
                 let menuItemKeys =  Object.keys(this._menuItemWidgets);
 
@@ -300,17 +345,21 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
 
-            _onClick: function(event){
+            _onDblClick: function(event){
                 //this.setName("ThisMenuNameFROMCOMMAND");
                // this.setActive();
 
                 console.log("systemMenu",event );
 
                 let currentStateToggle = {"block": "none", "none": "block"};
+                let currentStateCallbackToggle = {"block": "Active", "none": "InActive"};
 
-                domStyle.set(this._menuItems, {"display": currentStateToggle[domStyle.get(this._menuItems, "display")]});
+                let newStateDisplay = currentStateToggle[domStyle.get(this._menuItems, "display")];
 
 
+                domStyle.set(this._menuItems, {"display": newStateDisplay});
+
+                this._instanceCommands.changeActiveStatus(currentStateCallbackToggle[newStateDisplay]);
                 if(this.domNode)
                 {
                     this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode).play();
@@ -405,7 +454,14 @@ define(['dojo/_base/declare',
 
             unload: function () {
                 console.log("Destroying menu");
+
+                this._menuInterfaceStateWatchHandle.unwatch();
+                this._menuInterfaceStateWatchHandle.remove();
+
                 this.inherited(arguments);
+
+
+
                 this.destroy();
             }
 

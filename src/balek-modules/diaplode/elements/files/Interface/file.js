@@ -162,6 +162,12 @@ define(['dojo/_base/declare',
                 let newName = "💎 -" + this._interfaceState.get("fileContent").toString().substr(0,32);
               this.setContainerName(newName);
             },
+            startupContainable: function(){
+                if(this._viewNodeCodeMirror && this._viewNodeCodeMirror.refresh)
+                {
+                     this._viewNodeCodeMirror.refresh();
+                }
+            },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
