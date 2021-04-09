@@ -106,7 +106,7 @@ define(['dojo/_base/declare',
                                 // this.domNode.innerHTML= "hi";
 
                             } else {
-                               // this._containerWidgets[containerKey].refreshWidget();
+
                                 //check if in domnode
                             }
 
@@ -118,6 +118,7 @@ define(['dojo/_base/declare',
 
                                     if (this._containerWidgets[containerKey]._container.isDocked()) {
                                         domConstruct.place(this._containerWidgets[containerKey].domNode, this.domNode);
+                                        this._containerWidgets[containerKey].refreshWidget();
                                     }
                                 } else if (this._containerWidgets[containerKey]._container.isInOverlayWorkspace()) {
                                     //dont add anywhere yet

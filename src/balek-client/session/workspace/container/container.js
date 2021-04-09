@@ -55,10 +55,13 @@ define(['dojo/_base/declare',
 
             _cachedDisplayStyle: null,
 
+            _containerInterfaceResolvesWaiting: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
+                this._containerInterfaceResolvesWaiting = [];
                // console.log("container starting");
                 this._interfaceKeys = { instanceKey: null,
                                         componentKey: null};
@@ -255,6 +258,11 @@ define(['dojo/_base/declare',
                 if(containedInterfaceHandle.isContainable && containedInterfaceHandle.isContainable())
                 {
                     this._containedInterfaceHandle = containedInterfaceHandle;
+
+                    for (const key in this._containerInterfaceResolvesWaiting){
+                        let Promise = this._containerInterfaceResolvesWaiting.pop();
+                        Promise.Resolve(this._containedInterfaceHandle);
+                    }
                     return true;
                 }else {
                     console.log("containedInterfaceHandle is not containable");
@@ -557,7 +565,17 @@ define(['dojo/_base/declare',
                 }
             },
             getContainable: function(){
-               return this._containedInterfaceHandle;
+              // return this._containedInterfaceHandle;
+
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    if (this._containedInterfaceHandle !== null && this._containedInterfaceHandle !== "Getting Handle") {
+                        console.log("XXDD","this._containedInterfaceHandle", this._containedInterfaceHandle );
+
+                        Resolve(this._containedInterfaceHandle);
+                    } else {
+                        this._containerInterfaceResolvesWaiting.push({Resolve: Resolve, Reject: Reject});
+                    }
+                }));
             },
 
             isInOverlayWorkspace: function(){

@@ -65,36 +65,58 @@ define(['dojo/_base/declare',
 
 
 
-                let containable = this._container.getContainable();
-
-                if(containable &&  containable.getComponentState)
-                {
-                   containable.getWorkspaceContainableState().then(lang.hitch(this, function(workspaceStateResult){
-                       console.log("pppppp", workspaceStateResult);
-
-                       this._workspaceContainableState = workspaceStateResult;
-
-                       if (this._workspaceContainableState !== null)
-                       {
-                           this._workspaceContainableStateWatchHandle = this._workspaceContainableState.watch(lang.hitch(this, this.onWorkspaceContainableStateUpdate));
-
-                           let containerName = this._workspaceContainableState.get("containerName");
-
-                           console.log("pppppp", this._workspaceContainableState );
-
-                           if(containerName)
-                           {
-                               this._containerName = containerName;
-                           }
-                       }
+                this._container.getContainable().then(lang.hitch(this, function(containableInterface){
+                    console.log("XXDD","containableInterface", containableInterface );
 
 
-                   })).catch(lang.hitch(this, function(errorResult){
-                       console.log("error", errorResult);
+                    if(containableInterface &&  containableInterface.getComponentState)
+                    {
+                        containableInterface.getWorkspaceContainableState().then(lang.hitch(this, function(workspaceStateResult){
+                            console.log("XXDD","onWorkspaceContainableStateUpdate", workspaceStateResult );
+
+                            if (this._workspaceContainableState === null){
+                                this._workspaceContainableState = workspaceStateResult;
+
+                            }
 
 
-                   }));
-                }
+                            if (this._workspaceContainableState !== null)
+                            {
+
+                                this._workspaceContainableStateWatchHandle = this._workspaceContainableState.watch(lang.hitch(this, this.onWorkspaceContainableStateUpdate));
+
+                                let containerName = this._workspaceContainableState.get("containerName");
+
+
+                                console.log("XXDD","onWorkspaceContainableStateUpdate",containerName, this._workspaceContainableState  );
+
+                                debugger;
+                                if(containerName)
+                                {
+                                    this._containerName = containerName;
+                                }
+
+                                this.refreshWidget();
+
+                            }
+
+
+                        })).catch(lang.hitch(this, function(errorResult){
+                            console.log("error", errorResult);
+
+
+                        }));
+                    }else {
+                        console.log("XXDD","NoContainable!", containableInterface, this );
+
+                    }
+
+
+                })).catch(function(errorResult){
+                    console.log("XXDD","errorResult", errorResult );
+
+                });
+
 
 
 
@@ -109,6 +131,8 @@ define(['dojo/_base/declare',
 
             },
             onWorkspaceContainableStateUpdate: function(name, oldState,newState){
+                console.log("XXDD","onWorkspaceContainableStateUpdate", name, oldState, newState )
+
                 if(name.toString() === "containerName")
                 {
 
@@ -123,7 +147,8 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
             onContainerStateChange: function (name, oldState, newState) {
-                this._containerMenu.refreshWidget();
+                console.log("XXDD","onContainerStateChange", name, oldState, newState, this._containerState )
+                this.refreshWidget();
             },
 
             _onClick: function () {
@@ -148,18 +173,14 @@ define(['dojo/_base/declare',
 
                     let name = "Container"
 
-                    let containable = this._container.getContainable();
-                    if(containable && containable.getContainerName)
-                    {
-                        containable.getContainerName().then(lang.hitch(this, function(containerNameResult){
-                            this.domNode.innerHTML = containerNameResult ;
-                        })).catch(lang.hitch(this, function(errorResult){
+                    console.log("XXDD","refreshWidget", name, this._container );
 
-                        }));
-                    }else {
 
-                    }
-                    if (this._container.isInActiveWorkspace()) {
+                    if(this._workspaceContainableState)
+                   {
+                       name = this._workspaceContainableState.get("containerName");
+                   }
+                    if (this._container && this._container.isInActiveWorkspace()) {
 
                         this.domNode.innerHTML += "";
                         if (this._container.isDocked()) {
@@ -168,7 +189,7 @@ define(['dojo/_base/declare',
                             this.domNode.innerHTML += "not docked";
 
                         }
-                    } else if (this._container.isInOverlayWorkspace()) {
+                    } else if (this._container && this._container.isInOverlayWorkspace()) {
                         this.domNode.innerHTML = "overlay";
 
                     } else {
