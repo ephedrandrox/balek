@@ -1,4 +1,4 @@
-.diaplodeNavigatorInterfaceSystemMenuWidget{
+.diaplodeNavigatorInterfaceElementMenuWidget{
     position: relative;
     display: inline-block;
     top:0;
@@ -18,23 +18,23 @@
     margin: 0;
     width: 75px;
     height:75px;
-pointer-events: auto;
+    pointer-events: auto;
 
     border: solid transparent 3px;
 
-background: rgba(111,111,111, .8);
+    background: rgba(111,111,111, .8);
 }
 
-.diaplodeNavigatorInterfaceSystemMenuWidget:hover{
+.diaplodeNavigatorInterfaceElementMenuWidget:hover{
     border: solid purple 3px;
 
 }
 
-.diaplodeNavigatorInterfaceSystemMenuWidget:focus{
+.diaplodeNavigatorInterfaceElementMenuWidget:focus{
     border: solid #50d1d1 3px;
 }
 
-.diaplodeNavigatorInterfaceSystemMenuWidgetImage{
+.diaplodeNavigatorInterfaceElementMenuWidgetImage{
     position: absolute;
     top:0;
     left: 0;
@@ -45,7 +45,7 @@ background: rgba(111,111,111, .8);
 
 }
 
-.diaplodeNavigatorInterfaceSystemMenuWidgetTitle{
+.diaplodeNavigatorInterfaceElementMenuWidgetTitle{
     position: absolute;
     color: white;
     position: absolute;
@@ -60,7 +60,7 @@ background: rgba(111,111,111, .8);
     background: rgba(17, 89, 98, 0.4);
 }
 
-.diaplodeNavigatorInterfaceSystemMenuWidgetEmoji{
+.diaplodeNavigatorInterfaceElementMenuWidgetEmoji{
     position: absolute;
 
     position: absolute;
@@ -80,7 +80,7 @@ background: rgba(111,111,111, .8);
 }
 
 
-.diaplodeNavigatorInterfaceSystemMenuWidgetMenuItems{
+.diaplodeNavigatorInterfaceElementMenuWidgetMenuItems{
     position: relative;
     display: inline-block;
     width: 70vw;

@@ -16,8 +16,8 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/diaplode/navigator/resources/html/menuItem.html',
-        'dojo/text!balek-modules/diaplode/navigator/resources/css/menuItem.css',
+        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/elementsMenu/resources/html/menuItem.html',
+        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/elementsMenu/resources/css/menuItem.css',
 
         'balek-modules/Interface',
 
@@ -30,7 +30,7 @@ define(['dojo/_base/declare',
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss, baseInterface, stateSynced, remoteCommander) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceMenuItem", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
+        return declare("moduleDiaplodeNavigatorInterfaceElementsMenuElementMenuMenuItem", [_WidgetBase, _TemplatedMixin, baseInterface, stateSynced, remoteCommander], {
             _instanceKey: null,
             _menuKey: null,
             templateString: template,
@@ -48,51 +48,46 @@ define(['dojo/_base/declare',
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-                dojoReady(lang.hitch(this, function () {
-                    if(  this._componentKey )
-                    {
-                        this.askToConnectInterface();
-                    }
-                }));
+
 
             },
             postCreate: function () {
+                //topic.publish("addToMainContentLayer", this.domNode);
                 this._nameDiv.innerHTML = this._name;
-                topic.publish("addToMainContentLayer", this.domNode);
+
+                if(this._menuWidget && this._menuWidget.domNode)
+                {
+
+                    domConstruct.place(this.domNode, this._menuWidget.domNode);
+                }else
+                {
+                    // console.log("no place to go", this);
+                }
+
+
+                this._mainEmoji.innerHTML = this._menuCompanion.emoji;
             },
 
             //##########################################################################################################
             //State Functions Section
             //##########################################################################################################
-
-            onInterfaceStateChange: function(name, oldState, newState){
-              // console.log("menu Items State change", name, newState);
-
-                if (name === "interfaceRemoteCommands") {
-                    this.linkRemoteCommands(newState);
-                    //ready to show widget;
-                    this.introAnimation();
-
-                }
-
-                //Since We are extending with the remoteCommander
-                //We Check for interfaceRemoteCommandKey
-                else if (name === "interfaceRemoteCommandKey") {
-                    console.log("Remote COmmander Key!");
-                    this._interfaceRemoteCommanderKey = newState;
-
-                }else if (name === "name") {
-                   this._nameDiv.innerHTML = newState;
-                }
-                else{
-                   // console.log("state unaccounted for....", name, newState);
-                }
+            setName: function(name){
+                this._name = name;
+                this._nameDiv.innerHTML = this._name;
             },
 
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
 
+            _onClick: function(){
+                //console.log(this._menuCompanion, this._itemKey);
+                this._menuCompanion.load(this._itemKey).then(function(Result){
+                    console.log("Menu item load result", Result);
+                    //todo decide what to do here, more container to this workspace?
+
+                }).catch(function(errorResult){});
+            },
             _onFocus: function () {
                 //todo make it do something
             },

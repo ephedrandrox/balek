@@ -1,7 +1,11 @@
-define(['dojo/_base/declare',
+//Navigator Interface Elements Menu Element Menu Class
+//todo Clean this up and move arrangeWidgets to layout in ui
+define([
+        //Dojo Includes
+        'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/_base/array',
-'dojo/dom',
+        'dojo/dom',
         'dojo/dom-construct',
         "dojo/_base/window",
         'dojo/on',
@@ -13,37 +17,31 @@ define(['dojo/_base/declare',
         "dijit/focus",
         "dojo/ready",
         'dojo/_base/fx',
-
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-
-        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/resources/html/systemMenuWidget.html',
-        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/resources/css/systemMenuWidget.css',
-
-        'balek-modules/Interface',
-
-
-
-
-
-        "balek-modules/diaplode/navigator/Interface/menus/menuItem",
-
-        "balek-modules/diaplode/ui/input/getUserInput"
-
+        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/elementsMenu/resources/html/elementMenu.html',
+        'dojo/text!balek-modules/diaplode/navigator/Interface/menus/elementsMenu/resources/css/elementMenu.css',
+        //Balek Interface Includes
+        "balek-modules/diaplode/navigator/Interface/menus/elementsMenu/menuItem",
+        //Balek Interface Includes
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-client/session/workspace/container/containable',
+        'balek-modules/components/syncedMap/Interface'
 
     ],
     function (declare, lang, arrayUtil, dom,
               domConstruct, win, on, domAttr, domStyle, domGeom, dojoWindow, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
-              mainCss, baseInterface,
-              menuItem, getUserInput) {
+              mainCss,
+              menuItem,
+              _syncedCommanderInterface,
+              _balekWorkspaceContainerContainable, syncedMapInterface) {
 
-        return declare("moduleDiaplodeNavigatorInterfaceSystemMenuWidget", [_WidgetBase, _TemplatedMixin, baseInterface], {
+        return declare("moduleDiaplodeNavigatorInterfaceElementsMenuElementMenuWidget", [_WidgetBase, _TemplatedMixin,
+            _syncedCommanderInterface,  _balekWorkspaceContainerContainable], {
 
             templateString: template,
-            baseClass: "diaplodeNavigatorInterfaceSystemMenuWidget",
-
-
+            baseClass: "diaplodeNavigatorInterfaceElementMenuWidget",
 
 
             _mainCssString: mainCss,
@@ -58,6 +56,7 @@ define(['dojo/_base/declare',
             _menuInterfaceState: null,
             _menuInterfaceStateWatchHandle: null,
 
+            _menuMap: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -69,57 +68,112 @@ define(['dojo/_base/declare',
                 this._newMenuItems =[];
                 this._availableMenuItems = {};
                 this._menuItemWidgets = {};
-                console.log("systemMenuWidget");
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-//this is bad
-                console.log("systemMenuState", "state", this._systemMenu);
+
 
                 if(this._systemMenu && this._systemMenu._syncedMap && this._systemMenu._syncedMap.setStateWatcher)
                 {
-                console.log("systemMenuState", "state", this._systemMenu._syncedMap);
                     this._systemMenu._syncedMap.setStateWatcher(lang.hitch(this, this.onSystemMenuStateChange));
                 }
+
 
                 if(this._menuInterfaceState)
                 {
                     this._menuInterfaceStateWatchHandle = this._menuInterfaceState.watch(lang.hitch(this, this.onMenuInterfaceStateChange));
                 }
 
+
+
             },
-
             postCreate: function()
-        {
-            this.refreshView();
-            //
+            {
+                console.log("XXAA", "postCreate", this._systemMenu);
 
-            //topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
-            //only do this then reset
-            //
-            // this.makeMovable();
-        },
+                this.putInWorkspaceOverlayContainer();
+
+                this.refreshView();
+
+            },
             startup: function(){
                 this.refreshView();
             },
-            onMenuInterfaceStateChange: function(name, oldState, newState){
+            //##########################################################################################################
+            //Get/Set Functions Section
+            //##########################################################################################################
+            getMenuCompanion(){
+                let menuMapComponentKey = this._interfaceState.get("syncedMapComponentKey").toString();
+                let menuCompanion = this._elementsMenu.getMenuCompanion(menuMapComponentKey);
+                return menuCompanion;
+            },
+            //##########################################################################################################
+            //Event Functions Section
+            //##########################################################################################################
+            onContainerMove: function(MoveEvent)
+            {
 
+                    this._onMove(MoveEvent);
+
+            },
+            onInterfaceStateChange: function (name, oldState, newState) {
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommands and link them
+                this.inherited(arguments);
+
+                if((name.toString() === "syncedMapComponentKey" && this._interfaceState.get("syncedMapInstanceKey")) ||
+                    (name.toString() === "syncedMapInstanceKey"  && this._interfaceState.get("syncedMapComponentKey"))  && this._menuMap === null){
+                    let syncedMapComponentKey = this._interfaceState.get("syncedMapComponentKey")
+                    let syncedMapInstanceKey =  this._interfaceState.get("syncedMapInstanceKey")
+                    this._menuMap = new syncedMapInterface({
+                        _componentKey: syncedMapComponentKey,
+                        _instanceKey: syncedMapInstanceKey
+                    });
+
+
+                    this._menuMapWatchHandle = this._menuMap.setStateWatcher(lang.hitch(this, this.onMenuMapChange));
+                }
+
+            },
+            onMenuMapChange: function(name, oldState, newState){
+                this.onSystemMenuStateChange(name, oldState, newState);
+            },
+
+            _onClick: function(){
+                console.log("navigator", "on element menu  click");
+
+            },
+            onMenuInterfaceStateChange: function(name, oldState, newState){
                 if (name.toString() === "activeStatus") {
-                   this.refreshView();
+                    this.refreshView();
                 }
             },
             onSystemMenuStateChange: function(name, oldState, newState){
-                console.log("system Menu", name, oldState, newState);
 
                 if(oldState === undefined && this._menuItemWidgets[name.toString()] === undefined)
                 {
-                    let newMenuItem =  menuItem({_itemKey: name.toString(), _userKey: newState._userKey, _menuCompanion: this._systemMenu._menuCompanion, _name: newState.name});
 
-                    this._menuItemWidgets[name.toString()] = newMenuItem;
+                    let loopUntil =  function(){
 
-                    if(this.domNode)
-                    {
-                        this.refreshView();
-                    }
+
+                        let menuCompanion = this.getMenuCompanion();
+                        if(menuCompanion !== undefined){
+                            this._systemMenu = menuCompanion;
+                            let newMenuItem =  menuItem({_itemKey: name.toString(),
+                                _userKey: newState._userKey,
+                                _menuCompanion: menuCompanion.menuCompanion, _name: newState.name});
+
+                            this._menuItemWidgets[name.toString()] = newMenuItem;
+                            if(this.domNode)
+                            {
+                                this.refreshView();
+                            }
+                        }else {
+                            console.log("XXAA", "FFVV", "onSystemMenuStateChange", "no menucompanion");
+                            setTimeout(lang.hitch(this, loopUntil), 500);
+                        }
+
+                    };
+                    lang.hitch(this, loopUntil)();
 
                 }else
                 {
@@ -136,7 +190,7 @@ define(['dojo/_base/declare',
 
                 if( this._menuInterfaceState)
                 {
-                  menuActive = this._menuInterfaceState.get("activeStatus");
+                    menuActive = this._menuInterfaceState.get("activeStatus");
                 }
                 if(menuActive === "Active")
                 {
@@ -155,10 +209,12 @@ define(['dojo/_base/declare',
                 domStyle.set(this._menuItems, {"display": "none"});
             },
             refreshView: function(){
-                if(this._systemMenu && this._systemMenu._menuCompanion && this._systemMenu._menuCompanion.name)
+                console.log("XXAA", "FFVV", "refreshView", this._systemMenu);
+
+                if(this._systemMenu && this._systemMenu.menuCompanion && this._systemMenu.menuCompanion.name)
                 {
-                    this._mainTitle.innerHTML = this._systemMenu._menuCompanion.name;
-                    this._mainEmoji.innerHTML = this._systemMenu._menuCompanion.emoji;
+                    this._mainTitle.innerHTML = this._systemMenu.menuCompanion.name;
+                    this._mainEmoji.innerHTML = this._systemMenu.menuCompanion.emoji;
                 }else {
                     console.log( "SystemMenu error", this, this._systemMenu);
                 }
@@ -347,7 +403,7 @@ define(['dojo/_base/declare',
 
             _onDblClick: function(event){
                 //this.setName("ThisMenuNameFROMCOMMAND");
-               // this.setActive();
+                // this.setActive();
 
                 console.log("systemMenu",event );
 
@@ -446,6 +502,75 @@ define(['dojo/_base/declare',
 
                     return newMenuItem;
                 }
+            },
+
+
+
+
+
+            //##########################################################################################################
+            //UI Functions Section
+            //##########################################################################################################
+            refreshWidget: function(){
+                console.log("navigator", "on workspaces main widget refresh");
+
+                console.log("navigator", "refreshing from menu", this.domNode);
+                if(this.domNode){
+                    this.domNode.innerHTML = "";
+
+                    let newWorkspaceButton = domConstruct.create("div");
+                    newWorkspaceButton.setAttribute("title", "New Workspace");
+                    newWorkspaceButton.setAttribute("id", "addWorkspaceCommand");
+
+                    newWorkspaceButton.innerHTML = "New ❖"
+                    domClass.add(newWorkspaceButton, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetAddCommandDiv");
+
+                    on(newWorkspaceButton, 'click', lang.hitch(this, function (evt) {
+                        console.log("navigator", "new workspace clicked");
+
+                        evt.stopPropagation();
+                        this.onAddWorkspaceClicked();
+                    }));
+
+                    domConstruct.place(newWorkspaceButton, this.domNode);
+
+                    for( const workspaceKey in this._navigatorWorkspaceMenuWidgets )
+                    {
+                        let workspaceState = this._navigatorWorkspaceMenuWidgets[workspaceKey];
+
+                        let newWorkspaceInfo = domConstruct.create("div");
+
+                        newWorkspaceInfo.innerHTML = "❖ - " + workspaceState.workspaceName;
+
+                        newWorkspaceInfo.setAttribute("title", "Switch to " +workspaceState.workspaceName + " workspace \n(Opt + Click) to rename");
+
+                        domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDiv");
+
+
+                        if(this.isActiveWorkspace && this.isActiveWorkspace(workspaceKey)){
+                            domClass.add(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDivActive");
+                        }else {
+                            domClass.remove(newWorkspaceInfo, "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidgetWorkspaceNameDivActive");
+                        }
+
+
+                        on(newWorkspaceInfo, 'click', lang.hitch(this, this.onWorkspaceMenuClick , workspaceKey,  this.workspaceManagerCommands.changeActiveWorkspace));
+
+                        domConstruct.place(newWorkspaceInfo, this.domNode);
+
+                        // this._mainWorkspacesDiv.innerHTML += workspaceState.workspaceName + "<br>";
+                    }
+                }
+
+            },
+
+            //##########################################################################################################
+            //Workspace Container Functions Section
+            //##########################################################################################################
+
+            getDomNode: function()
+            {
+                return this.domNode;
             },
 
             //##########################################################################################################

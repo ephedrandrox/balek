@@ -14,7 +14,6 @@ define(['dojo/_base/declare',
         'balek-modules/diaplode/navigator/interfaceCommands',
 
         'balek-modules/diaplode/navigator/Interface/navigator',
-        'balek-modules/diaplode/navigator/Interface/menus/systemMenu',
 
 
 //Balek Interface Extensions
@@ -31,15 +30,14 @@ define(['dojo/_base/declare',
               Stateful,
               navigatorInterfaceCommands,
               navigatorMainWidget,
-              navigatorSystemMenu,
               _syncedCommanderInterface) {
 
         return declare("moduleDiaplodeNavigatorModuleInterface", _syncedCommanderInterface, {
             _instanceKey: null,
-            _navigatorMainWidget: null,
+            _navigator: null,
 
 
-            _navigatorSystemMenusState: null,
+          //  _navigatorSystemMenusState: null,
 
 
             _isVisible: true,
@@ -47,21 +45,12 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                this._navigatorSystemMenusState = {}; //make state that is watchable
 
-                let navigatorSystemMenusState = declare([Stateful], {
-                });
-
-                this._navigatorSystemMenusState = new navigatorSystemMenusState({
-
-                });
-
-
-                // this._navigatorSystemMenusStateWatchHandle = this._navigatorSystemMenus.watch( lang.hitch(this, this.onNavigatorSystemMenusStateChange));
-              //  console.log("navigator", this);
 
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
-                this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
+
+               this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
+
                 this._commandsForOtherInterfaces.setCommand("toggleShowView", lang.hitch(this, this.toggleShowView));
                 this._commandsForOtherInterfaces.setCommand("toggleWorkspaceShowView", lang.hitch(this, this.toggleWorkspaceShowView));
                 this._commandsForOtherInterfaces.setCommand("toggleElementShowView", lang.hitch(this, this.toggleElementShowView))
@@ -74,14 +63,14 @@ define(['dojo/_base/declare',
             onInterfaceStateChange: function (name, oldState, newState) {
                 //this has to be here so remoteCommander works
                 this.inherited(arguments);
-                console.log("navigator", name, oldState, newState);
+
                 if (name === "navigatorInstanceKeys") {
-                    if(this._navigatorMainWidget === null)
+                    if(this._navigator === null)
                     {
-                        this._navigatorMainWidget = new navigatorMainWidget({
+
+                        this._navigator = new navigatorMainWidget({
                             _instanceKey: this._instanceKey,
-                            _componentKey: newState.componentKey,
-                            _navigatorSystemMenusState: this._navigatorSystemMenusState
+                            _componentKey: newState.componentKey
                         });
                     }
 
@@ -95,17 +84,16 @@ define(['dojo/_base/declare',
 
             },
             addSystemMenuList:function( syncedMap, menuCompanion){
-                //This function is
-               // lang.hitch(this, this.availableTaskStateChange);
+                //todo remove this after making elements store for interfaces
+                let loopUntil =  function(){
+                    if(this._navigator && this._navigator._elementMenu ){
+                        this._navigator._elementMenu.newMenu(syncedMap, menuCompanion);
+                    }else {
+                        setTimeout(lang.hitch(this, loopUntil), 500);
+                    }
+                };
 
-
-                if(menuCompanion.name && this._navigatorSystemMenusState.get(menuCompanion.name.toString()) === undefined)
-                {
-                    this._navigatorSystemMenusState.set(menuCompanion.name.toString(),navigatorSystemMenu({_instanceKey: this._instanceKey, _syncedMap: syncedMap, _menuCompanion: menuCompanion}) ) ;
-                }
-
-                //todo create object that stores synced Maps with their state watchers
-                //syncedMap.setStateWatcher(lang.hitch(objectManager, objectManager.availableTaskStateChange));
+                lang.hitch(this, loopUntil)();
 
             },
             receiveMessage: function (moduleMessage) {
@@ -114,11 +102,11 @@ define(['dojo/_base/declare',
             refreshView: function(){
                 if(this._isVisible)
                 {
-                    this._navigatorMainWidget.show();
+                    this._navigator.show();
 
                 }else
                 {
-                    this._navigatorMainWidget.hide();
+                    this._navigator.hide();
                 }
             },
             toggleShowView: function () {
@@ -132,24 +120,21 @@ define(['dojo/_base/declare',
             toggleWorkspaceShowView: function () {
                 console.log("toggleWorkspaceShowView ");
 
-                this._navigatorMainWidget.toggleWorkspaceShowView();
+                this._navigator.toggleWorkspaceShowView();
             },
             toggleElementShowView: function () {
                 console.log("toggleElementShowView ");
 
-                this._navigatorMainWidget.toggleElementShowView();
+                this._navigator.toggleElementShowView();
             },
             toggleContainerShowView: function () {
                 console.log("toggleContainerShowView ");
 
-                this._navigatorMainWidget.toggleContainerShowView();
+                this._navigator.toggleContainerShowView();
             },
             unload: function () {
-             //   this._navigatorSystemMenusStateWatchHandle.unwatch();
-             //   this._navigatorSystemMenusStateWatchHandle.remove();
 
-
-                this._navigatorMainWidget.unload();
+                this._navigator.unload();
             }
         });
     }

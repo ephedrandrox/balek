@@ -1,20 +1,25 @@
-define([ 	'dojo/_base/declare',
+//Navigator Interface Workspaces Menu Class
+define([
+        //Dojo Includes
+        'dojo/_base/declare',
         "dojo/_base/lang",
-
         'dojo/dom-class',
         "dojo/dom-style",
-
         'dojo/dom-construct',
         'dojo/on',
-
-
-
+        //Diaplode Includes
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
-
     ],
-    function (declare, lang,  domClass, domStyle,
+    function (
+              //Dojo Includes
+              declare,
+              lang,
+              domClass,
+              domStyle,
               domConstruct,
-              on, balekWorkspaceManagerInterfaceCommands ) {
+              on,
+              //Diaplode Includes
+              balekWorkspaceManagerInterfaceCommands ) {
 
         return declare( "diaplodeNavigatorInterfaceWorkspacesMenu",null, {
              _actions: null,
@@ -64,7 +69,6 @@ define([ 	'dojo/_base/declare',
                 this.refreshWidget();
             },
             onWorkspaceManagerStateChange: function(name, oldState, newState){
-
 
                 this.refreshWidget();
             },

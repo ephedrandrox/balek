@@ -101,7 +101,6 @@ define(['dojo/_base/declare',
                             if(element.insert && typeof element.insert === "string"){
                                 return true;
                             }else {
-                                console.log(element);
                                 return false;
                             }
 

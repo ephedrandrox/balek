@@ -120,7 +120,9 @@ define(['dojo/_base/declare',
               },
             prepareSyncedState: function()
             {
-                this._componentKey = this.getUniqueComponentKey();
+                if( !this._componentKey){
+                    this._componentKey = this.getUniqueComponentKey();
+                }
                 this._components[this._componentKey] = this;
                 this._interfaceState.set("componentKey",  this._componentKey);
 

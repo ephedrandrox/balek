@@ -23,7 +23,12 @@ define(['dojo/_base/declare',
         //Diaplode ui components
         "balek-modules/diaplode/ui/input/getUserInput",
 
-        'balek-modules/Interface'
+        'balek-client/session/workspace/workspaceManagerInterfaceCommands',
+
+        //Balek Interface Includes
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-client/session/workspace/container/containable'
+
 
 
     ],
@@ -31,14 +36,18 @@ define(['dojo/_base/declare',
               domConstruct, win, on, domClass, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss, workspacesMenu, getUserInput,
- baseInterface) {
+              balekWorkspaceManagerInterfaceCommands,
 
-        return declare("diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidget", [_WidgetBase, _TemplatedMixin, workspacesMenu, baseInterface], {
+              _syncedCommanderInterface,
+              _balekWorkspaceContainerContainable) {
+
+        return declare("diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidget", [ _WidgetBase, _TemplatedMixin,_syncedCommanderInterface, workspacesMenu, _balekWorkspaceContainerContainable  ], {
 
             templateString: template,
             baseClass: "diaplodeNavigatorInterfaceWorkspacesMenuNavigatorMainWidget",
 
 
+            workspaceManagerCommands: null,
 
 
             _mainCssString: mainCss,
@@ -48,19 +57,84 @@ define(['dojo/_base/declare',
             //##########################################################################################################
 
             constructor: function (args) {
+                let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
+                this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
+
 
                 console.log("navigator", "on workspaces main widget constructor", this.baseClass);
 
                 domConstruct.place(domConstruct.toDom("<style>" + mainCss + "</style>"), win.body());
 
+
             },
             postCreate: function()
             {
                 console.log("navigator", "on workspaces main widget post create", this.domNode);
+
+                this.putInWorkspaceOverlayContainer();
+
                 this.loadAndWatchWorkspaces();
 
             },
+            onInterfaceStateChange: function (name, oldState, newState) {
+                //Since We are extending with the remoteCommander
+                //We Check for interfaceRemoteCommands and link them
+                console.log("ZZXX", name, newState);
+                this.inherited(arguments);
 
+
+
+            },
+
+            putInWorkspaceOverlayContainer: function(){
+                console.log("ZZXX", this);
+
+                this.initializeContainable();
+                console.log("ZZXX", this);
+
+                this.getContainerKeys().then(lang.hitch(this, function(containerKeys) {
+                    //this waits until the containable has component state for container Keys
+                    //               console.log(containerKeys, typeof containerKeys );
+                    console.log("ZZXX", containerKeys);
+
+                    if (Array.isArray(containerKeys) && containerKeys.length === 0) {
+                        //the containable has not been added to a container
+                        //adding it to the workspace puts it in a
+                        // console.log("users", containerKeys);
+
+                        let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget";
+                        let activeOverlayWorkspaceKey = this.workspaceManagerCommands.getActiveOverlayWorkspace().getWorkspaceKey();
+                        console.log("ZZXX", activeOverlayWorkspaceKey);
+
+
+
+                        this.workspaceManagerCommands.addToWorkspaceContainer(this, workspaceContainerWidgetPath)
+                            .then(lang.hitch(this, function (workspaceContainerKey) {
+                                console.log("ZZXX", "gotWorkspaceContainerKey", workspaceContainerKey);
+
+                               // this.connectContainer(workspaceContainerKey);
+
+                                this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeOverlayWorkspaceKey)
+                                    .then(lang.hitch(this, function (addContainerToWorkspaceResponse) {
+                                        console.log("ZZXX","Container added to workspace", addContainerToWorkspaceResponse);
+                                    }))
+                                    .catch(lang.hitch(this, function (error) {
+                                        console.log( "ZZXX","Error adding container to workspace", error);
+                                    }));
+                            })).catch(lang.hitch(this, function (error) {
+                            console.log("ZZXX", "workspaces container error", error);
+                        }));
+
+                    } else {
+                        //component containable is already in a container
+                        this.connectContainer(containerKeys);
+                        console.log("ZZXX","already in a container", containerKeys);
+                    }
+                })).catch(lang.hitch(this, function (error) {
+                    console.log( "systemMenu","getting container keys error", error);
+                }));
+
+            },
 
             //##########################################################################################################
             //Event Functions Section
@@ -158,6 +232,14 @@ define(['dojo/_base/declare',
 
             },
 
+            //##########################################################################################################
+            //Workspace Container Functions Section
+            //##########################################################################################################
+
+            getDomNode: function()
+            {
+                return this.domNode;
+            },
 
             //##########################################################################################################
             //Interface Functions Section

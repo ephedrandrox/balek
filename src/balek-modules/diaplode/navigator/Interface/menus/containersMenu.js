@@ -1,18 +1,24 @@
-define(['dojo/_base/declare',
-        "dojo/_base/lang",
+//Navigator Interface Containers Menu Class
 
+define([
+        //Dojo Includes
+        'dojo/_base/declare',
+        "dojo/_base/lang",
         'dojo/dom-class',
         "dojo/dom-style",
-
         'dojo/dom-construct',
-        'dojo/on',
-
+        //Balek Command Includes
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
     ],
-    function (declare, lang, domClass, domStyle,
-              domConstruct,
-              on, balekWorkspaceManagerInterfaceCommands) {
+    function (
+        //Dojo Includes
+        declare,
+        lang,
+        domClass,
+        domStyle,
+        domConstruct,
+        balekWorkspaceManagerInterfaceCommands) {
 
         return declare("diaplodeNavigatorInterfaceContainersMenu", null, {
             _actions: null,

@@ -13,12 +13,11 @@ define(['dojo/_base/declare',
 
 
               _syncedCommanderInstance) {
-        return declare("moduleDiaplodeNavigatorSystemMenuInstance", [_syncedCommanderInstance], {
+        return declare("moduleDiaplodeNavigatorWorkspaceMenuInstance", [_syncedCommanderInstance], {
             _instanceKey: null,
             _sessionKey: null,
             _userKey: null,
             _componentKey: null,
-            _menuName: "no name",
 
 
             constructor: function (args) {
@@ -27,18 +26,18 @@ define(['dojo/_base/declare',
 
                 if(this._instanceKey !== null && this._sessionKey !== null && this._userKey !== null && this._componentKey !== null )
                 {
+
                     this._commands={
 
-                        "changeName" : lang.hitch(this, this.changeName),
-                        "changeActiveStatus" : lang.hitch(this, this.changeActiveStatus),
-
+                        "setDocked" : lang.hitch(this, this.setDocked),
                     };
 
-                    this._interfaceState.set("availableMenuItems", {});
-                    this._interfaceState.set("name",this._menuName);
-
+                    this._interfaceState.set("componentModule", "Navigator Workspace Menu");
                     this.prepareSyncedState();
                     this.setInterfaceCommands();
+
+                    this._interfaceState.set("componentModule", "Navigator Workspace Menu");
+
                 }
                 else{
 
@@ -46,17 +45,10 @@ define(['dojo/_base/declare',
                 }
 
 
+                console.log("moduleDiaplodeWorkspaceMenuInstance starting...");
+            },
+            setDocked: function(status, remoteCommandCallback){
 
-                console.log("moduleDiaplodeSystemMenuInstance starting...");
-            },
-            changeName: function(name, remoteCommandCallback)
-            {
-                this._interfaceState.set("name", name);
-                remoteCommandCallback({success: "Name Set"});
-            },
-            changeActiveStatus: function(status, remoteCommandCallback){
-                this._interfaceState.set("activeStatus", status);
-                remoteCommandCallback({success: "Active Status Set"});
             },
             _end: function () {
                 this.inherited(arguments);

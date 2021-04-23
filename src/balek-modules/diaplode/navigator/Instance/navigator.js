@@ -1,3 +1,4 @@
+//todo move and clean up this to custom menus
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
@@ -5,11 +6,19 @@ define(['dojo/_base/declare',
         'dojo/node!crypto',
 
 
-        'balek-modules/diaplode/navigator/Database/navigator/menus',
+       'balek-modules/diaplode/navigator/Database/navigator/menus',
 
 
-        'balek-modules/diaplode/navigator/Instance/radialMenu',//todo remove
-        'balek-modules/diaplode/navigator/Instance/menus/systemMenu',
+     //   'balek-modules/diaplode/navigator/Instance/radialMenu',//todo remove
+      //  'balek-modules/diaplode/navigator/Instance/menus/systemMenu',
+        'balek-modules/diaplode/navigator/Instance/menus/workspaceMenu',
+        'balek-modules/diaplode/navigator/Instance/menus/containerMenu',
+        'balek-modules/diaplode/navigator/Instance/menus/elementMenu',
+        'balek-modules/diaplode/navigator/Instance/menus/customMenu',
+
+
+
+
 
         'balek-modules/components/syncedCommander/Instance'
 
@@ -23,8 +32,13 @@ define(['dojo/_base/declare',
 
               menuDatabaseController,
 
-              radialMenu,
-              systemMenu,
+            //  radialMenu,
+           //   systemMenu,
+              workspaceMenu,
+              containerMenu,
+              elementMenu,
+              customMenu,
+
               _syncedCommanderInstance) {
         return declare("moduleDiaplodeNavigatorInstance", _syncedCommanderInstance, {
             _instanceKey: null,
@@ -33,6 +47,12 @@ define(['dojo/_base/declare',
 
             _systemMenuNames: {},
             _systemMenus: {},
+
+            _workspaceMenu: null,
+            _containerMenu: null,
+            _elementMenu: null,
+            _customMenu: null,
+
 
             _menus: {}, //todo remove
 
@@ -46,7 +66,10 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
                 this._menus = {}; //new Menus object for this instance
+
+
                 this._systemMenus = {};
                 this._systemMenuNames=  {};
 
@@ -82,7 +105,7 @@ define(['dojo/_base/declare',
                                 this._commands={
                                     "changeName" : lang.hitch(this, this.changeName),
                                     "newMenu" : lang.hitch(this, this.newMenu),
-                                    "requestSystemMenuInstance" : lang.hitch(this, this.requestSystemMenuInstance)
+                                 //   "requestSystemMenuInstance" : lang.hitch(this, this.requestSystemMenuInstance)
                                 };
 
                                 //set state
@@ -90,11 +113,33 @@ define(['dojo/_base/declare',
                                 this._interfaceState.set("activeFocus", true);
                                 this._interfaceState.set("log", "log Started");
 
-                                //todo attache these to the constructor in base class
-                                this.prepareSyncedState();
-                                this.setInterfaceCommands();
+
+                this._workspaceMenu = new workspaceMenu({_sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                    _userKey: this._userKey});
+
+               this._interfaceState.set("workspaceMenuKey", this._workspaceMenu.getComponentKey());
 
 
+                this._containerMenu = new containerMenu({_sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                    _userKey: this._userKey});
+
+                this._interfaceState.set("containerMenuKey", this._containerMenu.getComponentKey());
+
+                this._elementMenu = new elementMenu({_sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                    _userKey: this._userKey});
+
+                this._interfaceState.set("elementMenuKey", this._elementMenu.getComponentKey());
+
+
+                this._customMenu = new customMenu({_sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                   _userKey: this._userKey});
+
+                this._interfaceState.set("customMenuKey", this._customMenu.getComponentKey());
+
+
+                //todo attache these to the constructor in base class
+                this.prepareSyncedState();
+                this.setInterfaceCommands();
 
                 console.log("moduleDiaplodeNavigatorInstance starting...");
             },
