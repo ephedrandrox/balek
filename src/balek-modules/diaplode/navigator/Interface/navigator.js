@@ -10,6 +10,8 @@ define([
         "balek-modules/diaplode/navigator/Interface/menus/workspacesMenu/navigatorMainWidget",//todo make this like elementMenu Structure
         "balek-modules/diaplode/navigator/Interface/menus/containersMenu/navigatorMainWidget",//todo make this like elementMenu Structure
         "balek-modules/diaplode/navigator/Interface/menus/elementsMenu",
+        "balek-modules/diaplode/navigator/Interface/menus/customMenu",
+
         //Balek Class Extensions
         'balek-modules/components/syncedCommander/Interface'
     ],
@@ -24,10 +26,14 @@ define([
               workspacesMenu,
               containersMenu,
               elementsMenu,
+              customMenu,
               //Balek Class Extensions
               _syncedCommanderInterface) {
 
         return declare("moduleDiaplodeNavigatorInterface", [ _syncedCommanderInterface], {
+
+            _isVisible: false,
+
             _instanceKey: null,
 
             baseClass: "diaplodeNavigatorInterface",
@@ -36,6 +42,7 @@ define([
              _elementMenu: null,
              _containerMenu: null,
              _workspaceMenu: null,
+            _customMenu: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -89,6 +96,18 @@ define([
                     console.log("ZZXXELEMENTS", this._elementMenu);
 
                 }
+
+                if (name.toString() === "customMenuKey" && this._customMenu === null) {
+                    console.log("ZZXXcustomMenuKey", name, newState);
+
+                    this._customMenu = new customMenu({_navigatorInterface: this,
+                        _componentKey: newState.toString(),
+                        _sessionKey: this._sessionKey,
+                        _instanceKey: this._instanceKey});
+
+                    console.log("ZZXXcustomMenuKey", this._customMenu);
+
+                }
             },
 
             //##########################################################################################################
@@ -109,7 +128,27 @@ define([
 
                 this._containerMenu.toggleShowView();
             },
-            unload() {
+            refreshView: function(){
+                this._elementMenu.refreshView();
+
+                this._containerMenu.refreshView();
+                this._workspaceMenu.refreshView();
+            },
+            show: function(){
+                console.log("QQAA", "show");
+                this._isVisible = true;
+                this.refreshView();
+            },
+            hide: function(){
+                console.log("QQAA", "hide");
+                this._isVisible = false;
+                this.refreshView();
+
+            },
+            isVisible: function(){
+                return this._isVisible;
+            },
+            unload: function() {
 
                 this._elementMenu.unload();
                     this._containerMenu.unload();
