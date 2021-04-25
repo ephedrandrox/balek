@@ -184,6 +184,20 @@ define(['dojo/_base/declare',
 
                 console.log("navigator", "refreshing from menu", this.domNode);
                 if(this.domNode){
+
+
+                        let navigatorVisibility = this._navigatorOverlayState.get("isVisible");
+                        let workspaceMenuVisibility = this._navigatorOverlayState.get("workspaceMenuIsVisible");
+                    console.log("QQQQ", navigatorVisibility, workspaceMenuVisibility, this._navigatorOverlayState);
+
+
+                        if(navigatorVisibility && workspaceMenuVisibility) {
+                            this.show();
+                        }else
+                        {
+                            this.hide();
+                        }
+
                     this.domNode.innerHTML = "";
 
                     let newWorkspaceButton = domConstruct.create("div");

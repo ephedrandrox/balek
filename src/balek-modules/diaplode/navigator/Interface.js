@@ -94,7 +94,7 @@ define(['dojo/_base/declare',
                 if(name === "isVisible"){
                     console.log(oldState, newState);
                     let currentViewState = this._overlayViewState.get("isVisible");
-                    if(currentViewState != newState)
+                    if(currentViewState !== newState)
                     {
                         this._overlayViewState.set("isVisible", newState);
                     }
@@ -103,9 +103,25 @@ define(['dojo/_base/declare',
                 if(name === "elementMenuIsVisible"){
                     console.log(oldState, newState);
                     let currentViewState = this._overlayViewState.get("elementMenuIsVisible");
-                    if(currentViewState != newState)
+                    if(currentViewState !== newState)
                     {
                         this._overlayViewState.set("elementMenuIsVisible", newState);
+                    }
+                }
+                if(name === "workspaceMenuIsVisible"){
+                    console.log(oldState, newState);
+                    let currentViewState = this._overlayViewState.get("workspaceMenuIsVisible");
+                    if(currentViewState !== newState)
+                    {
+                        this._overlayViewState.set("workspaceMenuIsVisible", newState);
+                    }
+                }
+                if(name === "containerMenuIsVisible"){
+                    console.log(oldState, newState);
+                    let currentViewState = this._overlayViewState.get("containerMenuIsVisible");
+                    if(currentViewState !== newState)
+                    {
+                        this._overlayViewState.set("containerMenuIsVisible", newState);
                     }
                 }
             },
@@ -135,7 +151,9 @@ define(['dojo/_base/declare',
             },
             toggleWorkspaceShowView: function () {
                 console.log("toggleWorkspaceShowView ");
-                this._navigator.toggleWorkspaceShowView();
+                let currentViewState = this._overlayViewState.get("workspaceMenuIsVisible");
+                this._overlayViewState.set("workspaceMenuIsVisible", !currentViewState);
+                this._instanceCommands.setWorkspaceMenuVisibility(!currentViewState);
             },
             toggleElementShowView: function () {
                 console.log("toggleElementShowView ");
@@ -146,8 +164,9 @@ define(['dojo/_base/declare',
             },
             toggleContainerShowView: function () {
                 console.log("toggleContainerShowView ");
-
-                this._navigator.toggleContainerShowView();
+                let currentViewState = this._overlayViewState.get("containerMenuIsVisible");
+                this._overlayViewState.set("containerMenuIsVisible", !currentViewState);
+                this._instanceCommands.setContainerMenuVisibility(!currentViewState);
             },
             unload: function () {
 

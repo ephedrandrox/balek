@@ -37,6 +37,8 @@ define(['dojo/_base/declare',
                     "newMenu" : lang.hitch(this, this.newMenu),
                     "setVisibility": lang.hitch(this, this.setVisibility),
                     "setElementMenuVisibility": lang.hitch(this, this.setElementMenuVisibility),
+                    "setWorkspaceMenuVisibility": lang.hitch(this, this.setWorkspaceMenuVisibility),
+                    "setContainerMenuVisibility": lang.hitch(this, this.setContainerMenuVisibility),
 
                 };
 
@@ -55,6 +57,14 @@ define(['dojo/_base/declare',
             },
             setElementMenuVisibility: function(isVisible, remoteCommandCallback){
                 this._interfaceState.set("elementMenuIsVisible",  isVisible);
+
+            },
+            setWorkspaceMenuVisibility: function(isVisible, remoteCommandCallback){
+                this._interfaceState.set("workspaceMenuIsVisible",  isVisible);
+
+            },
+            setContainerMenuVisibility: function(isVisible, remoteCommandCallback){
+                this._interfaceState.set("containerMenuIsVisible",  isVisible);
 
             },
             _end: function () {

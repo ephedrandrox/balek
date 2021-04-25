@@ -34,6 +34,9 @@ define([
 
             _workspaceManagerState: null,
 
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
+
             _containers: null,
 
             _targetNode: null,
@@ -64,6 +67,20 @@ define([
                 }
 
 
+                if(this._navigatorOverlayState !== null){
+                    this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
+                }
+
+            },
+            onNavigatorOverlayStateChange: function(name, oldState, newState) {
+                console.log("QQQQ", name, oldState, newState);
+
+                if (name.toString() === "isVisible") {
+                    this.refreshWidget();
+                }
+                if (name.toString() === "containerMenuIsVisible") {
+                    this.refreshWidget();
+                }
             },
             onAvailableContainersStateChange: function (name, oldState, newState) {
                 let containerKey = name.toString();

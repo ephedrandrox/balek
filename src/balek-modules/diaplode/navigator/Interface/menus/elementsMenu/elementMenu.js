@@ -189,7 +189,7 @@ this.refreshView();
                                 this.refreshView();
                             }
                         }else {
-                            console.log("QQQQ", "FFVV", "onSystemMenuStateChange", "no menucompanion");
+                           // console.log("QQQQ", "FFVV", "onSystemMenuStateChange", "no menucompanion");
                             setTimeout(lang.hitch(this, loopUntil), 500);
                         }
 

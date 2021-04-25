@@ -36,6 +36,10 @@ define([
 
             _navigatorMainWidget: null,
 
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
+
+
             constructor: function (args) {
 
 
@@ -52,7 +56,22 @@ define([
                 this._availableWorkspacesState = this.workspaceManagerCommands.getAvailableWorkspacesState();
                 this._workspaceManagerState = this.workspaceManagerCommands.getWorkspaceManagerState();
 
+                if(this._navigatorOverlayState !== null){
+                    this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
+                }
 
+            },
+            onNavigatorOverlayStateChange: function(name, oldState, newState){
+                console.log("QQQQ", name, oldState, newState);
+
+                if(name.toString() === "isVisible")
+                {
+                    this.refreshWidget();
+                }
+                if(name.toString() === "workspaceMenuIsVisible")
+                {
+                    this.refreshWidget();
+                }
 
             },
             onAvailableWorkspacesStateChange: function(name, oldState, newState){

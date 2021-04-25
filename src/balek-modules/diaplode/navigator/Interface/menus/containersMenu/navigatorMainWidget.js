@@ -158,6 +158,20 @@ define(['dojo/_base/declare',
                 console.log("AAA", "refreshing from menu", this.domNode, this._containers);
                 if (this.domNode) {
 
+                    let navigatorVisibility = this._navigatorOverlayState.get("isVisible");
+                    let containerMenuVisibility = this._navigatorOverlayState.get("containerMenuIsVisible");
+                    console.log("QQQQ", navigatorVisibility, containerMenuVisibility, this._navigatorOverlayState);
+
+
+                    if(navigatorVisibility && containerMenuVisibility) {
+                        this.show();
+                    }else
+                    {
+                        this.hide();
+                    }
+
+
+
                     this.domNode.innerHTML = "🍟"
                     for (const containerKey in this._containers) {
 
