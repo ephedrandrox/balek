@@ -71,13 +71,19 @@ define(['dojo/_base/declare',
             _consoleOnLoadSettingNode: null,
 
             navigatorCommands: null,
-
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
 
             _workspacesMenuDiv: null,
 
             _workspaceMenuWidget: null,
             _workspaceManagerState: null,
             _workspaceStateList: null,
+
+            _navigatorMenuToggleNode: null,
+            _elementMenuToggleNode: null,
+            _containerMenuToggleNode: null,
+            _workspaceMenuToggleNode: null,
 
             _xTerm: null,
 
@@ -104,7 +110,22 @@ define(['dojo/_base/declare',
                     timeout = setTimeout(lang.hitch(this, this._onViewportResize), 500)
                 }));
 
+                console.log("WWWW", "navigatorCommands", this.navigatorCommands);
+debugger;
+                this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
+                    console.log("WWWW", "navigatorCommands", navigatorCommands);
+                    debugger;
 
+                    this._navigatorOverlayState = navigatorCommands.getOverlayViewState();
+                    console.log("WWWW", "this._navigatorOverlayState", this._navigatorOverlayState);
+
+                    this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
+                    console.log("WWWW", "_navigatorOverlayStateWatchHandle", this._navigatorOverlayStateWatchHandle);
+                    this.refreshNavigatorOverlayButtons();
+
+                })).catch(function(errorResult){
+                    console.log("Could not get navigator commands", errorResult);
+                });
 
             },
             postCreate: function () {
@@ -218,6 +239,46 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+            onNavigatorOverlayStateChange: function(name, oldState, newState){
+                console.log("WWWWW", name, oldState, newState);
+
+                if(name.toString() === "isVisible")
+                {
+                    this.refreshNavigatorOverlayButtons();
+                }
+
+                if(name.toString() === "elementMenuIsVisible")
+                {
+                    this.refreshNavigatorOverlayButtons();
+                }
+
+                if(name.toString() === "containerMenuIsVisible")
+                {
+                    this.refreshNavigatorOverlayButtons();
+                }
+
+                if(name.toString() === "workspaceMenuIsVisible")
+                {
+                    this.refreshNavigatorOverlayButtons();
+                }
+
+            },
+            refreshNavigatorOverlayButtons: function(){
+                let overlayIsVisible = this._navigatorOverlayState.get("isVisible");
+                let elementMenuIsVisible = this._navigatorOverlayState.get("elementMenuIsVisible");
+                let containerMenuIsVisible = this._navigatorOverlayState.get("containerMenuIsVisible");
+                let workspaceMenuIsVisible = this._navigatorOverlayState.get("workspaceMenuIsVisible");
+
+                let activeBackground = "black";
+
+                let deactivatedBackground = "grey";
+
+                overlayIsVisible ? domStyle.set(this._navigatorMenuToggleNode, "background", activeBackground) : domStyle.set(this._navigatorMenuToggleNode, "background", deactivatedBackground);
+                elementMenuIsVisible ? domStyle.set(this._elementMenuToggleNode, "background", activeBackground) : domStyle.set(this._elementMenuToggleNode, "background", deactivatedBackground);
+                containerMenuIsVisible ? domStyle.set(this._containerMenuToggleNode, "background", activeBackground) : domStyle.set(this._containerMenuToggleNode, "background", deactivatedBackground);
+                workspaceMenuIsVisible ? domStyle.set(this._workspaceMenuToggleNode, "background", activeBackground) : domStyle.set(this._workspaceMenuToggleNode, "background", deactivatedBackground);
+
+            },
             updateWorkspaceNameDiv: function()
             {
                 if(this._workspaceManagerState !== null && this._workspaceStateList !== null )
