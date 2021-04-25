@@ -44,12 +44,22 @@ define([
              _workspaceMenu: null,
             _customMenu: null,
 
+            _navigatorCommands: null,
+
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
+
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                if(this._navigatorCommands !== null){
+                    this._navigatorOverlayState = this._navigatorCommands.getOverlayViewState();
+                }
 
             },
 
@@ -60,6 +70,7 @@ define([
                // console.log("navigator" , this._instanceCommands);
 
             },
+
             onInterfaceStateChange: function (name, oldState, newState) {
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
@@ -70,6 +81,7 @@ define([
                     console.log("ZZXX", name, newState);
 
                     this._workspaceMenu = new workspacesMenu({_navigatorInterface: this,
+                        _navigatorOverlayState: this._navigatorOverlayState,
                         _componentKey: newState.toString(),
                         _sessionKey: this._sessionKey,
                         _instanceKey: this._instanceKey});
@@ -80,6 +92,7 @@ define([
                     console.log("ZZXX", name, newState);
 
                     this._containerMenu = new containersMenu({_navigatorInterface: this,
+                        _navigatorOverlayState: this._navigatorOverlayState,
                         _componentKey: newState.toString(),
                         _sessionKey: this._sessionKey,
                         _instanceKey: this._instanceKey});
@@ -89,6 +102,7 @@ define([
                     console.log("ZZXXELEMENTS", name, newState);
 
                     this._elementMenu = new elementsMenu({_navigatorInterface: this,
+                        _navigatorOverlayState: this._navigatorOverlayState,
                         _componentKey: newState.toString(),
                         _sessionKey: this._sessionKey,
                         _instanceKey: this._instanceKey});

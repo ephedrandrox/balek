@@ -35,7 +35,9 @@ define(['dojo/_base/declare',
 
                 this._commands={
                     "newMenu" : lang.hitch(this, this.newMenu),
-                    "setVisibility": lang.hitch(this, this.setVisibility)
+                    "setVisibility": lang.hitch(this, this.setVisibility),
+                    "setElementMenuVisibility": lang.hitch(this, this.setElementMenuVisibility),
+
                 };
 
 
@@ -50,6 +52,10 @@ define(['dojo/_base/declare',
             setVisibility: function(isVisible, remoteCommandCallback)
             {
                 this._interfaceState.set("isVisible",  isVisible);
+            },
+            setElementMenuVisibility: function(isVisible, remoteCommandCallback){
+                this._interfaceState.set("elementMenuIsVisible",  isVisible);
+
             },
             _end: function () {
             return new Promise(lang.hitch(this, function(Resolve, Reject){

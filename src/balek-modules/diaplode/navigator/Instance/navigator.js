@@ -106,6 +106,7 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("log", "log Started");
 
 
+
                 //todo use this pattern to create syncedMap that creates interfaces automatically
                 this._workspaceMenu = new workspaceMenu({
                     _sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
@@ -122,7 +123,8 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("containerMenuKey", this._containerMenu.getComponentKey());
 
                 this._elementMenu = new elementMenu({
-                    _sessionKey: this._sessionKey, _instanceKey: this._instanceKey,
+                    _sessionKey: this._sessionKey,
+                    _instanceKey: this._instanceKey,
                     _userKey: this._userKey
                 });
 
