@@ -36,6 +36,7 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _navigator: null,
 
+            _overlayViewState: null,
 
           //  _navigatorSystemMenusState: null,
 
@@ -47,16 +48,24 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
 
+                let overlayViewState = declare([Stateful], {
+                });
+                this._overlayViewState = new overlayViewState({
+                    isVisible: false
+                });
+
                 this._commandsForOtherInterfaces = new navigatorInterfaceCommands();
 
-               this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
+                this._commandsForOtherInterfaces.setCommand("addSystemMenuList", lang.hitch(this, this.addSystemMenuList));
 
                 this._commandsForOtherInterfaces.setCommand("toggleShowView", lang.hitch(this, this.toggleShowView));
                 this._commandsForOtherInterfaces.setCommand("toggleWorkspaceShowView", lang.hitch(this, this.toggleWorkspaceShowView));
                 this._commandsForOtherInterfaces.setCommand("toggleElementShowView", lang.hitch(this, this.toggleElementShowView))
                 this._commandsForOtherInterfaces.setCommand("toggleContainerShowView", lang.hitch(this, this.toggleContainerShowView))
+                this._commandsForOtherInterfaces.setCommand("getOverlayViewState", lang.hitch(this, this.getOverlayViewState))
 
                 this._commandsForOtherInterfaces.setNavigatorReady();
+
 
 
             },
@@ -68,20 +77,40 @@ define(['dojo/_base/declare',
                     if(this._navigator === null)
                     {
 
-                        this._navigator = new navigatorMainWidget({
-                            _instanceKey: this._instanceKey,
-                            _componentKey: newState.componentKey
+                        this._commandsForOtherInterfaces.getCommands().then(lang.hitch(this, function(navigatorCommands){
+                            this._navigator = new navigatorMainWidget({
+                                _navigatorCommands: navigatorCommands,
+                                _instanceKey: this._instanceKey,
+                                _componentKey: newState.componentKey
+                            });
+                        })).catch(function(errorResult){
+                            console.log("Could not get navigator commands", errorResult);
                         });
+
                     }
 
                 }
 
                 if(name === "isVisible"){
                     console.log(oldState, newState);
-                    this._isVisible = newState;
-                    this.refreshView();
+                    let currentViewState = this._overlayViewState.get("isVisible");
+                    if(currentViewState != newState)
+                    {
+                        this._overlayViewState.set("isVisible", newState);
+                    }
                 }
 
+                if(name === "elementMenuIsVisible"){
+                    console.log(oldState, newState);
+                    let currentViewState = this._overlayViewState.get("elementMenuIsVisible");
+                    if(currentViewState != newState)
+                    {
+                        this._overlayViewState.set("elementMenuIsVisible", newState);
+                    }
+                }
+            },
+            getOverlayViewState: function(){
+                return  this._overlayViewState;
             },
             addSystemMenuList:function( syncedMap, menuCompanion){
                 //todo remove this after making elements store for interfaces
@@ -99,33 +128,21 @@ define(['dojo/_base/declare',
             receiveMessage: function (moduleMessage) {
                 console.log("You shouldn't be seeing this", moduleMessage);
             },
-            refreshView: function(){
-                if(this._isVisible)
-                {
-                    this._navigator.show();
-
-                }else
-                {
-                    this._navigator.hide();
-                }
-            },
             toggleShowView: function () {
-                let isVisible = this._isVisible;
-                this._isVisible = !isVisible;
-
-                this.refreshView();
-
-                this._instanceCommands.setVisibility(this._isVisible);
+                let currentViewState = this._overlayViewState.get("isVisible");
+                this._overlayViewState.set("isVisible", !currentViewState);
+                this._instanceCommands.setVisibility(!currentViewState);
             },
             toggleWorkspaceShowView: function () {
                 console.log("toggleWorkspaceShowView ");
-
                 this._navigator.toggleWorkspaceShowView();
             },
             toggleElementShowView: function () {
                 console.log("toggleElementShowView ");
 
-                this._navigator.toggleElementShowView();
+                let currentViewState = this._overlayViewState.get("elementMenuIsVisible");
+                this._overlayViewState.set("elementMenuIsVisible", !currentViewState);
+                this._instanceCommands.setElementMenuVisibility(!currentViewState);
             },
             toggleContainerShowView: function () {
                 console.log("toggleContainerShowView ");

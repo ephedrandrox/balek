@@ -35,6 +35,10 @@ define(['dojo/_base/declare',
             _menuInterfaces: null,
             _availableMenusWatchHandle: null,
 
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
+
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -49,12 +53,23 @@ define(['dojo/_base/declare',
                 this._menuMaps = {};
                 this._menuInterfaces = {};
 
+                if(this._navigatorOverlayState !== null){
+                   this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
+                }
+
             },
 
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+            onNavigatorOverlayStateChange: function(name, oldState, newState){
 
+                if(name.toString() === "isVisible")
+                {
+
+                }
+
+            },
             onInterfaceStateChange: function (name, oldState, newState) {
                 //Since We are extending with the remoteCommander
                 //We Check for interfaceRemoteCommands and link them
@@ -87,6 +102,7 @@ define(['dojo/_base/declare',
                     console.log("XXAA", "onAvailableMenusStateChange", name);
 
                     let newMenuInterface = new elementMenu({_componentKey: name.toString(),
+                        _navigatorOverlayState: this._navigatorOverlayState,
                         _menuInterfaceState: this._interfaceState,
                         _navigatorInterface: this._navigatorInterface,
                         _elementsMenu: this,
@@ -110,8 +126,15 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
-            refreshWidget: function(){
+            refreshView: function(){
+                console.log("QQAA", "refreshView", this._navigatorInterface.isVisible());
 
+                for( const menuInterfaceKey in this._menuInterfaces ) {
+                    let menuInterface = this._menuInterfaces[menuInterfaceKey];
+
+                        menuInterface.refreshView();
+
+                }
             },
 
             //##########################################################################################################

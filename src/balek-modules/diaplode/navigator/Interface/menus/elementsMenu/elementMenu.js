@@ -56,6 +56,9 @@ define([
             _menuInterfaceState: null,
             _menuInterfaceStateWatchHandle: null,
 
+            _navigatorOverlayState: null,
+            _navigatorOverlayStateWatchHandle: null,
+
             _menuMap: null,
 
             //##########################################################################################################
@@ -84,6 +87,9 @@ define([
                 }
 
 
+                if(this._navigatorOverlayState !== null){
+                    this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
+                }
 
             },
             postCreate: function()
@@ -96,6 +102,7 @@ define([
 
             },
             startup: function(){
+
                 this.refreshView();
             },
             //##########################################################################################################
@@ -109,6 +116,20 @@ define([
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+            onNavigatorOverlayStateChange: function(name, oldState, newState){
+                console.log("QQQQ", name, oldState, newState);
+
+                if(name.toString() === "isVisible")
+                {
+this.refreshView();
+                }
+
+                if(name.toString() === "elementMenuIsVisible")
+                {
+                    this.refreshView();
+                }
+
+            },
             onContainerMove: function(MoveEvent)
             {
 
@@ -168,7 +189,7 @@ define([
                                 this.refreshView();
                             }
                         }else {
-                            console.log("XXAA", "FFVV", "onSystemMenuStateChange", "no menucompanion");
+                            console.log("QQQQ", "FFVV", "onSystemMenuStateChange", "no menucompanion");
                             setTimeout(lang.hitch(this, loopUntil), 500);
                         }
 
@@ -210,6 +231,17 @@ define([
             },
             refreshView: function(){
                 console.log("XXAA", "FFVV", "refreshView", this._systemMenu);
+
+                let navigatorVisibility = this._navigatorOverlayState.get("isVisible");
+                let elementMenuVisibility = this._navigatorOverlayState.get("elementMenuIsVisible");
+
+
+                if(navigatorVisibility && elementMenuVisibility) {
+                    this.show();
+                }else
+                {
+                    this.hide();
+                }
 
                 if(this._systemMenu && this._systemMenu.menuCompanion && this._systemMenu.menuCompanion.name)
                 {
