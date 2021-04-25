@@ -26,7 +26,8 @@ define([
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
-        'balek-modules/components/syncedMap/Interface'
+        'balek-modules/components/syncedMap/Interface',
+        'balek-modules/diaplode/ui/layout/layout'
 
     ],
     function (declare, lang, arrayUtil, dom,
@@ -35,7 +36,8 @@ define([
               mainCss,
               menuItem,
               _syncedCommanderInterface,
-              _balekWorkspaceContainerContainable, syncedMapInterface) {
+              _balekWorkspaceContainerContainable, syncedMapInterface,
+              diaplodeLayout) {
 
         return declare("moduleDiaplodeNavigatorInterfaceElementsMenuElementMenuWidget", [_WidgetBase, _TemplatedMixin,
             _syncedCommanderInterface,  _balekWorkspaceContainerContainable], {
@@ -60,6 +62,7 @@ define([
             _navigatorOverlayStateWatchHandle: null,
 
             _menuMap: null,
+            _diaplodeLayout: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -73,7 +76,7 @@ define([
                 this._menuItemWidgets = {};
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
-
+                this._diaplodeLayout = new diaplodeLayout();
 
                 if(this._systemMenu && this._systemMenu._syncedMap && this._systemMenu._syncedMap.setStateWatcher)
                 {
@@ -90,6 +93,8 @@ define([
                 if(this._navigatorOverlayState !== null){
                     this._navigatorOverlayStateWatchHandle = this._navigatorOverlayState.watch(lang.hitch(this, this.onNavigatorOverlayStateChange));
                 }
+
+
 
             },
             postCreate: function()
@@ -258,9 +263,9 @@ this.refreshView();
                     this.hideMenu();
                 }
 
-                if(this.domNode)
+                if(this.domNode && this._menuItemWidgets)
                 {
-                    this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode).play();
+                    this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode);//.play();
                 }
 
                 let menuItemKeys =  Object.keys(this._menuItemWidgets);
@@ -277,158 +282,13 @@ this.refreshView();
 
                 }
             },
-
-            arrangeWidgets : function(widgets, anchorObject){
-
-                //todo, put this in layout
-                //use component to store the needed state
-                let animations = new Array();
-
-                let windowDimensions = dojoWindow.getBox();
-
-                let anchorOffsets = domGeom.position(anchorObject);
-
-                const animationSpeed = 300;
-                const animationRate = 10;
-
-                let anchorBottomOffset = 20 + anchorOffsets.h;
-
-                let lastTop = 0;
-                let lastLeft = 0;
-                let newTop = 0;
-                let widgetWidth = 0;
-                let widgetHeight = 0;
-
-                let padding = 10;
-                let heightPadding = 40;
-
-                let anchorPosition =  domGeom.position(anchorObject, true);
-                let anchorWidthOffset = anchorPosition.w;
-                let anchorHeightOffset = anchorPosition.h/2;
-
-                let widthToWork = windowDimensions.w - anchorOffsets.x - anchorWidthOffset;
-                let topToWork = windowDimensions.h - heightPadding - anchorOffsets.y-anchorHeightOffset;
-
-                let direction = "SouthEast";
-
-
-                let transformFunction = {
-                    "NorthEast" : function(){
-
-                        newTop = lastTop - padding - widgetHeight;
-
-                        if(lastLeft === 0 )
-                        {
-                            lastLeft = + anchorWidthOffset;
-                        }
-
-                        if (-anchorOffsets.y + heightPadding >= newTop  )
-                        {
-                            newTop =   - padding - widgetHeight;
-                            lastLeft+= widgetWidth + padding;
-                        }
-                        lastTop = newTop;
-
-                    },
-                    "NorthWest" : function(){
-
-                        newTop = lastTop - padding - widgetHeight;
-
-                        //If going West, we need to move a widgets width that way to start
-                        if(lastLeft === 0 )
-                        {
-                            lastLeft = - widgetWidth;
-                        }
-
-                        if (-anchorOffsets.y + heightPadding >= newTop  )
-                        {
-
-                            newTop = 0 - padding - widgetHeight;
-                            lastLeft -= widgetWidth + padding;
-
-                        }
-                        lastTop = newTop;
-
-                    },
-                    "SouthEast" : function(){
-                        newTop = lastTop + padding;
-
-                        if(lastLeft === 0 )
-                        {
-                            lastLeft = + anchorWidthOffset;
-                        }
-
-                        if (topToWork <= (newTop + widgetHeight + padding + anchorBottomOffset ))
-                        {
-                            newTop = padding;
-                            lastLeft+=  widgetWidth + padding;
-                        }
-                        lastTop = newTop+widgetHeight;
-
-                    },
-                    "SouthWest" : function (){
-                        newTop = lastTop + padding;
-
-                        //If going West, we need to move a widgets width that way to start
-                        if(lastLeft === 0 )
-                        {
-                            lastLeft = - widgetWidth;
-                        }
-
-                        //if we have reached the bottom, go to the top
-                        if (topToWork <= (newTop + widgetHeight + padding + anchorBottomOffset ))
-                        {
-                            newTop = padding;
-                            lastLeft= lastLeft-widgetWidth - padding;
-                        }
-                        lastTop = newTop+widgetHeight;
-                    }
-                }
-
-                //propigate south
-                if(topToWork >= (windowDimensions.h/2)) {
-                    if (widthToWork >= (windowDimensions.w / 2)) {
-                        direction = "SouthEast";
-                    }else{
-                        direction = "SouthWest"
-                    }
-                }
-                else
-                {
-
-                    if(widthToWork >= (windowDimensions.w/2))
-                    {
-                        direction = "NorthEast";
-                    }else{
-                        direction = "NorthWest";
-                    }
-                }
-
-                let addAnimation = function(domNode, top, left){
-                    animations.push(dojo.fx.slideTo({
-                        node: domNode,
-                        top: top ,
-                        left: left ,
-                        unit: "px",
-                        rate: animationRate,
-                        duration: animationSpeed
-                    }));
-                }
-
-                let directionTransform = transformFunction[direction.toString()];
-
-                arrayUtil.forEach(widgets, function(widget, index){
-                    let widgetPosition =  domGeom.position(widget.domNode, true);
-                    widgetWidth = widgetPosition.w;
-                    widgetHeight = widgetPosition.h;
-                    directionTransform();
-                    addAnimation(widget.domNode, newTop,  lastLeft + padding);
-
-                });
-                return dojo.fx.combine(animations);
+            arrangeWidgets : function(widgets, anchorObject) {
+               let layoutAnimation = this._diaplodeLayout.getAnimationArrangeWidgetsGridDynamic(widgets,anchorObject);
+               if(layoutAnimation && layoutAnimation.play)
+               {
+                   layoutAnimation.play();
+               }
             },
-
-
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
@@ -450,7 +310,7 @@ this.refreshView();
                 this._instanceCommands.changeActiveStatus(currentStateCallbackToggle[newStateDisplay]);
                 if(this.domNode)
                 {
-                    this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode).play();
+                    this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode);//.play();
                 }
 
             },
@@ -461,7 +321,7 @@ this.refreshView();
                 this._moveTimeout = setTimeout(lang.hitch(this, function(){
                     if(this.domNode)
                     {
-                        this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode).play();
+                        this.arrangeWidgets(Object.values(this._menuItemWidgets), this.domNode);
                     }
                 }), 20);
             },

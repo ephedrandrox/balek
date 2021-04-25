@@ -150,3 +150,95 @@ define(['dojo/_base/declare',
 
         });
     });
+
+
+
+/*
+
+introAnimation: function () {
+    fx.animateProperty({
+        node: this.domNode,
+        duration: 900,
+        properties: {
+            transform: {
+                end: 'translate(-50%, -50%)rotate(0deg)',
+                start: 'translate(-50%, -50%)rotate(-100deg)'
+            }
+        }
+    }).play();
+
+
+
+    fx.animateProperty({
+        node: this.domNode,
+        duration: 1200,
+
+        properties: {
+            opacity: {start: 0, end: 1}
+        }
+    }).play();
+},
+
+
+
+//##########################################################################################################
+            //UI Functions Section
+            //##########################################################################################################
+
+            introAnimation: function () {
+                fx.animateProperty({
+                    node: this.domNode,
+                    duration: 900,
+                    properties: {
+                        transform: {
+                            end: 'translate(-50%, -50%)rotate(0deg)',
+                            start: 'translate(-50%, -50%)rotate(-100deg)'
+                        }
+                    }
+                }).play();
+
+
+
+                fx.animateProperty({
+                    node: this.domNode,
+                    duration: 1200,
+
+                    properties: {
+                        opacity: {start: 0, end: 1}
+                    }
+                }).play();
+            },
+            arrangeMenus: function () {
+                let placementArray = [
+                    {x: 50, y: 10}, {x: 66, y: 30}, {x: 66, y: 70},
+                    {x: 50, y: 90}, {x: 34, y: 70}, {x: 34, y: 30},
+                    {x: 42, y: 20}, {x: 58, y: 20}, {x: 66, y: 50},
+                    {x: 58, y: 80}, {x: 42, y: 80}, {x: 33, y: 50}];
+                let count = 0;
+                for (const menuToArrange in this._availableMenus) {
+                    this._availableMenus[menuToArrange].moveTo(placementArray[count].x, placementArray[count].y);
+                    count++;
+                }
+            },
+            arrangeSystemMenus: function(){
+                console.log("navigator", "Rearrangin System menus")
+
+                let placementArray = [
+                    {x: 50, y: 10}, {x: 66, y: 30}, {x: 66, y: 70},
+                    {x: 50, y: 90}, {x: 34, y: 70}, {x: 34, y: 30},
+                    {x: 42, y: 20}, {x: 58, y: 20}, {x: 66, y: 50},
+                    {x: 58, y: 80}, {x: 42, y: 80}, {x: 33, y: 50}];
+                let count = 0;
+                for (const menuToArrange in this._navigatorSystemMenuWidgets) {
+                    console.log("navigator", "Rearrangin System menus",  this._navigatorSystemMenuWidgets[menuToArrange]);
+                    //this._navigatorSystemMenuWidgets[menuToArrange].moveTo(placementArray[count].x+30,    placementArray[count].y+300);
+                    count++;
+                }
+            },
+
+
+
+
+
+ */
+
