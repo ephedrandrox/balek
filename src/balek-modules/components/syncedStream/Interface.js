@@ -64,10 +64,33 @@ define(['dojo/_base/declare',
                 }
 
             },
+            isStreamReady: function(){
+                if(this._remoteCommandsReceived =true)
+                {
+                    return true;
+                }else
+                {
+                    return false;
+                }
+            },
+            onRemoteCommandsInitiated: function(){
+                //todo create function to check if xterm is ready to start
+                this._remoteCommandsReceived =true;
+
+                if(this.outputCallback !== null){
+                  this.beginStreaming();
+                }
+            },
             beginStreaming: function( outputCallback= null){
                 if ( outputCallback !== null)
                 {
                     this.outputCallback = outputCallback;
+                }else{
+                    return;
+                }
+
+                if ( this.outputCallback !== null && this._instanceCommands && this._instanceCommands.preloadChunks )
+                {
                     this._streamPosition = 0;
                     this._streamStartPosition = 0;
 

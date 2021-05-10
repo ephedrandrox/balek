@@ -79,7 +79,8 @@ define(['dojo/_base/declare',
 
             _sshSyncedStream: null,
 
-
+            _domStarted: false,
+            _remoteCommandsReceived: false,
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -97,15 +98,26 @@ define(['dojo/_base/declare',
             },
             startup: function()
             {
+                this._domStarted = true;
                // console.log("startup terminal",this,  this.domNode);
-                this.startupXTerm();
+                if(this._remoteCommandsReceived === true){
+                    this.startupXTerm();
+                }
+            },
+            onRemoteCommandsInitiated: function(){
+                //todo create function to check if xterm is ready to start
+                this._remoteCommandsReceived =true;
+
+                if(this._domStarted === true){
+                    this.startupXTerm();
+                }
             },
             startupXTerm: function(){
                // console.log("startup X terminal",this,  this.domNode);
 
 
 
-                if( this._xTerm === null &&this._sshSyncedStream !== null && this.domNode && dom.isDescendant(this.domNode, window.document)){
+                if( this._xTerm === null && this._sshSyncedStream !== null && this.domNode && dom.isDescendant(this.domNode, window.document) && this._remoteCommandsReceived === true){
 
                   //  console.log("xterm", xTerm,
                    //     xTermCss,
