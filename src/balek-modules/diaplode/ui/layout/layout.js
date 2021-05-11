@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
               lang,
               arrayUtil,
               domGeom,
-              dojoWindow,
+              dojoWindow
         ) {
         return declare("diaplodeUILayout", [], {
             constructor: function (args) {
