@@ -7,17 +7,16 @@
     "stopDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d",
-    "preBuild":  "npm run buildLibraries --prefix src/balek-modules/",
+    "preBuild": "npm run buildLibraries --prefix src/balek-modules/",
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
     "buildAll": "npm run preBuild && npm run build && npm run postBuild"
-
   },
   "dependencies": {
-    "mongodb": "^3.6.1",
+    "mongodb": "^3.6.9",
     "mysql2": "^1.7.0",
-    "sanitize-html": "^1.27.4",
-    "websocket": "^1.0.32",
-    "xterm": "^4.9.0",
+    "sanitize-html": "^2.4.0",
+    "websocket": "^1.0.34",
+    "xterm": "^4.13.0",
     "xterm-addon-fit": "^0.4.0"
   },
   "name": "balek",
