@@ -3,9 +3,9 @@ release/
 
 node_modules/
 
-data/mongo/mongoDB/
+builds/docker/mongo/mongoDB/
 
-data/mysql/mysqlDB/
+builds/docker/mysql/mysqlDB/
 
 .idea/
 

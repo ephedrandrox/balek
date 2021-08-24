@@ -2,14 +2,15 @@
   "scripts": {
     "start": "node loadServer.js",
     "build": "./lib/dojo-release-src/util/buildscripts/build.sh --profile ./balek.profile.js --language_in=ECMASCRIPT6",
-    "buildDevelopmentDatabases": "docker build -f data/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f data/mongo/Dockerfile .  -t balek-mongo:develop ",
-    "startDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
-    "stopDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
+    "buildDevelopmentDatabases": "docker build -f builds/docker/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f builds/docker/mongo/Dockerfile .  -t balek-mongo:develop ",
+    "startDevelopmentDatabases": "docker-compose -f builds/docker/mysql/docker-compose.yml up -d && docker-compose -f builds/docker/mongo/docker-compose.yml up -d",
+    "stopDevelopmentDatabases": "docker-compose -f builds/docker/mysql/docker-compose.yml down && docker-compose -f builds/docker/mongo/docker-compose.yml down",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d",
     "preBuild": "npm run buildLibraries --prefix src/balek-modules/",
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
-    "buildAll": "npm run preBuild && npm run build && npm run postBuild"
+    "buildAll": "npm run preBuild && npm run build && npm run postBuild",
+    "buildCertificates": "echo 'Coming soon!'"
   },
   "dependencies": {
     "mongodb": "^3.6.9",
