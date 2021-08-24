@@ -1,7 +1,7 @@
 {
   "scripts": {
     "buildLibraries": "build/build.sh",
-    "buildRelease": "rm -Rf ../../release/balek/balek-modules/lib && cp -Rf ./lib ../../release/balek/balek-modules/lib && chmod 400 ../../builds/diaplode/conf/ssh/id_rsa"
+    "buildRelease": "rm -Rf ../../release/balek/balek-modules/lib && cp -Rf ./lib ../../release/balek/balek-modules/lib && chmod 400 ../../builds/diaplode/config/balek/ssh/id_rsa"
   },
   "dependencies": {
     "codemirror": "^5.59.2",

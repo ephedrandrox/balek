@@ -11,14 +11,11 @@ data/mysql/mysqlDB/
 
 .DS_Store
 
-builds/diaplode/mysqlDB/
+/src/balek-modules/node-modules
 
-builds/diaplode/mongoDB/
-
-src/balek-modules/node-modules
-/builds/diaplode/docker/openssh/config/
 /src/balek-modules/lib/
 
-builds/diaplode/config
 
 lib/dojo-release-src/
+
+builds/diaplode/data/
