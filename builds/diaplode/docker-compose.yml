@@ -11,7 +11,7 @@ services:
       - ./config/balek:/balek/src/balek-server/etc
   mysqld:
     image: "diaplode-mysql:release"
-    build: "../../data/mysql"
+    build: "../docker/mysql"
     environment:
       - MYSQL_ROOT_PASSWORD=rootPass
       - MYSQL_DATABASE=balek
@@ -24,7 +24,7 @@ services:
       - ./data/mysqlDB:/var/lib/mysql
   mongodb:
     image: "diaplode-mongodb:release"
-    build: "../../data/mongo"
+    build: "../docker/mongo"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=rootPass
@@ -34,7 +34,7 @@ services:
       - ./data/mongoDB:/data/db
   openssh:
     image: "balek-openssh:release"
-    build: "../../docker/openssh"
+    build: "../docker/openssh"
     hostname: balek-openssh
     environment:
       - PUID=1000
