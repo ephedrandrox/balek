@@ -3,76 +3,52 @@ A module based web application framework for building and deploying Javascript w
   
 Currently in early development stage
 
-
-####To set up for development you will need:  
-
- * Node.js
- * NPM
- * Docker
- * Docker Compose
-
-####Get Balek:  
-
-    `git clone --recurse-submodules https://github.com/ephedrandrox/balek.git`  
-
-The dojo toolkit is included as a submodule. If you forget the `--recurse-submodules` flag then you can run `git submodule update --init --recursive` in the repo directory to download the dojo toolkit.
-
-####Enter the repository directory and install modules  
-`cd balek`  
-`npm install`
+This repository has several branches intended to become seperate repositories when development matures
 
 
-####Set Up Databases
- * mysql  
-    `cd data/mysql`  
-    `npm run build`  
-    You can then start/stop/restart the mysql server using  
-    `npm start`  
-    `npm stop`  
-    `npm restart`  
-    You will want to start this before starting Balek
- * mongodb  
-     `cd data/mongo`  
-     `npm run build`  
-      You can then start/stop/restart the mongo server using  
-      `npm start`  
-      `npm stop`  
-      `npm restart`  
-    You will want to start this before starting Balek  
+You will need [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek
 
-    Default database user information found in `balek/data/mysql/docker-compose.yml` and `balek/data/mongo/docker-compose.yml`  
-    
-    To use a different database, configure Balek by editing `src/balek-server/etc/config.json`
-    
-####Start Balek  
-From the root directory of the repo run  
-`npm start`  
+## Getting Balek
 
-This should start a server on localhost at port 8080 that can be accessed only through https://  
-`https://localhost:8080/`  
+    git clone --recurse-submodules https://github.com/ephedrandrox/balek.git  
 
-To stop `ctrl+c` process.
+ > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules` flag is omitted durring cloning, you can run `git submodule update --init --recursive` in the root directory to download the dojo toolkit.
 
-####Build Balek
-`npm run build`  
+## Building and Running Balek
 
-This builds the interface using dojo build tools and Google Composure to reduce size and increase load time. Built interface can be accessed in through  
-`https://localhost:8080/release/`  
+In the repository root:
+
+### Build:
+
+    docker-compose -f ./builds/balek/docker-compose.yml build
+This will take a few minutes
+### Run:
+
+    docker-compose -f ./builds/balek/docker-compose.yml up -d
+This will start up the Balek containers in the background
+### Stop:
+
+    docker-compose -f ./builds/balek/docker-compose.yml down
+This will stop the Balek containers
 
 
-####Deploying using docker
- `git clone --recurse-submodules https://github.com/ephedrandrox/balek.git`  
- `cd balek`  
- `docker-compose -f builds/balek/docker-compose.yml build`  
- `docker-compose -f builds/balek/docker-compose.yml up -d`
- 
- You could place your ssl certificates in `balek/builds/balek/conf/cert/` and or configure `balek/builds/balek/conf/config.json` before building.
- 
- To access the built/minified interface you have to request the /release/ directory. ie `https://localhost:8080/release/`  
- The release build will be improved in the future and this wont be the case.
+## Accessing Balek  
+
+Once the containers are up and running you can access your Balek instance through [https://localhost/](https://localhost/)
+
+To access the built/minified interface you have to request the [/release/](https://localhost/release/) directory.  
+The release build will be improved in the future and this wont be the case.
 
 
-####Building Your Own Applications Using Balek 
-You can add your own modules to Balek and then deploy with a build configuration. Modules live in  `src/balek-modules/` and build configurations are in `builds/`  In future versions the build configuration and module will be added as a single submodule.
 
-You could start by copying the `src/balek-modules/digivigil-www/guestbook/` and `builds/digivigilGuestbook/` directories.
+## Modifying Balek
+### SSL certificates
+You can place your own ssl certificates in the `builds/balek/conf/cert` directory and restart your containers to use them.
+### General Configuration
+Modify `balek/builds/balek/conf/config.json` and restart containers.
+
+
+### Building Your Own Applications Using Balek 
+You can add your own modules and build configurations to Balek. Modules live in  `src/balek-modules/` and build configurations are in `builds/`  
+ > Examples will become available in a seperate branch  
+ > Documentation will be created as interest inspires and time allows 
