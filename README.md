@@ -16,7 +16,7 @@ You will need [**Docker** and **docker-compose**](https://www.docker.com) to bui
 
 ## Building and Running Balek
 
-In the repository root:
+_In the repository root:_
 
 ### Build:
 
