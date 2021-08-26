@@ -1,5 +1,5 @@
 # **Balek**
-A module based web application framework for building and deploying Javascript web applications.
+A [module based](docs/modules.md) web application framework for building and deploying full stack JavaScript web applications.
   
 Currently in early development stage
 
