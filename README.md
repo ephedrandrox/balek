@@ -6,7 +6,7 @@ Currently in early development stage
 This repository has several branches intended to become seperate repositories when development matures
 
 
-You will need [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek
+You will need [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek using these instructions.
 
 ## Getting Balek
 Clone the repository and submodules
@@ -15,7 +15,7 @@ Clone the repository and submodules
 
  > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules` 
  > flag is omitted durring cloning, you can run `git submodule update --init --recursive` in 
- > the root directory to download the dojo toolkit.
+ > the root directory to download the dojo toolkit submodules.
 
 ## Building and Running Balek
 
@@ -42,8 +42,9 @@ Stop the Balek containers
 
 Once the containers are up and running you can access your Balek instance through [https://localhost/](https://localhost/)
 
-To access the built/minified interface you have to request the [/release/](https://localhost/release/) directory.  
-The release build will be improved in the future and this wont be the case.
+To access the built/minified interface you have to request [https://localhost/release/](https://localhost/release/)  
+
+📝 _The release build will be improved in the future and this won't be the case._
 
 
 
