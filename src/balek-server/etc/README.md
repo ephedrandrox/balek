@@ -7,7 +7,7 @@ and secure websocket connections, are found in the [`cert/`](cert/README.md) sub
 
 ### config.json
 
-**_[Example from Balek Docker Build](../builds/balek/conf/config.json)_**
+**_[Example from Balek Docker Build](../../../builds/balek/conf/config.json)_**
 
     {
         "Session Settings": {
