@@ -9,27 +9,33 @@ This repository has several branches intended to become seperate repositories wh
 You will need [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek
 
 ## Getting Balek
+Clone the repository and submodules
 
     git clone --recurse-submodules https://github.com/ephedrandrox/balek.git  
 
- > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules` flag is omitted durring cloning, you can run `git submodule update --init --recursive` in the root directory to download the dojo toolkit.
+ > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules` 
+ > flag is omitted durring cloning, you can run `git submodule update --init --recursive` in 
+ > the root directory to download the dojo toolkit.
 
 ## Building and Running Balek
 
-_In the repository root:_
+_Enter commands in the repository root:_
 
 ### Build:
+Will take a few minutes to complete
 
     docker-compose -f ./builds/balek/docker-compose.yml build
-This will take a few minutes
+
 ### Run:
+Start up the Balek containers in the background  
 
     docker-compose -f ./builds/balek/docker-compose.yml up -d
-This will start up the Balek containers in the background
+
 ### Stop:
+Stop the Balek containers  
 
     docker-compose -f ./builds/balek/docker-compose.yml down
-This will stop the Balek containers
+
 
 
 ## Accessing Balek  
