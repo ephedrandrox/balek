@@ -51,7 +51,8 @@ The release build will be improved in the future and this wont be the case.
 ### SSL certificates
 You can place your own ssl certificates in the `builds/balek/conf/cert` directory and restart your containers to use them.
 ### General Configuration
-Modify `balek/builds/balek/conf/config.json` and restart containers.
+Modify [`builds/balek/conf/config.json`](builds/balek/conf/config.json) and restart containers.  
+See the [`src/balek-server/etc/README.md`](src/balek-server/etc/README.md) for more info.
 
 
 ### Building Your Own Applications Using Balek 
