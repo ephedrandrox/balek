@@ -1,9 +1,9 @@
 # **Balek**
-A [module based](docs/modules.md) web application framework for building and deploying full stack JavaScript web applications.
+A [module based](docs/modules.md) framework for building and deploying full stack JavaScript web applications.
   
 Currently in early development stage
 
-This repository has several branches intended to become seperate repositories when development matures
+This repository has several branches intended to become repositories after development matures
 
 
 You will need [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek using these instructions.
