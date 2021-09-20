@@ -4,29 +4,29 @@ define(['dojo/_base/declare',
         'balek-modules/Instance'],
     function (declare, lang, topic, baseInstance) {
 
-        return declare("moduleDigivigilWWWGuestbookInstance", baseInstance, {
+        return declare("moduleDigivigilWWWSaleTagScanInstance", baseInstance, {
             _instanceKey: null,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-                console.log("moduleDigivigilWWWGuestbookInstance starting...");
+                console.log("moduleDigivigilWWWSaleTagScanInstance starting...");
 
             },
             receiveMessage: function (moduleMessage, wssConnection) {
                 if (moduleMessage.instanceKey == this._instanceKey) {
                     if (moduleMessage.messageData.request) {
                         switch (moduleMessage.messageData.request) {
-                            case "Digivigil Guestbook Entry":
-                                if (moduleMessage.messageData.guestbookEntry) {
-                                    this._module.addDigivigilWWWGuestbookEntry(moduleMessage.messageData.guestbookEntry);
+                            case "Digivigil SaleTagScan Entry":
+                                if (moduleMessage.messageData.saleTagScanEntry) {
+                                    this._module.addDigivigilWWWSaleTagScanEntry(moduleMessage.messageData.saleTagScanEntry);
                                 } else {
-                                    console.log("Guestbook Entry Format Error", moduleMessage);
+                                    console.log("SaleTagScan Entry Format Error", moduleMessage);
                                 }
                                 break;
-                            case "Guestbook Entries":
-                                this.sendGuestbookEntries(wssConnection);
+                            case "SaleTagScan Entries":
+                                this.sendSaleTagScanEntries(wssConnection);
                                 break;
                             default:
                                 console.log("Not a valid request", moduleMessage);
@@ -36,12 +36,12 @@ define(['dojo/_base/declare',
                     console.log("received Module message with incorrect instanceKey", moduleMessage.instanceKey, this._instanceKey)
                 }
             },
-            sendGuestbookEntries: function (wssConnection) {
-                this._module.getDigivigilWWWGuestbookEntries(lang.hitch(this, function (guestbookEntries) {
+            sendSaleTagScanEntries: function (wssConnection) {
+                this._module.getDigivigilWWWSaleTagScanEntries(lang.hitch(this, function (saleTagScanEntries) {
                     topic.publish("sendBalekProtocolMessage", wssConnection, {
                         moduleMessage: {
                             instanceKey: this._instanceKey,
-                            messageData: {guestbookData: guestbookEntries}
+                            messageData: {saleTagScanData: saleTagScanEntries}
                         }
                     });
                 }));

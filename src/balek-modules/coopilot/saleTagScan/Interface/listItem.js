@@ -16,17 +16,17 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/html/listItem.html',
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/css/listItem.css'
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/html/listItem.html',
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/css/listItem.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
-        return declare("digivigilWWWGuestbookListItemInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilWWWSaleTagScanListItemInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "digivigilWWWGuestbookListItemInterface",
+            baseClass: "digivigilWWWSaleTagScanListItemInterface",
 
             _mainCssString: mainCss,
 

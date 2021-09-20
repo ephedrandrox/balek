@@ -5,11 +5,11 @@ define(['dojo/_base/declare',
         "dojo/dom-construct",
         'dojo/dom-style',
         "dojo/_base/window",
-        'balek-modules/digivigil-www/guestbook/Interface/main'
+        'balek-modules/coopilot/saleTagScan/Interface/main'
     ],
     function (declare, lang, baseInterface, topic, domConstruct, domStyle, win, mainInterface) {
 
-        return declare("moduleDigivigilWWWGuestbookInterface", baseInterface, {
+        return declare("moduleDigivigilWWWSaleTagScanInterface", baseInterface, {
             _instanceKey: null,
             _mainInterface: null,
 
@@ -25,26 +25,26 @@ define(['dojo/_base/declare',
             getWorkspaceDomNode: function () {
                 return this._mainInterface.domNode;
             },
-            sendDigivigilGuestbookEntry: function (guestbookEntry) {
+            sendDigivigilSaleTagScanEntry: function (saleTagScanEntry) {
                 //todo make this use the send with callback function and return a promise
                 let entryMessage = {
                     moduleMessage: {
                         instanceKey: this._instanceKey, messageData: {
-                            request: "Digivigil Guestbook Entry",
-                            guestbookEntry: guestbookEntry
+                            request: "Digivigil SaleTagScan Entry",
+                            saleTagScanEntry: saleTagScanEntry
                         }
                     }
                 };
-                console.log("sending guestbook entry", entryMessage);
+                console.log("sending saleTagScan entry", entryMessage);
                 topic.publish("sendBalekProtocolMessage", entryMessage);
 
             },
-            requestGuestbookEntries() {
-                console.log("requesting guestbook entries");
+            requestSaleTagScanEntries() {
+                console.log("requesting saleTagScan entries");
                 topic.publish("sendBalekProtocolMessage", {
                     moduleMessage: {
                         instanceKey: this._instanceKey, messageData: {
-                            request: "Guestbook Entries",
+                            request: "SaleTagScan Entries",
                             searchParams: null
                         }
                     }
@@ -53,9 +53,9 @@ define(['dojo/_base/declare',
             receiveMessage: function (moduleMessage) {
 
                 if (moduleMessage.instanceKey == this._instanceKey) {
-                    if (moduleMessage.messageData.guestbookData) {
-                        console.log(moduleMessage.messageData.guestbookData);
-                        this._mainInterface.updateGuestbookData(moduleMessage.messageData.guestbookData);
+                    if (moduleMessage.messageData.saleTagScanData) {
+                        console.log(moduleMessage.messageData.saleTagScanData);
+                        this._mainInterface.updateSaleTagScanData(moduleMessage.messageData.saleTagScanData);
                     } else {
                         console.log("unknown message COntent")
                     }

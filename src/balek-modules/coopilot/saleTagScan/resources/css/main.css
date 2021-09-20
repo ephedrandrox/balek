@@ -2,7 +2,7 @@ body {
 text-align:center
 }
 
-.digivigilWWWGuestbookMainInterfaceButton{
+.digivigilWWWSaleTagScanMainInterfaceButton{
     background: transparent;
     cursor: pointer;
     color: white;
@@ -14,12 +14,12 @@ text-align:center
     top: 15%;
 
 }
-.digivigilWWWGuestbookMainInterfaceButton:hover {
+.digivigilWWWSaleTagScanMainInterfaceButton:hover {
     cursor: pointer;
     filter: invert(100%);
     background: black;
 }
-.digivigilWWWGuestbookMainInterfaceButton:active {
+.digivigilWWWSaleTagScanMainInterfaceButton:active {
     cursor: pointer;
     background: red;
     filter: invert(0%);
@@ -27,7 +27,7 @@ text-align:center
     border: solid white 2px;
 }
 
-.digivigilWWWGuestbookMainInterfaceButtonImage{
+.digivigilWWWSaleTagScanMainInterfaceButtonImage{
     height: 2vh;
     min-height: 25px;
     margin: 3px;
@@ -38,11 +38,11 @@ text-align:center
     user-drag: none;
 }
 
-.digivigilWWWGuestbookMainInterfaceListDiv{
+.digivigilWWWSaleTagScanMainInterfaceListDiv{
 
 }
 
-.digivigilWWWGuestbookMainInterfaceMainHeaderTitle{
+.digivigilWWWSaleTagScanMainInterfaceMainHeaderTitle{
     font-size: calc(20px + 2vh);
     color: grey;
     display: inline-block;
@@ -52,7 +52,7 @@ text-align:center
     top: calc(10px );;
 }
 
-.digivigilWWWGuestbookMainInterface{
+.digivigilWWWSaleTagScanMainInterface{
     background: rgba(28, 110, 164, 0.2);
     display: inline;
     display: inline-block;
@@ -75,7 +75,7 @@ text-align:center
     outline: none;
 }
 
-.digivigilWWWGuestbookMainInterfaceMainHeaderDiv{
+.digivigilWWWSaleTagScanMainInterfaceMainHeaderDiv{
     border: solid #144b73 6px;
     background: #144b73;
     border-top-left-radius: 25px;
@@ -92,7 +92,7 @@ text-align:center
     color: white;
     z-index: 100;
 }
-.digivigilWWWGuestbookMainInterfaceMainContentDiv{
+.digivigilWWWSaleTagScanMainInterfaceMainContentDiv{
     position: absolute;
     top: 5%;
     min-top: 50px;
@@ -104,7 +104,7 @@ text-align:center
     z-index: 50;
 }
 
-.digivigilWWWGuestbookMainInterfaceMainDiv{
+.digivigilWWWSaleTagScanMainInterfaceMainDiv{
     border: solid #144b73 6px;
     border-radius: 25px;
     position: absolute;
@@ -116,7 +116,7 @@ text-align:center
 }
 
 
-.digivigilWWWGuestbookMainInterfaceBackgroundDiv{
+.digivigilWWWSaleTagScanMainInterfaceBackgroundDiv{
     background : rgba(38, 145, 43, 0.3);
     border: solid black 3px;
     border-radius: 25px;
@@ -128,7 +128,7 @@ text-align:center
     overflow: hidden;
 }
 
-.digivigilWWWGuestbookMainInterfaceBackgroundDivImage{
+.digivigilWWWSaleTagScanMainInterfaceBackgroundDivImage{
    opacity: .7;
     position: absolute;
     top: 0;

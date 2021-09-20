@@ -14,11 +14,11 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil-www/guestbook/Interface/createEntry",
-        "balek-modules/digivigil-www/guestbook/Interface/listItem",
+        "balek-modules/coopilot/saleTagScan/Interface/createEntry",
+        "balek-modules/coopilot/saleTagScan/Interface/listItem",
 
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/html/main.html',
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/css/main.css'
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/html/main.html',
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/css/main.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, createEntry, listItem, template,
@@ -27,11 +27,11 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _interface: null,
             templateString: template,
-            baseClass: "digivigilWWWGuestbookMainInterface",
+            baseClass: "digivigilWWWSaleTagScanMainInterface",
 
             _mainCssString: mainCss,
 
-            _guestbookData: [],
+            _saleTagScanData: [],
             _listDiv: null,
 
             _listItems: {},
@@ -40,7 +40,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 this._interface = {};
                 this._createEntry = {};
-                this._guestbookData = {};
+                this._saleTagScanData = {};
                 this._listItems = {};
 
                 declare.safeMixin(this, args);
@@ -50,19 +50,19 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
 
-                this._interface.requestGuestbookEntries();
+                this._interface.requestSaleTagScanEntries();
 
             },
-            updateGuestbookData: function (guestbookData) {
-                if (guestbookData instanceof Array) {
-                    this._guestbookData = guestbookData;
+            updateSaleTagScanData: function (saleTagScanData) {
+                if (saleTagScanData instanceof Array) {
+                    this._saleTagScanData = saleTagScanData;
 
-                    guestbookData.forEach(lang.hitch(this, function (entry) {
+                    saleTagScanData.forEach(lang.hitch(this, function (entry) {
                         this.addOrUpdateListItem(entry);
                     }));
                 } else {
-                    this._guestbookData.push(guestbookData);
-                    this.addOrUpdateListItem(guestbookData);
+                    this._saleTagScanData.push(saleTagScanData);
+                    this.addOrUpdateListItem(saleTagScanData);
                 }
             },
             addOrUpdateListItem: function (listItemData) {

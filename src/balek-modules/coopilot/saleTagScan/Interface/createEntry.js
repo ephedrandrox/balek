@@ -16,26 +16,26 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/html/createEntry.html',
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/css/createEntry.css'
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/html/createEntry.html',
+        'dojo/text!balek-modules/coopilot/saleTagScan/resources/css/createEntry.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
-        return declare("digivigilWWWGuestbookCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilWWWSaleTagScanCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             _interface: null,
             templateString: template,
-            baseClass: "digivigilWWWGuestbookCreateEntryInterface",
+            baseClass: "digivigilWWWSaleTagScanCreateEntryInterface",
 
             _mainCssString: mainCss,
 
-            _guestbookData: {},
+            _saleTagScanData: {},
             _shiftDown: false,
 
             constructor: function (args) {
                 this._interface = {};
-                this._guestbookData = {};
+                this._saleTagScanData = {};
                 declare.safeMixin(this, args);
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
@@ -54,7 +54,7 @@ define(['dojo/_base/declare',
             },
             _onAddEntryClicked: function (eventObject) {
 
-                this._interface.sendDigivigilGuestbookEntry({
+                this._interface.sendDigivigilSaleTagScanEntry({
                     name: this._inputName.value,
                     home: this._inputHome.value,
                     note: this._inputNote.value
