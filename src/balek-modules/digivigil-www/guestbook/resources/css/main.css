@@ -1,0 +1,143 @@
+body {
+text-align:center
+}
+
+.digivigilWWWGuestbookMainInterfaceButton{
+    background: transparent;
+    cursor: pointer;
+    color: white;
+    border: solid white 2px;
+    display: inline-block;
+    border-radius: 5px;
+    position: absolute;
+    right: 30px;
+    top: 15%;
+
+}
+.digivigilWWWGuestbookMainInterfaceButton:hover {
+    cursor: pointer;
+    filter: invert(100%);
+    background: black;
+}
+.digivigilWWWGuestbookMainInterfaceButton:active {
+    cursor: pointer;
+    background: red;
+    filter: invert(0%);
+
+    border: solid white 2px;
+}
+
+.digivigilWWWGuestbookMainInterfaceButtonImage{
+    height: 2vh;
+    min-height: 25px;
+    margin: 3px;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+.digivigilWWWGuestbookMainInterfaceListDiv{
+
+}
+
+.digivigilWWWGuestbookMainInterfaceMainHeaderTitle{
+    font-size: calc(20px + 2vh);
+    color: grey;
+    display: inline-block;
+    margin-right: 20px;
+    position: absolute;
+    left: 30px;
+    top: calc(10px );;
+}
+
+.digivigilWWWGuestbookMainInterface{
+    background: rgba(28, 110, 164, 0.2);
+    display: inline;
+    display: inline-block;
+    text-align: center;
+    padding: 30px;
+    border: solid black 3px;
+    border-radius: 25px;
+    visibility: visible;
+    z-index: 5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    outline: none;
+}
+
+.digivigilWWWGuestbookMainInterfaceMainHeaderDiv{
+    border: solid #144b73 6px;
+    background: #144b73;
+    border-top-left-radius: 25px;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    overflow: hidden;
+    height: 5%;
+    min-height: 50px;
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    color: white;
+    z-index: 100;
+}
+.digivigilWWWGuestbookMainInterfaceMainContentDiv{
+    position: absolute;
+    top: 5%;
+    min-top: 50px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    z-index: 50;
+}
+
+.digivigilWWWGuestbookMainInterfaceMainDiv{
+    border: solid #144b73 6px;
+    border-radius: 25px;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    overflow: hidden;
+}
+
+
+.digivigilWWWGuestbookMainInterfaceBackgroundDiv{
+    background : rgba(38, 145, 43, 0.3);
+    border: solid black 3px;
+    border-radius: 25px;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    overflow: hidden;
+}
+
+.digivigilWWWGuestbookMainInterfaceBackgroundDivImage{
+   opacity: .7;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    height: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
