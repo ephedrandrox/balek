@@ -2,6 +2,7 @@ define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
         'dojo/dom-class',
+        'dojo/dom-style',
         'dojo/dom-construct',
         "dojo/_base/window",
         'dojo/on',
@@ -20,7 +21,7 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/coopilot/saleTagScan/resources/html/main.html',
         'dojo/text!balek-modules/coopilot/saleTagScan/resources/css/main.css'
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
+    function (declare, lang, topic, domClass, domStyle, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, createEntry, listItem, template,
               mainCss) {
         return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin], {
@@ -67,6 +68,7 @@ define(['dojo/_base/declare',
             },
             addOrUpdateListItem: function (listItemData) {
                 if (!(this._listItems[listItemData._id])) {
+
                     this._listItems[listItemData._id] = new listItem({
                         _interfaceKey: this._interfaceKey,
                         itemData: listItemData
@@ -74,14 +76,55 @@ define(['dojo/_base/declare',
                     domConstruct.place(this._listItems[listItemData._id].domNode, this._listDiv);
                 }
             },
-            _onAddEntryClicked: function (eventObject) {
-                this._createEntry = new createEntry({_interface: this._interface});
-                topic.publish("displayAsDialog", this._createEntry);
+            _onCopyClicked: function (eventObject) {
+            let saleTagScanData =  this._saleTagScanData;
+                let tabbedString = "" ;
+                saleTagScanData.forEach(lang.hitch(this, function (entry) {
+                    tabbedString += entry.note.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                }));
+
+
+                     console.log('tabbed content: ', tabbedString);
+
+                     this.copyToClipboard(tabbedString);
+
+
+
             },
+            copyToClipboard: function (textToCopy){
+
+
+            let node = domConstruct.create("div");
+            node.innerHTML = "<pre>" + textToCopy +"</pre>";
+            domStyle.set(node, "display", "float");
+            domConstruct.place(node, win.body())
+
+                if (window.getSelection) {
+                    if (window.getSelection().empty) {  // Chrome
+                        window.getSelection().empty();
+                    } else if (window.getSelection().removeAllRanges) {  // Firefox
+                        window.getSelection().removeAllRanges();
+                    }
+                } else if (document.selection) {  // IE?
+                    document.selection.empty();
+                }
+            if (window.getSelection) {
+                var range = document.createRange();
+                range.selectNode(node);
+                window.getSelection().addRange(range);
+                let text =  window.getSelection().toString();
+                console.log('Pasted content: ', text);
+                document.execCommand("copy");
+                alert("Tags Tabbed and copied to clipboard")
+            }else {
+                alert("Could not copy text!")
+            }
+                domConstruct.destroy(node);
+        },
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ESCAPE:
-                        this._interface.toggleShowView();
+                      //  this._interface.toggleShowView();
                         keyUpEvent.preventDefault();
                         break;
                 }

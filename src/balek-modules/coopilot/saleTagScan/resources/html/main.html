@@ -5,7 +5,12 @@
     </div>
     <div class="${baseClass}MainDiv">
         <div class="${baseClass}MainHeaderDiv">
-            
+            <div class="${baseClass}MainHeaderTitle">Tag Scan</div>
+            <div data-dojo-attach-event="onclick:_onCopyClicked" class="${baseClass}Button">
+                <img class="${baseClass}ButtonImage"
+                     src="balek-modules/coopilot/saleTagScan/resources/images/file.svg">
+            </div>
+
         </div>
         <div class="${baseClass}MainContentDiv">
             <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'></div>
