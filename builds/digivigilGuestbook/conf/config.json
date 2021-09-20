@@ -1,6 +1,6 @@
 {
 	"Session Settings": {
-		"Main Module": "digivigil-www/guestbook"
+		"Main Module": "coopilot/saleTagScan"
 	},
 	"Network Settings":{
 		"Server Address" : "0.0.0.0",
