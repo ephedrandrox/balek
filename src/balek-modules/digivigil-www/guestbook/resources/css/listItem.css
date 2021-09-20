@@ -21,7 +21,7 @@
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-    font-size: calc(6px + 2vh);
+    font-size: calc(6px + .2vh);
 }
 
 
@@ -30,8 +30,8 @@
     float: left;
     background: #0c334f;
     border-radius: 5px;
-    border: solid #c2c2c2 2px;
-    font-size: calc(6px + 2vh);
+    border: solid #c2c2c2 .25px;
+    font-size: calc(6px + .2vh);
     padding: 5px;
 }
 
@@ -47,8 +47,8 @@
     display: block;
     background: #ffffff;
     border: solid #c2c2c2 2px;
-    font-size: 3vh;
-    font-size: calc(12px + 3vh);
+    font-size: .25vh;
+    font-size: calc(12px + .25vh);
     border-radius: 5px;
     color: black;
 }
