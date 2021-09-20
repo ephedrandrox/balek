@@ -1,0 +1,17 @@
+<div class="${baseClass}"  data-dojo-attach-event="onMouseDown:_onTopMouseDown" tabindex="1">
+    <div class="${baseClass}TopBarDiv">
+        <div data-dojo-attach-point='_topBarCloseNode' data-dojo-attach-event="onMouseDown:_onCloseNodeMouseDown" class="${baseClass}TopBarButton">❇︎</div>
+        <div data-dojo-attach-point='_topBarDockNode'  data-dojo-attach-event="onMouseDown:_onDockNodeMouseDown" class="${baseClass}TopBarButton">⇣︎</div>
+        <span data-dojo-attach-point='_containerNameDiv'>${_containerName}</span>
+        <div  data-dojo-attach-point='_topBarBackgroundNode' class="${baseClass}TopBarBackground"></div>
+    </div>
+    <div class="${baseClass}LeftBarDiv" data-dojo-attach-point='_leftBarNode'>
+    </div>
+    <div class="${baseClass}ContentDiv" data-dojo-attach-point='_contentNode'>
+
+    </div>
+    <div class="${baseClass}RightBarDiv" data-dojo-attach-point='_rightBarNode'>
+    </div>
+    <div class="${baseClass}BottomBarDiv" data-dojo-attach-point='_bottomBarNode'>
+    </div>
+</div>

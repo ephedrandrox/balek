@@ -1,0 +1,89 @@
+.diaplodeNavigatorInterfaceElementMenuWidget{
+    position: relative;
+    display: inline-block;
+    top:0;
+    left: 0;
+    background: none;
+    z-index: 6000;
+    color: black;
+    outline: none;
+    opacity: 1;
+
+    border: solid #050530 3px;
+    -webkit-box-shadow: 0px 0px 15px 8px #050530;
+    box-shadow: 0px 0px 15px 8px #050530;
+    border-radius: 50%;
+
+    padding:0;
+    margin: 0;
+    width: 75px;
+    height:75px;
+    pointer-events: auto;
+
+    border: solid transparent 3px;
+
+    background: rgba(111,111,111, .8);
+}
+
+.diaplodeNavigatorInterfaceElementMenuWidget:hover{
+    border: solid purple 3px;
+
+}
+
+.diaplodeNavigatorInterfaceElementMenuWidget:focus{
+    border: solid #50d1d1 3px;
+}
+
+.diaplodeNavigatorInterfaceElementMenuWidgetImage{
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    width: 75px;
+    height:75px;
+
+}
+
+.diaplodeNavigatorInterfaceElementMenuWidgetTitle{
+    position: absolute;
+    color: white;
+    position: absolute;
+    padding: 5px;
+    border-radius: 5px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    border: solid white 3px;
+
+
+    background: rgba(17, 89, 98, 0.4);
+}
+
+.diaplodeNavigatorInterfaceElementMenuWidgetEmoji{
+    position: absolute;
+
+    position: absolute;
+    padding: 5px;
+    border-radius: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 50px;
+    background: none;
+    height: 50px;
+    cursor: pointer;
+
+    border-radius: 50%;
+
+    vertical-align: top;
+}
+
+
+.diaplodeNavigatorInterfaceElementMenuWidgetMenuItems{
+    position: relative;
+    display: inline-block;
+    width: 70vw;
+    height: 70vh;
+    pointer-events: none;
+}

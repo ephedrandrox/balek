@@ -14,6 +14,5 @@ require(["balek-server/Instance",
     })).catch(lang.hitch(this, function (error) {
         console.log(error);
     }));
-
     console.log("Began Startup");
 });

@@ -1,0 +1,104 @@
+define(['dojo/_base/declare',
+        'dojo/_base/lang',
+        //Balek Service Includes
+        'balek-modules/diaplode/services/system/ssh/ssh',
+
+        'balek-modules/components/syncedStream/Instance',
+
+        //Balek Instance Includes
+        'balek-modules/components/syncedCommander/Instance',
+    ],
+    function (declare,
+              lang,
+
+
+              //Balek Service Includes
+              sshService,
+
+              syncedStreamInstance,
+              //Balek Instance Includes
+              _syncedCommanderInstance) {
+        return declare("moduleDiaplodeCommanderInstanceTerminal", [_syncedCommanderInstance], {
+
+            _sshService: null,
+
+            _sshSyncedStream: null,
+            constructor: function (args) {
+                declare.safeMixin(this, args);
+                console.log("starting moduleDiaplodeCommanderInstanceTerminal");
+
+
+                this._sshSyncedStream = new syncedStreamInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("sshOutputComponentKey", this._sshSyncedStream._componentKey);
+
+                //set setRemoteCommander commands
+                this._commands={
+                  //  "connectTerminal": lang.hitch(this, this.connectTerminal),
+                    "sendTerminalInput": lang.hitch(this, this.sendTerminalInput),
+                    "dockInterface" : lang.hitch(this, this.dockInterface),
+                    "undockInterface" : lang.hitch(this, this.undockInterface)
+                };
+                this.setInterfaceCommands();
+
+                this._interfaceState.set("Component Name","terminal");
+                //creates component Key that can be used to connect to state
+                this.prepareSyncedState();
+
+
+                this._interfaceState.set("terminalDocked", "false");
+
+                this._interfaceState.set("Status", "Ready");
+
+
+
+                this._sshService = new sshService({sshUsername: "diaplode", sshHostname: "localhost", sshPort: 2222,
+                    _onOutputCallback: lang.hitch(this, function(data){
+
+                        this._sshSyncedStream.appendOutput(data);
+
+                    })});
+
+               // this.connectTerminal();
+
+            },
+            //##########################################################################################################
+            //Remote Command Functions Section
+            //##########################################################################################################
+            connectTerminal:  function(remoteCommandCallback)
+            {
+
+
+                if( this._sshService === null){
+                    this._sshService = new sshService({sshUsername: "ephedrandrox", sshHostname: "localhost",
+                        _onOutputCallback: lang.hitch(this, function(data){
+                            this._sshSyncedStream.appendOutput(data);
+                        })});
+                    remoteCommandCallback({success: "Connecting Terminal"});
+
+                }else {
+                    remoteCommandCallback({success: "Terminal already connected"});
+
+                }
+
+            },
+            sendTerminalInput: function( input){
+              //  console.log(input);
+                this._sshService.sendInput(input);
+            },
+            dockInterface: function()
+            {
+                this._interfaceState.set("terminalDocked", "true");
+            },
+            undockInterface: function()
+            {
+                this._interfaceState.set("terminalDocked", "false");
+            },
+            //##########################################################################################################
+            //Instance Override Functions Section
+            //##########################################################################################################
+            _end: function(){
+                //calls inherited _end functions like stateSynced Object
+                this.inherited(arguments);
+            }
+        });
+    });

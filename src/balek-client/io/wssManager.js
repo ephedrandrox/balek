@@ -8,7 +8,7 @@ define([ 	'dojo/_base/declare',
 				   topic) {
 			
 			return declare(null, {
-				_mainWebSocket: null,
+				_mainSocket: null,
 								
 				constructor: function(args){
 					
@@ -22,18 +22,36 @@ define([ 	'dojo/_base/declare',
 				},
 				sendMessage: function(balekProtocolMessage)
 				{
-					let JSONString = JSON.stringify(balekProtocolMessage);
-					this._mainSocket.send( JSONString)
+
+					try{
+						let JSONString = JSON.stringify(balekProtocolMessage);
+
+						//todo create and check if passes isBalekProtocolMessage test
+
+						if(this._mainSocket!== null && this._mainSocket.readyState === this._mainSocket.OPEN)
+						{
+							this._mainSocket.send( JSONString)
+
+						}else
+						{
+							alert("Could not send balekProtocolMessage - Connection Closed -  reload to reconnect");
+							console.log("Could not send balekProtocolMessage - Connection Closed -  reload to reconnect", balekProtocolMessage);
+						}
+					}catch(error){
+						alert("Could not send balekProtocolMessage - check console");
+						console.log("Could not send balekProtocolMessage error try catch", error);
+					}
+
 				},
 				dataReceived: function(event)
 				{
-					let dataRecieved = "";
+					let dataReceived = "";
 					try{
-						dataRecieved = JSON.parse(event.data);
+						dataReceived = JSON.parse(event.data);
 
-						if(dataRecieved.balekProtocolMessage != null)
+						if(dataReceived.balekProtocolMessage != null)
 						{
-							topic.publish("balekProtocolMessageReceived", dataRecieved.balekProtocolMessage);
+							topic.publish("balekProtocolMessageReceived", dataReceived.balekProtocolMessage);
 						}
 						else
 						{
@@ -41,13 +59,16 @@ define([ 	'dojo/_base/declare',
 						}
 					}	
 					catch (Err){
-						console.log("dataRecieved not formated correctly" + JSON.stringify(dataRecieved));
+						console.log("dataReceived not formatted correctly" + JSON.stringify(dataReceived));
 						console.log(Err);
 					}
 				},
 				connectionClosed: function(event)
 				{
 					console.log("connectionClosed");
+					//todo create system status state that would be set here
+					//todo Modules could watch this state as needed
+					alert("Connection Closed - reload manually");
 					console.log(event);
 				},
 				connectMainSocket: function(address)

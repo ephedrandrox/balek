@@ -13,9 +13,16 @@ define(['dojo/_base/declare',
         'balek-modules/admin/users/Interface/userListItem',
         'balek-modules/admin/users/Interface/userEdit',
 
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-client/session/workspace/container/containable'
+
     ],
-    function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin, template, cssFile, userListItem, userEdit) {
-        return declare("moduleAdminUsersInterfaceUserManagementInterface", [_WidgetBase, _TemplatedMixin], {
+    function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin, template, cssFile, userListItem, userEdit,
+              _syncedCommanderInterface,
+              _balekWorkspaceContainerContainable) {
+        return declare("moduleAdminUsersInterfaceUserManagementInterface", [_WidgetBase, _TemplatedMixin,
+                                                                            _syncedCommanderInterface,
+                                                                            _balekWorkspaceContainerContainable], {
             _instanceKey: null,
             templateString: template,
             _cssString: cssFile,
@@ -31,6 +38,13 @@ define(['dojo/_base/declare',
                 this._userListItems = {};
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._cssString + "</style>"), win.body());
+
+            },
+            postCreate: function () {
+                this.initializeContainable();
+            },
+            onInterfaceStateChange: function (name, oldState, newState) {
+                this.inherited(arguments);     //this has to be done so remoteCommander works
 
             },
             _onClickAddUser: function (clickEvent) {

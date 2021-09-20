@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "buildLibraries": "build/build.sh",
+    "buildRelease": "rm -Rf ../../release/balek/balek-modules/lib && cp -Rf ./lib ../../release/balek/balek-modules/lib && chmod 400 ../../builds/diaplode/config/balek/ssh/id_rsa"
+  },
+  "dependencies": {
+    "codemirror": "^5.59.2",
+    "xterm": "^4.10.0",
+    "xterm-addon-fit": "^0.4.0"
+  },
+  "author": "Blake Glanville",
+  "license": "BSD-3-Clause"
+}

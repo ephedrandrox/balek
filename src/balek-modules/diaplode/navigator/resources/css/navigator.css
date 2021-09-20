@@ -1,0 +1,108 @@
+body {
+    text-align: center
+}
+
+.diaplodeNavigatorInterface * {
+
+}
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+
+}
+
+
+.diaplodeNavigatorInterface {
+    position: absolute;
+    pointer-events: auto;
+
+    background: none;
+    display: inline-block;
+    text-align: center;
+    padding: 0px;
+    border-radius: 50%;
+    visibility: visible;
+    z-index: 5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+    opacity: 0;
+
+border: none;
+    cursor: move;
+
+    text-align: left;
+}
+
+.diaplodeNavigatorInterface:focus{
+}
+
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+    position: relative;
+
+
+
+}
+.diaplodeNavigatorInterfaceWorkspacesDiv {
+    position: relative;
+display: inline-block;
+border:none;
+background: none;
+}
+.diaplodeNavigatorInterfaceContainersDiv {
+    position: relative;
+    display: inline-block;
+    border:none;
+    background: none;
+}
+diaplodeNavigatorInterfaceWorkspaceButtonDiv{
+cursor: pointer;
+}
+
+.diaplodeNavigatorInterfaceImage {
+    width: 0px;
+    width: 300px;
+    height: 300px;
+visibility: hidden;
+
+}
+
+
+.diaplodeNavigatorInterfaceLogDiv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: .5;
+}
+
+
+.diaplodeNavigatorInterfaceCommandsDiv {
+    position: relative;
+
+
+    font-size: 50px;
+    border: solid white 2px;
+
+   color: white;
+
+
+    background: rgba(0,0,0,.5);
+    top: 0;
+}
+.diaplodeNavigatorInterfaceCommandDiv {
+
+    border: solid white 2px;
+
+    color: white;
+    border: solid white 2px;
+
+}
+
+
+.diaplodeNavigatorInterfaceHelpDiv {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
