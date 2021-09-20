@@ -19,7 +19,7 @@ define(['dojo/_base/declare',
 
                 this._mainInterface = new mainInterface({_instanceKey: this._instanceKey, _interface: this});
 
-                topic.publish("addToCurrentWorkspace", this);
+                topic.publish("displayAsDialog", this._mainInterface);
 
             },
             getWorkspaceDomNode: function () {
