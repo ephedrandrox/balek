@@ -34,6 +34,7 @@ define(['dojo/_base/declare',
 
             _saleTagScanData: [],
             _listDiv: null,
+            _mainContentDiv: null,
 
             _listItems: {},
             _createEntry: null,
@@ -74,6 +75,8 @@ define(['dojo/_base/declare',
                         itemData: listItemData
                     });
                     domConstruct.place(this._listItems[listItemData._id].domNode, this._listDiv);
+
+                    this._mainContentDiv.scrollTop = this._mainContentDiv.scrollHeight;
                 }
             },
             _onCopyClicked: function (eventObject) {

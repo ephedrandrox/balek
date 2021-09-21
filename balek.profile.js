@@ -115,27 +115,6 @@ var profile = (function () {
                 customBase: true,
                 boot: true
             },
-            "balek-modules/session/login/Interface": {
-                include: [  "balek-modules/session/login/Interface"]
-            },
-            "balek-modules/session/menu/Interface": {
-                include: [  "balek-modules/session/menu/Interface",]
-            },
-            "balek-modules/users/info/Interface": {
-                include: [  "balek-modules/users/info/Interface"]
-            },
-            "balek-modules/ui/backgrounds/flowerOfLife": {
-                include: [  "balek-modules/ui/backgrounds/flowerOfLife",
-                            "dojox/gfx/svg",
-                            "dojox/gfx/shape",
-                            "dojox/gfx/path"]
-            },
-            "balek-modules/admin/users/Interface": {
-                include: [  "balek-modules/admin/users/Interface"]
-            },
-            "balek-modules/admin/system/Interface": {
-                include: [  "balek-modules/admin/system/Interface"]
-            },
             "balek-modules/coopilot/saleTagScan/Interface": {
                 include: [  "balek-modules/coopilot/saleTagScan/Interface"]
             }
