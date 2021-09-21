@@ -14,7 +14,7 @@
 			"database": "balek"
 		},
 		"Mongo Database Connection": {
-			"host": "mongodb-guestbook",
+			"host": "mongodb-coopilot",
 			"port": "27017",
 			"user": "root",
 			"password": "rootPass",

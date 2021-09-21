@@ -1,0 +1,21 @@
+version: '3'
+services:
+  balek-coopilot:
+    image: "balek-coopilot-guestbook:release"
+    build:
+      context: "../.."
+      dockerfile: "builds/coopilot/Dockerfile"
+    ports:
+      - "443:8080"
+    volumes:
+      - ./conf:/balek/src/balek-server/etc
+  mongodb-coopilot:
+    image: "balek-coopilot-mongodb:release"
+    build: "../docker/mongo"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+      - MONGO_INITDB_DATABASE=balek
+    volumes:
+      - ./config/dbInit:/docker-entrypoint-initdb.d/
+      - ./data/mongoDB:/data/db
