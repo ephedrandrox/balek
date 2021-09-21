@@ -21,3 +21,6 @@ builds/diaplode/data/
 src/balek-server/etc/cert/
 
 data/
+
+
+builds/coopilot/conf/cert
