@@ -136,27 +136,8 @@ var profile = (function () {
             "balek-modules/admin/system/Interface": {
                 include: [  "balek-modules/admin/system/Interface"]
             },
-            "balek-modules/digivigil-www/guestbook/Interface": {
-                include: [  "balek-modules/digivigil-www/guestbook/Interface"]
-            },
-            "balek-modules/diaplode/login/Interface": {
-                include: [  "balek-modules/diaplode/login/Interface"]
-            },
-            "balek-modules/diaplode/navigator/Interface": {
-                include: [  "balek-modules/diaplode/navigator/Interface"]
-            },
-            "balek-modules/diaplode/commander/Interface": {
-                    include: [  "balek-modules/diaplode/commander/Interface"]
-            },
-            "balek-modules/diaplode/commander/Interface/terminal": {
-                include: [  "balek-modules/diaplode/commander/Interface/terminal"],
-                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
-                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
-            },
-            "balek-modules/diaplode/commander/Interface/console": {
-                include: [  "balek-modules/diaplode/commander/Interface/console"],
-                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
-                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
+            "balek-modules/coopilot/saleTagScan/Interface": {
+                include: [  "balek-modules/coopilot/saleTagScan/Interface"]
             }
 
         }
