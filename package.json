@@ -5,13 +5,14 @@
     "buildDevelopmentDatabases": "docker build -f data/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f data/mongo/Dockerfile .  -t balek-mongo:develop ",
     "startDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml up -d && docker-compose -f data/mongo/docker-compose.yml up -d",
     "stopDevelopmentDatabases": "docker-compose -f data/mysql/docker-compose.yml down && docker-compose -f data/mongo/docker-compose.yml down",
+    "buildDocumentation": "sh ./buildDocs.sh",
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
   },
   "dependencies": {
-    "mongodb": "^3.6.9",
-    "mysql2": "^1.7.0",
-    "sanitize-html": "^2.4.0",
+    "mongodb": "^4.3.1",
+    "mysql2": "^2.3.3",
+    "sanitize-html": "^2.6.1",
     "websocket": "^1.0.34"
   },
   "name": "balek",
@@ -25,6 +26,6 @@
   "author": "Blake Glanville",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "stylus": "^0.54.8"
+    "stylus": "^0.56.0"
   }
 }
