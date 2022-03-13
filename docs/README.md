@@ -1,6 +1,4 @@
 # **Balek Documentation**
-## Introduction
-Balek aims to provide a framework for developing, building, and deploying full stack javascript applications.
 
 ## [Quickstart Guide](./quickstart.md)
 
