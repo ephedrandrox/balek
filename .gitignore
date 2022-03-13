@@ -14,3 +14,7 @@ data/mysql/mysqlDB/
 builds/diaplode/mysqlDB/
 
 builds/diaplode/mongoDB/
+
+src/balek-modules/users/guide/resources/docs/html/
+
+src/balek-modules/users/guide/resources/docs/pdf/
