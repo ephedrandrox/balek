@@ -1,10 +1,5 @@
 # **Balek**
-A framework for building and deploying full stack JavaScript web applications.
+A framework in early development stages for building and deploying full stack JavaScript web applications.
   
-Currently in early development stage
+See the [Quickstart](./docs/quickstart.md) and the rest of the [Documentation](./docs/README.md) and to get further acquainted
 
-This repository has several branches intended to become repositories after development matures
-
-See the [Quickstart](./docs/quickstart.md) in the [Documentation](./docs/README.md) and to get further acquainted
-
-[Building Your Own Applications With Balek](./docs/composing.md)

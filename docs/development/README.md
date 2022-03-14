@@ -8,7 +8,7 @@ There are several [Base Primitives](../../src/balek-modules/base/README.md)  tha
 These modules can then be [configured](../configuration.md) and [built](../builds.md) into deployable containers 
 
 
-
+[Building Your Own Applications With Balek](./composing.md)
 
 
 
