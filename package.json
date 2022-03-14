@@ -28,7 +28,7 @@
   "main": "balek.profile.js",
   "repository": {
     "type": "git",
-    "url": "ssh://git@digivigil.com/home/git/balek/balek.git"
+    "url": "ssh://git@github.com:ephedrandrox/balek.git"
   },
   "author": "Blake Glanville",
   "license": "BSD-3-Clause"
