@@ -9,23 +9,27 @@
     "buildDigivigilGuestbookDockerRelease": "docker build -f builds/digivigilGuestbook/Dockerfile .  -t balek-digivigil-guestbook:release",
     "startDigivigilGuestbookDockerRelease": "docker-compose -f builds/digivigilGuestbook/docker-compose.yml up -d"
   },
+  "scriptsComments": {
+    "start": "Starts Balek",
+    "build": "Builds release folder from src",
+    "buildDevelopmentDatabases": "Uses Docker to build database containers for development",
+    "startDevelopmentDatabases": "Uses Docker to run database containers for development",
+    "stopDevelopmentDatabases": "Uses Docker to stop database containers for development",
+    "buildDocumentation": "Runs the script to build the docs"
+  },
   "dependencies": {
-    "mongodb": "^4.3.1",
+    "mongodb": "^4.4.1",
     "mysql2": "^2.3.3",
-    "sanitize-html": "^2.6.1",
     "websocket": "^1.0.34"
   },
   "name": "balek",
   "description": "balek",
-  "version": "0.0.01",
+  "version": "0.0.01-pre",
   "main": "balek.profile.js",
   "repository": {
     "type": "git",
     "url": "ssh://git@digivigil.com/home/git/balek/balek.git"
   },
   "author": "Blake Glanville",
-  "license": "BSD-3-Clause",
-  "devDependencies": {
-    "stylus": "^0.56.0"
-  }
+  "license": "BSD-3-Clause"
 }
