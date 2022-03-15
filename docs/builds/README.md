@@ -4,4 +4,8 @@
 * Configuration point for building custom containers
 * Mount point for running containers
 
-> Checkout the [Builds Readme](../builds/README.md) if you are interested in creating your own builds.
+
+Custom build configurations can be stored in subdirectories.
+
+Build configurations consist of a combination of Docker and Balek configuration files
+

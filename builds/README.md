@@ -1,4 +1,5 @@
-# Balek Builds
-Custom build configurations can be stored in subdirectories.  
+# Balek Builds Directory
 
-Build configurations consist of a combination of Docker and Balek configuration files
+This Directory is the configuration point for building and deploying containers
+
+> Checkout the [Builds Documentation](../docs/builds/) if you are interested in creating your own builds.

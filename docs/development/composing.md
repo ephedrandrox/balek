@@ -1,5 +1,6 @@
 ## Building Your Own Applications Using Balek
-You can add your own [modules](./modules.md) and [build](../builds.md) configurations to Balek. 
+You can add your own [modules](./modules.md) and [build](../builds/README.md) configurations to Balek. 
+
 
 Modules live in  [`src/balek-modules/`](../../src/balek-modules) and build configurations are in [`builds/`](../../builds)
 
