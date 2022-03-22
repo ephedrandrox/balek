@@ -13,19 +13,20 @@ Currently in early development stage
 
 #### Get Balek:  
 
-    `git clone --recurse-submodules https://github.com/ephedrandrox/balek.git`  
+    git clone --recurse-submodules https://github.com/ephedrandrox/balek.git 
 
 The dojo toolkit is included as a submodule. If you forget the `--recurse-submodules` flag then you can run `git submodule update --init --recursive` in the repo directory to download the dojo toolkit.
 
 #### Enter the repository directory and install modules  
-`cd balek`  
-`npm install`
+    cd balek  
+    npm install
 
 
 #### Set Up Databases
- * mysql  
-    `cd data/mysql`  
-    `npm run build`  
+ * mysql 
+    cd data/mysql
+    npm run build
+   
     You can then start/stop/restart the mysql server using  
     `npm start`  
     `npm stop`  
@@ -54,9 +55,13 @@ This should start a server on localhost at port 8080 that can be accessed only t
 To stop `ctrl+c` process.
 
 #### Build Balek
+In the root of the repository
+
 `npm run build`  
 
-This builds the interface using dojo build tools and Google Composure to reduce size and increase load time. Built interface can be accessed in through  
+builds the interface using dojo build tools and Google Composure to reduce size and increase 
+load time. Built interface can be accessed in through  
+
 `https://localhost:8080/release/`  
 
 
