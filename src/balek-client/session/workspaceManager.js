@@ -224,7 +224,7 @@ define(['dojo/_base/declare',
                         console.log("workspaceUpdate", "Creating workspace overlay");
                         this.createWorkspaceInterface(newState.toString(),  "Active Overlay");
                         topic.publish("addToMainContentLayerAlwaysOnTop", this._workspaces[newState.toString()].domNode );
-                        this._workspaces[newState.toString()].onActivate();
+                        this._workspaces[newState.toString()].onActivated();
                     }
                 }
             },
