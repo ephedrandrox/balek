@@ -577,6 +577,25 @@ debugger;
                         getCommand.unload();
                     }) });
             },
+            _onConversationsButtonClicked: function(clickEvent){
+
+                        let moduleID = "diaplode/conversations";
+                        topic.publish("isModuleLoaded", moduleID, function (moduleIsLoaded) {
+
+                            topic.publish("getAvailableModulesState", lang.hitch(this, function (availableModulesStore) {
+                                console.log("getAvailableModulesState", availableModulesStore);
+                            }));
+
+                            console.log("isModuleLoaded ", moduleIsLoaded);
+                            if (moduleIsLoaded) {
+                                moduleIsLoaded.toggleShowView();
+                            } else {
+                                topic.publish("requestModuleLoad", moduleID);
+                            }
+                        });
+
+
+            },
             _onConsoleKillClicked: function(clickEvent)
             {
                 this._instanceCommands.sendConsoleInput("\u0004");
