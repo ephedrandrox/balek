@@ -24,9 +24,3 @@ You can now run Diaplode and it's required services by
 
     docker-compose -f ./builds/diaplode/docker-compose.yml up -d
 
-##User Administration
-
-And
-
-
-Custom Builds: See the Building Guide
