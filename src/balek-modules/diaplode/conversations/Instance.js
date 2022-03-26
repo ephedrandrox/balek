@@ -1,10 +1,13 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
 
+        'balek-modules/diaplode/conversations/Instance/main',
+
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance'
     ],
     function (declare, lang,
+              MainInstance,
               syncedCommanderInstance, syncedMapInstance) {
         return declare("moduleDiaplodeConversationsInstance", syncedCommanderInstance, {
             _instanceKey: null,
@@ -23,6 +26,17 @@ define(['dojo/_base/declare',
 
                 this._availableUsers  = new syncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableUsersComponentKey", this._availableUsers._componentKey);
+
+                //Create Main Instance and save keys in interface state
+                //will maybe make this a bunch of instances in syncedmap
+                let mainInstance = new MainInstance({_instanceKey: this._instanceKey,
+                    _sessionKey: this._sessionKey,
+                    _userKey: this._userKey});
+                this._mainInstance = mainInstance  ;
+                this._interfaceState.set("mainInterfaceKeys" , {instanceKey: mainInstance._instanceKey,
+                    sessionKey: mainInstance._sessionKey,
+                    userKey: mainInstance._userKey,
+                    componentKey: mainInstance._componentKey});
 
                 this.prepareSyncedState();
                 this.setInterfaceCommands();
