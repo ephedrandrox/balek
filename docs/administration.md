@@ -5,11 +5,12 @@ Installation is done on a local or remote host through a terminal. Docker is the
 
 A custom installation is out of the scope of this guide at this time.
 
-On a host with Docker installed, clone the Balek Repository and submodules:
+## Git, Build, and Run
+On a host with Git and Docker installed, clone the Balek Repository and submodules:
     
     git clone --recurse-submodules https://github.com/ephedrandrox/balek.git
 
-Then checkout the diaplode-main branch  
+### Checkout the diaplode-main branch  
 
     cd balek
     git checkout diaplode-main
@@ -19,8 +20,14 @@ Then checkout the diaplode-main branch
     docker-compose -f ./builds/diaplode/docker-compose.yml build
 This will build containers for Diaplode, MariaDB, MongoDB, and OpenSSH.
 
-You can now run Diaplode and it's required services by 
 ### Run the containers with:
 
     docker-compose -f ./builds/diaplode/docker-compose.yml up -d
+
+## Configure
+
+### Certificates
+To be continued ...
+#### OpenSSH...
+#### Web Server...
 
