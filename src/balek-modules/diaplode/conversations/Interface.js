@@ -31,7 +31,8 @@ define(['dojo/_base/declare',
                     if(this._mainInterface === null){
                         let mainInterface = new MainInterface({_instanceKey: newState.instanceKey,
                             _sessionKey: newState.sessionKey,
-                            _componentKey: newState.componentKey})
+                            _componentKey: newState.componentKey,
+                            _conversationsInstanceCommands: this._instanceCommands})
                         this._mainInterface = mainInterface;
                         mainInterface.getContainerKeys().then(lang.hitch(this, function(containerKeys){
                            if(Array.isArray(containerKeys) && containerKeys.length === 0)

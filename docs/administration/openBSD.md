@@ -13,35 +13,61 @@
 
 ### Setup Admin User
 **add user to wheel**  
-`usermod -G wheel <username`    
+
+    usermod -G wheel <username>
 
 **Add wheel group to /etc/doas.conf**  
-`permit persist :wheel`  
+
+    permit persist :wheel
 *persist allows password to be entered only once*
 
-### Add packages
-     doas pkg_add screen  
-     doas  
-     doas pkg_add git  
-     doas pkg_add jdk  
-     doas pkg_add jre  
-     add /usr/local/jdk-11/bin to PATH  
-     doas pkg_add node  
-     doas pkg_add mariadb-server  
+### Add packages 
+***neofetch*** and ***screen*** are optional
 
-### Create Balek Mysql Database and User:
-    mysql -u root -p < 000_createDatabases.sql
-    CREATE USER balekAppUser@localhost IDENTIFIED BY balekAppPassword;
-    GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES ON balek.* TO balekAppUser@localhost;
+    doas pkg_add neofetch screen git jdk node mariadb-server mongodb
+
+### Setup Java
+add /usr/local/jdk-1.8.0/bin to PATH  
+
+    export PATH=$PATH:/usr/local/jre-1.8.0/bin
+    vi ~/.profile
+
+
+### Setup MySQL
+create databases, startup and secure installation  
+    
+    mysql_install_db
+    rcctl enable mysqld
+    rcctl start mysqld
+    rcctl check mysqld
+    mysql_secure_installation
+
+#### Create Balek Mysql Database and User:
+Dump initial Balek Database with Demo User
+
+    mysql -u root -p < ~/balek/builds/docker/mysql/initSQL/000_createDatabases.sql
+Create Balek App User
+
+    CREATE USER 'balekAppUser'@'localhost' IDENTIFIED BY balekAppPassword;
+    GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES ON balek.* TO 'balekAppUser@localhost';
     FLUSH PRIVILEGES;
 
-### Create Mongo User
+### Setup Mongo
+####Create database directory and configure mongod
+    mkdir ~/mongo_databases
+    chown -R _mongodb:_mongodb ~/mongo_databases
+    vi /etc/mongodb.conf
 
-`mongo admin --eval "db.createUser({user: root, pwd: rootPass, roles: [readWrite, dbAdminAnyDatabase]})"`
+Change `dbPath` to the `mongo_databases` directory
+
+#### Create Mongo User
+
+    mongo admin --eval "db.createUser({user: 'root', pwd: 'rootPass', roles: ['readWrite', 'dbAdminAnyDatabase']})"
 
 ### Git and Build Diaplode
 
-     Git and build Diaplode   
+Git and build Diaplode   
+
      git balek  
      checkout diaplode-main  
      npm install  
@@ -49,4 +75,8 @@
      npm run start  
 
 
-Created Diaplode user for ssh
+### Generate and authorize SSH Keys
+For the terminal to work, we need to be able to ssh to localhost  
+
+    ssh-keygen
+    cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
