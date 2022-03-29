@@ -18,6 +18,8 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/diaplode/conversations/resources/css/main.css',
         //Diaplode ui components
         "balek-modules/diaplode/ui/input/getUserInput",
+        "balek-modules/diaplode/ui/input/chooseUsers",
+
         //Balek Interface Includes
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
@@ -31,9 +33,10 @@ define(['dojo/_base/declare',
               template, mainCss,
               //Diaplode ui components
               getUserInput,
+              chooseUsers,
               //Balek Interface Includes
               _syncedCommanderInterface,
-              _balekWorkspaceContainerContainable,
+              _balekWorkspaceContainerContainable
     ) {
         return declare("moduleDiaplodeConversationsMainInterface", [_WidgetBase, _TemplatedMixin, _syncedCommanderInterface, _balekWorkspaceContainerContainable
         ], {
@@ -75,26 +78,43 @@ define(['dojo/_base/declare',
                 if (name === "Status" && newState === "Ready") {
                     console.log("Instance Status:", newState);
                 }else if(name === "content"){
-                    alert(newState)
+                    console.log("#CD", newState)
                     //this is when we get new content, lets make a syncedMap
                 }else if(name === "removeContent"){
-                    alert(newState)
+                    console.log("#CD", newState)
                     //This could be used to signal content removed that was given to Interface State
                 }
             },
             _onAddContent: function (clickEvent) {
                 this._instanceCommands.addContent("New Content").then(function(commandReturnResults){
-                    console.log("CD", commandReturnResults)
+                    console.log("#CD", commandReturnResults)
                 }).catch(function(commandErrorResults){
-                    console.log("CD", "Create Note Received Error Response" + commandErrorResults);
+                    console.log("#CD", "Create Content Received Error Response" + commandErrorResults);
                 });
             },
             _onRemoveContent: function(clickEvent){
                 this._instanceCommands.removeContent("Remove New Content").then(function(commandReturnResults){
-                    console.log("CD", commandReturnResults)
+                    console.log("#CD", commandReturnResults)
                 }).catch(function(commandErrorResults){
-                    console.log("CD", "Create Note Received Error Response" + commandErrorResults);
+                    console.log("#CD", "Remove Content Received Error Response" + commandErrorResults);
                 });
+            },
+            _onNewConversation: function(clickEvent){
+                let getNameForConversation = new getUserInput({question: "Choose Conversation Name",
+                    inputReplyCallback: lang.hitch(this, function(newConversationNameChoice){
+                        let getUserForConversation = new chooseUsers({question: "Choose User",
+                            inputReplyCallback: lang.hitch(this, function(newConversationUserChoice){
+                                this._conversationsInstanceCommands.createConversation({ name: newConversationNameChoice, users: [newConversationUserChoice]}).then(function(commandReturnResults){
+                                    console.log("#CD", commandReturnResults)
+                                }).catch(function(commandErrorResults){
+                                    console.log("#CD", "Create Conversation Received Error Response" + commandErrorResults);
+                                });
+                                getUserForConversation.unload();
+                                getNameForConversation.unload()
+
+                            }) });
+
+                    }) });
             },
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
