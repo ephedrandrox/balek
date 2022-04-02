@@ -13,7 +13,11 @@ define(['dojo/_base/declare',
         return declare("moduleDiaplodeConversationsInstance", syncedCommanderInstance, {
             _instanceKey: null,
 
-            _availableUsers: null,
+            _availableConversations: null,
+
+            _moduleUserConversationsStateList: null,
+            _moduleUserConversationsStateListWatchHandle: null,
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("moduleDiaplodeConversationsInstance starting...");
@@ -28,8 +32,8 @@ define(['dojo/_base/declare',
 
                     this._interfaceState.set("moduleName","moduleDiaplodeConversationsInstance");
 
-                    this._availableUsers  = new syncedMapInstance({_instanceKey: this._instanceKey});
-                    this._interfaceState.set("availableUsersComponentKey", this._availableUsers._componentKey);
+                    this._availableConversations  = new syncedMapInstance({_instanceKey: this._instanceKey});
+                    this._interfaceState.set("availableConversationsComponentKey", this._availableConversations._componentKey);
 
                     let mainInstance = new MainInstance({_instanceKey: this._instanceKey,
                         _sessionKey: this._sessionKey,
@@ -40,9 +44,23 @@ define(['dojo/_base/declare',
                         userKey: mainInstance._userKey,
                         componentKey: mainInstance._componentKey});
 
+
+                    this._moduleUserConversationsList = this.moduleController.getUserConversationsStateMap(userKey);
+                    this._moduleUserConversationsListWatchHandle = this._moduleUserConversationsList.watch(lang.hitch(this, this.userConversationsStateListChange))
+                    console.log("#CD","_moduleUserConversationsList", this._moduleUserConversationsList )
+
                     this.prepareSyncedState();
                     this.setInterfaceCommands();
                 }));
+            },
+
+            userConversationsStateListChange: function(name, oldState, newState)
+            {
+                console.log("#CD","userConversationsStateListChange", name, oldState, newState)
+
+                this._availableConversations.add(name, {Status: newState, conversationKey: name});
+
+
             },
             //##########################################################################################################
             //Remote Commands Functions Section
@@ -64,6 +82,10 @@ define(['dojo/_base/declare',
                 })).catch(function(rejectError){
                     remoteCommanderCallback({error: rejectError})
                 })
+            },
+            unload: function(){
+                this._moduleUserConversationsListWatchHandle.unwatch()
+                this._moduleUserConversationsListWatchHandle.unload()
             }
         });
     }

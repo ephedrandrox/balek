@@ -6,13 +6,16 @@ define(['dojo/_base/declare',
 
         'balek-modules/diaplode/conversations/Interface/main',
 
-        'balek-modules/components/syncedCommander/Interface'
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-modules/components/syncedMap/Interface'
+
     ],
-    function (declare, lang, topic, balekWorkspaceManagerInterfaceCommands, MainInterface, syncedCommanderInterface) {
+    function (declare, lang, topic, balekWorkspaceManagerInterfaceCommands, MainInterface, syncedCommanderInterface, syncedMapInterface) {
         return declare("moduleDiaplodeConversationsInterface", syncedCommanderInterface, {
             _instanceKey: null,
 
             _mainInterface: null,
+            _availableConversations: null,
             workspaceManagerCommands: null,
 
             constructor: function (args) {
@@ -45,6 +48,15 @@ define(['dojo/_base/declare',
                         })).catch(lang.hitch(this, function(error){
                             console.log(error);
                         }));
+                    }
+                }else if(name.toString() === "availableConversationsComponentKey") {
+                    console.log("#CD", name, newState)
+                    if( this._availableConversations === null){
+                        this._availableConversations = new syncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        console.log("#CD", this._availableConversations)
+                        this._availableConversations.setStateWatcher(function(name, oldState, newState){
+                            console.log("#CD", name, oldState, newState)
+                        });
                     }
                 }
             },
