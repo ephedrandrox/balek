@@ -18,8 +18,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("diaplodeConversationsController Cannot Start!...");
                 }
                 console.log("diaplodeConversationsController starting...");
-                this.conversationKey= String(crypto.randomUUID());
-                debugger;
+                this.conversationKey = String(crypto.randomUUID());
             },
             getConversationKey: function(){
                 return this.conversationKey;

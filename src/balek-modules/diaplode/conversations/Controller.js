@@ -43,12 +43,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             let newConversationKey = newConversation.getConversationKey()
                             if(newConversationKey !== null)
                             {
-                                debugger;
 
                                 //Add it to the conversations array
                                 this._conversations[newConversationKey.toString()]  = newConversation;
                                 //add to all users lists:
-                                debugger;
+
 
                                 this.refreshConversationUsersLists(newConversation);
                                 debugger;
@@ -94,15 +93,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     let conversationKey = conversation.getConversationKey();
                     if( ownerKey != null && Array.isArray(userKeys)){
                             let ownerStateMap = this.getUserConversationsStateMap(ownerKey);
-debugger;
                             ownerStateMap.set(String(conversationKey) ,"Active");
                         debugger;
                         userKeys.forEach(lang.hitch(this, function(userKey){
                             let userStateMap = this.getUserConversationsStateMap(userKey);
-                            debugger;
-
                             userStateMap.set(String(conversationKey), "Active")
-                            debugger;
                         }))
 
                     }
