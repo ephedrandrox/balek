@@ -35,7 +35,8 @@ define(['dojo/_base/declare',
                         let mainInterface = new MainInterface({_instanceKey: newState.instanceKey,
                             _sessionKey: newState.sessionKey,
                             _componentKey: newState.componentKey,
-                            _conversationsInstanceCommands: this._instanceCommands})
+                            _conversationsInstanceCommands: this._instanceCommands,
+                            _moduleInterface: this})
                         this._mainInterface = mainInterface;
                         mainInterface.getContainerKeys().then(lang.hitch(this, function(containerKeys){
                            if(Array.isArray(containerKeys) && containerKeys.length === 0)
@@ -54,11 +55,21 @@ define(['dojo/_base/declare',
                     if( this._availableConversations === null){
                         this._availableConversations = new syncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
                         console.log("#CD", this._availableConversations)
-                        this._availableConversations.setStateWatcher(function(name, oldState, newState){
-                            console.log("#CD", name, oldState, newState)
-                        });
+                        this._availableConversations.setStateWatcher(lang.hitch(this, this.onAvailableConversationsUpdate));
                     }
                 }
+            },
+            onAvailableConversationsUpdate: function(name, oldState, newState){
+                console.log("#CD", name, oldState, newState)
+                if(this._mainInterface !== null && typeof this._mainInterface.onAvailableConversationsUpdate === 'function')
+                {
+                    this._mainInterface.onAvailableConversationsUpdate();
+                }else {
+                    alert("no main Interface"); //this needs to work with postCreate
+                }
+            },
+            getAvailableConversations: function(){
+                return this._availableConversations._objects;
             },
             toggleShowView: function(){
                 if (this._mainInterface !== null && typeof this._mainInterface.toggleShowView === 'function'){

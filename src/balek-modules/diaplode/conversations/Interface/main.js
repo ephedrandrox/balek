@@ -46,7 +46,10 @@ define(['dojo/_base/declare',
             _mainCssString: mainCss,
             baseClass: "diaplodeConversationsMainInterface",
 
-           _mainNode: null,
+            //Dom Node Handles
+            _conversationsList: null,
+            _mainNode: null,
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -84,6 +87,17 @@ define(['dojo/_base/declare',
                     console.log("#CD", newState)
                     //This could be used to signal content removed that was given to Interface State
                 }
+            },
+            onAvailableConversationsUpdate: function()
+            {
+             let availableConversations = this._moduleInterface.getAvailableConversations();
+             let newHTML = "";
+                for (const conversationKey in availableConversations)
+                {
+                    let conversation = availableConversations[conversationKey];
+                    newHTML += ("Conversation" + conversation.conversationKey + ":" + conversation.Status +"</br>" )
+                }
+                this._conversationsList.innerHTML = newHTML;
             },
             _onAddContent: function (clickEvent) {
                 this._instanceCommands.addContent("New Content").then(function(commandReturnResults){
