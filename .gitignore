@@ -3,18 +3,20 @@ release/
 
 node_modules/
 
-data/mongo/mongoDB/
+builds/docker/mongo/mongoDB/
 
-data/mysql/mysqlDB/
+builds/docker/mysql/mysqlDB/
 
 .idea/
 
 .DS_Store
 
-builds/diaplode/mysqlDB/
+/src/balek-modules/node-modules
 
-builds/diaplode/mongoDB/
+/src/balek-modules/lib/
 
 src/balek-modules/users/guide/resources/docs/html/
 
 src/balek-modules/users/guide/resources/docs/pdf/
+
+data/

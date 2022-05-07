@@ -33,6 +33,8 @@ define(['dojo/_base/declare',
                 topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
                 topic.subscribe("getSessionsForUser", lang.hitch(this, this.getSessionsForUser));
                 topic.subscribe("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey));
+                topic.subscribe("getSessionByKey", lang.hitch(this, this.getSessionByKey));
+
 
 
                 topic.subscribe("setSessionDisconnected", lang.hitch(this, this.setSessionDisconnected));
@@ -64,7 +66,7 @@ define(['dojo/_base/declare',
                         this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
                     }else
                     {
-                        console.log("Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey);
+                        console.log("Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey, sessionMessage);
                         messageReplyCallback({success: "Message for Unknown Session received. SessionKey:"+ sessionMessage.sessionKey});
 
                     }
@@ -143,7 +145,7 @@ define(['dojo/_base/declare',
                         _wssConnection: wssConnection
                     });
 
-                    this._sessions[sessionKey].sendWorkspaces();
+                   // this._sessions[sessionKey].sendWorkspaces();
 
                     topic.publish("getMainModuleSettingsWithCallback", lang.hitch(this, function (mainModule) {
                         topic.publish("loadModuleForClient", wssConnection, mainModule, lang.hitch(function (moduleInterface) {
@@ -302,14 +304,12 @@ define(['dojo/_base/declare',
             },
             unloadAllUserSessionsExcept: function(sessionKeyToKeep){
                 let sessionUserKey = this._sessions[sessionKeyToKeep].getUserKey();
-                debugger;
 
 
                 this.getSessionsForUserKey(sessionUserKey, lang.hitch(this, function(sessionsForUser){
                     sessionsForUser.forEach(lang.hitch(this, function(session){
                         if(sessionKeyToKeep !== session._sessionKey)
                         {
-                            debugger;
                             this.unloadSession(session._sessionKey);
                         }
                     }));
@@ -323,9 +323,16 @@ define(['dojo/_base/declare',
                     this._sessions[sessionKey].updateSessionStatus({sessionStatus: 2});
                 }
             },
+
+
+            //todo delete this after state update
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();
             },
+            getSessionByKey: function(sessionKey, returnCallback){
+                returnCallback(this._sessions[sessionKey]);
+            },
+
             getSessionsForUser: function (username, sessionReturn) {
 
                 let sessionsToReturn = [];

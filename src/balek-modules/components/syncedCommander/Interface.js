@@ -15,7 +15,7 @@ define(['dojo/_base/declare',
                     this.sendInstanceCallbackMessage({
                         request: "Component Key",
                     }, lang.hitch(this, function (requestResults) {
-                        console.log("got command return results", requestResults);
+                      //  console.log("got command return results", requestResults);
                         this._componentKey = requestResults.componentKey
                         this.askToConnectInterface();
 
@@ -29,10 +29,13 @@ define(['dojo/_base/declare',
                 //We Check for interfaceRemoteCommands and link them
                 if (name === "interfaceRemoteCommands") {
                     this.linkRemoteCommands(newState);
+                    if(this.onRemoteCommandsInitiated){
+                        this.onRemoteCommandsInitiated();
+                    }
                 }
                 //We Also Check for interfaceRemoteCommandKey so we can send commands
                 if (name === "interfaceRemoteCommandKey") {
-                    console.log("Remote COmmander Key!");
+                   // console.log("Remote COmmander Key!");
                     this._interfaceRemoteCommanderKey = newState;
                 }
 

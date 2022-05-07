@@ -56,7 +56,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang', "dojo/topic", "dojo/node!fs"],
                         "js": 'application/javascript',
                         "ico": 'image/x-icon',
                         "png": 'image/png',
-                        "svg": 'image/svg+xml'
+                        "svg": 'image/svg+xml',
+                        "json": "application/json"
                     }
                 };
                 

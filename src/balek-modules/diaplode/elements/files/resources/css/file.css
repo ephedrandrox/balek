@@ -1,0 +1,81 @@
+.diaplodeElementsFilesInterfaceFile * {
+
+}
+
+.diaplodeElementsFilesInterfaceFile {
+    position: absolute;
+    background: black;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    border: none;
+
+    visibility: visible;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    outline: none;
+    opacity: 1;
+z-index:1
+}
+
+.CodeMirror {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    border: none;
+    height: 100%;
+    width: 100%;
+
+    overflow: scroll;
+}
+
+.diaplodeElementsFilesInterfaceFileViewDiv {
+    position: absolute;
+    background: none;
+    display: inline-block;
+    padding: 10px;
+    margin: 0;
+    border: none;
+
+    visibility: visible;
+    top: 0;
+    left:0;
+    right: 0;
+    bottom: 0;
+
+
+
+    max-width: 100%;
+    max-height: 100%;
+    outline: none;
+    opacity: 1;
+    overflow: auto;
+    color: #0c2147;
+    font-size: 12pt;
+    text-align: left;
+}
+
+.diaplodeElementsFilesInterfaceFileEditorTextArea {
+    position: absolute;
+
+    padding: 10px;
+    margin: 0;
+    border: none;
+    visibility: visible;
+    top: 0;
+    left:0;
+    right: 0;
+    bottom: 0;
+
+    opacity: 1;
+    background: rgba(0,0,0,.75);
+    color: red;
+    font-size: 12pt;
+
+
+
+}

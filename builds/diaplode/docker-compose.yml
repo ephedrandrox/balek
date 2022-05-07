@@ -1,0 +1,59 @@
+version: '3'
+services:
+  balek:
+    image: "diaplode:release"
+    build:
+      context: "../.."
+      dockerfile: "builds/diaplode/Dockerfile"
+    ports:
+      - "443:8080"
+    volumes:
+      - ./config/balek:/balek/src/balek-server/etc
+  mysqld:
+    image: "diaplode-mysql:release"
+    build: "../docker/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootPass
+      - MYSQL_DATABASE=balek
+      - MYSQL_USER=balekAppUser
+      - MYSQL_PASSWORD=balekAppPassword
+    ports:
+        - "3306:3306"
+    volumes:
+      - ./config/initSQL:/docker-entrypoint-initdb.d/:ro
+      - ./data/mysqlDB:/var/lib/mysql
+  mongodb:
+    image: "diaplode-mongodb:release"
+    build: "../docker/mongo"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootPass
+      - MONGO_INITDB_DATABASE=balek
+    volumes:
+      - ./config/dbInit:/docker-entrypoint-initdb.d/
+      - ./data/mongoDB:/data/db
+  openssh:
+    image: "balek-openssh:release"
+    build: "../docker/openssh"
+    hostname: balek-openssh
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=PST
+      - PASSWORD_ACCESS=false
+      - PUBLIC_KEY_FILE=config/balek/ssh/id_rsa.pub
+      - SUDO_ACCESS=true
+      - USER_NAME=diaplode
+    volumes:
+      - ./data/openSSH:/config
+    ports:
+      - 2222:2222
+    restart: unless-stopped
+  nginx:
+    image: nginx
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - balek
+    ports:
+      - 80:80

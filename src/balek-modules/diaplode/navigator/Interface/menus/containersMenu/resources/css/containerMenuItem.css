@@ -1,0 +1,70 @@
+.diaplodeNavigatorInterfaceContainersMenuItemWidget{
+    position: relative;
+    display: inline-block;
+    top:0;
+    left: 0;
+    background: none;
+    z-index: 6000;
+    color: white;
+    outline: none;
+    opacity: 1;
+
+
+    border: solid rgb(111,111,111) 3px;
+
+    padding:5px;
+    margin: 4px;
+    cursor: pointer;
+    font-size: 14pt;
+
+    background: rgba(0,0,0,.5);
+
+
+border-radius: 5px;
+
+}
+
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetAddCommandDiv{
+
+    border: solid white 3px;
+
+    cursor: pointer;
+}
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetContainerDiv{
+    border: white solid 3px;
+
+    cursor: pointer;
+}
+
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetDockedContainerDiv{
+    border: red solid 3px;
+}
+
+
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetContainerNameDiv{
+
+    border: solid white 3px;
+
+    white-space: nowrap;
+    cursor: pointer;
+    margin: 10px;
+    padding:5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+}
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetContainerNameDivActive {
+
+    border: solid black 3px;
+    color: black;
+    background: rgba(255,255,255,.8);
+
+}
+
+
+.diaplodeNavigatorInterfaceContainersMenuItemWidgetContainerNameDiv:hover{
+
+    border: solid black 3px;
+    white-space: nowrap;
+    cursor: pointer;
+}

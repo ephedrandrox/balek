@@ -1,5 +1,11 @@
 var profile = (function () {
+
+
+    //#####################################################################
+    //todo work on the build and release system
+    //#####################################################################
     return {
+
         basePath: "./",
         releaseDir: "./release",
         releaseName: "balek",
@@ -13,7 +19,7 @@ var profile = (function () {
         layerOptimize: "closure",
         optimize: "closure",
         mini: true,
-        stripConsole: "none",
+        stripConsole: "all",
         selectorEngine: "lite",
 
         defaultConfig: {
@@ -74,11 +80,33 @@ var profile = (function () {
             location: "./src/balek"
         }, {
             name: "balek-modules",
-            location: "./src/balek-modules"
+            location: "./src/balek-modules",
+            resourceTags: {
+                copyOnly: function(filename, mid){
+
+                    let balekNodeModules = /^balek-modules\/node_modules\/|^balek-modules\/build\//,
+                        codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/,
+                        quill = /blots\/text.js/;
+
+
+                    return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid);
+                }
+
+                //todo
+                /*
+                amd: function(filename, mid){
+                   let  balekNodeModuleLibraries = /^balek-modules\/lib\//;
+                   let balekModule = /^balek-modules\/|$.js/;
+                   let javascriptFile =  /$.js/;
+                    return !balekNodeModuleLibraries.test(mid) && balekModule.test(mid) && javascriptFile.test(filename);
+                }
+                */
+            }
         }, {
             name: "balek-client",
             location: "./src/balek-client"
-        }],
+        }
+        ],
 
         layers: {
             "dojo/dojo": {
@@ -110,7 +138,27 @@ var profile = (function () {
             },
             "balek-modules/digivigil-www/guestbook/Interface": {
                 include: [  "balek-modules/digivigil-www/guestbook/Interface"]
+            },
+            "balek-modules/diaplode/login/Interface": {
+                include: [  "balek-modules/diaplode/login/Interface"]
+            },
+            "balek-modules/diaplode/navigator/Interface": {
+                include: [  "balek-modules/diaplode/navigator/Interface"]
+            },
+            "balek-modules/diaplode/commander/Interface": {
+                    include: [  "balek-modules/diaplode/commander/Interface"]
+            },
+            "balek-modules/diaplode/commander/Interface/terminal": {
+                include: [  "balek-modules/diaplode/commander/Interface/terminal"],
+                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
+                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
+            },
+            "balek-modules/diaplode/commander/Interface/console": {
+                include: [  "balek-modules/diaplode/commander/Interface/console"],
+                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
+                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
             }
+
         }
     };
 })();

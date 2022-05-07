@@ -35,7 +35,7 @@ define(['dojo/_base/declare',
             baseClass: "sessionMenuWorkspacesMenu",
 
             _sessionMenuWorkspacesInterface: null,
-            _workspacesStore: null,
+           // _workspacesStore: null,
 
             constructor: function (args) {
 
@@ -44,7 +44,7 @@ define(['dojo/_base/declare',
                 //should maybe give id and check for these before adding more and more in case body already has style
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
-                topic.publish("getWorkspacesStore", lang.hitch(this, function (workspacesStore) {
+             /*   topic.publish("getWorkspacesStore", lang.hitch(this, function (workspacesStore) {
                     this._workspacesStore = workspacesStore;
                     this._sessionMenuWorkspacesInterface = new sessionMenuWorkspacesMenu({
                         _instanceKey: this._instanceKey,
@@ -55,7 +55,11 @@ define(['dojo/_base/declare',
                     this._sessionMenuWorkspacesInterface.reload();
                     topic.publish("addToMainContentLayerFirstBelowTop", this._sessionMenuWorkspacesInterface.domNode);
                 }));
-
+*/
+                this._sessionMenuWorkspacesInterface = new sessionMenuWorkspacesMenu({
+                    _instanceKey: this._instanceKey
+                });
+                topic.publish("addToMainContentLayerFirstBelowTop", this._sessionMenuWorkspacesInterface.domNode);
             },
             _mouseEnter: function (eventObject) {
                 domClass.add(this._workspacesIconDiv, "mouseOverSessionWorkspacesMenuWorkspaceIcon");
