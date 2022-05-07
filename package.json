@@ -20,6 +20,7 @@
   "dependencies": {
     "mongodb": "^4.4.1",
     "mysql2": "^2.3.3",
+    "sanitize-html": "^2.7.0",
     "websocket": "^1.0.34"
   },
   "name": "balek",
