@@ -1,8 +1,6 @@
 {
 	"Session Settings": {
-		"Main Module": "digivigil-www/guestbook",
-		"Main Module": "session/login",
-		"Main Module": "diaplode/login"
+		"Main Module": "balekute/connect"
 	},
 	"Network Settings":{
 		"Server Address" : "0.0.0.0",

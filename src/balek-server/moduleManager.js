@@ -212,7 +212,9 @@ define(['dojo/_base/declare',
 
             },
             checkAndLoadModulesFromTree: function (modulesFileTree, returnCallback) {
-
+                function handleError(error){
+                    console.log("######################ERRROR",error.src, error.id);
+                }
                 for (const file in modulesFileTree) {
                     if (!(file == "__fileStats__" || file == "__filePath__")) {
                         if (modulesFileTree[file].__fileStats__.isDirectory()) {
@@ -220,10 +222,15 @@ define(['dojo/_base/declare',
                             let modulePath = modulesFileTree[file].__filePath__.substr(this._modulesFilePath.length);
                             if (modulesFileTree[file]['Instance.js'] && modulesFileTree[file]['Interface.js'] && modulesFileTree[file]['Module.js']) {
                                 console.log(modulePath);
-                                //todo try/catch then returnCallback(error) this require
-                                require(["balek-modules/" + modulePath + "/Module"], lang.hitch(this, function (newModule) {
-                                    this._modules[modulePath] = new newModule();
-                                }));
+
+
+                                require.on("error", handleError);
+
+                                    require(["balek-modules/" + modulePath + "/Module"], lang.hitch(this, function (newModule) {
+                                        this._modules[modulePath] = new newModule();
+                                    }));
+
+
                             }
 
                             this.checkAndLoadModulesFromTree(modulesFileTree[file], returnCallback);

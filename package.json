@@ -13,6 +13,17 @@
     "buildAll": "npm run preBuild && npm run build && npm run postBuild",
     "buildCertificates": "echo 'Coming soon!'"
   },
+  "scripts": {
+    "start": "node loadServer.js",
+    "build": "./lib/dojo-release-src/util/buildscripts/build.sh --profile ./balek.profile.js --language_in=ECMASCRIPT6",
+    "buildDevelopmentDatabases": "docker build -f builds/docker/mysql/Dockerfile .  -t balek-mysqldb:develop && docker build -f builds/docker/mongo/Dockerfile .  -t balek-mongo:develop ",
+    "startDevelopmentDatabases": "docker-compose -f builds/docker/mysql/docker-compose.yml up -d && docker-compose -f builds/docker/mongo/docker-compose.yml up -d",
+    "stopDevelopmentDatabases": "docker-compose -f builds/docker/mysql/docker-compose.yml down && docker-compose -f builds/docker/mongo/docker-compose.yml down",
+    "preBuild": "npm run buildLibraries --prefix src/balek-modules/",
+    "postBuild": "npm run buildRelease --prefix src/balek-modules/",
+    "buildAll": "npm run preBuild && npm run build && npm run postBuild",
+    "buildCertificates": "sh builds/certificates/build.sh"
+  },
   "scriptsComments": {
     "start": "Starts Balek",
     "build": "Builds release folder from src",

@@ -117,6 +117,29 @@ define(['dojo/_base/declare',
 
                         }));
                     });
+
+                    this._instanceCommands["_"+interfaceLinks[linkKey]] = lang.hitch(this, function () {
+                        let args = Array.from(arguments);
+                        let commandReturnCallback = args.pop()
+
+                        if (typeof commandReturnCallback === 'function') {
+                            let commandArguments = args;
+
+                                this.sendInstanceCallbackMessage({
+                                    request: "Remote Command",
+                                    remoteCommanderKey: this._interfaceRemoteCommanderKey,
+                                    remoteCommand: interfaceLinks[linkKey],
+                                    remoteCommandArguments: commandArguments,
+                                }, function (commandResults) {
+                                    console.log("got command return results");
+                                    commandReturnCallback(commandResults);
+                                });
+
+
+                        }else{
+                            console.log("Instance command not given a callback")
+                        }
+                    });
                 }
             },
             routeCommand: function (instanceKey, remoteCommanderKey, command, commandCallback, commandArguments) {
