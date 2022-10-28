@@ -1,4 +1,16 @@
 <div class="${baseClass}" tabindex="0">
     <div data-dojo-attach-event="onClick:_invitationClicked" >Invitation: ${invitationKey}
+        <div data-dojo-attach-point="_hostDiv"></div>
+        <div data-dojo-attach-point="_statusDiv"></div>
+        <div data-dojo-attach-point="_qrDiv"><img src="${qrEncodedString}" data-dojo-attach-point="_qrImage" /></div>
+        <div class="${baseClass}DeviceDiv">
+            <div data-dojo-attach-point="_hostnameDiv"></div>
+            <div data-dojo-attach-point="_publicSigningKeyDiv"></div>
+            <div data-dojo-attach-point="_keychainIdentifierDiv"></div>
+            <div data-dojo-attach-point="_nameDiv"></div>
+            <div data-dojo-attach-point="_osNameDiv"></div>
+            <div data-dojo-attach-point="_signatureDiv"></div>
+
+        </div>
     </div>
 </div>

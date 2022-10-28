@@ -53,7 +53,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         if(input && input.owner && input.owner.userKey)
                         {
                             //New Conversation Created!
-                            let newInvitation = Invitation({owner: input.owner,  _connectController: this, _module: this._module});
+                            let newInvitation = Invitation({owner: input.owner, host: input.host, _connectController: this, _module: this._module});
                             let newInvitationKey = newInvitation.getKey()
                             if(newInvitationKey !== null)
                             {
@@ -73,7 +73,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }));
             },
-            useInvitationKey: function (invitationKey) {
+            useInvitationKey: function (invitationKey, deviceInfo) {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if (invitationKey === null) {
                         Reject({error: "conversationContent === null"});
@@ -83,9 +83,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             let invitation = this._invitations[invitationKey]
 
                             if ( typeof invitation.useKey === 'function') {
-                                let invitationStatus = invitation.useKey(invitationKey);
+                                let invitationStatus = invitation.useKey(invitationKey, deviceInfo);
                                 if( invitationStatus == "accepted" )
                                 {
+                                    console.log("invitation Key accepted", deviceInfo)
                                     Resolve({invitationKey: invitationKey, status: invitationStatus});
                                 }else{
                                     Reject({error: "Not Accepted", status : invitationStatus});

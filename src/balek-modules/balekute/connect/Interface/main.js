@@ -50,7 +50,7 @@ define(['dojo/_base/declare',
 
 
 
-                this._interface._instanceCommands.createInvitationKey("New Content").then(function(commandReturnResults){
+                this._interface._instanceCommands.createInvitationKey(location.hostname).then(function(commandReturnResults){
                     console.log("#CDD", commandReturnResults)
                     //create new interface with callback
                 }).catch(function(commandErrorResults){

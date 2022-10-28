@@ -3,12 +3,14 @@ define(['dojo/_base/declare',
 
         //Balek Instance Includes
         'balek-modules/components/syncedCommander/Instance',
+        'dojo/node!qrcode'
     ],
     function (declare,
               lang,
 
               //Balek Instance Includes
-              _SyncedCommanderInstance) {
+              _SyncedCommanderInstance,
+              QRCode) {
         return declare("moduleBalekuteConnectMainInstance", [_SyncedCommanderInstance], {
 
             scanEntries: null,
@@ -19,11 +21,11 @@ define(['dojo/_base/declare',
                 console.log("starting moduleBalekuteConnectMainInstance");
 
 
-
                 //set setRemoteCommander commands
-                this._commands={
 
-                };
+                this._commands={
+                    "getQRCode": lang.hitch(this, this.getQRCode)
+                    };
                 this.setInterfaceCommands();
 
                 this._interfaceState.set("Component Name","Connect Main");
@@ -33,6 +35,14 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("Status", "Ready");
 
 
+            },
+            getQRCode: function(input, remoteCallback){
+
+                QRCode.toDataURL(input,{type:'terminal'}, function (err, url) {
+                    //console.log(url)
+                    console.log(url)
+                    remoteCallback({Result: url})
+                })
             },
             //##########################################################################################################
             //Instance Override Functions Section

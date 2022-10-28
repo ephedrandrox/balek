@@ -1,4 +1,19 @@
 .moduleBalekuteConnectInvitationInterface{
+    display: block;
     background: red;
+    color: white;
+}
+
+.moduleBalekuteConnectInvitationInterfaceStatusAccepted{
+    background: green;
+    color: white;
+}
+.moduleBalekuteConnectInvitationInterfaceStatusWaiting{
+    background: red;
+    color: white;
+}
+.moduleBalekuteConnectInvitationInterfaceDeviceDiv{
+    display: block;
+    background: purple;
     color: white;
 }

@@ -56,24 +56,30 @@ define(['dojo/_base/declare',
                // this.setInterfaceCommands();
 
             },
-            useInvitationKey: function( input, remoteCallback){
-                console.log("useInvitationKey", input);
-
-                let invitationKey = input
+            useInvitationKey: function( invitationKey, deviceInfo, remoteCallback){
+                console.log("useInvitationKey", invitationKey, deviceInfo, arguments);
 
 
+                if( typeof invitationKey === 'string' && typeof deviceInfo === 'object' &&
+                    typeof remoteCallback === 'function'  )
+                {
+                    this.moduleController.useInvitationKey(invitationKey,deviceInfo).then(lang.hitch(this, function (Result) {
+                        console.log("this.moduleController.useInvitationKey",Result)
+                        remoteCallback({Result: Result})
+                    })).catch(function(rejectError){
+                        remoteCallback({error: rejectError})
+                    })
+                }else {
+                    console.log("❗️Unexpected Arguments! useInvitationKey: function( invitationKey, hostname, publicSigningKey, remoteCallback)‼️",arguments)
+                }
 
 
-
-                this.moduleController.useInvitationKey(invitationKey).then(lang.hitch(this, function (Result) {
-                    console.log("this.moduleController.useInvitationKey",Result)
-                    remoteCallback({Result: Result})
-                })).catch(function(rejectError){
-                    remoteCallback({error: rejectError})
-                })
             },
             createInvitationKey: function( input, remoteCallback){
                 console.log("createInvitationKey", input);
+
+                let invitationHost = input
+
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
                     if (userKey != null ){
                         this._userKey = userKey;
@@ -81,7 +87,8 @@ define(['dojo/_base/declare',
 
                         this.moduleController.createInvitation({owner: {instanceKey: this._instanceKey,
                                 sessionKey: this._sessionKey,
-                                userKey: this._userKey}}).then(lang.hitch(this, function (Result) {
+                                userKey: this._userKey}, host:
+                        invitationHost}).then(lang.hitch(this, function (Result) {
 
                             remoteCallback({Result: Result})
                             if(Result && Result.newKey){
@@ -111,9 +118,11 @@ define(['dojo/_base/declare',
                 if(invitationState && typeof invitationState.watch === 'function'){
 
                     let status = invitationState.get("status")
+                    let host = invitationState.get("host")
 
 
                     remoteCallback({name: "status", newState: status})
+                    remoteCallback({name: "host", newState: host})
 
 
                     if( !this.stateWatchers[invitationKey] )

@@ -4,7 +4,7 @@
 	},
 	"Network Settings":{
 		"Server Address" : "0.0.0.0",
-		"Server Port" : "8080"
+		"Server Port" : "443"
 	},
 	"Database Settings": {
 		"MySQL Database Connection": {
