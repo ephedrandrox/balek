@@ -46,8 +46,6 @@ define(['dojo/_base/declare',
             _createInvitationClicked: function(clickEvent){
                 console.log(this._instanceCommands)
 
-                let invitationInterface = null;
-
 
 
                 this._interface._instanceCommands.createInvitationKey(location.hostname).then(function(commandReturnResults){

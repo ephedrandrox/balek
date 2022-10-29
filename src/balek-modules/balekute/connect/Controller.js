@@ -73,10 +73,43 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }));
             },
+            userAcceptDeviceInfo: function(input)
+            {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    let owner = input.owner
+                    let invitationKey = input.invitationKey
+                    if (typeof owner === 'undefined' || typeof invitationKey === 'undefined' ) {
+                        Reject({error: "owner or invitationKey === undefined"});
+                    } else {
+
+                        if(this._invitations[invitationKey]){
+                            let invitation = this._invitations[invitationKey]
+
+                            if ( typeof invitation.userAcceptsDevice === 'function') {
+                                let invitationStatus = invitation.userAcceptsDevice(owner, invitationKey);
+                                if( invitationStatus == "accepted" )
+                                {
+                                    console.log("invitation Key Used and device accepted", invitationKey)
+                                    Resolve({invitationKey: invitationKey, status: invitationStatus});
+                                }else{
+                                    Reject({error: "Not Accepted", status : invitationStatus});
+                                }
+                            }else{
+                                Reject({error: "Invitation can not use key!"});
+                            }
+
+
+
+                        }else{
+                            Reject({error: "Invitation is not available"});
+                        }
+                    }
+                }));
+            },
             useInvitationKey: function (invitationKey, deviceInfo) {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if (invitationKey === null) {
-                        Reject({error: "conversationContent === null"});
+                        Reject({error: "invitationKey === null"});
                     } else {
 
                         if(this._invitations[invitationKey]){
@@ -84,9 +117,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                             if ( typeof invitation.useKey === 'function') {
                                 let invitationStatus = invitation.useKey(invitationKey, deviceInfo);
-                                if( invitationStatus == "accepted" )
+                                if( invitationStatus == "used" )
                                 {
-                                    console.log("invitation Key accepted", deviceInfo)
+                                    console.log("invitation Key Used", deviceInfo)
                                     Resolve({invitationKey: invitationKey, status: invitationStatus});
                                 }else{
                                     Reject({error: "Not Accepted", status : invitationStatus});

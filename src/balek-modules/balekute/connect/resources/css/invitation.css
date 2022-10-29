@@ -1,19 +1,73 @@
 .moduleBalekuteConnectInvitationInterface{
+    position: relative;
     display: block;
-    background: red;
+    background: rgba(97, 91, 178, 0.46);
     color: white;
+    padding: 30px;
+    margin: 10px;
+    margin-top: 30px;
+    border-radius: 30px;
+    text-align: center;
 }
 
 .moduleBalekuteConnectInvitationInterfaceStatusAccepted{
-    background: green;
+    background: rgba(29, 208, 29, 0.6);
     color: white;
 }
 .moduleBalekuteConnectInvitationInterfaceStatusWaiting{
-    background: red;
+    background: rgba(97, 91, 178, 0.46);
     color: white;
 }
-.moduleBalekuteConnectInvitationInterfaceDeviceDiv{
-    display: block;
-    background: purple;
+
+.moduleBalekuteConnectInvitationInterfaceStatusUsed{
+    background: #080869;
     color: white;
+}
+
+.moduleBalekuteConnectInvitationInterfaceDeviceDiv{
+    positioon: relative;
+    display: inline-block;
+    background: rgba(238, 25, 220, 0.68);
+    color: white;
+    padding: 10px;
+    border: solid black 2px;
+    border-radius: 5px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    text-align: left;
+
+}
+.moduleBalekuteConnectInvitationInterfaceQRImage{
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+}
+
+.moduleBalekuteConnectInvitationInterfaceQRDiv{
+    display: block;
+    width: 100px;
+    height: 100px;
+    display: block;
+    border: solid black 5px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    padding: 3px;
+    background: rgba(178, 178, 225, 0.9);
+
+}
+
+.moduleBalekuteConnectInvitationInterfaceTextField{
+    border: solid black 2px;
+    border-radius: 5px;
+    padding: 6px;
+    margin: 3px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    display:inline-block;
 }

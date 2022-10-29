@@ -1,16 +1,9 @@
-<div class="${baseClass}" tabindex="0">
-    <div data-dojo-attach-event="onClick:_invitationClicked" >Invitation: ${invitationKey}
-        <div data-dojo-attach-point="_hostDiv"></div>
-        <div data-dojo-attach-point="_statusDiv"></div>
-        <div data-dojo-attach-point="_qrDiv"><img src="${qrEncodedString}" data-dojo-attach-point="_qrImage" /></div>
+<div class="${baseClass}" tabindex="0" class="${baseClass}">
+    <div data-dojo-attach-event="onClick:_invitationClicked" >
+        <div data-dojo-attach-point="_qrDiv" class="${baseClass}QRDiv"><img class="${baseClass}QRImage" src="${qrEncodedString}" data-dojo-attach-point="_qrImage" /></div>
         <div class="${baseClass}DeviceDiv">
-            <div data-dojo-attach-point="_hostnameDiv"></div>
-            <div data-dojo-attach-point="_publicSigningKeyDiv"></div>
-            <div data-dojo-attach-point="_keychainIdentifierDiv"></div>
-            <div data-dojo-attach-point="_nameDiv"></div>
-            <div data-dojo-attach-point="_osNameDiv"></div>
-            <div data-dojo-attach-point="_signatureDiv"></div>
-
+            <div data-dojo-attach-point="_publicSigningKeyDiv" class="${baseClass}TextField" style="background-color: rgba(255, 0, 0, .5)"></div>
+            <div data-dojo-attach-point="_keychainIdentifierDiv" class="${baseClass}TextField" style="background-color: rgba(0, 0, 255, .5)"></div>
         </div>
     </div>
 </div>

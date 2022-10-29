@@ -28,6 +28,7 @@ define(['dojo/_base/declare',
 
                 //set setRemoteCommander commands
                 this._commands={
+                    "acceptDeviceInfo" : lang.hitch(this, this.acceptDeviceInfo),
                     "useInvitationKey": lang.hitch(this, this.useInvitationKey),
                     "createInvitationKey" : lang.hitch(this, this.createInvitationKey),
                     "connectInvitationState" : lang.hitch(this,this.connectInvitationState)
@@ -55,6 +56,42 @@ define(['dojo/_base/declare',
 
                // this.setInterfaceCommands();
 
+            },
+            acceptDeviceInfo: function(invitationKey, remoteCallback)
+            {
+                console.log("acceptDeviceInfo", invitationKey);
+
+                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
+                    if (userKey != null ){
+                        this._userKey = userKey;
+
+
+                        this.moduleController.userAcceptDeviceInfo({owner: {instanceKey: this._instanceKey,
+                                sessionKey: this._sessionKey,
+                                userKey: this._userKey}, invitationKey:
+                            invitationKey,}).then(lang.hitch(this, function (Result) {
+
+                            remoteCallback({Result: Result})
+                            if(Result && Result.newKey){
+                                let newInvitationKey = Result.newKey
+                                console.log("Adding invitation to available list with key:", newInvitationKey);
+
+                                let newInvitation = this.moduleController.getInvitationState(newInvitationKey);
+                                console.log("Adding invitation:", newInvitation);
+
+                                this.availableInvitations.add(newInvitationKey, newInvitation );
+
+                            }
+
+
+                        })).catch(function(rejectError){
+                            remoteCallback({error: rejectError})
+                        })
+                    }else{
+                        remoteCallback({error: "Cannot create Invitation without user Key"})
+                    }
+
+                }));
             },
             useInvitationKey: function( invitationKey, deviceInfo, remoteCallback){
                 console.log("useInvitationKey", invitationKey, deviceInfo, arguments);
@@ -117,13 +154,17 @@ define(['dojo/_base/declare',
                 let invitationState = this.moduleController.getInvitationState(invitationKey)
                 if(invitationState && typeof invitationState.watch === 'function'){
 
-                    let status = invitationState.get("status")
-                    let host = invitationState.get("host")
-
-
-                    remoteCallback({name: "status", newState: status})
-                    remoteCallback({name: "host", newState: host})
-
+                    //Send state that already exists
+                    Object.entries(invitationState).forEach(entry => {
+                        const [key, value] = entry;
+                        if(typeof value !== 'function')
+                        {
+                            console.log("🟦🟩🟦🟩", key, value);
+                            remoteCallback({name: key, newState: value})
+                        }else {
+                            console.log("🟥🟧🟥🟧", key, value);
+                        }
+                    });
 
                     if( !this.stateWatchers[invitationKey] )
                     {
