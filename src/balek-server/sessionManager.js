@@ -160,7 +160,6 @@ define(['dojo/_base/declare',
 
             },
             sessionCredentialsUpdate: function (wssConnection, credentialData, sessionUpdateReply) {
-
                 if (wssConnection._sessionKey && credentialData.username && credentialData.password) {
                     topic.publish("getUserFromDatabase", credentialData.username, lang.hitch(this, function (userInfo) {
                         if (Array.isArray(userInfo) && userInfo.length >= 1) {

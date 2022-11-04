@@ -27,6 +27,28 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            getUserInfoFromDatabaseByKey: function (userKey) {
+
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    let query = this._dbConnection.query('SELECT id, name, password, userKey, permission_groups FROM ' + this._mysqlSettings.database + '.users WHERE userKey = ?;', userKey);
+                    let userToReturn = [];
+                    query.on('error', function (err) {
+                        console.log(err);
+                        Reject(err);
+                    })
+                        .on('result', lang.hitch(this, function (row) {
+                            //todo get connection from pool to pause
+                            // this._dbConnection.pause();
+                            userToReturn.push(row);
+                        }))
+                        .on('end', function () {
+                            // all rows have been received
+                            //console.log("All rows received");
+                            Resolve(userToReturn);
+                        });
+                }));
+
+            },
             getUserFromDatabase: function (username) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {

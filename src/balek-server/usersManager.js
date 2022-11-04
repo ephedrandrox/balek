@@ -50,6 +50,9 @@ define(['dojo/_base/declare',
                 topic.subscribe("getUserFromDatabase", lang.hitch(this, this.getUserFromDatabase));
                 topic.subscribe("getUsersFromDatabase", lang.hitch(this, this.getUsersFromDatabase));
 
+                topic.subscribe("getUserInfoFromDatabaseByKey", lang.hitch(this, this.getUserInfoFromDatabaseByKey));
+
+
                 topic.subscribe("receiveUserManagerMessage", lang.hitch(this, this.receiveUserManagerMessage));
 
             },
@@ -66,6 +69,17 @@ define(['dojo/_base/declare',
             getUserFromDatabase: function (username, returnGetUserFromDatabase) {
                 this._dbController.getUserFromDatabase(username).then(function (results) {
                     //todo update User Store
+                    console.log("🟩🟩🟪🟪", results )
+                    returnGetUserFromDatabase(results);
+                }).catch(function (error) {
+                    returnGetUserFromDatabase(error);
+                });
+            },
+            getUserInfoFromDatabaseByKey: function (userKey, returnGetUserFromDatabase) {
+                this._dbController.getUserInfoFromDatabaseByKey(userKey).then(function (results) {
+                    //todo update User Store
+                    console.log("🟦🟦🟦🟦", results )
+
                     returnGetUserFromDatabase(results);
                 }).catch(function (error) {
                     returnGetUserFromDatabase(error);

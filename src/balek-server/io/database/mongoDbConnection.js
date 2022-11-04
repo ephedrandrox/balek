@@ -24,6 +24,7 @@ define(['dojo/_base/declare',
                 if (this._host && this._port && this._user && this._password && this._database) {
 
                     this._mongoClient = mongodbNodeObject.MongoClient;
+                    this._objectIdConstructor = mongodbNodeObject.ObjectId;
                     this._url = 'mongodb://' + this._user + ":" + this._password + "@" + this._host + ":" + this._port;
 
                     this._mongoClient.connect(this._url, {

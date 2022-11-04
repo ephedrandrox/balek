@@ -15,19 +15,19 @@ define(['dojo/_base/declare',
                 topic.subscribe("receiveBalekProtocolMessage", lang.hitch(this, this.receiveBalekProtocolMessage));
             },
             sendBalekProtocolMessage: function (wssConnection, dataToSend) {
-                console.log("→ SEND  --  DEBUG: ################Send::::",dataToSend, "DEBUG: Send end:--------------------------")
+             //   console.log("→ SEND  --  DEBUG: ################Send::::",dataToSend, "DEBUG: Send end:--------------------------")
                 wssConnection.sendDataToClient(this.wrapObject(dataToSend));
             },
             sendBalekProtocolMessageReply: function (wssConnection, balekMessage, messageReply) {
                 let dataToSend = this.wrapObject(messageReply);
 
                 dataToSend.balekProtocolMessage.messageReply = balekMessage.messageKey;
-                console.log("☞ SEND  --  DEBUG: ################SendMEssageReply::::",dataToSend, "DEBUG: Send end:--------------------------")
+             //   console.log("☞ SEND  --  DEBUG: ################SendMEssageReply::::",dataToSend, "DEBUG: Send end:--------------------------")
 
                 wssConnection.sendDataToClient(dataToSend);
             },
             receiveBalekProtocolMessage: function (balekMessage, wssConnection) {
-                console.log("✉️✉️ Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
+           //     console.log("✉️✉️ Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
                 if (balekMessage.moduleMessage) {
                     topic.publish("receiveModuleMessage", balekMessage.moduleMessage, wssConnection, lang.hitch(this, function (messageReply) {
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
