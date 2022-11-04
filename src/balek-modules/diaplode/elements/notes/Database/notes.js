@@ -52,12 +52,9 @@ define(['dojo/_base/declare',
             getUserNotes: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                collection.find({_userKey: this._userKey},
+                        let collection = this.shared._DBConnection._db.collection(this._Collection)
+                            if(collection){
+                                collection.find({_userKey: this._userKey}, {}).toArray(
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
@@ -68,39 +65,37 @@ define(['dojo/_base/declare',
                                             Resolve([]); //return empty array
                                         }
                                     }));
+                            }else{
+                                Reject({error: "Could not get Notes Collection"});
                             }
-                        }));
+
                     }else {
                         Reject({error: "userKey Not set in Elements Notes Database Controller"});
                     }
                 }));
             },
-            getUserNote: function(noteID){
+            getUserNote: function(noteId){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                noteID = collection.s.pkFactory.ObjectID(noteID);
-                                collection.find({_userKey: this._userKey,
-                                                _id: noteID},
+                     let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
+                            noteId = this.shared._DBConnection._objectIdConstructor(noteId)
+                            collection.findOne({_userKey: this._userKey,
+                                                _id: noteId},
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
                                         }
-                                        else if(response){
-                                            response.toArray(function(err, documents)
-                                            {
-                                                Resolve(documents[0]);
-                                            });
+                                        else if(Array.isArray(response)){
+                                            Resolve(response[0]);
                                         }else{
-                                            Resolve([]); //return empty array
+                                            Resolve(response);
                                         }
                                     }));
-                            }
-                        }));
+                        }else{
+                            Reject({error: "Could not get Notes Collection"});
+                        }
+
                     }else {
                         Reject({error: "userKey Not set in Elements Notes Database Controller"});
                     }
@@ -109,21 +104,22 @@ define(['dojo/_base/declare',
             newUserNote: function(noteContent)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                        if(error){
-                            Reject(error);
-                        }
-                        else if(collection){
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
                             collection.insertOne({_userKey: this._userKey, noteContent: noteContent}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
                                 else if(response){
                                     Resolve(response.insertedId);
+                                }else{
+                                    Reject({error: "Could not create Note"});
                                 }
                             }));
+                        }else
+                        {
+                            Reject({error: "Could not get Notes Collection"});
                         }
-                    }));
                 }));
             },
             updateUserNote: function(noteId, noteContent)
@@ -132,13 +128,10 @@ define(['dojo/_base/declare',
 
                 //todo check that the note ID fits the user ID before updateing
 
-                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                    if(error){
-                        Reject(error);
-                    }
-                    else if(collection){
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if(collection){
                         //debugger;
-                        noteId = collection.s.pkFactory.ObjectID(noteId);
+                        noteId = this.shared._DBConnection._objectIdConstructor(noteId)
 
                         collection.updateOne({_id: noteId}, {$set: {noteContent: noteContent}}, lang.hitch(this, function (error, response) {
                             if(error){
@@ -148,8 +141,10 @@ define(['dojo/_base/declare',
                                 Resolve(response);
                             }
                         }));
+                    }else {
+                        Reject({error: "Could not get Notes collection"});
                     }
-                }));
+
 
 
                 }));

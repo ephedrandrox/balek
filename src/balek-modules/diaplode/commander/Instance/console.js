@@ -44,7 +44,6 @@ define(['dojo/_base/declare',
 
 
                 //import commandMap and SSH services then use them to output to the console
-
                 require([ 'balek-modules/diaplode/services/system/process/commandMap',
                         'balek-modules/diaplode/services/system/ssh/ssh'],
                     lang.hitch(this, function (commandMap, sshService) {

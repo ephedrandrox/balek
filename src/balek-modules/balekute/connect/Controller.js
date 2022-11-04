@@ -2,19 +2,27 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
 
         'dojo/Stateful',
-        'balek-modules/balekute/connect/Controller/Invitation'
+        'balek-modules/balekute/connect/Controller/Invitation',
+        'balek-modules/balekute/connect/Controller/Device',
+        'balek-modules/balekute/connect/Controller/Target'
+
+
     ],
-    function (declare, lang, topic, Stateful, Invitation
+    function (declare, lang, topic, Stateful, Invitation, Device, Target
  ) {
         return declare("balekuteConnectController", null, {
             _module: null,
 
             _invitations: null,
-
             _invitationStates: null,
 
-            statusAsState: null,
+            _devices: null,
+            _devicesBySigningKey: null,
 
+            _targets: null,
+            _targetsBySessionKey: null,
+
+            statusAsState: null,
 
             mongoConnection: null,
 
@@ -23,7 +31,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this._invitations = {};
                 this._invitationStates = {}
 
-                this._userConversationsStateMaps = {};
+                this._devices = {}
+                this._devicesBySigningKey = {}
+
+                this._targets = {}
+                this._targetsBySessionKey = {}
 
                 let StatusState = declare([Stateful], {});
 
@@ -43,6 +55,21 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 console.log("diaplodeConversationsController  starting...");
             },
             //Interface Commands:
+
+            createTarget: function(sessionKey){
+                let newTarget = Target({_connectController: this, _module: this._module,
+                sessionKey: sessionKey})
+
+
+                let newTargetKey = newTarget.getKey()
+                if(newTargetKey !== null) {
+                    console.log(this._targets,this._targetsBySessionKey, newTargetKey, sessionKey)
+                    this._targets[newTargetKey.toString()] = newTarget
+                    this._targetsBySessionKey[sessionKey.toString()] = newTarget
+                }
+
+return newTarget
+            },
             createInvitation: function (input) {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if (input === null) {
@@ -136,8 +163,38 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }));
             },
+            useTargetKey: function (targetKey, signature, deviceInfo) {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (targetKey === null) {
+                        Reject({error: "targetKey === null"});
+                    } else {
 
+                        if(this._targets[targetKey]){
+                            let target = this._targets[targetKey]
+
+                            if ( typeof target.useKey === 'function') {
+                                let targetStatus = target.useKey(targetKey, signature, deviceInfo);
+                                if( targetStatus == "Success" )
+                                {
+                                    console.log("target Key Used", deviceInfo)
+                                    Resolve({targetKey: targetKey, status: targetStatus});
+                                }else{
+                                    Reject({error: "Not Accepted", status : targetStatus});
+                                }
+                            }else{
+                                Reject({error: "Target can not use key!"});
+                            }
+
+
+
+                        }else{
+                            Reject({error: "Target is not available"});
+                        }
+                    }
+                }));
+            },
             //Instance Commands
+
             getInvitationState: function(invitationKey){
                 if(this._invitations[invitationKey] && typeof this._invitations[invitationKey].getStatusState === 'function' )
                 {
@@ -146,6 +203,57 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     return undefined
                 }
             },
+
+            getDeviceByPublicSigningKey: function(publicSigningKey){
+                console.log("_devicesBySigningKey", publicSigningKey, this._devicesBySigningKey, this._devicesBySigningKey[publicSigningKey.toString()])
+                if(this._devicesBySigningKey[publicSigningKey.toString()]
+                    && typeof this._devicesBySigningKey[publicSigningKey.toString()].getDeviceIdentifier === 'function' )
+                {
+                    return this._devicesBySigningKey[publicSigningKey.toString()]
+                }else {
+                    return undefined
+                }
+            },
+
+
+            createDevice: function (input) {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (input === null) {
+                        //Make sure that the Interface sent an input Object
+                        Reject({error: "input === null"});
+                    } else {
+                        //Make sure that the input Object is structured correctly
+                        if(input && input.owner && input.owner.userKey
+                            && input.deviceInfo && input.deviceInfo.publicSigningKey)
+                        {
+                            //New Device Created!
+                            let newDevice = Device({owner: input.owner,
+                                deviceInfo: input.deviceInfo,
+                                _connectController: this, _module: this._module});
+                            let newDeviceKey = newDevice.getKey()
+                            let newDevicePublicSigningKey = newDevice.getPublicSigningKey()
+                            if(newDeviceKey !== null)
+                            {
+
+                                //todo add to mongo database and load on start
+
+                                //Add it to the devices arrays
+                                this._devices[newDeviceKey.toString()]  = newDevice;
+                                this._devicesBySigningKey[newDevicePublicSigningKey.toString()] = newDevice
+
+
+                                Resolve({result: "success", newKey: newDeviceKey});
+                            }else {
+                                //no key, no go
+                                Reject({error: "new invitation could not produce key."});
+                            }
+                        }else
+                        {
+                            Reject({error: "input has no owner, publicKey, deviceName, or userKey.", input});
+                        }
+                    }
+                }));
+            }
         });
     }
 );

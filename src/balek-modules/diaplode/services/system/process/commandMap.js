@@ -20,6 +20,8 @@ define(['dojo/_base/declare',
 
                 if(this.executionArray != null && Array.isArray(this.executionArray ) && this._onOutputCallback != null)
                 {
+                    console.log("_firstCommand  processCommand Service starting...");
+
                     this._firstCommand = new processCommand({ executionArray: this.executionArray,
                             _onOutputCallback: this._onOutputCallback});
                 }else

@@ -43,6 +43,13 @@ define(['dojo/_base/declare',
 
             _invitationsDiv: null,
 
+            _qrDiv: null,
+            _qrImage: null,
+            qrEncodedString: "",
+
+            targetKey: "",
+
+
             _createInvitationClicked: function(clickEvent){
                 console.log(this._instanceCommands)
 
@@ -56,6 +63,16 @@ define(['dojo/_base/declare',
                 });
 
 
+
+            },
+            _loginWithPassword: function(clickEvent){
+                //The connect interface allows balekute devices to connect
+                //Since we are a web interface, lets load the login
+                // topic.publish("requestModuleLoad", "session/login");
+                topic.publish("requestModuleLoad", "diaplode/login");
+            },
+            _qrClicked: function(clickEvent){
+                window.open("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + this.targetKey, "_self")
 
             },
             constructor: function (args) {
@@ -75,8 +92,52 @@ define(['dojo/_base/declare',
             },
 
             onInterfaceStateChange: function (name, oldState, newState) {
-                console.log("calling");
+                console.log("🆘🆘calling", name, oldState, newState);
                 this.inherited(arguments);     //this has to be done so remoteCommander works
+
+            if(name == "targetKey"){
+                this.targetKey = newState
+                this._instanceCommands.getQRCode("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + newState).then(lang.hitch(this, function(commandReturnResults){
+                    // console.log("#QRCode", commandReturnResults)
+                    //create new interface with callback
+
+                    this.qrEncodedString = commandReturnResults.Result
+                    // console.log("#QRCode this.qrEncodedString", this.qrEncodedString)
+
+                    if(this._qrDiv && this._qrImage )
+                    {
+                        this._qrImage.src = this.qrEncodedString
+                    }
+
+                })).catch(function(commandErrorResults){
+                    console.log("#QRCode", "Create QRCode Received Error Response" + commandErrorResults);
+                });
+            }
+                if(name == "targetActivated"){
+                    topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
+                        let availableSessions = sessionState.get("availableSessions");
+                        let firstSessionKey = Object.keys(availableSessions)[0];
+
+                        if(firstSessionKey && firstSessionKey !== null)
+                        {
+                            topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
+                        }else
+                        {
+                            topic.publish("requestModuleLoad", "diaplode/elements/files");
+
+                            topic.publish("requestModuleLoad", "diaplode/elements/notes");
+                            topic.publish("requestModuleLoad", "diaplode/elements/tasks");
+
+                            topic.publish("requestModuleLoad", "diaplode/navigator");
+                            topic.publish("requestModuleLoad", "diaplode/commander");
+
+                            topic.publish("loadBackground", "flowerOfLife");
+
+                            this.destroy();
+                        }
+                    }));
+
+                }
             },
             onNewInvitation: function(invitation){
                 console.log("CDD: newIn", invitation);
@@ -84,11 +145,13 @@ define(['dojo/_base/declare',
                 domConstruct.place(invitation.domNode, this._invitationsDiv)
 
             },
+
             postCreate: function () {
                 this.initializeContainable();
 
             },
             startupContainable: function(){
+                //called after containable is started
                 console.log("startupContainable main scan containable");
             },
             unload: function () {

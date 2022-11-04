@@ -52,12 +52,11 @@ define(['dojo/_base/declare',
             getUserSettings: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                collection.find({_userKey: this._userKey},
+                        console.log()
+                        var collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
+
+                                collection.find({_userKey: this._userKey}, {}).toArray(
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
@@ -69,7 +68,7 @@ define(['dojo/_base/declare',
                                         }
                                     }));
                             }
-                        }));
+
                     }else {
                         Reject({error: "userKey Not set in menus Database Controller"});
                     }
@@ -78,8 +77,8 @@ define(['dojo/_base/declare',
             setUserSettings: function(userSettings)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    this.getUserSettings().then(lang.hitch(this, function (userSettingsResults) {
-                        userSettingsResults.toArray().then(lang.hitch(this, function(userSettingsResultsArray){
+                    this.getUserSettings().then(lang.hitch(this, function (userSettingsResultsArray) {
+
                             if(userSettingsResultsArray.length>0 && userSettingsResultsArray[0])
                             {
                                 //settings already in database, get collection and update
@@ -104,12 +103,10 @@ define(['dojo/_base/declare',
                             }else
                             {
                                 //No Settings yet, so lets create them
-                                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                                    if(error){
-                                        Reject(error);
-                                    }
-                                    else if(collection){
-                                        collection.insertOne({_userKey: this._userKey, userSettings: userSettings}, lang.hitch(this, function (error, response) {
+                                var collection = this.shared._DBConnection._db.collection(this._Collection)
+                                if(collection){
+
+                                    collection.insertOne({_userKey: this._userKey, userSettings: userSettings}, lang.hitch(this, function (error, response) {
                                             if(error){
                                                 Reject(error);
                                             }
@@ -117,10 +114,10 @@ define(['dojo/_base/declare',
                                                 Resolve(response);
                                             }
                                         }));
-                                    }
-                                }));
+                                }
+
                             }
-                        }));
+
                     })).catch(lang.hitch(this, function (error) {
                         Reject(error);
                     }));

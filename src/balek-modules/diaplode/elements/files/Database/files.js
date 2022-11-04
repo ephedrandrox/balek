@@ -21,7 +21,6 @@ define(['dojo/_base/declare',
                 console.log("Creating collection");
                 this.connectToDatabase().then(lang.hitch(this, function(settingsDatabase){
                     console.log("Got Connection");
-
                     try{
                         settingsDatabase.listCollections({name: this._Collection}).next(lang.hitch(this, function(error, collectionInfo){
                             if(collectionInfo){
@@ -52,12 +51,9 @@ define(['dojo/_base/declare',
             getUserFiles: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                collection.find({_userKey: this._userKey},
+                        var collection  =  this.shared._DBConnection._db.collection(this._Collection)
+                           if(collection){
+                                collection.find({_userKey: this._userKey}, {}).toArray(
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
@@ -68,39 +64,39 @@ define(['dojo/_base/declare',
                                             Resolve([]); //return empty array
                                         }
                                     }));
-                            }
-                        }));
+                            }else{
+                               Reject({error: "Could not get Files Collection"});
+                           }
+
                     }else {
                         Reject({error: "userKey Not set in Elements Files Database Controller"});
                     }
                 }));
             },
-            getUserFile: function(fileID){
+            getUserFile: function(fileId){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                fileID = collection.s.pkFactory.ObjectID(fileID);
-                                collection.find({_userKey: this._userKey,
-                                                _id: fileID},
+                       let collection =  this.shared._DBConnection._db.collection(this._Collection)
+                                if(collection){
+                                    console.log(this.shared, collection)
+                                    fileId = this.shared._DBConnection._objectIdConstructor(fileId)
+                                collection.findOne({_userKey: this._userKey,
+                                                _id: fileId},
                                     lang.hitch(this, function (error, response) {
+                                        console.log({_userKey: this._userKey,
+                                            _id: fileId}, error, response)
                                         if(error){
                                             Reject(error);
                                         }
-                                        else if(response){
-                                            response.toArray(function(err, documents)
-                                            {
-                                                Resolve(documents[0]);
-                                            });
+                                        else if(Array.isArray(response)){
+                                            Resolve(response[0]);
                                         }else{
-                                            Resolve([]); //return empty array
+                                            Resolve(response);
                                         }
                                     }));
-                            }
-                        }));
+                            }else {
+                                    Reject({error: "Could not get collection"});
+                                }
                     }else {
                         Reject({error: "userKey Not set in Elements Files Database Controller"});
                     }
@@ -109,11 +105,8 @@ define(['dojo/_base/declare',
             newUserFile: function(fileContent)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                        if(error){
-                            Reject(error);
-                        }
-                        else if(collection){
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
                             collection.insertOne({_userKey: this._userKey, fileContent: fileContent}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
@@ -122,8 +115,9 @@ define(['dojo/_base/declare',
                                     Resolve(response.insertedId);
                                 }
                             }));
+                        }else{
+                            Reject({error: "Could not get collection"});
                         }
-                    }));
                 }));
             },
             updateUserFile: function(fileId, fileContent)
@@ -132,13 +126,10 @@ define(['dojo/_base/declare',
 
                 //todo check that the file ID fits the user ID before updateing
 
-                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                    if(error){
-                        Reject(error);
-                    }
-                    else if(collection){
-                        //debugger;
-                        fileId = collection.s.pkFactory.ObjectID(fileId);
+                let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
+
+                            fileId = this.shared._DBConnection._objectIdConstructor(fileId)
 
                         collection.updateOne({_id: fileId}, {$set: {fileContent: fileContent}}, lang.hitch(this, function (error, response) {
                             if(error){
@@ -148,8 +139,10 @@ define(['dojo/_base/declare',
                                 Resolve(response);
                             }
                         }));
-                    }
-                }));
+                    }else {
+                            Reject({error: "Could not get collection"});
+                        }
+                //}));
 
 
                 }));

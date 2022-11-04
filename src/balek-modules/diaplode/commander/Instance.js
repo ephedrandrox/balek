@@ -39,29 +39,35 @@ define(['dojo/_base/declare',
 
                     this._userKey = userKey;
                     this._settingsDatabase = new settingsDatabase({_instanceKey: this._instanceKey, _userKey: userKey});
+                    console.log("moduleDiaplodeCommanderInstance starting...1");
 
                     //todo make a settings database automatic using settings manager
-                    this._settingsDatabase.getUserSettings().then(lang.hitch(this, function(userSettings){
-                        userSettings.toArray().then(lang.hitch(this, function(userSettingsArray){
+                    this._settingsDatabase.getUserSettings().then(lang.hitch(this, function(userSettingsArray){
+                        console.log("moduleDiaplodeCommanderInstance starting...2");
 
                             if(userSettingsArray.length>0 && userSettingsArray[0].userSettings)
-                            {
+                            {                    console.log("moduleDiaplodeCommanderInstance starting...3");
+
                                 this._userSettings = userSettingsArray[0].userSettings;
                             }else
-                            {
+                            {                    console.log("moduleDiaplodeCommanderInstance starting...4");
+
                                 this._settingsDatabase.setUserSettings(this._userSettings);
                             }
                             //Now that settings are loaded or set to default
-                            this.loadComponents();
+                        console.log("moduleDiaplodeCommanderInstance loadComponents...4");
 
-                        }));
+                        this.loadComponents();
+                        console.log("moduleDiaplodeCommanderInstance loadComponents...4");
+
+
                     })).catch(function(error){
                         console.log(error);
                     });
 
                 }));
 
-                console.log("moduleDiaplodeCommanderInstance starting...");
+                console.log("moduleDiaplodeCommanderInstance starting...5");
 
             },
             loadComponents: function(){
@@ -79,6 +85,8 @@ define(['dojo/_base/declare',
                 }
             },
             saveSettings:function(settings, remoteCommanderCallback) {
+                console.log("moduleDiaplodeCommanderInstance saveSettings...4");
+
                 if(settings.consoleDockedOnLoad === true || settings.consoleDockedOnLoad === false)
                 {
                     this._userSettings.consoleDockedOnLoad = settings.consoleDockedOnLoad;
@@ -90,6 +98,8 @@ define(['dojo/_base/declare',
                 });
             },
             newTerminal: function(remoteCommandCallback){
+                console.log("moduleDiaplodeCommanderInstance newTerminal...4");
+
                 remoteCommandCallback({success: "creating new Terminal Instance..."})
                 let newTerminalInstance = new terminalInstance({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: this._userKey});
                 this._terminalInstances.push( newTerminalInstance );

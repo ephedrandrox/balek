@@ -37,9 +37,7 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 console.log("BKConnect: starting up")
 
-                //The connect interface allows balekute devices to connect
-                //Since we are a web interface, lets load the login
-                topic.publish("requestModuleLoad", "diaplode/login");
+
             },
             onInterfaceStateChange: function (name, oldState, newState) {
                 //this has to be here so remoteCommander works

@@ -13,34 +13,53 @@ define(['dojo/_base/declare',
               QRCode) {
         return declare("moduleBalekuteConnectMainInstance", [_SyncedCommanderInstance], {
 
-            scanEntries: null,
-
-
+            _connectController: null,
+            target : null,
+            targetState: null,
+            targetStateWatchHandle: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("starting moduleBalekuteConnectMainInstance");
 
 
                 //set setRemoteCommander commands
-
-                this._commands={
-                    "getQRCode": lang.hitch(this, this.getQRCode)
+                if(this._connectController !== null)
+                {
+                    this._commands={
+                        "getQRCode": lang.hitch(this, this.getQRCode)
                     };
-                this.setInterfaceCommands();
+                    this.setInterfaceCommands();
 
-                this._interfaceState.set("Component Name","Connect Main");
-                //creates component Key that can be used to connect to state
-                this.prepareSyncedState();
-
-                this._interfaceState.set("Status", "Ready");
+                   this.target =  this._connectController.createTarget(this._sessionKey);
 
 
+                    this.targetState = this.target.getState()
+
+                    this._interfaceState.set("Component Name","Connect Main");
+                    this._interfaceState.set("targetKey",this.target.getKey())
+
+                    this.targetStateWatchHandle = this.targetState.watch(lang.hitch(this, this.onTargetStateUpdate))
+                    //creates component Key that can be used to connect to state
+                    this.prepareSyncedState();
+
+                    this._interfaceState.set("Status", "Ready");
+
+                }
+
+
+            },
+            onTargetStateUpdate: function(name, oldState, newState)
+            {
+                if(name == "targetActivated")
+                {
+                    this._interfaceState.set("targetActivated", newState)
+
+                }
             },
             getQRCode: function(input, remoteCallback){
 
                 QRCode.toDataURL(input,{type:'terminal'}, function (err, url) {
-                    //console.log(url)
-                    console.log(url)
+
                     remoteCallback({Result: url})
                 })
             },
@@ -49,6 +68,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             _end: function(){
                 //calls inherited _end functions like stateSynced Object
+                this.targetStateWatchHandle.unwatch()
                 this.inherited(arguments);
             }
         });

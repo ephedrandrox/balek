@@ -14,6 +14,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             //todo change to invitationState
             invitationState: null,
 
+            deviceInfo: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 if(this._module === null || this._connectController === null){
@@ -44,14 +45,16 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     //If Verified Register the device
                     if(result)
                     {
-                        this.statusState.set("status", "used")
+                            this.deviceInfo = deviceInfo
+                            this.statusState.set("status", "used")
 
-                        this.statusState.set("hostname", deviceInfo.hostname)
-                        this.statusState.set("publicSigningKey", publicSigningKey)
-                        this.statusState.set("keychainIdentifier", deviceInfo.keychainIdentifier)
-                        this.statusState.set("name", deviceInfo.name)
-                        this.statusState.set("osName", deviceInfo.osName)
-                        this.statusState.set("signature", signature)
+                            this.statusState.set("hostname", deviceInfo.hostname)
+                            this.statusState.set("publicSigningKey", publicSigningKey)
+                            this.statusState.set("keychainIdentifier", deviceInfo.keychainIdentifier)
+                            this.statusState.set("name", deviceInfo.name)
+                            this.statusState.set("osName", deviceInfo.osName)
+                            this.statusState.set("signature", signature)
+
                     }else{
                         this.statusState.set("status", "error")
                         this.statusState.set("error", "Signature failed")
@@ -66,7 +69,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 && invitationKey == this.key){
 
                         this.statusState.set("status", "accepted")
+                    this._connectController.createDevice({owner: {userKey: this.owner.userKey},
+                        deviceInfo: this.deviceInfo }).then(lang.hitch(this, function(Result){
+                        this.statusState.set("status", "accepted")
 
+
+                        this.statusState.set("keychainIdentifier", Result.newKey)
+
+                    })).catch(lang.hitch(this, function (error) {
+                        console.log(error);
+                        this.statusState.set("status", "error")
+                        this.statusState.set("error", "Device Creation Failed")
+                    }));
 
                 }else{
                     this.statusState.set("status", "error")

@@ -24,10 +24,11 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 this.stateWatchers = {}
-                console.log("moduleBalekuteConnectInstance starting...");
+                console.log("moduleBalekuteConnectInstance starting...",this);
 
                 //set setRemoteCommander commands
                 this._commands={
+                    "useTargetKey" : lang.hitch(this, this.useTargetKey),
                     "acceptDeviceInfo" : lang.hitch(this, this.acceptDeviceInfo),
                     "useInvitationKey": lang.hitch(this, this.useInvitationKey),
                     "createInvitationKey" : lang.hitch(this, this.createInvitationKey),
@@ -47,7 +48,9 @@ define(['dojo/_base/declare',
                 this.prepareSyncedState();
 
                 this._interfaceState.set("Status", "Ready");
-                this.mainInstance = new MainInstance({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: this._userKey});
+
+                this.mainInstance = new MainInstance({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: this._userKey,
+                _connectController: this.moduleController});
 
                 this._interfaceState.set("mainInstanceKeys", {instanceKey: this.mainInstance._instanceKey,
                     sessionKey: this.mainInstance._sessionKey,
@@ -92,6 +95,25 @@ define(['dojo/_base/declare',
                     }
 
                 }));
+            },
+            useTargetKey: function( targetKey, signature, deviceInfo, remoteCallback){
+                console.log("useTargetKey", targetKey, deviceInfo, arguments);
+
+
+                if( typeof targetKey === 'string' && typeof signature === 'string' && typeof deviceInfo === 'object' &&
+                    typeof remoteCallback === 'function'  )
+                {
+                    this.moduleController.useTargetKey(targetKey,signature,deviceInfo).then(lang.hitch(this, function (Result) {
+                        console.log("this.moduleController.useTargetKey",Result)
+                        remoteCallback({Result: Result})
+                    })).catch(function(rejectError){
+                        remoteCallback({error: rejectError})
+                    })
+                }else {
+                    console.log("❗️Unexpected Arguments! useTargetKey: function( targetKey, signature, deviceInfo, remoteCallback)‼️",arguments)
+                }
+
+
             },
             useInvitationKey: function( invitationKey, deviceInfo, remoteCallback){
                 console.log("useInvitationKey", invitationKey, deviceInfo, arguments);

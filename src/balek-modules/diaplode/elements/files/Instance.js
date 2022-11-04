@@ -44,9 +44,8 @@ define(['dojo/_base/declare',
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
                     this._userKey = userKey;
                     this._filesDatabase = new filesDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
-                    this._filesDatabase.getUserFiles().then(lang.hitch(this, function (userFiles) {
-                        userFiles.toArray().then(lang.hitch(this, function (userFilesArray) {
-
+                    this._filesDatabase.getUserFiles().then(lang.hitch(this, function (userFilesArray) {
+                        console.log("getSessionUserKey", "getUserFiles", userFilesArray)
                             if (userFilesArray.length > 0) {
                                for( userFilesArrayKey in userFilesArray ) {
                                   // this.createFileInstance(userFilesArray[userFilesArrayKey]._id);
@@ -63,7 +62,7 @@ define(['dojo/_base/declare',
                             } else {
                                 //no files for user returned
                             }
-                        }));
+
                     })).catch(function (error) {
                         console.log(error);
                     });
@@ -114,8 +113,11 @@ define(['dojo/_base/declare',
             //Remote Commands Functions Section
             //##########################################################################################################
             createFile: function(fileContent, remoteCommanderCallback){
+                console.log("🟠🟠🟠createFile start", fileContent)
 
                 this._filesDatabase.newUserFile(fileContent).then(lang.hitch(this, function(newFileID){
+                    console.log("🟠🟠🟠createFile calledback", fileContent)
+
                     this.createFileInstance(newFileID);
                     if(remoteCommanderCallback)
                     {
@@ -124,6 +126,8 @@ define(['dojo/_base/declare',
                     }
 
                 })).catch(function(newFileErrorResults){
+                    console.log("🟠🟠🟠createFile error", newFileErrorResults)
+
                     if(remoteCommanderCallback) {
                         remoteCommanderCallback({
                             Error: "File Not Created",
