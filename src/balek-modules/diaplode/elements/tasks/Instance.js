@@ -44,8 +44,8 @@ define(['dojo/_base/declare',
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
                     this._userKey = userKey;
                     this._tasksDatabase = new tasksDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
-                    this._tasksDatabase.getUserTasks().then(lang.hitch(this, function (userTasks) {
-                        userTasks.toArray().then(lang.hitch(this, function (userTasksArray) {
+                    this._tasksDatabase.getUserTasks().then(lang.hitch(this, function (userTasksArray) {
+
                             if (userTasksArray.length > 0) {
                                for( userTasksArrayKey in userTasksArray ) {
                                    if( !userTasksArray[userTasksArrayKey].name ){
@@ -60,7 +60,7 @@ define(['dojo/_base/declare',
                             } else {
                                 //no tasks for user returned
                             }
-                        }));
+
                     })).catch(function (error) {
                         console.log(error);
                     });

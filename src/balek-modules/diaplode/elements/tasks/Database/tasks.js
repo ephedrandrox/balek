@@ -52,58 +52,50 @@ define(['dojo/_base/declare',
             getUserTasks: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                collection.find({_userKey: this._userKey},
-                                    lang.hitch(this, function (error, response) {
-                                        if(error){
-                                            Reject(error);
-                                        }
-                                        else if(response){
-                                            Resolve(response);
-                                        }else{
-                                            Resolve([]); //return empty array
-                                        }
-                                    }));
-                            }
-                        }));
+                        let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
+                            collection.find({_userKey: this._userKey}, {}).toArray(
+                                lang.hitch(this, function (error, response) {
+                                    if(error){
+                                        Reject(error);
+                                    }
+                                    else if(response){
+                                        Resolve(response);
+                                    }else{
+                                        Resolve([]); //return empty array
+                                    }
+                                }));
+                        }else{
+                            Reject({error: "Could not get Tasks Collection"});
+                        }
+
                     }else {
-                        Reject({error: "userKey Not set in Elements Tasks Database Controller"});
+                        Reject({error: "userKey Not set in Tasks Database Controller"});
                     }
                 }));
             },
-            getUserTask: function(taskID){
+            getUserTask: function(taskId){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     if (this._userKey !== null) {
-                        this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                            if(error){
-                                Reject(error);
-                            }
-                            else if(collection){
-                                //todo is there a better way to this function?
-                                //maybe make object of functions in base class
-                                taskID = collection.s.pkFactory.ObjectID(taskID);
+                        let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if(collection){
+                            taskId = this.shared._DBConnection._objectIdConstructor(taskId)
+                            collection.findOne({_userKey: this._userKey,
+                                    _id: taskId},
+                                lang.hitch(this, function (error, response) {
+                                    if(error){
+                                        Reject(error);
+                                    }
+                                    else if(Array.isArray(response)){
+                                        Resolve(response[0]);
+                                    }else{
+                                        Resolve(response);
+                                    }
+                                }));
+                        }else{
+                            Reject({error: "Could not get Tasks Collection"});
+                        }
 
-                                collection.find({_userKey: this._userKey,
-                                                _id:  taskID },
-                                    lang.hitch(this, function (error, response) {
-                                        if(error){
-                                            Reject(error);
-                                        }
-                                        else if(response){
-                                            response.toArray(function(err, documents)
-                                            {
-                                                Resolve(documents[0]);
-                                            });
-                                        }else{
-                                            Resolve([]); //return empty array
-                                        }
-                                    }));
-                            }
-                        }));
                     }else {
                         Reject({error: "userKey Not set in Elements Tasks Database Controller"});
                     }
@@ -112,35 +104,34 @@ define(['dojo/_base/declare',
             newUserTask: function(taskContent)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                        if(error){
-                            Reject(error);
-                        }
-                        else if(collection){
-                            collection.insertOne({_userKey: this._userKey, taskContent: taskContent, taskStatus:"☑️"}, lang.hitch(this, function (error, response) {
-                                if(error){
-                                    Reject(error);
-                                }
-                                else if(response){
-                                    Resolve(response.insertedId);
-                                }
-                            }));
-                        }
-                    }));
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if(collection){
+                        collection.insertOne({_userKey: this._userKey, taskContent: taskContent}, lang.hitch(this, function (error, response) {
+                            if(error){
+                                Reject(error);
+                            }
+                            else if(response){
+                                Resolve(response.insertedId);
+                            }else{
+                                Reject({error: "Could not create Task"});
+                            }
+                        }));
+                    }else
+                    {
+                        Reject({error: "Could not get Tasks Collection"});
+                    }
                 }));
             },
             updateUserTask: function(taskId, taskContent)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
 
-                //todo check that the task ID fits the user ID before updateing
+                    //todo check that the task ID fits the user ID before updateing
 
-                this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                    if(error){
-                        Reject(error);
-                    }
-                    else if(collection){
-                        taskId = collection.s.pkFactory.ObjectID(taskId);
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if(collection){
+                        //debugger;
+                        taskId = this.shared._DBConnection._objectIdConstructor(taskId)
 
                         collection.updateOne({_id: taskId}, {$set: {taskContent: taskContent}}, lang.hitch(this, function (error, response) {
                             if(error){
@@ -150,10 +141,9 @@ define(['dojo/_base/declare',
                                 Resolve(response);
                             }
                         }));
+                    }else {
+                        Reject({error: "Could not get Tasks collection"});
                     }
-                }));
-
-
                 }));
             },
             updateUserTaskStatus: function(taskId, taskStatus)
@@ -162,23 +152,23 @@ define(['dojo/_base/declare',
 
                     //todo check that the task ID fits the user ID before updateing
 
-                    this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (error, collection) {
-                        if(error){
-                            Reject(error);
-                        }
-                        else if(collection){
-                            taskId = collection.s.pkFactory.ObjectID(taskId);
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if(collection){
+                        //debugger;
+                        taskId = this.shared._DBConnection._objectIdConstructor(taskId)
 
-                            collection.updateOne({_id: taskId}, {$set: {taskStatus: taskStatus}}, lang.hitch(this, function (error, response) {
-                                if(error){
-                                    Reject(error);
-                                }
-                                else if(response){
-                                    Resolve(response);
-                                }
-                            }));
-                        }
-                    }));
+                        collection.updateOne({_id: taskId}, {$set: {taskStatus: taskStatus}}, lang.hitch(this, function (error, response) {
+                            if(error){
+                                Reject(error);
+                            }
+                            else if(response){
+                                Resolve(response);
+                            }
+                        }));
+                    }else {
+                        Reject({error: "Could not get Notes collection"});
+                    }
+
 
 
                 }));

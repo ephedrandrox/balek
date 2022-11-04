@@ -46,8 +46,8 @@ define(['dojo/_base/declare',
                 topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
                     this._userKey = userKey;
                     this._notesDatabase = new notesDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
-                    this._notesDatabase.getUserNotes().then(lang.hitch(this, function (userNotes) {
-                        userNotes.toArray().then(lang.hitch(this, function (userNotesArray) {
+                    this._notesDatabase.getUserNotes().then(lang.hitch(this, function (userNotesArray) {
+
 
                             if (userNotesArray.length > 0) {
                                for( userNotesArrayKey in userNotesArray ) {
@@ -67,7 +67,7 @@ define(['dojo/_base/declare',
                             } else {
                                 //no notes for user returned
                             }
-                        }));
+
                     })).catch(function (error) {
                         console.log(error);
                     });
