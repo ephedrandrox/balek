@@ -13,8 +13,8 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                this._databaseController = new moduleDatabase();
-                this._databaseController.connectToDatabase();
+             //   this._databaseController = new moduleDatabase();
+              //  this._databaseController.connectToDatabase();
 
                 console.log("diaplodeNavigatorModule  starting...");
             },

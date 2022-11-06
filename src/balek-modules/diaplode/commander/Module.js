@@ -1,20 +1,18 @@
 define(['dojo/_base/declare',
         'balek-modules/Module',
-        'balek-modules/diaplode/Database',
 
         'balek-modules/diaplode/commander/Instance'],
-    function (declare, baseModule, moduleDatabase, moduleInstance) {
+    function (declare, baseModule, moduleInstance) {
         return declare("diaplodeCommanderModule", [baseModule], {
             _displayName: "Diaplode Commander",
             _allowedSessions: [1],
-            _databaseController: null,
+
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-                this._databaseController = new moduleDatabase();
-                this._databaseController.connectToDatabase();
+
 
                 console.log("diaplodeCommanderModule  starting...");
             },

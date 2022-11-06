@@ -15,6 +15,7 @@ define(['dojo/_base/declare',
                 console.log("moduleDiaplodeElementsNotesDatabaseController starting...");
                 this.createCollection();
 
+
             },
             createCollection: function()
             {

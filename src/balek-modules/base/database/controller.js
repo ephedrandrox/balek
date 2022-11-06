@@ -9,7 +9,7 @@ sync the _interfaceState object between the two
 
 define(['dojo/_base/declare',
         'dojo/_base/lang',
-        'dojo/topic'
+        'dojo/topic',
     ],
     function (declare, lang, topic) {
         return declare("moduleBaseDatabaseController", null, {
@@ -18,23 +18,37 @@ define(['dojo/_base/declare',
             },
             _Database: null,
             _Collection: null,
+
+            _connectingResolves: null,
+            _connectingRejects: null,
+
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
-
+                this._connectingResolves = []
+                this._connectingRejects = []
             },
             connectToDatabase: function(){
                 //This function could be overwritten in superclass to use
                 //something other then the balek configured database
-                console.log("connection to database!");
+                console.log("🟥🟧🟨🟩🟦🟪connection to database!");
 
 
 
             return new Promise(lang.hitch(this, function(Resolve, Reject){
                 if(this.shared._DBConnection._db){
-                    console.log("already connected");
+                    console.log("🟥🟧🟨🟩🟦🟪already connected");
                     Resolve(this.shared._DBConnection._db);
+                } else if (this._connectingResolves.length !== 0 ){
+                    console.log("🟥🟧🟨🟩🟦🟪already connecting")
+                    this._connectingResolves.push(Resolve)
+                    this._connectingRejects.push(Reject)
                 }
-                    else{
+                else{
+                    this._connectingResolves.push(Resolve)
+                    this._connectingRejects.push(Reject)
+
+                    console.log("🟥🟧🟨🟩🟦🟪Atempting connecting")
                     topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
 
                         if (this._Database === null)
@@ -49,7 +63,31 @@ define(['dojo/_base/declare',
                             this._Database,
                             lang.hitch(this, function (dbConnection) {
                                 this.shared._DBConnection = dbConnection;
-                                Resolve(this.shared._DBConnection._db);
+                                //console.log("dbConnection to database!", dbConnection);
+
+                                this.shared._DBConnection.getDatabaseConnection().then(lang.hitch(this, function(Result){
+                                 //   console.log("dbConnection to database Result!", dbConnection, Result, dbConnection._db);
+
+                                    if(Result === dbConnection._db ){
+                                        this._connectingResolves.forEach(lang.hitch(this, function(connectionResolve){
+                                            connectionResolve(dbConnection._db)
+                                        }))
+                                    }else{
+                                        this._connectingRejects.forEach(lang.hitch(this, function(connectionReject){
+                                            connectionReject({Error: "Could not get database connection"})
+                                        }))
+
+                                    }
+
+
+
+                                })).catch(lang.hitch(this, function(Error){
+                                        console.log("dbConnection to database Error!", dbConnection, Error, this.shared._DBConnection._db);
+
+                                    })
+                                )
+
+
                         }));
 
                     }));

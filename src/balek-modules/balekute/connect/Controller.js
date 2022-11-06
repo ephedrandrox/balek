@@ -4,11 +4,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/Stateful',
         'balek-modules/balekute/connect/Controller/Invitation',
         'balek-modules/balekute/connect/Controller/Device',
-        'balek-modules/balekute/connect/Controller/Target'
+        'balek-modules/balekute/connect/Controller/Target',
+
+        'balek-modules/balekute/connect/Database/devices'
 
 
     ],
-    function (declare, lang, topic, Stateful, Invitation, Device, Target
+    function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase
  ) {
         return declare("balekuteConnectController", null, {
             _module: null,
@@ -18,6 +20,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             _devices: null,
             _devicesBySigningKey: null,
+            _devicesDatabase: null,
 
             _targets: null,
             _targetsBySessionKey: null,
@@ -31,7 +34,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this._invitations = {};
                 this._invitationStates = {}
 
-                this._devices = {}
+                this._devices = {} //probably delete this
                 this._devicesBySigningKey = {}
 
                 this._targets = {}
@@ -45,13 +48,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("diaplodeConversationsController  Cannot Start!...");
                 }
 
-                topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
-                    topic.publish("getMongoDbConnection", mongoDBConfig.host, mongoDBConfig.port, mongoDBConfig.user, mongoDBConfig.password, mongoDBConfig.database, lang.hitch(this, function (dbConnection) {
-                        this.mongoConnection = dbConnection;
-                    }));
-                }));
+                this._devicesDatabase = new devicesDatabase({_instanceKey: this._instanceKey});
 
-
+                this.loadDevices()
                 console.log("diaplodeConversationsController  starting...");
             },
             //Interface Commands:
@@ -68,7 +67,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._targetsBySessionKey[sessionKey.toString()] = newTarget
                 }
 
-return newTarget
+                return newTarget
             },
             createInvitation: function (input) {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
@@ -215,7 +214,30 @@ return newTarget
                 }
             },
 
+            loadDevices: function(){
+                this._devicesDatabase.getDevices().then(lang.hitch(this, function(Result){
+                    console.log("getDevices 🔆🔆🔆 ", Result)
+                    if(Array.isArray(Result)){
+                        Result.forEach(lang.hitch(this, function(deviceEntry){
+                            if(deviceEntry.deviceContent && deviceEntry.deviceContent.owner && deviceEntry.deviceContent.owner.userKey
+                                && deviceEntry.deviceContent.deviceInfo && deviceEntry.deviceContent.deviceInfo.publicSigningKey) {
 
+                                let newDevice = Device({owner: deviceEntry.deviceContent.owner,
+                                    deviceInfo: deviceEntry.deviceContent.deviceInfo,
+                                    _connectController: this, _module: this._module});
+                                let newDeviceKey = newDevice.getKey()
+                                let newDevicePublicSigningKey = newDevice.getPublicSigningKey()
+                                this._devices[newDeviceKey.toString()]  = newDevice;
+                                this._devicesBySigningKey[newDevicePublicSigningKey.toString()] = newDevice
+
+                            }
+                        }))
+                    }
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("getDevices  Error ❌❌❌ ", Error)
+                }))
+
+            },
             createDevice: function (input) {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if (input === null) {
@@ -236,6 +258,12 @@ return newTarget
                             {
 
                                 //todo add to mongo database and load on start
+
+                                this._devicesDatabase.newUserDevice(input).then(lang.hitch(this, function(Result){
+                                    console.log("NewUserDevice 🔆🔆🔆 ", Result)
+                                })).catch(lang.hitch(this, function(Error){
+                                    console.log("NewUserDevice  Error ❌❌❌ ", Error)
+                                }))
 
                                 //Add it to the devices arrays
                                 this._devices[newDeviceKey.toString()]  = newDevice;

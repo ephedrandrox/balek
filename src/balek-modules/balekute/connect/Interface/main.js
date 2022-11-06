@@ -114,29 +114,40 @@ define(['dojo/_base/declare',
                 });
             }
                 if(name == "targetActivated"){
-                    topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
-                        let availableSessions = sessionState.get("availableSessions");
-                        let firstSessionKey = Object.keys(availableSessions)[0];
 
-                        if(firstSessionKey && firstSessionKey !== null)
-                        {
-                            topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
-                        }else
-                        {
-                            topic.publish("requestModuleLoad", "diaplode/elements/files");
+                    topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
+                        lang.hitch(this, function (loginReply) {
+                                if(loginReply.error === undefined)
+                                {
+                                    topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
+                                        let availableSessions = sessionState.get("availableSessions");
+                                        let firstSessionKey = Object.keys(availableSessions)[0];
 
-                            topic.publish("requestModuleLoad", "diaplode/elements/notes");
-                            topic.publish("requestModuleLoad", "diaplode/elements/tasks");
+                                        if(firstSessionKey && firstSessionKey !== null)
+                                        {
+                                            topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
+                                        }else
+                                        {
+                                            topic.publish("requestModuleLoad", "diaplode/elements/files");
 
-                            topic.publish("requestModuleLoad", "diaplode/navigator");
-                            topic.publish("requestModuleLoad", "diaplode/commander");
+                                            topic.publish("requestModuleLoad", "diaplode/elements/notes");
+                                            topic.publish("requestModuleLoad", "diaplode/elements/tasks");
 
-                            topic.publish("loadBackground", "flowerOfLife");
+                                            topic.publish("requestModuleLoad", "diaplode/navigator");
+                                            topic.publish("requestModuleLoad", "diaplode/commander");
 
-                            this.destroy();
-                        }
-                    }));
+                                           // topic.publish("loadBackground", "flowerOfLife");
 
+                                            this.destroy();
+                                        }
+                                    }));
+                                }
+                                else
+                                {
+                                    alert(loginReply.error);
+                                    //todo Maybe make a reset switch and use it here,
+                                }
+                        }));
                 }
             },
             onNewInvitation: function(invitation){

@@ -169,6 +169,10 @@ define(['dojo/_base/declare',
                                     //user Log in Success
                                     //updateSession
                                     let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(user.permission_groups)));
+                                    console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
+                                       user.userKey,
+                                        permissionGroups);
+
                                     this._sessions[wssConnection._sessionKey].updateSessionStatus({
                                         sessionStatus: 1,
                                         userName: credentialData.username,
@@ -176,6 +180,9 @@ define(['dojo/_base/declare',
                                         permissionGroups: permissionGroups
                                     });
                                     matched = true;
+                                    console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
+                                        user.userKey,
+                                        permissionGroups);
                                     sessionUpdateReply({messageData: {message: "worked"}});
                                 }
                             }
