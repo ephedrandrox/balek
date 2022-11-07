@@ -5,7 +5,7 @@ define(['dojo/_base/declare',
         'balek-modules/balekute/connect/Instance/main',
 
         'balek-modules/components/syncedCommander/Instance',
-        'balek-modules/components/syncedMap/Instance'
+        'balek-modules/components/syncedMap/Instance',
 
     ],
     function (declare, lang, topic, MainInstance, _SyncedCommanderInstance, SyncedMapInstance) {
@@ -177,8 +177,9 @@ define(['dojo/_base/declare',
                 if(invitationState && typeof invitationState.watch === 'function'){
 
                     //Send state that already exists
-                    Object.entries(invitationState).forEach(entry => {
-                        const [key, value] = entry;
+                         Object.entries(invitationState).forEach(function(entry) {
+                             const key = entry[0]
+                             const value = entry[1]
                         if(typeof value !== 'function')
                         {
                             console.log("🟦🟩🟦🟩", key, value);
@@ -186,7 +187,7 @@ define(['dojo/_base/declare',
                         }else {
                             console.log("🟥🟧🟥🟧", key, value);
                         }
-                    });
+                     });
 
                     if( !this.stateWatchers[invitationKey] )
                     {

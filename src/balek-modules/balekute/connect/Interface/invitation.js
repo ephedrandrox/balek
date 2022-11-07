@@ -20,7 +20,7 @@ define(['dojo/_base/declare',
               domAttr,
 
               _WidgetBase, _TemplatedMixin,
-              template,
+              template
 
            ) {
 
