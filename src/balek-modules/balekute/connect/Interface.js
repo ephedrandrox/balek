@@ -15,10 +15,8 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic,
               domConstruct, domStyle, win,
-               MainInterface,
-               Invitation,
-               _SyncedCommanderInterface,
-              SyncedMapInterface) {
+               MainInterface, Invitation,
+               _SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleBalekuteConnectInterface", _SyncedCommanderInterface, {
             _instanceKey: null,

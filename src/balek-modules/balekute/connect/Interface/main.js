@@ -136,7 +136,7 @@ define(['dojo/_base/declare',
                                             topic.publish("requestModuleLoad", "diaplode/navigator");
                                             topic.publish("requestModuleLoad", "diaplode/commander");
 
-                                           // topic.publish("loadBackground", "flowerOfLife");
+                                            topic.publish("loadBackground", "flowerOfLife");
 
                                             this.destroy();
                                         }
