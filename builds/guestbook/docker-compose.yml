@@ -1,17 +1,17 @@
 version: '3'
 services:
   balek-guestbook:
-    image: "balek-digivigil-guestbook:release"
+    image: "balek-guestbook:release"
     build:
       context: "../.."
-      dockerfile: "builds/digivigilGuestbook/Dockerfile"
+      dockerfile: "builds/guestbook/Dockerfile"
     ports:
       - "443:8080"
     volumes:
       - ./conf:/balek/src/balek-server/etc
   mongodb-guestbook:
-    image: "balek-digivigil-guestbook-mongodb:release"
-    build: "../../data/mongo"
+    image: "balek-guestbook-mongodb:release"
+    build: "../docker/mongo"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=rootPass

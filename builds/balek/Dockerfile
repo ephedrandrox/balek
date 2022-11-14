@@ -1,4 +1,4 @@
-FROM node:11
+FROM node:19
 
 WORKDIR /balek
 COPY ./ /balek

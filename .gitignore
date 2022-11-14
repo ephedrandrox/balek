@@ -22,3 +22,5 @@ src/balek-modules/users/guide/resources/docs/pdf/
 data/
 
 src/balek-modules/build/quill/
+
+builds/guestbook/mongoDB/

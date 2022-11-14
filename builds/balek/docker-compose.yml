@@ -1,7 +1,7 @@
 version: '3'
 services:
   balek:
-    image: "balek:release"
+    image: "balek:dev"
     build:
       context: "../.."
       dockerfile: "builds/balek/Dockerfile"
@@ -10,7 +10,7 @@ services:
     volumes:
       - ./conf:/balek/src/balek-server/etc
   mysqld:
-    image: "balek-mysql:release"
+    image: "balek-mysql:dev"
     build: "../../data/mysql"
     environment:
       - MYSQL_ROOT_PASSWORD=rootPass
@@ -23,7 +23,7 @@ services:
       - ./initSQL:/docker-entrypoint-initdb.d/:ro
       - ./mysqlDB:/var/lib/mysql
   mongodb:
-    image: "balek-mongodb:release"
+    image: "balek-mongodb:dev"
     build: "../../data/mongo"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
