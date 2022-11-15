@@ -44,9 +44,9 @@ define(['dojo/_base/declare',
                     //Create availableEntries SyncedMap
                     if(this.availableEntries === null){
                         this.availableEntries = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                        for( const Resolve of this.availableEntriesResolveRequests)
+                        for( const ResolveKey in this.availableEntriesResolveRequests)
                         {
-                            Resolve(this.availableEntries)
+                            Resolve(this.availableEntries[ResolveKey])
                         }
                     }
                 }

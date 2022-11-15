@@ -48,8 +48,9 @@ define(['dojo/_base/declare',
                 //Get Controller Entries State
                 let Entries = this._moduleController.getEntries()
                 //Add all Controller Entries to our Available Entries
-                for (const [key, value] of Object.entries(Entries)) {
-                    if(typeof value !== 'function' && value._id.toString() == key.toString()){
+                for (const key in Entries) {
+                    let value = Entries[key]
+                    if(typeof value !== 'function' && value._id && value._id.toString() == key){
                         console.log("adding Entries from controller entries State", key, value)
                         this.availableEntries.add(key, value );
                     }
