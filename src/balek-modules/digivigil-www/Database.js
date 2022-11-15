@@ -3,12 +3,12 @@ define(['dojo/_base/declare',
     function (declare, databaseController) {
         return declare("diaplodeDatabaseController", [databaseController], {
 
-            _Database: "diaplode",
+            _Database: "digivigil",
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("diaplodeDatabaseController  starting...");
+                console.log("digivigilDatabaseController  starting...");
             }
         });
     }
