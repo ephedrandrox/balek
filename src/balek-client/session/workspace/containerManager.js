@@ -73,11 +73,11 @@ define([ 	'dojo/_base/declare',
                 if(stateChangeUpdate.availableContainersState)
                 {
                     try{
-                        console.log("AAA", name, stateChangeUpdate.availableContainersState);
+                       // console.log("AAA", name, stateChangeUpdate.availableContainersState);
 
                         let availableContainersState = JSON.parse(stateChangeUpdate.availableContainersState);
 
-                        console.log("AAA", name, availableContainersState);
+                      //  console.log("AAA", name, availableContainersState);
 
                         for (const name in availableContainersState)
                         {

@@ -105,7 +105,7 @@ define(['dojo/_base/declare',
                 {
                     try{
                         let containersState = JSON.parse(stateChangeUpdate.containersState);
-                        console.log("workspaceUpdate", containersState, this );
+                   //     console.log("workspaceUpdate", containersState, this );
 
                         for (const name in containersState)
                         {
