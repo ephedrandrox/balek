@@ -14,12 +14,16 @@ define(['dojo/_base/declare',
         "dijit/_TemplatedMixin",
 
         'dojo/text!balek-modules/users/info/resources/html/userInfo.html',
-        'dojo/text!balek-modules/users/info/resources/css/userInfo.css'
+        'dojo/text!balek-modules/users/info/resources/css/userInfo.css',
+
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-client/session/workspace/container/containable',
 
     ],
-    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS) {
-        return declare("moduleUserInfoInterface", [_WidgetBase, _TemplatedMixin], {
+    function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
+        return declare("moduleUserInfoInterface", [_WidgetBase, _TemplatedMixin,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
             _instanceKey: null,
+            _interface: null,
             templateString: template,
             baseClass: "userInfo",
 
@@ -39,9 +43,6 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
                 this._availableSessionsListNodes = {};
-
-                //todo should maybe give id and check for these before adding more and more in case body already has style
-                //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
@@ -69,10 +70,12 @@ define(['dojo/_base/declare',
                     this._userImageNode.src = this._userData.icon;
                 }
             },
-            availableSessionsStateChange: function (name, oldState, newState) {
-                if (name === "availableSessions") {
-                    this.updateSessionsView();
-                }
+            onAvailableSessionsStateChange: function (name, oldState, newState) {
+                console.log("onAvailableSessionsStateChange", name, oldState, newState)
+
+                let id = name.toString()
+                this.sessions[id] = newState.session
+                this.addOrUpdateEntryWidget(id)
             },
             updateSessionsView: function () {
                 let availableSessions = this._sessionState.get("availableSessions");
@@ -123,6 +126,7 @@ define(['dojo/_base/declare',
             },
 
             postCreate() {
+                this.initializeContainable();
 
                 topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
                     this._sessionState = sessionState;
@@ -138,10 +142,21 @@ define(['dojo/_base/declare',
 
                 }));
 
+                this._interface.getAvailableSessions().then(lang.hitch(this, function(Sessions){
+                    this.availableSessions = Sessions
+                    this.availableSessionsWatchHandle = this.availableSessions.setStateWatcher(lang.hitch(this, this.onAvailableSessionsStateChange));
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
+
               /*  topic.publish("getAvailableSessionsState", lang.hitch(this, function (availableSessionsState) {
                     this._availableSessionsState = availableSessionsState;
                     this._availableSessionsStateWatchHandle = this._availableSessionsState.watch("availableSessions", lang.hitch(this, this.availableSessionsStateChange))
                 }));*/
+            },
+            startupContainable: function(){
+                //called after containable is started
+                console.log("startupContainable main User Info interface containable");
             },
             unload: function () {
                 this._userStateWatchHandle.unwatch();

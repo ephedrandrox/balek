@@ -29,8 +29,8 @@ define(['dojo/_base/declare',
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
-
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
+
                 this._interfaceState.set("Component Name","Digivigil Guestbook");
                 this._interfaceState.set("Status", "Starting");
                 //creates component Key that can be used to connect to state
@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
                 //calls inherited _end functions like stateSynced Object
                 this.inherited(arguments);
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying Guestbook Module Interface ");
+                    console.log("destroying Guestbook Module Instance ");
                     this.controllerEntriesWatchHandle.unwatch()
                     Resolve({success: "Unloaded Instance"});
                 }));
