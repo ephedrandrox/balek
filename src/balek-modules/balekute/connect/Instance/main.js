@@ -32,7 +32,6 @@ define(['dojo/_base/declare',
 
                    this.target =  this._connectController.createTarget(this._sessionKey);
 
-
                     this.targetState = this.target.getState()
 
                     this._interfaceState.set("Component Name","Connect Main");

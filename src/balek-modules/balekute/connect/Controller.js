@@ -27,8 +27,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             statusAsState: null,
 
-            mongoConnection: null,
-
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 this._invitations = {};

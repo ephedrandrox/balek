@@ -85,14 +85,14 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
 
-                console.log("quill", this._workspaceContainableState );
+            //    console.log("quill", this._workspaceContainableState );
                 if (this._workspaceContainableState !== null)
                 {
                     this._workspaceContainableStateWatchHandle = this._workspaceContainableState.watch(lang.hitch(this, this.onWorkspaceContainableStateUpdate));
 
                     let containerName = this._workspaceContainableState.get("containerName");
 
-                    console.log("quill", this._workspaceContainableState );
+                   // console.log("quill", this._workspaceContainableState );
 
                     if(containerName)
                     {
