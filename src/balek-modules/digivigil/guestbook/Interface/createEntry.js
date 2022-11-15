@@ -16,17 +16,17 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/html/createEntry.html',
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/css/createEntry.css'
+        'dojo/text!balek-modules/digivigil/guestbook/resources/html/createEntry.html',
+        'dojo/text!balek-modules/digivigil/guestbook/resources/css/createEntry.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
-        return declare("digivigilWWWGuestbookCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilGuestbookCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             _interface: null,
             templateString: template,
-            baseClass: "digivigilWWWGuestbookCreateEntryInterface",
+            baseClass: "digivigilGuestbookCreateEntryInterface",
 
             _mainCssString: mainCss,
 

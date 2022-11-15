@@ -3,8 +3,8 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/Module',
-        'balek-modules/digivigil-www/guestbook/Controller',
-        'balek-modules/digivigil-www/guestbook/Instance',
+        'balek-modules/digivigil/guestbook/Controller',
+        'balek-modules/digivigil/guestbook/Instance',
        ],
     function (declare, lang, topic,
               baseModule, moduleController, moduleInstance) {
@@ -12,7 +12,7 @@ define(['dojo/_base/declare',
             //Module Config
             _displayName: "Digivigil Guestbook",
             _allowedSessions: [0, 1],
-            _iconPath: 'balek-modules/digivigil-www/guestbook/resources/images/book.svg',
+            _iconPath: 'balek-modules/digivigil/guestbook/resources/images/book.svg',
             //End Config
             _instances: {},
             _Controller: null,

@@ -14,11 +14,11 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil-www/guestbook/Interface/createEntry",
-        "balek-modules/digivigil-www/guestbook/Interface/listItem",
+        "balek-modules/digivigil/guestbook/Interface/createEntry",
+        "balek-modules/digivigil/guestbook/Interface/listItem",
 
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/html/main.html',
-        'dojo/text!balek-modules/digivigil-www/guestbook/resources/css/main.css',
+        'dojo/text!balek-modules/digivigil/guestbook/resources/html/main.html',
+        'dojo/text!balek-modules/digivigil/guestbook/resources/css/main.css',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',

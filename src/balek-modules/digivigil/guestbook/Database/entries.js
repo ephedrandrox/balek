@@ -1,7 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'balek-modules/digivigil-www/Database',
+        'balek-modules/digivigil/Database',
     ],
     function (declare, lang, topic,  digivigilDatabaseController) {
         return declare("moduleDigivigilGuestbookEntriesDatabaseController", [digivigilDatabaseController], {

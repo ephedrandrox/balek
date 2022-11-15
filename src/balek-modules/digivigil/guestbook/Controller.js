@@ -1,7 +1,7 @@
 define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
-        'balek-modules/digivigil-www/guestbook/Database/entries',
+        'balek-modules/digivigil/guestbook/Database/entries',
         "dojo/node!sanitize-html",
     ],
     function (declare, lang, topic,

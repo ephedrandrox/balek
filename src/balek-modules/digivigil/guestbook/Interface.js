@@ -8,14 +8,14 @@ define(['dojo/_base/declare',
 
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
-        'balek-modules/digivigil-www/guestbook/Interface/main',
+        'balek-modules/digivigil/guestbook/Interface/main',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-modules/components/syncedMap/Interface',
     ],
     function (declare, lang, topic, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, MainInterface, _SyncedCommanderInterface, SyncedMapInterface) {
 
-        return declare("moduleDigivigilWWWGuestbookInterface",   _SyncedCommanderInterface, {
+        return declare("moduleDigivigilGuestbookInterface",   _SyncedCommanderInterface, {
             _instanceKey: null,
             _mainInterface: null,
 

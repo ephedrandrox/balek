@@ -2,7 +2,7 @@ define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
         //Guestbook Instance sub modules
-        'balek-modules/digivigil-www/guestbook/Instance/main',
+        'balek-modules/digivigil/guestbook/Instance/main',
         //Balek Components
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance',],
