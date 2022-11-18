@@ -60,6 +60,9 @@ define(['dojo/_base/declare',
                 //overwrite in Interface
                 if(this._stateChangeInterfaceCallback)
                 {
+                    if(newState === undefined){
+                        newState = null
+                    }
                     let interfaceStateObject = {[String(name)] : newState};
                     this._stateChangeInterfaceCallback({interfaceState: JSON.stringify(interfaceStateObject)});
                 }

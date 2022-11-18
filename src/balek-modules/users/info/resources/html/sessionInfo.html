@@ -1,0 +1,18 @@
+<div class="${baseClass}" tabindex="0">
+    <div class="${baseClass}MainDiv" data-dojo-attach-point='_mainDiv'>
+        <div class="${baseClass}NameDiv" data-dojo-attach-point='_keyDiv'>
+            ${sessionInfo.key}
+        </div>
+        <div class="${baseClass}ControlDiv">
+            <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onSwitchToButtonClicked'>
+                Switch To
+            </div>
+            <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onCloseButtonClicked'>
+                Close
+            </div>
+            <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onSwitchAndCloseButtonClicked'>
+               Switch And Close
+            </div>
+        </div>
+    </div>
+</div>

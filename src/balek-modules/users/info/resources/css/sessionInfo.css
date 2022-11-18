@@ -1,0 +1,57 @@
+.usersInfoSessionInfoInterface {
+    position: relative;
+    color: #ffffff;
+    background: rgba(20, 75, 115, 0.8);
+    display: block;
+    text-align: center;
+    padding: 0;
+    border: solid black 2px;
+    border-radius: 15px;
+    min-width: 40vw;
+    margin: 20px;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(84, 227, 84, 1);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(84, 227, 84, 1);
+    box-shadow: 0px 0px 10px 0px rgba(84, 227, 84, 1);
+    outline: none;
+    cursor: auto;
+}
+
+.usersInfoSessionInfoInterfaceMainDiv {
+    position: relative;
+
+    display: inline-block;
+    background: #0c334f;
+    border: solid #c2c2c2 2px;
+    border-radius: 5px;
+    padding: 5px;
+
+    cursor: pointer;
+}
+
+
+.usersInfoSessionInfoInterfaceControlDiv {
+    position: relative;
+
+    display: inline-block;
+    background: #0c334f;
+    border: solid #c2c2c2 2px;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: calc(6px + 2vh);
+    cursor: pointer;
+
+}
+
+
+.usersInfoSessionInfoInterfaceButtonDiv {
+    position: relative;
+
+    display: inline-block;
+    background: #0c334f;
+    border: solid #c2c2c2 2px;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: calc(6px + 2vh);
+    cursor: pointer;
+
+}

@@ -40,7 +40,7 @@
 }
 
 .userInfoAvailableSessions {
-    border: solid purple 3px;
-    max-height: 300px;
+    border: solid #0f0f3b 3px;
+    max-height: 500px;
     overflow: scroll;
 }

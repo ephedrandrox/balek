@@ -44,13 +44,12 @@ define(['dojo/_base/declare',
                     //Create availableEntries SyncedMap
                     if(this.availableSessions === null){
                         this.availableSessions = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                        for( const ResolveKey in this.availableEntriesResolveRequests)
+                        for( const ResolveKey in this.availableSessionsResolveRequests)
                         {
                             Resolve(this.availableSessions[ResolveKey])
                         }
                     }
-                }
-                else if (name === "userInfoInstanceKeys") {
+                } else if (name === "userInfoInstanceKeys") {
                     //Create Main Interface
                     if(this._userInfoInterface === null){
                         this._userInfoInterface = new UserInfo({_instanceKey: newState.instanceKey,

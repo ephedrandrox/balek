@@ -3,13 +3,34 @@ define(['dojo/_base/declare',
         'dojo/topic',
         'dojo/node!crypto',
 
+        'dojo/Stateful',
+        'balek-server/session/sessionsController/instanceCommands',
+
         'balek-server/session/session',
         'balek/sessionManager'],
-    function (declare, lang, topic, crypto, sessionManagerSession, balekSessionManager) {
+    function (declare, lang, topic, crypto, Stateful, InstanceCommands, sessionManagerSession, balekSessionManager) {
         return declare("balekServerSessionManager", balekSessionManager, {
 
             _sessions: {},
+            _sessionListsByUserKey: {},      //States in the Key of User
 
+            InstanceCommands: null,
+
+            getUserSessionList: function(userKey){
+                if(userKey && userKey.toString())
+                    if( this._sessionListsByUserKey[userKey.toString()])
+                    {
+                        return this._sessionListsByUserKey[userKey.toString()]
+                    }else {
+                        let SessionList = declare([Stateful], {});
+                        this._sessionListsByUserKey[userKey.toString()] = new SessionList({})
+                        return this._sessionListsByUserKey[userKey.toString()]
+                    }
+                else {
+                    console.log("Error: getUserSessionList invalid userKey", userKey)
+                    return false
+                }
+            },
             constructor: function (args) {
                 //todo add ability to remove session
                 //todo remove sessions that have only the main module loaded and a disconnected socket
@@ -18,9 +39,20 @@ define(['dojo/_base/declare',
 
                 console.log("Initializing Balek Session Manager for server...");
 
+                this.InstanceCommands = new InstanceCommands();
                 this._sessions = {};
 
+
+
+                this.InstanceCommands.setCommand("getUserSessionList", lang.hitch(this, this.getUserSessionList))
+
+                //##########################################################################################################
+                //Migrate to SessionsController Section
+                //##########################################################################################################
+
+
                 topic.subscribe("requestSessionKey", lang.hitch(this, this.requestSessionKey));
+                this.InstanceCommands.setCommand("requestSessionKey", lang.hitch(this, this.requestSessionKey))
                 topic.subscribe("sessionCredentialsUpdate", lang.hitch(this, this.sessionCredentialsUpdate));
 
                 topic.subscribe("getSessionUserGroups", lang.hitch(this, this.getSessionUserGroups));
@@ -32,8 +64,13 @@ define(['dojo/_base/declare',
                 topic.subscribe("getSessionWSSConnection", lang.hitch(this, this.getSessionWSSConnection));
                 topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
                 topic.subscribe("getSessionsForUser", lang.hitch(this, this.getSessionsForUser));
+
                 topic.subscribe("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey));
+                this.InstanceCommands.setCommand("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey))
+
+
                 topic.subscribe("getSessionByKey", lang.hitch(this, this.getSessionByKey));
+                this.InstanceCommands.setCommand("getSessionByKey", lang.hitch(this, this.getSessionByKey))
 
 
 
@@ -44,6 +81,10 @@ define(['dojo/_base/declare',
                 topic.subscribe("receiveWorkspaceMessage", lang.hitch(this, this.receiveWorkspaceMessage));
 
                 topic.subscribe("addInstanceToSession", lang.hitch(this, this.addInstanceToSession));
+                //##########################################################################################################
+                //SessionsController Functions Section END
+                //##########################################################################################################
+
 
             },
             receiveSessionMessage: function (sessionMessage, messageReplyCallback) {
@@ -85,6 +126,7 @@ define(['dojo/_base/declare',
                     }
                 } else if (sessionManagerMessage.sessionKey && sessionManagerMessage.requestAvailableSessions) {
                 //todo remove this and set up retreievable state object
+
                     if (this._sessions[sessionManagerMessage.sessionKey] && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
                         let sessionsToReturn = {};
                         let allSessions = this._sessions;
@@ -132,14 +174,13 @@ define(['dojo/_base/declare',
 
             },
             addInstanceToSession: function (sessionKey, instance) {
+                //todo make session.addInstance
                 this._sessions[sessionKey]._instances[instance._instanceKey] = instance;
             },
             requestSessionKey: function (wssConnection) {
-
                 if (wssConnection._sessionKey === null) {
                     let sessionKey = this.getUniqueSessionKey();
                     wssConnection._sessionKey = sessionKey;
-
                     this._sessions[sessionKey] = new sessionManagerSession({
                         _sessionKey: sessionKey,
                         _wssConnection: wssConnection
@@ -157,7 +198,6 @@ define(['dojo/_base/declare',
                         }));
                     }));
                 }
-
             },
             sessionCredentialsUpdate: function (wssConnection, credentialData, sessionUpdateReply) {
                 if (wssConnection._sessionKey && credentialData.username && credentialData.password) {
@@ -183,6 +223,16 @@ define(['dojo/_base/declare',
                                     console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
                                         user.userKey,
                                         permissionGroups);
+
+                                    let userSessionList =  this.getUserSessionList(user.userKey)
+                                    console.log("sessions state:", userSessionList);
+
+                                    if(userSessionList){
+                                        userSessionList.set(String(wssConnection._sessionKey), String(wssConnection._sessionKey))
+                                    }
+                                    console.log("sessions state:", userSessionList);
+
+
                                     sessionUpdateReply({messageData: {message: "worked"}});
                                 }
                             }
@@ -191,7 +241,7 @@ define(['dojo/_base/declare',
 
                             }
                         } else {
-                            sessionUpdateReply({error: {error: "No User with that name"}});
+                            sessionUpdateReply({error: {error: "No User with that namex", userInfo: userInfo}});
 
                         }
                     }));
@@ -210,10 +260,21 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                   try{
                       let sessionToUnload = this._sessions[sessionKey];
+                      let sessionUserKey = sessionToUnload.getUserKey()
                       let resolveMessage = "normal";
                       let unloadAndResolve = lang.hitch(this, function(){
                           //todo, this should be a promise being returned from unload
                           sessionToUnload.unload();
+
+                          let userSessionList =  this.getUserSessionList(sessionUserKey)
+                          console.log("sessions state:", userSessionList);
+
+                          if(userSessionList){
+                              userSessionList.set(String(sessionKey), undefined)
+                          }
+                          console.log("sessions state:", userSessionList);
+
+
                           delete  this._sessions[sessionKey];
                           Resolve(resolveMessage);
                       });
@@ -310,8 +371,6 @@ define(['dojo/_base/declare',
             },
             unloadAllUserSessionsExcept: function(sessionKeyToKeep){
                 let sessionUserKey = this._sessions[sessionKeyToKeep].getUserKey();
-
-
                 this.getSessionsForUserKey(sessionUserKey, lang.hitch(this, function(sessionsForUser){
                     sessionsForUser.forEach(lang.hitch(this, function(session){
                         if(sessionKeyToKeep !== session._sessionKey)
@@ -335,8 +394,12 @@ define(['dojo/_base/declare',
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();
             },
-            getSessionByKey: function(sessionKey, returnCallback){
-                returnCallback(this._sessions[sessionKey]);
+            getSessionByKey: function(sessionKey, returnCallback = null){
+                if(typeof returnCallback === 'function'){
+                    returnCallback(this._sessions[sessionKey])
+                }else{
+                    return this._sessions[sessionKey]
+                }
             },
 
             getSessionsForUser: function (username, sessionReturn) {
@@ -353,7 +416,7 @@ define(['dojo/_base/declare',
                 }
                 sessionReturn(sessionsToReturn);
             },
-            getSessionsForUserKey: function (userKey, sessionReturn) {
+            getSessionsForUserKey: function (userKey, sessionReturn = null) {
 
                 let sessionsToReturn = [];
                 for (var session in this._sessions) {
@@ -362,7 +425,11 @@ define(['dojo/_base/declare',
                         sessionsToReturn.push(this._sessions[session]);
                     }
                 }
-                sessionReturn(sessionsToReturn);
+                if(typeof sessionReturn === 'function'){
+                    sessionReturn(sessionsToReturn);
+                }else{
+                    return sessionsToReturn
+                }
             },
             setSessionStatus: function (sessionKey, sessionStatus) {
                 this._sessions[sessionKey].updateSessionStatus({sessionStatus: sessionStatus});

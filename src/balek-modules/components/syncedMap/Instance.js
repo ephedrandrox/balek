@@ -1,25 +1,51 @@
 define(['dojo/_base/declare',
+        'dojo/_base/lang',
         'balek-modules/Instance',
         'balek-modules/base/state/synced',
         'balek-modules/base/command/remote',],
-    function (declare, baseInstance, stateSyncer ,remoteCommander) {
+    function (declare, lang, baseInstance, stateSyncer ,remoteCommander) {
         return declare("moduleBaseSyncedMapInstance", [baseInstance, stateSyncer ,remoteCommander], {
             _instanceKey: null,
             _sessionKey: null,
 
+            _relayStateWatchHandle: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-
                 console.log("moduleBaseSyncedMapInstance starting...");
-
                 this.prepareSyncedState();
-
                 this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
 
             },
             add: function(key, value){
                 this._interfaceState.set(key.toString(), value);
             },
+            remove: function(key) {
+                this._interfaceState.set(key.toString(), undefined);
+            },
+            relayState: function(state){
+                for (const key in state) {
+                    let value = state[key]
+                    if(typeof value !== 'function' && key != "_attrPairNames"
+                        && key != "declaredClass"){
+                        console.log("adding available Sessions from  State", key, value)
+                        this.add(key, value );
+                    }
+                }
+                this._relayStateWatchHandle = state.watch(lang.hitch(this, this.onRelayStateChange))
+            },
+            onRelayStateChange: function(name, oldState, newState){
+                console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
+
+                if (newState === undefined){
+                    this.remove(name)
+                    console.log("remove",name, oldState, newState)
+
+                }else{
+                    this.add(name, newState)
+                    console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
+                }
+            }
+            ,
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
                 if (moduleMessage.instanceKey == this._instanceKey) {
                     if (moduleMessage.messageData) {
