@@ -13,6 +13,9 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+        "balek-modules/diaplode/ui/input/getUserInput",
+
+
         'balek-modules/users/info/Interface/sessionInfo',
 
         'dojo/text!balek-modules/users/info/resources/html/userInfo.html',
@@ -25,7 +28,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic, Stateful, domClass, domConstruct, win,
               on, domAttr, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
-              SessionWidget,
+              getUserInput,SessionWidget,
               template, templateCSS,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleUserInfoInterface", [_WidgetBase, _TemplatedMixin,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
             _instanceKey: null,
@@ -33,7 +36,7 @@ define(['dojo/_base/declare',
             templateString: template,
             baseClass: "userInfo",
 
-
+            _userNameNode: null,
 
             _sessionState: null,
             _userState: null,
@@ -44,6 +47,9 @@ define(['dojo/_base/declare',
 
             _sessionWidgets: null,
 
+
+            _userInfoState: null,
+            _userInfoStateWatchHandle: null,
 
             _userData: {
                 icon: null,
@@ -57,29 +63,43 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
-            userStateChange: function (name, oldState, newState) {
-                if (name === "userData") {
-                    this.updateUserData();
+            _onIconFileChange: function (eventObject) {
+                let file = eventObject.target.files[0];
+                if (file.size / 1024 < 64) {
+                    if (file.type.match('image.png')) {
+                        let reader = new FileReader();
+                        reader.onload = lang.hitch(this, function (onLoadEvent) {
+                            let base64String = onLoadEvent.target.result.substr(22)
+                            let base64Array = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+                            let iconForTransfer = {type: "Buffer", data: base64Array}
+                            this._interface._instanceCommands.updateUserIcon(iconForTransfer).then(lang.hitch(this, function(Result){
+                                console.log("UserIcon request", Result)
+                            })).catch(function(Error){
+                                console.log("Error sending update UserIcon request", Error)
+                            })
+                        });
+                        // Read in the image file as a data URL.
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert("File not png");
+                    }
+                } else {
+                    alert("File too big > 64k");
                 }
             },
-            updateUserData: function () {
-                let userData = this._userState.get("userData");
-                let sessionUser = "Demo";
-                //this is silly, should index by key
-                //todo make userDataByNameStore
-                for (const user in userData) {
+            _onChangeNameDblClicked:function(clickEvent){
+                console.log("Username request", this)
 
-                    if (userData[user].name === sessionUser) {
-                        this._userData = userData[user];
-                    }
+                let getDataForNote = new getUserInput({question: "Change Username...",
+                    inputReplyCallback: lang.hitch(this, function(newNoteData){
+                        this._interface._instanceCommands.updateUsername(newNoteData).then(lang.hitch(this, function(Result){
+                            console.log("Username request", Result)
+                        })).catch(function(Error){
+                            console.log("Error sending update Username request", Error)
+                        })
+                        getDataForNote.unload();
+                    }) });
 
-                }
-
-                this._userNameNode.innerHTML = this._userData.name;
-                if(this._userData.icon !=null)
-                {
-                    this._userImageNode.src = this._userData.icon;
-                }
             },
             addSessionWidget: function(sessionKey){
                     if(!this._sessionWidgets[sessionKey]){
@@ -89,13 +109,28 @@ define(['dojo/_base/declare',
                     domConstruct.place(this._sessionWidgets[sessionKey].domNode, this._availableSessionsNode)
             },
             removeSessionWidget: function(sessionKey){
-                // Use this to check all?
-                // this._availableSessions.forEach(lang.hitch( this, function(sessionKey, Session){ }))
                 if(this._sessionWidgets[sessionKey]){
                     let removeNode = this._sessionWidgets[sessionKey]
                     console.log("🔇🔇🔇♥️",removeNode.domNode)
                     domConstruct.destroy(removeNode.domNode)
                     delete this._sessionWidgets[sessionKey]
+                }
+            },
+            onUserInfoStateChange: function (name, oldState, newState) {
+                console.log("onUserInfoStateChange", name, oldState, newState)
+                 name = name.toString()
+                if(name == "userName"){
+                    console.log("userName", name, oldState, newState)
+                    this._userNameNode.innerHTML = newState
+                }else if(name == "userKey"){
+                    console.log("userKey", name, oldState, newState)
+                }else if(name == "icon" && newState.data){
+                    console.log("icon", name, oldState, newState)
+                    let charCodeArray = new Uint8Array(newState.data);
+                    let base64String = btoa(String.fromCharCode.apply(null, charCodeArray));
+                        this._userImageNode.src = "data:image/png;base64," + base64String;
+                }else {
+                    console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             onAvailableSessionsStateChange: function (name, oldState, newState) {
@@ -110,72 +145,18 @@ define(['dojo/_base/declare',
                         console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
-            // updateSessionsView: function () {
-            //     let availableSessions = this._availableSessions
-            //     let replacementDiv=domConstruct.create("div");
-            //
-            //     for (const sessionKey in availableSessions) {
-            //
-            //             let newSessionDiv = domConstruct.create("div");
-            //
-            //
-            //             domClass.add(newSessionDiv, "userInfoAvailableSessionDiv");
-            //             newSessionDiv.innerHTML = sessionKey;
-            //             on(newSessionDiv, 'click', lang.hitch(sessionKey, function (evt) {
-            //                 evt.stopPropagation();
-            //                 topic.publish("requestSessionChange", sessionKey);
-            //             }));
-            //             domConstruct.place(newSessionDiv, replacementDiv);
-            //
-            //
-            //             let newSessionUnloadDiv = domConstruct.create("div");
-            //             newSessionUnloadDiv.innerHTML = "Close";
-            //
-            //             on(newSessionUnloadDiv, 'click', lang.hitch(sessionKey, function (evt) {
-            //                 evt.stopPropagation();
-            //                 topic.publish("requestSessionUnload", sessionKey, function(value){
-            //                     console.log(value);
-            //                     //todo do something with this info. Should make session state, updating state changes interface
-            //                 });
-            //             }));
-            //             domConstruct.place(newSessionUnloadDiv, newSessionDiv);
-            //
-            //
-            //         let newSessionUnloadAllDiv = domConstruct.create("div");
-            //         newSessionUnloadAllDiv.innerHTML = "change and unload all";
-            //         on(newSessionUnloadAllDiv, 'click', lang.hitch(sessionKey, function (evt) {
-            //             evt.stopPropagation();
-            //             topic.publish("requestSessionChangeAndUnloadAll", sessionKey, function(value){
-            //                 console.log(value);
-            //                 //todo do something with this info. Should make session state, updating state changes interface
-            //             });
-            //         }));
-            //         domConstruct.place(newSessionUnloadAllDiv, newSessionDiv);
-            //
-            //
-            //     }
-            //     domConstruct.empty(this._availableSessionsNode);
-            //     domConstruct.place(replacementDiv, this._availableSessionsNode);
-            // },
 
             postCreate() {
                 this.initializeContainable();
 
-                // topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
-                //     this._sessionState = sessionState;
-                //     //just add available states to session state and watch that!
-                //
-                //     //this.updateSessionsView();
-                //
-                //     this._availableSessionsStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.availableSessionsStateChange))
-                //
-                // }));
+                this._interface.getUserState().then(lang.hitch(this, function(userInfoState){
+                    this._userInfoState = userInfoState
+                    console.log("getUserState userInfoState", userInfoState);
 
-                topic.publish("getUserState", lang.hitch(this, function (userState) {
-                    this._userState = userState;
-                    this.updateUserData();
-                    this._userStateWatchHandle = this._userState.watch("userData", lang.hitch(this, this.userStateChange))
-                }));
+                    this._userInfoStateWatchHandle = this._userInfoState.setStateWatcher(lang.hitch(this, this.onUserInfoStateChange));
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
 
                 this._interface.getAvailableSessions().then(lang.hitch(this, function(Sessions){
                     this._availableSessions = Sessions
@@ -186,10 +167,6 @@ define(['dojo/_base/declare',
                     console.log("Error this._interface.getAvailableEntries()", Error)
                 }))
 
-              /*  topic.publish("getAvailableSessionsState", lang.hitch(this, function (availableSessionsState) {
-                    this._availableSessionsState = availableSessionsState;
-                    this._availableSessionsStateWatchHandle = this._availableSessionsState.watch("availableSessions", lang.hitch(this, this.availableSessionsStateChange))
-                }));*/
             },
             startupContainable: function(){
                 //called after containable is started

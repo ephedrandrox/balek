@@ -24,6 +24,9 @@ define(['dojo/_base/declare',
             availableSessions: null,
             availableSessionsResolveRequests: null,
 
+            userInfoState: null,
+            userInfoStateResolveRequests: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -47,6 +50,15 @@ define(['dojo/_base/declare',
                         for( const ResolveKey in this.availableSessionsResolveRequests)
                         {
                             Resolve(this.availableSessions[ResolveKey])
+                        }
+                    }
+                } else if (name === "userInfoStateRelayComponentKey") {
+                    //Create availableEntries SyncedMap
+                    if(this.userInfoState === null){
+                        this.userInfoState = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        for( const ResolveKey in this.userInfoStateResolveRequests)
+                        {
+                            Resolve(this.userInfoState[ResolveKey])
                         }
                     }
                 } else if (name === "userInfoInstanceKeys") {
@@ -94,7 +106,16 @@ define(['dojo/_base/declare',
                     }
                 }))
             },
-
+            getUserState: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    if(this.userInfoState == null){
+                        this.userInfoStateResolveRequests.push(Resolve)
+                    }else
+                    {
+                        Resolve(this.userInfoState)
+                    }
+                }))
+            },
             unload: function () {
                 console.log("Unloading user info Main interface");
                 this._userInfoInterface.unload();

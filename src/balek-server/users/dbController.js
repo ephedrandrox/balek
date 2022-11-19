@@ -49,6 +49,28 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            getUserIconFromDatabaseByKey: function (userKey) {
+
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    let query = this._dbConnection.query('SELECT icon FROM ' + this._mysqlSettings.database + '.users WHERE userKey = ?;', userKey);
+                    let userToReturn = [];
+                    query.on('error', function (err) {
+                        console.log(err);
+                        Reject(err);
+                    })
+                        .on('result', lang.hitch(this, function (row) {
+                            //todo get connection from pool to pause
+                            // this._dbConnection.pause();
+                            userToReturn.push(row);
+                        }))
+                        .on('end', function () {
+                            // all rows have been received
+                            //console.log("All rows received");
+                            Resolve(userToReturn);
+                        });
+                }));
+
+            },
             getUserFromDatabase: function (username) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
@@ -89,6 +111,57 @@ define(['dojo/_base/declare',
                         });
                 }));
 
+            },
+            updateUsernameInDatabase: function (userName, userKey) {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (userName, userKey) {
+                        query = this._dbConnection.query('UPDATE ' + this._mysqlSettings.database + '.users SET name = ? WHERE userKey = ? ;', [userName, userKey]);
+                    }
+
+                    let resultToReturn = [];
+
+                    query.on('error', function (err) {
+                        Reject(err.message);
+                    })
+                        .on('result', function (row) {
+                            resultToReturn.push(row);
+                        })
+                        .on('end', function () {
+                            Resolve(resultToReturn);
+                        });
+                }));
+            },
+            updateUserIconInDatabase: function(iconBase64, userKey)
+            {                console.log("updateUserIcon" , this.usersControllerCommands, iconBase64, userKey);
+
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    try{
+                        if (iconBase64, userKey) {
+                            query = this._dbConnection.query('UPDATE ' + this._mysqlSettings.database + '.users SET icon = ? WHERE userKey = ? ;', [iconBase64, userKey]);
+                        }else{
+                            Reject({Error: "Must provide (iconBase64, userKey)",
+                                From: "userinfo databases controller try updateUserIconInDatabase()",
+                                arguments: arguments } )
+                        }
+                        let resultToReturn = [];
+                        query.on('error', function (Error) {
+                            console.log("updateUserIcon" , this.usersControllerCommands, iconBase64, userKey, Error);
+
+                            Reject({Error: Error,
+                                From: "userinfo databases controller updateUserIconInDatabase()"} )
+                        })
+                            .on('result', function (row) {
+                                resultToReturn.push(row);
+                            })
+                            .on('end', function () {
+                                Resolve(resultToReturn);
+                            });
+                    }catch(Error){
+                        Reject({Error: Error,
+                            From: "userinfo databases controller try updateUserIconInDatabase()"} )
+                    }
+
+                }));
             },
             updateUserInDatabase: function (userData) {
 

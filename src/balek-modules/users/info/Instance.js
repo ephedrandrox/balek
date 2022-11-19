@@ -8,13 +8,17 @@ define(['dojo/_base/declare',
         'balek-modules/components/syncedCommander/Instance',
         'balek-server/session/sessionsController/instanceCommands',
 
+        'balek-server/users/usersController/instanceCommands',
+
     ],
-    function (declare, lang, topic, UserInfo, SyncedMapInstance, _SyncedCommanderInstance,SessionsControllerInstanceCommands) {
+    function (declare, lang, topic, UserInfo, SyncedMapInstance, _SyncedCommanderInstance,
+              SessionsControllerInstanceCommands,UsersControllerInstanceCommands) {
         return declare("moduleUsersInfoInstance", _SyncedCommanderInstance, {
             _instanceKey: null,
             _userInfoInstance: null,
 
             availableSessions: null,
+            userInfoStateRelay: null,
 
             sessionsList: null,
             sessionsListWatchHandle: null,
@@ -29,9 +33,12 @@ define(['dojo/_base/declare',
                 this.availableSessions = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableSessionsComponentKey", this.availableSessions._componentKey);
 
+                this.userInfoStateRelay = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("userInfoStateRelayComponentKey", this.userInfoStateRelay._componentKey);
+
                 let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
-                let sessionKey = this._sessionKey
+
                 let session = this.sessionsControllerCommands.getSessionByKey(this._sessionKey)
                 let sessions = this.sessionsControllerCommands.getSessionsForUserKey(session.getUserKey())
                 //creates component Key that can be used to connect to state
@@ -41,17 +48,19 @@ define(['dojo/_base/declare',
                 this.sessionsList = sessionsList
 
 
-                // //todo make syncedmap addstate(state) start here and add watch function
-                // for (const key in sessionsList) {
-                //     let value = sessionsList[key]
-                //     if(typeof value !== 'function' ){
-                //         console.log("adding available Sessions from  State", key, value)
-                //         this.availableSessions.add(key, value );
-                //     }
-                // }
+                let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
+                this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
+                let userState = this.usersControllerCommands.getUserState(session.getUserKey())
 
-               // sessionListWatchHandle = sessionsList.watch(lang.hitch(this, this.onSessionListChange))
+                this._commands={
+                    "updateUsername" : lang.hitch(this, this.updateUsername),
+                    "updateUserIcon" : lang.hitch(this, this.updateUserIcon)
+                };
+
+                this.setInterfaceCommands();
+
                 this.availableSessions.relayState(sessionsList)
+                this.userInfoStateRelay.relayState(userState)
                 this.prepareSyncedState();
 
                 //Create the main Instance
@@ -62,23 +71,47 @@ define(['dojo/_base/declare',
                     sessionKey: this._userInfoInstance._sessionKey,
                     componentKey: this._userInfoInstance._componentKey});
 
-
                 this._interfaceState.set("Status", "Started");
 
+            },
+            updateUsername: function(userName, remoteCommandCallback){
+                let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
+                this.usersControllerCommands.updateUsername(userName, userKey).then(lang.hitch(this,function(Result){
+                    remoteCommandCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this,function(Error){
+                    remoteCommandCallback({Error: Error})
+                }))
+            },
+            updateUserIcon: function(iconBuffer, remoteCommandCallback){
 
+                if(iconBuffer && iconBuffer.data){
+                try{
+                    let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
+                    const iconData = Object.values(iconBuffer.data);
+                    const iconBase64 = Buffer.from(iconData);
+
+                    this.usersControllerCommands.updateUserIcon(iconBase64, userKey)
+                        .then(lang.hitch(this,function(Result){
+                        remoteCommandCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this,function(Error){
+                        remoteCommandCallback({Error: Error,
+                            From: "usersControllerCommands.updateUserIcon"})
+                    }))
+                }catch(Error){
+                    remoteCommandCallback({Error: Error,
+                        From: "UpdateUserIcon Catch"})
+                }
+                }else{
+                    remoteCommandCallback({Error: "Did not receive an icon buffer",
+                        From: "UpdateUserIcon If Logic"})
+                }
             },
             onSessionListChange: function(name, oldState, newState){
-                console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
-//add this to suyncedmap as .relayState(stateToRelay)
-
                 if (newState === undefined){
                     this.availableSessions.remove(name)
                     console.log("remove",name, oldState, newState)
-
                 }else{
                     this.availableSessions.add(name, newState)
-                    console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
-
                 }
             },
             //##########################################################################################################
