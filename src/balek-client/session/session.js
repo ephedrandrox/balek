@@ -3,8 +3,9 @@ define(['dojo/_base/declare',
         'dojo/topic',
         'dojo/Stateful',
         'balek/session/session',
+        'balek-client/session/sessionController',
         'balek-client/session/workspaceManager'],
-    function (declare, lang, topic, Stateful, balekSessionManagerSession, balekWorkspaceManger) {
+    function (declare, lang, topic, Stateful, balekSessionManagerSession, SessionController, balekWorkspaceManger) {
 
 
         return declare("balekClientSessionManagerSession", balekSessionManagerSession, {
@@ -13,9 +14,13 @@ define(['dojo/_base/declare',
             _workspaceManager: null,
             _getSessionStateTopicHandle: null,
             _sessionKey: null,
+
+            _Controller: null,
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 this._workspaceManager = new balekWorkspaceManger({_sessionKey: this._sessionKey});
+                this._Controller = new SessionController({_session: this});
 
 
                 let sessionState = declare([Stateful], {

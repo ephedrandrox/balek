@@ -6,6 +6,11 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'dojo/on',
         "dojo/dom-attr",
+
+        "balek-client/users/usersController/interfaceCommands",
+        "balek-client/session/sessionController/interfaceCommands",
+
+
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
@@ -13,49 +18,45 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/session/menu/resources/css/userMenu.css'
 
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, _WidgetBase, _TemplatedMixin, template, templateCSS) {
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, UsersControllerInterfaceCommands, SessionControllerInterfaceCommands,  _WidgetBase, _TemplatedMixin, template, templateCSS) {
 
         return declare("moduleSessionUserMenuInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
             baseClass: "sessionUserMenu",
 
-            _userState: null,
-            _sessionState: null,
-            _userStateWatchHandle: null,
-            _userData: {name: null, icon: "balek-modules/session/menu/Interface/user/resources/images/user.svg"},
+            usersControllerCommands: null,
+            sessionControllerCommands: null,
+
+            _userInfoState: null,
+            _userInfoStateWatchHandle: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-                //todo should maybe give id and check for these before adding more and more in case body already has style
-                //Or even better, make a style manager that receives events to add styles
+                let sessionControllerInterfaceCommands = new SessionControllerInterfaceCommands();
+                this.sessionControllerCommands = sessionControllerInterfaceCommands.getCommands();
+
+                let usersControllerInterfaceCommands = new UsersControllerInterfaceCommands();
+                this.usersControllerCommands = usersControllerInterfaceCommands.getCommands();
+
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
-                this._userStateWatchHandle = {};
-                this._userState = {};
             },
             postCreate() {
-                topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
-                    this._sessionState = sessionState;
-                    topic.publish("getUserState", lang.hitch(this, function (userState) {
-                        this._userState = userState;
-                        this.updateUserData();
-                        this._userStateWatchHandle = this._userState.watch("userData", lang.hitch(this, this.updateUserData));
-                    }));
-                }));
-            },
-            updateUserData: function () {
-                let userData = this._userState.get("userData");
-                let sessionUser = this._sessionState.get("userName");
-                //this is silly, should index by key
-                for (const user in userData) {
-                    if (userData[user].name === sessionUser) {
-                        this._userData = userData[user];
-                    }
+                let userKey = this.sessionControllerCommands.getSessionUserKey()
+                this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
+                if(this._userInfoState.get("icon")){
+                    this.onUserInfoUpdate("icon", null, this._userInfoState.get("icon"))
                 }
-                if (this._userImage) {
-                    this._userImage.src = this._userData.icon;
+                this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoUpdate));
+            },
+            onUserInfoUpdate: function(name, oldValue, newValue){
+                if(name === "icon" && this._userImage){
+                    this._userImage.src = newValue;
+                }else{
+                    console.log("Unused State Update", name, oldValue, newValue)
                 }
             },
             _mouseEnter: function (eventObject) {
@@ -75,8 +76,8 @@ define(['dojo/_base/declare',
                 });
             },
             unload: function () {
-                this._userStateWatchHandle.unwatch();
-                this._userStateWatchHandle.remove();
+                this._userInfoStateWatchHandle.unwatch();
+                this._userInfoStateWatchHandle.remove();
             }
         });
     });

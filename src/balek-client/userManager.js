@@ -1,15 +1,24 @@
+//##########################################################################################################
+//Interface User Manager
+//##########################################################################################################
+
+
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        "dojo/Stateful"],
-    function (declare, lang, topic, Stateful) {
+        "dojo/Stateful",
+        "balek-client/users/usersController",
+
+    ],
+    function (declare, lang, topic, Stateful, UsersController) {
 
         return declare("usersManager", null, {
 
             _userState: null,
 
-            constructor: function (args) {
+            _interfaceCommands: null,
 
+            constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
@@ -27,6 +36,8 @@ define(['dojo/_base/declare',
                     userDataByKey: null,
 
                 });
+debugger
+                this._Controller = new UsersController({_usersManager: this});
 
                 topic.subscribe("getUserState", lang.hitch(this, this.getUserState));
                 topic.subscribe("receiveUserManagerMessage", lang.hitch(this, this.receiveUserManagerMessage));
@@ -41,6 +52,7 @@ define(['dojo/_base/declare',
                 this.getUserData();
             },
             receiveUserManagerMessage(userManagerMessage) {
+                console.log("sdfsdfsd🟩📣🟦🟪📢💬fds", userManagerMessage)
                 if (userManagerMessage.messageData) {
                     if (userManagerMessage.messageData.userData) {
                         let userUpdateData = userManagerMessage.messageData.userData;
