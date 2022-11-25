@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
             },
             _onClick: function(event)
             {
-                console.log("systemMenu",event );
+                console.log("movableContainerWidget onClick",event );
             },
             postCreate: function () {
 

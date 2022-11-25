@@ -37,7 +37,12 @@ define(['dojo/_base/declare',
                     //this one does not have a reply callback, maybe it should?
                 } else if (balekMessage.sessionMessage) {
                     topic.publish("receiveSessionMessage", balekMessage.sessionMessage, lang.hitch(this, function (messageReply) {
-                        this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
+                        if(wssConnection.isConnected()){
+                            this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
+                            return true
+                        }else{
+                            return { Error: "Websocket is not connected - receiveSessionMessage messageCallback"}
+                        }
                     }));
                 } else if (balekMessage.sessionManagerMessage) {
                     topic.publish("receiveSessionManagerMessage", balekMessage.sessionManagerMessage);

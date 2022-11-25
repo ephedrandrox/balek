@@ -17,8 +17,8 @@ define(['dojo/_base/declare',
             _instanceKey: null,
             _userInfoInstance: null,
 
-            availableSessions: null,
-            userInfoStateRelay: null,
+            // availableSessions: null,
+            // userInfoStateRelay: null,
 
             sessionsList: null,
             sessionsListWatchHandle: null,
@@ -30,27 +30,27 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("Component Name","User Info");
                 this._interfaceState.set("Status", "Starting");
 
-                this.availableSessions = new SyncedMapInstance({_instanceKey: this._instanceKey});
-                this._interfaceState.set("availableSessionsComponentKey", this.availableSessions._componentKey);
+                // this.availableSessions = new SyncedMapInstance({_instanceKey: this._instanceKey});
+              //  this._interfaceState.set("availableSessionsComponentKey", this.availableSessions._componentKey);
 
-                this.userInfoStateRelay = new SyncedMapInstance({_instanceKey: this._instanceKey});
-                this._interfaceState.set("userInfoStateRelayComponentKey", this.userInfoStateRelay._componentKey);
+                // this.userInfoStateRelay = new SyncedMapInstance({_instanceKey: this._instanceKey});
+              //  this._interfaceState.set("userInfoStateRelayComponentKey", this.userInfoStateRelay._componentKey);
 
                 let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
-                let session = this.sessionsControllerCommands.getSessionByKey(this._sessionKey)
-                let sessions = this.sessionsControllerCommands.getSessionsForUserKey(session.getUserKey())
-                //creates component Key that can be used to connect to state
-                console.log("sessions for uer:", session, sessions);
-                let sessionsList = this.sessionsControllerCommands.getUserSessionList(session.getUserKey())
-                console.log("sessions state:", sessionsList);
-                this.sessionsList = sessionsList
+                // let session = this.sessionsControllerCommands.getSessionByKey(this._sessionKey)
+                // let sessions = this.sessionsControllerCommands.getSessionsForUserKey(session.getUserKey())
+                // //creates component Key that can be used to connect to state
+                // console.log("sessions for uer:", session, sessions);
+                // let sessionsList = this.sessionsControllerCommands.getUserSessionList(session.getUserKey())
+                // console.log("sessions state:", sessionsList);
+                // this.sessionsList = sessionsList
 
 
                 let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
                 this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
-                let userState = this.usersControllerCommands.getUserState(session.getUserKey())
+              //  let userState = this.usersControllerCommands.getUserState(session.getUserKey())
 
                 this._commands={
                     "updateUsername" : lang.hitch(this, this.updateUsername),
@@ -59,8 +59,8 @@ define(['dojo/_base/declare',
 
                 this.setInterfaceCommands();
 
-                this.availableSessions.relayState(sessionsList)
-                this.userInfoStateRelay.relayState(userState)
+                // this.availableSessions.relayState(sessionsList)
+                // this.userInfoStateRelay.relayState(userState)
                 this.prepareSyncedState();
 
                 //Create the main Instance
@@ -106,14 +106,14 @@ define(['dojo/_base/declare',
                         From: "UpdateUserIcon If Logic"})
                 }
             },
-            onSessionListChange: function(name, oldState, newState){
-                if (newState === undefined){
-                    this.availableSessions.remove(name)
-                    console.log("remove",name, oldState, newState)
-                }else{
-                    this.availableSessions.add(name, newState)
-                }
-            },
+            // onSessionListChange: function(name, oldState, newState){
+            //     if (newState === undefined){
+            //         this.availableSessions.remove(name)
+            //         console.log("remove",name, oldState, newState)
+            //     }else{
+            //         this.availableSessions.add(name, newState)
+            //     }
+            // },
             //##########################################################################################################
             //Base Instance Override Function
             //##########################################################################################################

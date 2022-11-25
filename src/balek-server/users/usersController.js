@@ -77,8 +77,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 for(KeyValIndex in stateEntries)
                 {
                     let objectKey = stateEntries[KeyValIndex][0]
-                    if(userInfoState.get(objectKey) ){
-                        messageReplyCallback({userInfoState: {name: objectKey , newState: userInfoState.get(objectKey) }})
+                    let object = userInfoState.get(objectKey)
+                    if(typeof object !== 'function' ){
+                        messageReplyCallback({userInfoState: {name: objectKey ,
+                                newState: object }})
                     }else {
                         console.log("Skipping 🛑🛑🔵🔵🔵🔵🔵🔵", objectKey, userInfoState[objectKey], Object.entries(userInfoState))
                     }

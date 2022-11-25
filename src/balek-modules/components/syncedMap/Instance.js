@@ -27,14 +27,14 @@ define(['dojo/_base/declare',
                     let value = state[key]
                     if(typeof value !== 'function' && key != "_attrPairNames"
                         && key != "declaredClass"){
-                        console.log("adding available Sessions from  State", key, value)
+                        console.log("adding objects from  State", key, value)
                         this.add(key, value );
                     }
                 }
                 this._relayStateWatchHandle = state.watch(lang.hitch(this, this.onRelayStateChange))
             },
             onRelayStateChange: function(name, oldState, newState){
-                console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
+              //  console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
 
                 if (newState === undefined){
                     this.remove(name)
@@ -42,7 +42,6 @@ define(['dojo/_base/declare',
 
                 }else{
                     this.add(name, newState)
-                    console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
                 }
             }
             ,

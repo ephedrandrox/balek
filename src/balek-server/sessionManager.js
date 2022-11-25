@@ -4,17 +4,20 @@ define(['dojo/_base/declare',
         'dojo/node!crypto',
 
         'dojo/Stateful',
+        'balek-server/session/sessionsController',
+
         'balek-server/session/sessionsController/instanceCommands',
 
         'balek-server/session/session',
         'balek/sessionManager'],
-    function (declare, lang, topic, crypto, Stateful, InstanceCommands, sessionManagerSession, balekSessionManager) {
+    function (declare, lang, topic, crypto, Stateful, SessionsController, InstanceCommands, sessionManagerSession, balekSessionManager) {
         return declare("balekServerSessionManager", balekSessionManager, {
 
             _sessions: {},
             _sessionListsByUserKey: {},      //States in the Key of User
 
             InstanceCommands: null,
+            _Controller: null,
 
             getUserSessionList: function(userKey){
                 if(userKey && userKey.toString())
@@ -38,6 +41,8 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 console.log("Initializing Balek Session Manager for server...");
+
+                this._Controller = new SessionsController({_sessionsManager: this});
 
                 this.InstanceCommands = new InstanceCommands();
                 this._sessions = {};
@@ -103,6 +108,13 @@ define(['dojo/_base/declare',
                         errorMessage: error});
                     });
 
+                    }else if(sessionMessage.sessionRequest && sessionMessage.sessionRequest.userSessionsListWatch){
+                        if(sessionMessage.sessionRequest.userKey && sessionMessage.sessionRequest.userKey.toString()){
+                            this._Controller.relayUserSessionsList(sessionMessage.sessionRequest.userKey.toString(), sessionMessage.sessionKey, messageReplyCallback)
+                        }else{
+                            messageReplyCallback({Error: "No UserKey Provided"})
+                        }
+
                     }else if(this._sessions[sessionMessage.sessionKey]){
                         this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);
                     }else
@@ -154,8 +166,7 @@ define(['dojo/_base/declare',
                             }
                         });
                     }
-                }
-               else
+                } else
                     {
                     console.log("unknown session Manager message");
                 }
@@ -209,9 +220,9 @@ define(['dojo/_base/declare',
                                     //user Log in Success
                                     //updateSession
                                     let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(user.permission_groups)));
-                                    console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
-                                       user.userKey,
-                                        permissionGroups);
+                                    // console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
+                                    //    user.userKey,
+                                    //     permissionGroups);
 
                                     this._sessions[wssConnection._sessionKey].updateSessionStatus({
                                         sessionStatus: 1,
@@ -220,9 +231,9 @@ define(['dojo/_base/declare',
                                         permissionGroups: permissionGroups
                                     });
                                     matched = true;
-                                    console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
-                                        user.userKey,
-                                        permissionGroups);
+                                    // console.log("🟥🟧🟨🟩🟦🟪updateSessionStatus!",this._sessions,  credentialData.username,
+                                    //     user.userKey,
+                                    //     permissionGroups);
 
                                     let userSessionList =  this.getUserSessionList(user.userKey)
                                     console.log("sessions state:", userSessionList);

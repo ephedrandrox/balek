@@ -33,23 +33,25 @@ define(['dojo/_base/declare',
 
             },
             _requestUserInfoInstanceWatch: function (userKey) {
-                //##########################################################################################################
-                //PRIVATE To request state updates from User Manager Instance
-                //##########################################################################################################
-                topic.publish("sendBalekProtocolMessageWithReplyCallback", {userManagerMessage: {messageData: {request: "userInfoWatch", userKey: userKey}}}, lang.hitch(this,
-                    function(returnValue){
-                    console.log("🔶🔶🔷🔷🔹🔹", returnValue)
-                        if(returnValue && returnValue.userInfoState
-                            && returnValue.userInfoState.name
-                            && returnValue.userInfoState.newState){
-                            if(returnValue.userInfoState.name === "icon" && returnValue.userInfoState.newState.data)
-                            {
-                                returnValue.userInfoState.newState = "data:image/png;base64," + this.convertUint8ToBase64String(returnValue.userInfoState.newState.data);
-                            }
-                            this.getUserInfoState(userKey).set(returnValue.userInfoState.name, returnValue.userInfoState.newState)
-                            console.log("🔶🔶🔷🔷🔹🔹", returnValue)
+            //##########################################################################################################
+            //PRIVATE To request state updates from User Manager Instance
+            //##########################################################################################################
+            topic.publish("sendBalekProtocolMessageWithReplyCallback", {userManagerMessage: {messageData: {request: "userInfoWatch", userKey: userKey}}}, lang.hitch(this,
+                function(returnValue){
+                //
+                    if(returnValue && returnValue.userInfoState
+                        && returnValue.userInfoState.name
+                        && returnValue.userInfoState.newState){
+                        if(returnValue.userInfoState.name === "icon" && returnValue.userInfoState.newState.data)
+                        {
+                            returnValue.userInfoState.newState = "data:image/png;base64," + this.convertUint8ToBase64String(returnValue.userInfoState.newState.data);
                         }
-                    }));
+                        this.getUserInfoState(userKey).set(returnValue.userInfoState.name, returnValue.userInfoState.newState)
+                        console.log("🔶🔶🔷🔷🔹🔹_requestUserInfoInstanceWatch getUserInfoState set", returnValue.userInfoState.name, returnValue.userInfoState.newState)
+                    }else{
+                        console.log("🔶🔶🔷🔷🔹🔹_requestUserInfoInstanceWatch userManager received unexpected ❌❌❌❌", returnValue)
+                    }
+                }));
             },
             getUserInfoState: function (userKey) {
                 if (userKey && userKey.toString()) {

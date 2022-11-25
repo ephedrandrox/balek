@@ -13,10 +13,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+        "balek-client/users/usersController/interfaceCommands",
+        "balek-client/session/sessionController/interfaceCommands",
+
         "balek-modules/diaplode/ui/input/getUserInput",
 
 
         'balek-modules/users/info/Interface/sessionInfo',
+
+
 
         'dojo/text!balek-modules/users/info/resources/html/userInfo.html',
         'dojo/text!balek-modules/users/info/resources/css/userInfo.css',
@@ -28,6 +33,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic, Stateful, domClass, domConstruct, win,
               on, domAttr, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
+              UsersControllerInterfaceCommands, SessionControllerInterfaceCommands,
               getUserInput,SessionWidget,
               template, templateCSS,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleUserInfoInterface", [_WidgetBase, _TemplatedMixin,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
@@ -48,6 +54,11 @@ define(['dojo/_base/declare',
             _sessionWidgets: null,
 
 
+            usersControllerCommands: null,
+            sessionControllerCommands: null,
+
+            _usersSessionsStateList: null,
+            _usersSessionsStateListWatchHandle: null,
             _userInfoState: null,
             _userInfoStateWatchHandle: null,
 
@@ -60,6 +71,14 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args)
                 this._availableSessionsListNodes = {}
                 this._sessionWidgets = {}
+
+                let sessionControllerInterfaceCommands = new SessionControllerInterfaceCommands();
+                this.sessionControllerCommands = sessionControllerInterfaceCommands.getCommands();
+
+                let usersControllerInterfaceCommands = new UsersControllerInterfaceCommands();
+                this.usersControllerCommands = usersControllerInterfaceCommands.getCommands();
+
+
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
@@ -124,13 +143,13 @@ define(['dojo/_base/declare',
                     this._userNameNode.innerHTML = newState
                 }else if(name == "userKey"){
                     console.log("userKey", name, oldState, newState)
-                }else if(name == "icon" && newState.data){
+                }else if(name == "icon" ){
                     console.log("icon", name, oldState, newState)
-                    let charCodeArray = new Uint8Array(newState.data);
-                    let base64String = btoa(String.fromCharCode.apply(null, charCodeArray));
-                        this._userImageNode.src = "data:image/png;base64," + base64String;
+                    // let charCodeArray = new Uint8Array(newState.data);
+                    // let base64String = btoa(String.fromCharCode.apply(null, charCodeArray));
+                         this._userImageNode.src = newState;
                 }else {
-                    console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
+                    console.log("onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             onAvailableSessionsStateChange: function (name, oldState, newState) {
@@ -145,27 +164,44 @@ define(['dojo/_base/declare',
                         console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
+            onUserSessionStateListChange: function(name, oldState, newState){
+                console.log("onUserSessionStateListChange", name, oldState, newState)
+                this.onAvailableSessionsStateChange(name, oldState, newState)
+            },
 
             postCreate() {
                 this.initializeContainable();
 
-                this._interface.getUserState().then(lang.hitch(this, function(userInfoState){
-                    this._userInfoState = userInfoState
-                    console.log("getUserState userInfoState", userInfoState);
+                let userKey = this.sessionControllerCommands.getSessionUserKey()
+                this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
+                if(this._userInfoState.get("icon")){
+                    this.onUserInfoStateChange("icon", null, this._userInfoState.get("icon"))
+                }
+                if(this._userInfoState.get("userName")){
+                    this.onUserInfoStateChange("userName", null, this._userInfoState.get("userName"))
+                }
+                this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoStateChange));
 
-                    this._userInfoStateWatchHandle = this._userInfoState.setStateWatcher(lang.hitch(this, this.onUserInfoStateChange));
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
 
-                this._interface.getAvailableSessions().then(lang.hitch(this, function(Sessions){
-                    this._availableSessions = Sessions
-                    console.log("Sessions availableSessions", Sessions);
+                this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
+                this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
+                // this._interface.getUserState().then(lang.hitch(this, function(userInfoState){
+                //     this._userInfoState = userInfoState
+                //     console.log("getUserState userInfoState", userInfoState);
+                //
+                //     this._userInfoStateWatchHandle = this._userInfoState.setStateWatcher(lang.hitch(this, this.onUserInfoStateChange));
+                // })).catch(lang.hitch(this, function(Error){
+                //     console.log("Error this._interface.getAvailableEntries()", Error)
+                // }))
 
-                    this.availableSessionsWatchHandle = this._availableSessions.setStateWatcher(lang.hitch(this, this.onAvailableSessionsStateChange));
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
+                // this._interface.getAvailableSessions().then(lang.hitch(this, function(Sessions){
+                //     this._availableSessions = Sessions
+                //     console.log("Sessions availableSessions", Sessions);
+                //
+                //     this.availableSessionsWatchHandle = this._availableSessions.setStateWatcher(lang.hitch(this, this.onAvailableSessionsStateChange));
+                // })).catch(lang.hitch(this, function(Error){
+                //     console.log("Error this._interface.getAvailableEntries()", Error)
+                // }))
 
             },
             startupContainable: function(){
@@ -175,8 +211,8 @@ define(['dojo/_base/declare',
             unload: function () {
                 this._userStateWatchHandle.unwatch();
                 this._userStateWatchHandle.remove();
-                this._availableSessionsStateWatchHandle.unwatch();
-                this._availableSessionsStateWatchHandle.remove();
+                this._usersSessionsStateListWatchHandle.unwatch();
+                this._usersSessionsStateListWatchHandle.remove();
             }
         });
     });

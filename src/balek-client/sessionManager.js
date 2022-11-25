@@ -3,21 +3,29 @@ define(['dojo/_base/declare',
         'dojo/topic',
         'dojo/Stateful',
         'balek-client/session/session',
+        'balek-client/session/sessionController',
         'balek/sessionManager'],
     function (declare,
               lang,
               topic,
               Stateful,
               sessionManagerSession,
+              SessionsController,
               balekSessionManager) {
 
         return declare("balekClientSessionManager", balekSessionManager, {
 
-            _session: null,
-            _availableSessionsState: null,
+            _session: null,                     // TBRemoved
+            _availableSessionsState: null,      // TBRemoved
+
+            _Controller: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                this._Controller = new SessionsController({});
+
 
                 let availableSessionsState = declare([Stateful], {
                     availableSessions: null
@@ -80,13 +88,15 @@ define(['dojo/_base/declare',
                         console.log("Session Unloaded");
                         topic.publish("resetUI", lang.hitch(this, function () {
                             console.log("UI reset reset");
-//make a new session here by using the function in this object that I am going to make
+                            //make a new session here by using the function in this object that I am going to make
                             this._session = new sessionManagerSession({
                                 _sessionKey: sessionManagerMessage.changeSessionKey //,
                           //      _sessionStatus: 1
                             });
+                            this._Controller.setActiveSession(this._session)
 
-                           // this._session.updateSessionState({
+
+                            // this._session.updateSessionState({
                            //     _sessionStatus: 1,
                            //     _permissionGroups: permissionGroups,
                            //     _username: userName
@@ -173,6 +183,7 @@ define(['dojo/_base/declare',
                     this._session = new sessionManagerSession({
                         _sessionKey: sessionKey
                     });
+                    this._Controller.setActiveSession(this._session)
                 } else {
                     //already have a session
                 }
