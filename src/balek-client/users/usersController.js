@@ -34,7 +34,7 @@ define(['dojo/_base/declare',
             },
             _requestUserInfoInstanceWatch: function (userKey) {
             //##########################################################################################################
-            //PRIVATE To request state updates from User Manager Instance
+            //PRIVATE Used To request state updates from User Manager Instance
             //##########################################################################################################
             topic.publish("sendBalekProtocolMessageWithReplyCallback", {userManagerMessage: {messageData: {request: "userInfoWatch", userKey: userKey}}}, lang.hitch(this,
                 function(returnValue){

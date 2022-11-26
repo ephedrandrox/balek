@@ -37,9 +37,6 @@ define(['dojo/_base/declare',
                 });
 
                 this.containerStateWatchHandle = this._containerState.watch( lang.hitch(this, this.onContainerStateChange));
-                //todo unwatch this when unloaded
-
-
             },
             onContainerStateChange: function(name, oldState, newState){
                 console.log(name, oldState, newState);

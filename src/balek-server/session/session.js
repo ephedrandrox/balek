@@ -109,7 +109,8 @@ define([ 	'dojo/_base/declare',
                 if(!this._availableSessionStates[availableSession._sessionKey])
                 {
                     this._availableSessionStates[availableSession._sessionKey] = availableSession.getState();
-                    this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey].watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
+                    this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey]
+                        .watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
                 }
             },
             sessionRequest: function(request, messageReplyCallback)

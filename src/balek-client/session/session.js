@@ -14,7 +14,7 @@ define(['dojo/_base/declare',
             _getSessionStateTopicHandle: null,
             _sessionKey: null,
 
-            _Controller: null,
+           // _Controller: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);

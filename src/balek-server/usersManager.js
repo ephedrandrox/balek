@@ -114,7 +114,6 @@ define(['dojo/_base/declare',
                 });
             },
             receiveUserManagerMessage(userManagerMessage, wssConnection, messageReplyCallback) {
-
                 if (userManagerMessage.messageData.request && userManagerMessage.messageData.request.toString() ) {
                     //todo remove/change this to not get all users on load
                     if(userManagerMessage.messageData.request.toString() === "usersData")

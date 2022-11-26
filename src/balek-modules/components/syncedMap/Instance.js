@@ -34,9 +34,7 @@ define(['dojo/_base/declare',
                 this._relayStateWatchHandle = state.watch(lang.hitch(this, this.onRelayStateChange))
             },
             onRelayStateChange: function(name, oldState, newState){
-              //  console.log("onSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChangeonSessionListChange",name, oldState, newState)
-
-                if (newState === undefined){
+                 if (newState === undefined){
                     this.remove(name)
                     console.log("remove",name, oldState, newState)
 

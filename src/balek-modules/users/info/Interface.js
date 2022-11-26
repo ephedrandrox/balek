@@ -7,13 +7,12 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
 
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
-        'balek-modules/components/syncedMap/Interface',
-
-
         'balek-modules/users/info/Interface/userInfo',
         'balek-modules/components/syncedCommander/Interface',
     ],
-    function (declare, lang, topic, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, SyncedMapInterface, UserInfo, _SyncedCommanderInterface) {
+    function (declare, lang, topic,
+              domConstruct, domStyle, win,
+              balekWorkspaceManagerInterfaceCommands, UserInfo, _SyncedCommanderInterface) {
         return declare("moduleUserInfoInterface", _SyncedCommanderInterface, {
             _instanceKey: null,
 
@@ -35,33 +34,13 @@ define(['dojo/_base/declare',
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
 
 
-
-            },  //##########################################################################################################
+            },
+            //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
             onInterfaceStateChange: function (name, oldState, newState) {
                 //this has to be here so remoteCommander works
                 this.inherited(arguments);
-
-                // if (name === "availableSessionsComponentKey") {
-                //     //Create availableEntries SyncedMap
-                //     if(this.availableSessions === null){
-                //         this.availableSessions = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                //         for( const ResolveKey in this.availableSessionsResolveRequests)
-                //         {
-                //             Resolve(this.availableSessions[ResolveKey])
-                //         }
-                //     }
-                // } else if (name === "userInfoStateRelayComponentKey") {
-                //     //Create availableEntries SyncedMap
-                //     if(this.userInfoState === null){
-                //         this.userInfoState = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                //         for( const ResolveKey in this.userInfoStateResolveRequests)
-                //         {
-                //             Resolve(this.userInfoState[ResolveKey])
-                //         }
-                //     }
-                // } else
                     if (name === "userInfoInstanceKeys") {
                     //Create Main Interface
                     if(this._userInfoInterface === null){

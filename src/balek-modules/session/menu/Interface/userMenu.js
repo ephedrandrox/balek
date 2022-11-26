@@ -6,20 +6,21 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'dojo/on',
         "dojo/dom-attr",
-
+        ///------------
         "balek-client/users/usersController/interfaceCommands",
         "balek-client/session/sessionController/interfaceCommands",
-
-
+        ///------------
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-
+        //-------------
         'dojo/text!balek-modules/session/menu/resources/html/userMenu.html',
         'dojo/text!balek-modules/session/menu/resources/css/userMenu.css'
 
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, UsersControllerInterfaceCommands, SessionControllerInterfaceCommands,  _WidgetBase, _TemplatedMixin, template, templateCSS) {
-
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr,
+              UsersControllerInterfaceCommands, SessionControllerInterfaceCommands,
+              _WidgetBase, _TemplatedMixin,
+              template, templateCSS) {
         return declare("moduleSessionUserMenuInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,

@@ -40,7 +40,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
                     {
                         console.log("Error: " + error);
                         console.log("From Message: " + wsMessage.utf8Data);
-
                     }
 
                 } else if (wsMessage.type === 'binary') {
