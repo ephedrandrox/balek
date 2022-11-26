@@ -8,6 +8,7 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+
         'dojo/text!balek-modules/admin/users/resources/html/userManagement.html',
         'dojo/text!balek-modules/admin/users/resources/css/userManagement.css',
         'balek-modules/admin/users/Interface/userListItem',
@@ -17,12 +18,14 @@ define(['dojo/_base/declare',
         'balek-client/session/workspace/container/containable'
 
     ],
-    function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin, template, cssFile, userListItem, userEdit,
+    function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin,
+              template, cssFile, userListItem, userEdit,
               _syncedCommanderInterface,
               _balekWorkspaceContainerContainable) {
         return declare("moduleAdminUsersInterfaceUserManagementInterface", [_WidgetBase, _TemplatedMixin,
                                                                             _syncedCommanderInterface,
                                                                             _balekWorkspaceContainerContainable], {
+            _interface: null,
             _instanceKey: null,
             templateString: template,
             _cssString: cssFile,
@@ -32,12 +35,19 @@ define(['dojo/_base/declare',
             userListDiv: null,
             _userEditWidget: null,
 
+            usersControllerCommands: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
                 this._userListItems = {};
 
+
                 domConstruct.place(domConstruct.toDom("<style>" + this._cssString + "</style>"), win.body());
+
+                if(this.usersControllerCommands !== null){
+
+                }
 
             },
             postCreate: function () {
@@ -61,8 +71,10 @@ define(['dojo/_base/declare',
                     } else {
 
                         let userListItemOBJECT = new userListItem({
+                            _interface: this._interface,
                             _userManagementInterface: this,
                             _instanceKey: this._instanceKey,
+                            usersControllerCommands: this.usersControllerCommands,
                             _userData: userData[user]
                         });
                         this._userListItems[user] = userListItemOBJECT;
@@ -72,8 +84,10 @@ define(['dojo/_base/declare',
             },
             editUser: function (userData) {
                 this._userEditWidget = new userEdit({
+                    _interface: this._interface,
                     _userManagementInterface: this,
                     _instanceKey: this._instanceKey,
+                    usersControllerCommands: this.usersControllerCommands,
                     _userData: userData
                 });
 

@@ -46,6 +46,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._instanceCommands.setCommand("getUserState", lang.hitch(this, this.getUserState))
                     this._instanceCommands.setCommand("updateUsername", lang.hitch(this, this.updateUsername))
                     this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
+                    this._instanceCommands.setCommand("updateUserPassword", lang.hitch(this, this.updateUserPassword))
 
 
                     this._dbController = new userDbController();
@@ -156,6 +157,29 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         });
                     }else{
                         Reject({Error: "Error - userKey and iconBase64 must be provided", userInfo: [iconBase64, userKey]})
+                    }
+                }));
+            },
+            updateUserPassword: function(password, userKey){
+                console.log("updateUserPassword" , this.usersControllerCommands, password, userKey);
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if(userKey && password){
+                        this._dbController.updateUserPasswordInDatabase(password, userKey).then(lang.hitch(this, function (results) {
+                            console.log("updateUserPassword",password, userKey, this._usersManager._userStates[userKey],results )
+                            if(results[0].affectedRows === 1)
+                            {
+                                Resolve({Success: "Password Changed"})
+                                this._usersManager._userStates[userKey].set("password", Date(Date().getTime()).toString())
+                            }else if(results[0].affectedRows === 0){
+                                Reject({Error: "No Rows Affected"})
+                            }else {
+                                Reject({Error: "Unexpected Results", Results: results})
+                            }
+                        })).catch(function (Error) {
+                            Reject({Error: Error})
+                        });
+                    }else{
+                        Reject({Error: "Error - userKey and password must be provided", userInfo: [iconBase64, userKey]})
                     }
                 }));
             },

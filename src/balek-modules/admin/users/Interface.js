@@ -8,12 +8,18 @@ define(['dojo/_base/declare',
 
         'balek-modules/components/syncedCommander/Interface',
 
+        "balek-client/users/usersController/interfaceCommands",
+
+
         'balek-modules/admin/users/Interface/userManagement',
 
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
     ],
-    function (declare, lang,  topic, domConstruct, domStyle, win, syncedCommanderInterface, userManagement, balekWorkspaceManagerInterfaceCommands) {
+    function (declare, lang,  topic, domConstruct, domStyle, win,
+              syncedCommanderInterface,
+              UsersControllerInterfaceCommands,
+              userManagement, balekWorkspaceManagerInterfaceCommands) {
 
         return declare("moduleAdminUsersInterface", syncedCommanderInterface, {
             _instanceKey: null,
@@ -24,6 +30,7 @@ define(['dojo/_base/declare',
 
             workspaceManagerCommands: null,
 
+            usersControllerCommands: null,
 
             constructor: function (args) {
 
@@ -31,6 +38,12 @@ define(['dojo/_base/declare',
 
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
+
+
+                let usersControllerInterfaceCommands = new UsersControllerInterfaceCommands();
+                this.usersControllerCommands = usersControllerInterfaceCommands.getCommands();
+
+
 
 
             },
@@ -47,8 +60,10 @@ define(['dojo/_base/declare',
             },
             loadUserManagementInterface: function(instanceKeys){
                 this._userManagementInterface = new userManagement({
+                    _interface: this,
                     _instanceKey: instanceKeys.instanceKey,
                     _componentKey: instanceKeys.componentKey,
+                    usersControllerCommands: this.usersControllerCommands,
                     _userData: null
                 });
 

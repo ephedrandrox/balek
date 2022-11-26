@@ -108,14 +108,14 @@ define(['dojo/_base/declare',
             },
             _onChangeNameDblClicked:function(clickEvent){
                 console.log("Username request", this)
-                let getDataForNote = new getUserInput({question: "Change Username...",
-                    inputReplyCallback: lang.hitch(this, function(newNoteData){
-                        this._interface._instanceCommands.updateUsername(newNoteData).then(lang.hitch(this, function(Result){
+                let getDataForName = new getUserInput({question: "Change Username...",
+                    inputReplyCallback: lang.hitch(this, function(newName){
+                        this._interface._instanceCommands.updateUsername(newName).then(lang.hitch(this, function(Result){
                             console.log("Username request", Result)
                         })).catch(function(Error){
                             console.log("Error sending update Username request", Error)
                         })
-                        getDataForNote.unload();
+                        getDataForName.unload();
                     }) });
             },
             addSessionWidget: function(sessionKey){

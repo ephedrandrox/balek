@@ -31,11 +31,14 @@ define(['dojo/_base/declare',
                 this._interfaceCommands = new InterfaceCommands();
                 this._interfaceCommands.setCommand("getUserInfoState", lang.hitch(this, this.getUserInfoState))
 
+
+
             },
+            //##########################################################################################################
+            //PRIVATE
+            //##########################################################################################################
             _requestUserInfoInstanceWatch: function (userKey) {
-            //##########################################################################################################
-            //PRIVATE Used To request state updates from User Manager Instance
-            //##########################################################################################################
+                //PRIVATE Used To request state updates from User Manager Instance
             topic.publish("sendBalekProtocolMessageWithReplyCallback", {userManagerMessage: {messageData: {request: "userInfoWatch", userKey: userKey}}}, lang.hitch(this,
                 function(returnValue){
                 //
@@ -53,6 +56,9 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
+            //##########################################################################################################
+            //Interface Commands
+            //##########################################################################################################
             getUserInfoState: function (userKey) {
                 if (userKey && userKey.toString()) {
                     userKey = userKey.toString()
@@ -68,6 +74,9 @@ define(['dojo/_base/declare',
                     return null
                 }
             },
+            //##########################################################################################################
+            //Utility
+            //##########################################################################################################
             convertUint8ToBase64String(data) {
                 let charCodeArray = new Uint8Array(data);
                 let base64String = btoa(String.fromCharCode.apply(null, charCodeArray));

@@ -163,6 +163,38 @@ define(['dojo/_base/declare',
 
                 }));
             },
+            updateUserPasswordInDatabase: function(password, userKey){
+                console.log("updateUserPasswordInDatabase" , this.usersControllerCommands, password, userKey);
+
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    try{
+                        if (password, userKey) {
+                            query = this._dbConnection.query('UPDATE ' + this._mysqlSettings.database + '.users SET password = ? WHERE userKey = ? ;', [password, userKey]);
+                        }else{
+                            Reject({Error: "Must provide (password, userKey)",
+                                From: "userinfo databases controller try updateUserPasswordInDatabase()",
+                                arguments: arguments } )
+                        }
+                        let resultToReturn = [];
+                        query.on('error', function (Error) {
+                            console.log("updateUserIcon" , this.usersControllerCommands, password, userKey, Error);
+
+                            Reject({Error: Error,
+                                From: "userinfo databases controller updateUserPasswordInDatabase()"} )
+                        })
+                            .on('result', function (row) {
+                                resultToReturn.push(row);
+                            })
+                            .on('end', function () {
+                                Resolve(resultToReturn);
+                            });
+                    }catch(Error){
+                        Reject({Error: Error,
+                            From: "userinfo databases controller try updateUserPasswordInDatabase()"} )
+                    }
+
+                }));
+            },
             updateUserInDatabase: function (userData) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
