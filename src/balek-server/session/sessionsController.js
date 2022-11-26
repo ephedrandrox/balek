@@ -40,8 +40,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
 
                      this._instanceCommands.setCommand("getAvailableSessionsList", lang.hitch(this, this.getAvailableSessionsList))
-                    // this._instanceCommands.setCommand("updateUsername", lang.hitch(this, this.updateUsername))
-                    // this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
 
                 }
             },
@@ -107,8 +105,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return this._sessionListWatchers[sessionKey]
             },
             putSessionListWatcher(userKey, sessionKey, watchHandle){
-               // this._sessionListWatchers[userKey] = watchHandle
-
                 let sessionWatchers =  this.getSessionListWatchers(sessionKey)
 
                 if(sessionWatchers[userKey]){
@@ -116,7 +112,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     sessionWatchers[userKey].remove()
                 }
                 sessionWatchers[userKey] = watchHandle
-
             },
             stopWatching(userKey, sessionKey){
                 //todo Make this work and call from command when Interface is done watching

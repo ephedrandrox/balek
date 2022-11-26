@@ -4,24 +4,23 @@ define(['dojo/_base/declare',
 
         //Balek Components
         'balek-modules/users/info/Instance/userInfo',
-        'balek-modules/components/syncedMap/Instance',
         'balek-modules/components/syncedCommander/Instance',
         'balek-server/session/sessionsController/instanceCommands',
 
         'balek-server/users/usersController/instanceCommands',
 
     ],
-    function (declare, lang, topic, UserInfo, SyncedMapInstance, _SyncedCommanderInstance,
+    function (declare, lang, topic, UserInfo, _SyncedCommanderInstance,
               SessionsControllerInstanceCommands,UsersControllerInstanceCommands) {
         return declare("moduleUsersInfoInstance", _SyncedCommanderInstance, {
             _instanceKey: null,
             _userInfoInstance: null,
 
-            // availableSessions: null,
-            // userInfoStateRelay: null,
 
             sessionsList: null,
             sessionsListWatchHandle: null,
+            sessionsControllerCommands: null,
+            usersControllerCommands: null,
 
             constructor: function (args) {
 
@@ -30,27 +29,11 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("Component Name","User Info");
                 this._interfaceState.set("Status", "Starting");
 
-                // this.availableSessions = new SyncedMapInstance({_instanceKey: this._instanceKey});
-              //  this._interfaceState.set("availableSessionsComponentKey", this.availableSessions._componentKey);
-
-                // this.userInfoStateRelay = new SyncedMapInstance({_instanceKey: this._instanceKey});
-              //  this._interfaceState.set("userInfoStateRelayComponentKey", this.userInfoStateRelay._componentKey);
-
                 let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
-                // let session = this.sessionsControllerCommands.getSessionByKey(this._sessionKey)
-                // let sessions = this.sessionsControllerCommands.getSessionsForUserKey(session.getUserKey())
-                // //creates component Key that can be used to connect to state
-                // console.log("sessions for uer:", session, sessions);
-                // let sessionsList = this.sessionsControllerCommands.getUserSessionList(session.getUserKey())
-                // console.log("sessions state:", sessionsList);
-                // this.sessionsList = sessionsList
-
-
                 let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
                 this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
-              //  let userState = this.usersControllerCommands.getUserState(session.getUserKey())
 
                 this._commands={
                     "updateUsername" : lang.hitch(this, this.updateUsername),
@@ -59,8 +42,6 @@ define(['dojo/_base/declare',
 
                 this.setInterfaceCommands();
 
-                // this.availableSessions.relayState(sessionsList)
-                // this.userInfoStateRelay.relayState(userState)
                 this.prepareSyncedState();
 
                 //Create the main Instance
@@ -83,7 +64,6 @@ define(['dojo/_base/declare',
                 }))
             },
             updateUserIcon: function(iconBuffer, remoteCommandCallback){
-
                 if(iconBuffer && iconBuffer.data){
                 try{
                     let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
@@ -106,14 +86,6 @@ define(['dojo/_base/declare',
                         From: "UpdateUserIcon If Logic"})
                 }
             },
-            // onSessionListChange: function(name, oldState, newState){
-            //     if (newState === undefined){
-            //         this.availableSessions.remove(name)
-            //         console.log("remove",name, oldState, newState)
-            //     }else{
-            //         this.availableSessions.add(name, newState)
-            //     }
-            // },
             //##########################################################################################################
             //Base Instance Override Function
             //##########################################################################################################

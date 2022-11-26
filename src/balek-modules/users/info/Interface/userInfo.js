@@ -108,7 +108,6 @@ define(['dojo/_base/declare',
             },
             _onChangeNameDblClicked:function(clickEvent){
                 console.log("Username request", this)
-
                 let getDataForNote = new getUserInput({question: "Change Username...",
                     inputReplyCallback: lang.hitch(this, function(newNoteData){
                         this._interface._instanceCommands.updateUsername(newNoteData).then(lang.hitch(this, function(Result){
@@ -118,7 +117,6 @@ define(['dojo/_base/declare',
                         })
                         getDataForNote.unload();
                     }) });
-
             },
             addSessionWidget: function(sessionKey){
                     if(!this._sessionWidgets[sessionKey]){
@@ -145,8 +143,6 @@ define(['dojo/_base/declare',
                     console.log("userKey", name, oldState, newState)
                 }else if(name == "icon" ){
                     console.log("icon", name, oldState, newState)
-                    // let charCodeArray = new Uint8Array(newState.data);
-                    // let base64String = btoa(String.fromCharCode.apply(null, charCodeArray));
                          this._userImageNode.src = newState;
                 }else {
                     console.log("onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
@@ -164,44 +160,35 @@ define(['dojo/_base/declare',
                         console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
-            onUserSessionStateListChange: function(name, oldState, newState){
-                console.log("onUserSessionStateListChange", name, oldState, newState)
-                this.onAvailableSessionsStateChange(name, oldState, newState)
-            },
 
             postCreate() {
                 this.initializeContainable();
 
                 let userKey = this.sessionControllerCommands.getSessionUserKey()
                 this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
+
                 if(this._userInfoState.get("icon")){
                     this.onUserInfoStateChange("icon", null, this._userInfoState.get("icon"))
                 }
                 if(this._userInfoState.get("userName")){
                     this.onUserInfoStateChange("userName", null, this._userInfoState.get("userName"))
                 }
+
                 this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoStateChange));
 
 
                 this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
-                this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
-                // this._interface.getUserState().then(lang.hitch(this, function(userInfoState){
-                //     this._userInfoState = userInfoState
-                //     console.log("getUserState userInfoState", userInfoState);
-                //
-                //     this._userInfoStateWatchHandle = this._userInfoState.setStateWatcher(lang.hitch(this, this.onUserInfoStateChange));
-                // })).catch(lang.hitch(this, function(Error){
-                //     console.log("Error this._interface.getAvailableEntries()", Error)
-                // }))
 
-                // this._interface.getAvailableSessions().then(lang.hitch(this, function(Sessions){
-                //     this._availableSessions = Sessions
-                //     console.log("Sessions availableSessions", Sessions);
-                //
-                //     this.availableSessionsWatchHandle = this._availableSessions.setStateWatcher(lang.hitch(this, this.onAvailableSessionsStateChange));
-                // })).catch(lang.hitch(this, function(Error){
-                //     console.log("Error this._interface.getAvailableEntries()", Error)
-                // }))
+                for (const key in this._usersSessionsStateList) {
+                    let value = this._usersSessionsStateList[key]
+                    if(typeof value !== 'function' && key != "_attrPairNames"
+                        && key != "declaredClass"){
+                        console.log("adding objects from  State", key, value)
+                        this.onAvailableSessionsStateChange(key, null, value );
+                    }
+                }
+
+                this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
 
             },
             startupContainable: function(){
