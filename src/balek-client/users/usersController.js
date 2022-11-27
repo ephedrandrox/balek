@@ -1,5 +1,5 @@
 //##########################################################################################################
-//Interface User Manager
+//Client User Manager
 //##########################################################################################################
 
 
@@ -17,11 +17,33 @@ define(['dojo/_base/declare',
             _UserInfoState: null,
             _userInfoStates: {},
 
+            _userListState: null,
+
+            _shared: {},
+
             _interfaceCommands: null,
+
+            _usersManager: null,
+
+
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+                console.log("YUP2Con", this._usersManager, this._shared)
+
+                if(this._usersManager !== null &&
+                    typeof this._shared._usersManager === 'undefined'){
+                    console.log("YUP2Con", this._usersManager, this._shared)
+                    this._shared._usersManager = this._usersManager
+                    //todo removed shared and only create userCOntroller once
+                    this._interfaceCommands = new InterfaceCommands();
+                    this._interfaceCommands.setCommand("getUserInfoState", lang.hitch(this, this.getUserInfoState))
+                    this._interfaceCommands.setCommand("getUserList", lang.hitch(this, this.getUserList))
+
+
+                }
+                console.log("YUP2Con", this._usersManager, this._shared)
 
                 this._UserInfoState = declare([Stateful], {
                    userName: null,
@@ -30,6 +52,7 @@ define(['dojo/_base/declare',
 
                 this._interfaceCommands = new InterfaceCommands();
                 this._interfaceCommands.setCommand("getUserInfoState", lang.hitch(this, this.getUserInfoState))
+                this._interfaceCommands.setCommand("getUserList", lang.hitch(this, this.getUserList))
 
 
 
@@ -56,9 +79,36 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
+            _requestUserListInstanceWatch: function () {
+                //PRIVATE Used To request a list of users from User Manager Instance
+                topic.publish("sendBalekProtocolMessageWithReplyCallback", {userManagerMessage: {messageData: {request: "userListWatch"}}}, lang.hitch(this,
+                    function(returnValue){
+                        if(returnValue && returnValue.userListState
+                            && returnValue.userListState.name
+                            && returnValue.userListState.newState){
+                            this.getUserListState().set(returnValue.userListState.name, returnValue.userListState.newState)
+                            console.log("🔶🔶🔷🔷🔹🔹_requestUserListInstanceWatch getUserListState set", returnValue.userListState.name, returnValue.userListState.newState)
+                        }else{
+                            console.log("🔶🔶🔷🔷🔹🔹_requestUserListInstanceWatch userManager received unexpected ❌❌❌❌", returnValue)
+                        }
+                    }));
+            },
             //##########################################################################################################
             //Interface Commands
             //##########################################################################################################
+            getUserList: function(){
+                console.log("YUP2", this._usersManager, this._usersManager._userList)
+                if(typeof this._shared._usersManager !== 'undefined'){
+                   // this._usersManager.getUserData()
+                  // return this._usersManager._userState
+
+                    this._requestUserListInstanceWatch();
+
+                    return this.getUserListState()
+                }else{
+                    return false
+                }
+            },
             getUserInfoState: function (userKey) {
                 if (userKey && userKey.toString()) {
                     userKey = userKey.toString()
@@ -73,6 +123,13 @@ define(['dojo/_base/declare',
                 } else {
                     return null
                 }
+            },
+            getUserListState: function () {
+                if (!this._userListState) {
+                    let UserListState = declare([Stateful], {});
+                    this._userListState = new UserListState({})
+                }
+                return this._userListState
             },
             //##########################################################################################################
             //Utility

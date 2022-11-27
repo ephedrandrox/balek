@@ -38,8 +38,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                     this._instanceCommands = new InstanceCommands();
 
-
-                     this._instanceCommands.setCommand("getAvailableSessionsList", lang.hitch(this, this.getAvailableSessionsList))
+                    this._instanceCommands.setCommand("getAvailableSessionsList", lang.hitch(this, this.getAvailableSessionsList))
+                    this._instanceCommands.setCommand("getSessionUserKey", lang.hitch(this, this.getSessionUserKey))
 
                 }
             },
@@ -120,6 +120,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             //Relay Available Sessions State End
             //##########################################################################################################
             //Instance Commands
+            getSessionUserKey: function(sessionKey){
+                let session = this._sessionsManager.getSession(sessionKey)
+                let userKey = null
+                if(session !== null)
+                {
+                    userKey = session.getUserKey()
+                }
+                return userKey
+            },
             getAvailableSessionsList: function(userKey){
                 return this._sessionsManager.getUserSessionList(userKey)
             }

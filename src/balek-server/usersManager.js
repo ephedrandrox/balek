@@ -58,8 +58,6 @@ define(['dojo/_base/declare',
                 });
 
 
-
-
                 topic.subscribe("getUserState", lang.hitch(this, this.getUserState));
 
                 //replace these with state object
@@ -132,6 +130,10 @@ define(['dojo/_base/declare',
                         }else{
                             messageReplyCallback({Error: "No UserKey Provided"})
                         }
+                    }else if(userManagerMessage.messageData.request.toString() === "userListWatch")
+                    {
+                          this._Controller.relayUserListState(wssConnection._sessionKey, messageReplyCallback)
+                        this._Controller.loadUserListFor(wssConnection._sessionKey)
                     }
 
                 } else if (userManagerMessage.messageData.updateUserData) {

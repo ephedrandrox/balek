@@ -36,7 +36,7 @@ define(['dojo/_base/declare',
                     userDataByKey: null,
 
                 });
-debugger
+
                 this._Controller = new UsersController({_usersManager: this});
 
                 topic.subscribe("getUserState", lang.hitch(this, this.getUserState));

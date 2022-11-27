@@ -4,21 +4,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/Stateful',
 
         'balek-server/users/usersController/instanceCommands',
+        'balek-server/session/sessionsController/instanceCommands',
         "balek-server/users/dbController"
 
     ],
-    function (declare, lang, topic, Stateful,InstanceCommands, userDbController
+    function (declare, lang, topic, Stateful,
+              InstanceCommands, SessionInstanceCommands, userDbController
     ) {
         return declare("balekUsersController", null, {
 
             statusAsState: null,
             _instanceCommands: null,
+            _sessionCommands: null,
             _dbController: null,
 
             _usersManager: null,
             _userStates: null,
+            _userListStates: null,
 
             _userInfoWatchers: null,
+            _userListWatchers: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
@@ -33,9 +38,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         userKey: null
                     });
                     this._userStates = {};
-
+                    this._userListStates = {};
 
                     this._userInfoWatchers = {}
+
+                    this._userListWatchers = {}
+
 
                     let StatusState = declare([Stateful], {});
                     this.statusAsState = new StatusState({});
@@ -48,7 +56,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
                     this._instanceCommands.setCommand("updateUserPassword", lang.hitch(this, this.updateUserPassword))
 
-
+                    let SessionsInstanceCommands = new SessionInstanceCommands()
+                    this._sessionCommands = SessionsInstanceCommands.getCommands()
                     this._dbController = new userDbController();
 
                     //todo remove loading all
@@ -111,9 +120,68 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             stopWatching(userKey, sessionKey){
                 //todo Make this work and call from command when Interface is done watching
             },
+
             //##########################################################################################################
             //Relay User Info State End
             //##########################################################################################################
+            relayUserListState: function( sessionKey, messageReplyCallback){
+                let userKey = this._sessionCommands.getSessionByKey(sessionKey)
+                 let userListState =  this.getUserListState(userKey)
+                 let stateEntries = Object.entries(userListState)
+                 for(KeyValIndex in stateEntries)
+                 {
+                    let objectKey = stateEntries[KeyValIndex][0]
+                    let object = userListState.get(objectKey)
+                    if(typeof object !== 'function' ){
+                        messageReplyCallback({userListState: {name: objectKey ,
+                                newState: object }})
+                    }else {
+                        console.log("Skipping 🛑🛑🔵🔵🔵🔵🔵🔵", objectKey, userListState[objectKey], Object.entries(userListState))
+                    }
+                }
+                let watchHandle = userListState.watch(lang.hitch(this, function(name, oldState, newState){
+                    messageReplyCallback({userListState: {name: name , newState: newState}})
+                }))
+                this.putUserListWatcher(userKey, sessionKey, watchHandle)
+            },
+            getUserListWatchers(sessionKey)
+            {
+                if(!this._userListWatchers[sessionKey]){
+                    this._userListWatchers[sessionKey] = {}
+                }
+                return this._userListWatchers[sessionKey]
+            },
+            putUserListWatcher(userKey, sessionKey,  watchHandle){
+                let sessionWatchers =  this.getUserListWatchers(sessionKey)
+
+                if(!sessionWatchers[userKey]){
+                    sessionWatchers[userKey] = {}
+                }
+                sessionWatchers[userKey] = watchHandle
+
+            },
+            getUserListState: function(userKey){
+                if(!this._userListStates[userKey]){
+                 let UserListState =  declare([Stateful], {})
+                    this._userListStates[userKey] = UserListState({})
+                }
+                return this._userListStates[userKey]
+            },
+            loadUserListFor: function(sessionKey){
+                let userKey = this._sessionCommands.getSessionByKey(sessionKey)
+                let userListState =  this.getUserListState(userKey)
+
+                this._dbController.getUsersFromDatabase().then(function (usersFromDatabase) {
+                    if(typeof usersFromDatabase.forEach === 'function')
+                    {
+                        usersFromDatabase.forEach(lang.hitch(this, function(user){
+                            userListState.set(user.userKey.toString(), user.userKey.toString())
+                        }))
+                    }
+                }).catch(function (Error) {
+                    console.log("loadUserListFor Error", Error);
+                });
+            },
             //Instance Commands
             updateUsername: function(userName, userKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {

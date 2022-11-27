@@ -405,6 +405,13 @@ define(['dojo/_base/declare',
             getSessionWorkspaces: function (sessionKey, workspacesReturn) {
                 this._sessions[sessionKey].getWorkspaces();
             },
+            getSession: function(sessionKey){
+                if(this._sessions[sessionKey]){
+                    return this._sessions[sessionKey]
+                }else{
+                    return null
+                }
+            },
             getSessionByKey: function(sessionKey, returnCallback = null){
                 if(typeof returnCallback === 'function'){
                     returnCallback(this._sessions[sessionKey])
