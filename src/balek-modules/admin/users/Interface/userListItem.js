@@ -57,7 +57,7 @@ define(['dojo/_base/declare',
                 }
             },
             _onClickUserListItem: function (eventObject) {
-                this._userManagementInterface.editUser(this._userData);
+                this._userManagementInterface.editUser(this._userData.userKey);
             },
             _mouseEnter: function (eventObject) {
                 domClass.add(this.domNode, "mouseOverUserListItem");

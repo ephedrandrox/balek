@@ -16,24 +16,38 @@ define(['dojo/_base/declare',
         "dijit/_TemplatedMixin",
 
         'dojo/text!balek-modules/admin/users/resources/html/userEdit.html',
-        'dojo/text!balek-modules/admin/users/resources/css/userEdit.css'
+        'dojo/text!balek-modules/admin/users/resources/css/userEdit.css',
+
+        'balek-modules/components/syncedCommander/Interface',
+        'balek-client/session/workspace/container/containable'
 
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dijitFocus, dojoKeys, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS) {
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dijitFocus, dojoKeys,
+              InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
+              template, templateCSS,
+              _syncedCommanderInterface,
+              _balekWorkspaceContainerContainable
+        ) {
 
-        return declare("moduleAdminUserManagementUserEditInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("moduleAdminUserManagementUserEditInterface", [_WidgetBase, _TemplatedMixin,
+                                                                        _syncedCommanderInterface,
+                                                                        _balekWorkspaceContainerContainable], {
             _instanceKey: null,
             templateString: template,
             baseClass: "userManagementWidgetUserEdit",
 
             _usernameInlineEditBox: null,
 
+
+            _editUserKey: "",
             _userData: {},
             usersControllerCommands: null,
             _userInfoState: null,
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                this._editUserKey = this._userData.userKey
 
                 //todo should maybe give id and check for these before adding more and more in case body already has style
                 //Or even better, make a style manager that receives events to add styles
@@ -46,8 +60,15 @@ define(['dojo/_base/declare',
                 //todo may need to check domReady here
                 dijitFocus.focus(this._mainDiv);
             },
-            postCreate() {
+            onInterfaceStateChange: function (name, oldState, newState) {
+                this.inherited(arguments);     //this has to be done so remoteCommander works
 
+            },
+            startupContainable(){
+                console.log("🟢🟢🟢🟢userEdit Interface containable Started")
+            },
+            postCreate() {
+                this.initializeContainable();
                 this._usernameInlineEditBox = new InlineEditBox({
                     editor: TextBox,
                     autoSave: true
@@ -235,6 +256,10 @@ define(['dojo/_base/declare',
                     alert("File too big > 64k");
                 }
             },
+            unload: function () {
+            this._userInfoStateWatchHandle.unwatch();
+            this._userInfoStateWatchHandle.remove();
+        }
             // _onIconFileChange: function (eventObject) {
             //     let file = eventObject.target.files[0];
             //     if (file.size / 1024 < 64) {

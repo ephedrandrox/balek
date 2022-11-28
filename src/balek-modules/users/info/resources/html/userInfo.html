@@ -1,12 +1,12 @@
 <div class="${baseClass}">
     <div class=${baseClass}UserImage>
-    <label for="iconFile" class=${baseClass}FileInputLabel>
+    <label for="${baseClass}IconFile" class=${baseClass}FileInputLabel>
         <img data-dojo-attach-point='_userImageNode' src="//:0">
     </label>
     </div>
     <br/>
     <div class=${baseClass}UserLabel data-dojo-attach-point='_userNameNode' data-dojo-attach-event="dblclick:_onChangeNameDblClicked" ><b>${_userData.name}</b><br></div>
     <div class=${baseClass}AvailableSessions data-dojo-attach-point='_availableSessionsNode' ></div>
-    <input type="file" id="iconFile" class=${baseClass}FileInput data-dojo-attach-point='_userIconFile'
+    <input type="file" id="${baseClass}IconFile" class=${baseClass}FileInput data-dojo-attach-point='_userIconFile'
            data-dojo-attach-event="onchange:_onIconFileChange">
 </div>

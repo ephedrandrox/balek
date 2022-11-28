@@ -3,7 +3,7 @@
     <div class=${baseClass}UserImageDiv
          data-dojo-attach-event="onmouseenter:_mouseEnterUserImage, onmouseleave:_mouseLeaveUserImage"
          data-dojo-attach-point='_userIconImageDiv'>
-        <label for="iconFile" class=${baseClass}FileInputLabel>
+        <label for="${baseClass}IconFile${_editUserKey}" class=${baseClass}FileInputLabel>
             <img class=${baseClass}UserImage data-dojo-attach-point='_userIconImage' src=${_userData.icon}>
         </label>
     </div>
@@ -13,6 +13,6 @@
     <input class=${baseClass}PasswordField type="password" data-dojo-attach-point='_passwordField2' value=""
            tabindex="2"><br><br>
     <input class=${baseClass}SubmitButton type=submit data-dojo-attach-event="onclick:_onClickEditUserButton">
-    <input type="file" id="iconFile" class=${baseClass}FileInput data-dojo-attach-point='_userIconFile'
+    <input type="file" id="${baseClass}IconFile${_editUserKey}" class=${baseClass}FileInput data-dojo-attach-point='_userIconFile'
            data-dojo-attach-event="onchange:_onIconFileChange">
 </div>

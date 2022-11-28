@@ -3,13 +3,15 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/admin/users/Instance/userManagement',
+        'balek-modules/admin/users/Instance/userEdit',
+
         'balek-modules/components/syncedCommander/Instance',
 
         'balek-server/session/sessionsController/instanceCommands',
         'balek-server/users/usersController/instanceCommands',
     ],
     function (declare, lang, topic,
-              userManagementInstance, _syncedCommanderInstance,
+              userManagementInstance, UserEditInstance, _syncedCommanderInstance,
               SessionsControllerInstanceCommands,UsersControllerInstanceCommands) {
 
         return declare("moduleAdminUsersInstance", _syncedCommanderInstance, {
@@ -17,12 +19,15 @@ define(['dojo/_base/declare',
 
             _userManagementInstance: null,
 
+            _editUserInstances: null,
+
             sessionsControllerCommands: null,
             usersControllerCommands: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
+                this._editUserInstances = {}
                 console.log("moduleAdminUsersInstance starting...");
 
                 this._interfaceState.set("Component Name","User Administration");
@@ -37,7 +42,9 @@ define(['dojo/_base/declare',
                 this._commands={
                     "updateUsername" : lang.hitch(this, this.updateUsername),
                     "updateUserIcon" : lang.hitch(this, this.updateUserIcon),
-                    "updateUserPassword" : lang.hitch(this, this.updateUserPassword)
+                    "updateUserPassword" : lang.hitch(this, this.updateUserPassword),
+
+                    "getEditUserComponentKey" : lang.hitch(this, this.getEditUserComponentKey)
 
                 };
 
@@ -52,6 +59,18 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("Status", "Started");
 
+            },
+            getEditUserInstance: function(userKey){
+                if(!this._editUserInstances[userKey]){
+                    this._editUserInstances[userKey] = new UserEditInstance({_instanceKey: this._instanceKey, editUserKey : userKey })
+                }
+                return this._editUserInstances[userKey]
+            },
+            getEditUserComponentKey: function(userKey, messageCallback){
+
+                let userEditInstance = this.getEditUserInstance(userKey)
+                let componentKey = userEditInstance._componentKey
+                messageCallback(  {SUCCESS: {userKey:userKey, componentKey: componentKey }} )
             },
             updateUsername: function(userKey, userName, remoteCommandCallback){
               //  let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()

@@ -19,7 +19,7 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin,
-              template, cssFile, userListItem, userEdit,
+              template, cssFile, userListItem, UserEdit,
               _syncedCommanderInterface,
               _balekWorkspaceContainerContainable) {
         return declare("moduleAdminUsersInterfaceUserManagementInterface", [_WidgetBase, _TemplatedMixin,
@@ -104,6 +104,9 @@ define(['dojo/_base/declare',
                     domConstruct.place(userListItemOBJECT.domNode, this.userListDiv);
                 }
             },
+            startupContainable(){
+                console.log("🟢🟢🟢🟢userManagement Interface containable Started")
+            },
             loadUserList: function(){
                 //Called before watching _userList state
                 //There may be no objects yet in case it already has
@@ -143,32 +146,62 @@ define(['dojo/_base/declare',
                 // }
             },
             editUser: function (userKey) {
-                let newUserEdit = null
-                if (this._userEditWidgets[userKey]){
-                    newUserEdit = this._userEditWidgets[userKey]
-                }else{
-                    newUserEdit = new userEdit({
-                        _interface: this._interface,
-                        _userManagementInterface: this,
-                        _instanceKey: this._instanceKey,
-                        usersControllerCommands: this.usersControllerCommands,
-                        _userData: {userKey: userKey, name: "" , icon: ""}
-                    });
 
-                    this._userEditWidgets[userKey] = newUserEdit
-                    aspect.after(this._userEditWidgets[userKey], "destroy", lang.hitch(this, function () {
-                        this._userEditWidgets[userKey] = null
-                    }));
-                    //this._interface.putInWorkspace(this._userEditWidgets[userKey])
-                    topic.publish("displayAsDialog", newUserEdit);
-                }
+
+                this._interface._instanceCommands.getEditUserComponentKey(userKey).then(lang.hitch(this, function(Result){
+                    let success = Result.SUCCESS
+                    let error = Result.ERROR
+
+                    if(success){
+                        let componentKey = success.componentKey
+                        let userKey = success.userKey
+                        console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey, userKey,Result)
+
+                        if(componentKey && componentKey.toString()){
+                            console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey)
+
+                            let userEdit = null
+                            if (this._userEditWidgets[userKey]){
+                                userEdit = this._userEditWidgets[userKey]
+                            }else{
+                                userEdit = new UserEdit({
+                                    _interface: this._interface,
+                                    _userManagementInterface: this,
+                                    _instanceKey: this._instanceKey,
+                                    _componentKey: componentKey,
+                                    usersControllerCommands: this.usersControllerCommands,
+                                    _userData: {userKey: userKey, name: "" , icon: ""}
+                                });
+
+                                this._userEditWidgets[userKey] = userEdit
+                                aspect.after(this._userEditWidgets[userKey], "destroy", lang.hitch(this, function () {
+                                    this._userEditWidgets[userKey] = null
+                                }));
+                                this._interface.putInWorkspace(this._userEditWidgets[userKey])
+                                // topic.publish("displayAsDialog", newUserEdit);
+                            }
+
+
+
+
+
+                        }
+                    }
+
+
+                    console.log("🟣🟣🟣🟣", Result)
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("🟣🟣🟣🟣", Error)
+                }))
+
+
 
 
 
 //todo make this work and add new user that also floats
               //  topic.publish("displayAsDialog", this._userEditWidget);
 
-                newUserEdit.setFocus();
+              //  newUserEdit.setFocus();
             },
             unload: function () {
                 this._userListWatchHandle.unwatch();
