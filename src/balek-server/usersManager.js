@@ -36,11 +36,11 @@ define(['dojo/_base/declare',
                 this._dbController = new userDbController();
 
 
-                //replace these with state object
-                topic.subscribe("getUserFromDatabase", lang.hitch(this, this.getUserFromDatabase));
-                topic.subscribe("getUsersFromDatabase", lang.hitch(this, this.getUsersFromDatabase));
-                topic.subscribe("getUserInfoFromDatabaseByKey", lang.hitch(this, this.getUserInfoFromDatabaseByKey));
-                topic.subscribe("receiveUserManagerMessage", lang.hitch(this, this.receiveUserManagerMessage));
+                //todo move these and their uses to the Controller
+                    topic.subscribe("getUserFromDatabase", lang.hitch(this, this.getUserFromDatabase));
+                    topic.subscribe("getUsersFromDatabase", lang.hitch(this, this.getUsersFromDatabase));
+                    topic.subscribe("getUserInfoFromDatabaseByKey", lang.hitch(this, this.getUserInfoFromDatabaseByKey));
+                    topic.subscribe("receiveUserManagerMessage", lang.hitch(this, this.receiveUserManagerMessage));
 
             },
             getUserFromDatabase: function (username, returnGetUserFromDatabase) {
@@ -75,13 +75,7 @@ define(['dojo/_base/declare',
                     //todo remove/change this to not get all users on load
                     if(userManagerMessage.messageData.request.toString() === "usersData")
                     {
-                        topic.publish("getUsersFromDatabase", lang.hitch(this, function (usersFromDatabase) {
-                            topic.publish("sendBalekProtocolMessage", wssConnection, {
-                                userManagerMessage: {
-                                    messageData: {userData: usersFromDatabase}
-                                }
-                            });
-                        }));
+                        console.log("Should Not Be seeing this....")
                     }else if(userManagerMessage.messageData.request.toString() === "userInfoWatch")
                     {
                         if(userManagerMessage.messageData.userKey && userManagerMessage.messageData.userKey.toString()){
@@ -92,29 +86,29 @@ define(['dojo/_base/declare',
                     }else if(userManagerMessage.messageData.request.toString() === "userListWatch")
                     {
                           this._Controller.relayUserListState(wssConnection._sessionKey, messageReplyCallback)
-                       // this._Controller.loadUserListFor(wssConnection._sessionKey)
                     }
 
                 } else if (userManagerMessage.messageData.updateUserData) {
+                    console.log("Should Not Be seeing this....")
 
-                    let updateUserData = userManagerMessage.messageData.updateUserData;
-
-                    let updateRequest = this.updateUserFromSession(wssConnection._sessionKey, updateUserData);
-
-                    updateRequest.then(lang.hitch(this, function (updatedData) {
-                        messageReplyCallback({
-                            userManagerMessage: {
-                                messageData: {userUpdatedData: updatedData}
-                            }
-                        });
-                        //update success send result back
-                    })).catch(lang.hitch(this, function (error) {
-                        messageReplyCallback({
-                            userManagerMessage: {
-                                messageData: {error: error}
-                            }
-                        });
-                    }));
+                    // let updateUserData = userManagerMessage.messageData.updateUserData;
+                    //
+                    // let updateRequest = this.updateUserFromSession(wssConnection._sessionKey, updateUserData);
+                    //
+                    // updateRequest.then(lang.hitch(this, function (updatedData) {
+                    //     messageReplyCallback({
+                    //         userManagerMessage: {
+                    //             messageData: {userUpdatedData: updatedData}
+                    //         }
+                    //     });
+                    //     //update success send result back
+                    // })).catch(lang.hitch(this, function (error) {
+                    //     messageReplyCallback({
+                    //         userManagerMessage: {
+                    //             messageData: {error: error}
+                    //         }
+                    //     });
+                    // }));
                 }
             },
             getUniqueUserKey: function () {
