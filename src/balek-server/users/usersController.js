@@ -19,16 +19,14 @@ define(['dojo/_base/declare',
     ) {
         return declare("balekUsersController", null, {
 
-            statusAsState: null,
             _instanceCommands: null,
             _sessionCommands: null,
             _dbController: null,
 
             _usersManager: null,
-            _userStates: null,
 
-            _userInfoState: null,
 
+            _userInfoStates: null,
             _userListStates: null,
 
             _userInfoWatchers: null,
@@ -36,65 +34,35 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                if(!this._usersManager){
-                    console.log("balekUsersController NOT starting...");
-
-                }else {
+                if(this._usersManager){
                     console.log("balekUsersController  starting...");
 
-                    this._UserState = declare([Stateful], {
-                        userName: null,
-                        userKey: null
-                    });
-
-
-                    this._userStates = {};
-                    this._userInfoState = {};
-
+                    //Create User Infos and User Lists Maps
+                    this._userInfoStates = {};
                     this._userListStates = {};
-
                     this._userInfoWatchers = {}
-
                     this._userListWatchers = {}
 
-
-                    let StatusState = declare([Stateful], {});
-                    this.statusAsState = new StatusState({});
-                    this.statusAsState.set("Status", "Starting")
-
-
+                    //Initialize Instance Commands
                     this._instanceCommands = new InstanceCommands();
-                    this._instanceCommands.setCommand("getUserState", lang.hitch(this, this.getUserState))
                     this._instanceCommands.setCommand("addNewUser", lang.hitch(this, this.addNewUser))
                     this._instanceCommands.setCommand("updateUsername", lang.hitch(this, this.updateUsername))
                     this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
                     this._instanceCommands.setCommand("updateUserPassword", lang.hitch(this, this.updateUserPassword))
-
+                    //Get Session Instance Commands and create Database Controller
                     let SessionsInstanceCommands = new SessionInstanceCommands()
                     this._sessionCommands = SessionsInstanceCommands.getCommands()
                     this._dbController = new userDbController();
-
-                    //todo remove loading all
-                    //load as state is requested
-                    this._dbController.getUsersFromDatabase().then(lang.hitch(this, function (results) {
-                        results.forEach ( lang.hitch(this, function(user){
-                            this._userStates[user.userKey] = new this._UserState({
-                                userName: user.name,
-                                userKey: user.userKey
-                            });
-                        }));
-                    })).catch(function (error) {
-                        debugger;
-                        console.log("Could not load users from database!!!!!!!!!!" , error);
-                    });
-
+                }else {
+                    console.log("balekUsersController NOT starting...");
                 }
             },
             //##########################################################################################################
-            //Relay User Info State
+            //Relay User Info State - UserManager Function
             //##########################################################################################################
             relayUserInfoState: function(userKey, sessionKey, messageReplyCallback){
-                let userInfoState =  this._usersManager._userStates[userKey]
+                console.log("relayUserInfoState  🔵🔵🔵🔵🛑🛑🔵🔵🔵🔵", sessionKey)
+                let userInfoState =  this.getUserInfoState(userKey)
                 let stateEntries = Object.entries(userInfoState)
                 for(KeyValIndex in stateEntries)
                 {
@@ -103,14 +71,11 @@ define(['dojo/_base/declare',
                     if(typeof object !== 'function' ){
                         messageReplyCallback({userInfoState: {name: objectKey ,
                                 newState: object }})
-                    }else {
-                        console.log("Skipping 🛑🛑🔵🔵🔵🔵🔵🔵", objectKey, userInfoState[objectKey], Object.entries(userInfoState))
                     }
                 }
                 let watchHandle = userInfoState.watch(lang.hitch(this, function(name, oldState, newState){
                     messageReplyCallback({userInfoState: {name: name , newState: newState}})
                 }))
-                this.loadIcon(userKey)
                 this.putUserInfoWatcher(userKey, sessionKey, watchHandle)
             },
             getUserInfoWatchers(sessionKey)
@@ -134,9 +99,10 @@ define(['dojo/_base/declare',
             },
 
             //##########################################################################################################
-            //Relay User List State
+            //Relay User List State - UserManager Methods
             //##########################################################################################################
             relayUserListState: function( sessionKey, messageReplyCallback){
+                console.log("relayUserListState 🛑🛑🔵🔵🔵🔵🔵🔵", sessionKey)
                 let userKey = this._sessionCommands.getSessionByKey(sessionKey)
                  let userListState =  this.getUserListState(userKey)
                  let stateEntries = Object.entries(userListState)
@@ -147,8 +113,6 @@ define(['dojo/_base/declare',
                     if(typeof object !== 'function' ){
                         messageReplyCallback({userListState: {name: objectKey ,
                                 newState: object }})
-                    }else {
-                        console.log("Skipping 🛑🛑🔵🔵🔵🔵🔵🔵", objectKey, userListState[objectKey], Object.entries(userListState))
                     }
                 }
                 let watchHandle = userListState.watch(lang.hitch(this, function(name, oldState, newState){
@@ -175,15 +139,6 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Instance Commands
             //##########################################################################################################
-            getUserState: function(userKey)
-            {
-                //todo make state then load from database
-                this.loadIcon(userKey)
-                let userState = this._usersManager.getUserInfoState(userKey)
-                return userState
-
-                //this._usersManager._userStates[userKey]
-            },
             addNewUser: function(userData, adminUserKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userData && adminUserKey
@@ -208,11 +163,10 @@ define(['dojo/_base/declare',
                                     {
                                         Resolve({Success: "User Added", Results: results})
                                         //Create User State
-                                        this._usersManager._userStates[userKey.toString()] = new this._UserState({
-                                            userName: userData.userName,
-                                            userKey: userKey,
-                                            icon: iconBase64
-                                        });
+                                        let newUserState = this.getUserInfoState(userKey)
+                                        newUserState.set("userName",  userData.userName )
+                                        newUserState.set("icon",  iconBase64 )
+
                                         console.log("Userlists 🟢🟢🟢🟢🟢",  this._userListStates)
                                         //add userKey to userslists
                                         for(objectIndex in this._userListStates)
@@ -252,11 +206,11 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userKey && userName){
                            this._dbController.updateUsernameInDatabase(userName, userKey).then(lang.hitch(this, function (results) {
-                               console.log("updateUsername",userName, userKey, this._usersManager._userStates[userKey],results )
+                               console.log("updateUsername",userName, userKey, this.getUserInfoState(userKey),results )
                                if(results[0].affectedRows === 1)
                                {
                                    Resolve({Success: "Username Changed"})
-                                   this._usersManager._userStates[userKey].set("userName", userName)
+                                   this.getUserInfoState(userKey).set("userName", userName)
                                }else if(results[0].affectedRows === 0){
                                    Reject({Error: "No Rows Affected"})
                                }else {
@@ -275,11 +229,11 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userKey && iconBase64){
                         this._dbController.updateUserIconInDatabase(iconBase64, userKey).then(lang.hitch(this, function (results) {
-                            console.log("updateUserIcon",iconBase64, userKey, this._usersManager._userStates[userKey],results )
+                            console.log("updateUserIcon",iconBase64, userKey, this.getUserInfoState(userKey),results )
                             if(results[0].affectedRows === 1)
                             {
                                 Resolve({Success: "Icon Changed"})
-                                this._usersManager._userStates[userKey].set("icon", iconBase64)
+                                this.getUserInfoState(userKey).set("icon", iconBase64)
                             }else if(results[0].affectedRows === 0){
                                 Reject({Error: "No Rows Affected"})
                             }else {
@@ -298,11 +252,11 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userKey && password){
                         this._dbController.updateUserPasswordInDatabase(password, userKey).then(lang.hitch(this, function (results) {
-                            console.log("updateUserPassword",password, userKey, this._usersManager._userStates[userKey],results )
+                            console.log("updateUserPassword",password, userKey, this.getUserInfoState(userKey),results )
                             if(results[0].affectedRows === 1)
                             {
                                 Resolve({Success: "Password Changed"})
-                                this._usersManager._userStates[userKey].set("password", Date(Date().getTime()).toString())
+                                this.getUserInfoState(userKey).set("password", Date(Date().getTime()).toString())
                             }else if(results[0].affectedRows === 0){
                                 Reject({Error: "No Rows Affected"})
                             }else {
@@ -319,19 +273,25 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Private Methods
             //##########################################################################################################
+            getUserListState: function(userKey){
+                if(!this._userListStates[userKey]){
+                    let UserListState =  declare([Stateful], {})
+                    this._userListStates[userKey] = UserListState({})
+                    this.loadUserListFor(userKey)
+                }
+                return this._userListStates[userKey]
+            },
             getUserInfoState: function(userKey){
-                if (!this._userInfoState[userKey]){
-                    //Create New UserInfoState
+                if (!this._userInfoStates[userKey]){
                     let UserInfoState = declare([Stateful], {
-                        userName: null,
                         userKey: null
                     });
-                    this._userInfoState[userKey] = new UserInfoState({
-                        userName: "",
+                    this._userInfoStates[userKey] = new UserInfoState({
                         userKey: userKey
                     });
+                    this.loadIconAndName(userKey)
                 }
-                return this._userInfoState[userKey]
+                return this._userInfoStates[userKey]
             },
             isUserAdmin: function(userKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
@@ -362,18 +322,12 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
-            getUserListState: function(userKey){
-                if(!this._userListStates[userKey]){
-                    let UserListState =  declare([Stateful], {})
-                    this._userListStates[userKey] = UserListState({})
-                }
-                return this._userListStates[userKey]
-            },
-            loadUserListFor: function(sessionKey){
-                let userKey = this._sessionCommands.getSessionByKey(sessionKey)
+
+            loadUserListFor: function(userKey){
+
                 let userListState =  this.getUserListState(userKey)
 
-                this._dbController.getUsersFromDatabase().then(function (usersFromDatabase) {
+                this._dbController.getUsersKeysFromDatabase().then(function (usersFromDatabase) {
                     if(typeof usersFromDatabase.forEach === 'function')
                     {
                         usersFromDatabase.forEach(lang.hitch(this, function(user){
@@ -384,9 +338,11 @@ define(['dojo/_base/declare',
                     console.log("loadUserListFor Error", Error);
                 });
             },
-            loadIcon: function(userKey){
-                this._dbController.getUserIconFromDatabaseByKey(userKey).then(lang.hitch(this, function (results) {
-                    this._usersManager._userStates[userKey].set("icon", results[0].icon)
+            loadIconAndName: function(userKey){
+                this._dbController.getUserIconAndNameFromDatabaseByKey(userKey).then(lang.hitch(this, function (results) {
+                    this.getUserInfoState(userKey).set("icon", results[0].icon)
+                    this.getUserInfoState(userKey).set("userName", results[0].name)
+
                 })).catch(function (error) {
                 });
             }
