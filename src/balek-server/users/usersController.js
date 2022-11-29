@@ -1,12 +1,18 @@
-define(['dojo/_base/declare', 'dojo/_base/lang',
+//##########################################################################################################
+//  Server Users Controller
+//  summary:
+//          Used by Instances and the Users Manager to get and set User information
+//  tags:
+//          Balek-Server Controller Users
+//##########################################################################################################
+define(['dojo/_base/declare',
+        'dojo/_base/lang',
         'dojo/topic',
-
         'dojo/Stateful',
-
+        //Balek Commands and Controller Imports
         'balek-server/users/usersController/instanceCommands',
         'balek-server/session/sessionsController/instanceCommands',
         "balek-server/users/dbController"
-
     ],
     function (declare, lang, topic, Stateful,
               InstanceCommands, SessionInstanceCommands, userDbController
@@ -20,6 +26,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             _usersManager: null,
             _userStates: null,
+
+            _userInfoState: null,
+
             _userListStates: null,
 
             _userInfoWatchers: null,
@@ -37,7 +46,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         userName: null,
                         userKey: null
                     });
+
+
                     this._userStates = {};
+                    this._userInfoState = {};
+
                     this._userListStates = {};
 
                     this._userInfoWatchers = {}
@@ -77,8 +90,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 }
             },
-            //Interface Commands:
-
             //##########################################################################################################
             //Relay User Info State
             //##########################################################################################################
@@ -123,7 +134,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
 
             //##########################################################################################################
-            //Relay User Info State End
+            //Relay User List State
             //##########################################################################################################
             relayUserListState: function( sessionKey, messageReplyCallback){
                 let userKey = this._sessionCommands.getSessionByKey(sessionKey)
@@ -161,68 +172,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 sessionWatchers[userKey] = watchHandle
 
             },
-            getUserListState: function(userKey){
-                if(!this._userListStates[userKey]){
-                 let UserListState =  declare([Stateful], {})
-                    this._userListStates[userKey] = UserListState({})
-                }
-                return this._userListStates[userKey]
-            },
-            loadUserListFor: function(sessionKey){
-                let userKey = this._sessionCommands.getSessionByKey(sessionKey)
-                let userListState =  this.getUserListState(userKey)
-
-                this._dbController.getUsersFromDatabase().then(function (usersFromDatabase) {
-                    if(typeof usersFromDatabase.forEach === 'function')
-                    {
-                        usersFromDatabase.forEach(lang.hitch(this, function(user){
-                            userListState.set(user.userKey.toString(), user.userKey.toString())
-                        }))
-                    }
-                }).catch(function (Error) {
-                    console.log("loadUserListFor Error", Error);
-                });
-            },
+            //##########################################################################################################
             //Instance Commands
-            isUserAdmin: function(userKey){
-                return new Promise(lang.hitch(this, function (Resolve, Reject) {
-                        if(userKey){
+            //##########################################################################################################
+            getUserState: function(userKey)
+            {
+                //todo make state then load from database
+                this.loadIcon(userKey)
+                let userState = this._usersManager.getUserInfoState(userKey)
+                return userState
 
-                            this._dbController.getUserInfoFromDatabaseByKey(userKey).then(function (results) {
-                                //todo update User Store
-                                console.log("🟦🟦🟦🟦", results )
-                                if(results && Array.isArray(results))
-                                {
-                                    let userData = results[0]
-                                    let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(userData.permission_groups)));
-                                    if(permissionGroups && Array.isArray(permissionGroups)
-                                    && permissionGroups.includes("admin")) {
-                                        Resolve(true) ;
-                                    }else
-                                    {
-                                        Reject({Error: "Not valid administration user Key"});
-                                    }
-                                }else{
-                                    Reject({Error: "Not valid administration user Key"});
-                                }
-                            }).catch(function (error) {
-                                Reject(error);
-                            });
-                        }else{
-                            Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
-                        }
-                }));
+                //this._usersManager._userStates[userKey]
             },
             addNewUser: function(userData, adminUserKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userData && adminUserKey
                     && userData.userName && userData.icon && userData.icon.data
                     && userData.password){
-                        console.log("loadUserListFor Error", Error);
 
                         const iconData = Object.values(userData.icon.data);
                         const iconBase64 = Buffer.from(iconData);
-
 
                         let userKey = this._usersManager.getUniqueUserKey()
                         let permissionGroups =  Buffer.from(JSON.stringify(["users"]).toString())
@@ -233,13 +202,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             if(results)
                             {
                                 console.log("addNewUser" , this._dbController)
-
                                 this._dbController.addNewUser(userData.userName, userData.password, iconBase64, userKey, permissionGroups).then(lang.hitch(this, function (results) {
                                     console.log("addNewUseraddNewUser",userData.userName, userData.password, userKey )
                                     if(results[0].affectedRows === 1)
                                     {
                                         Resolve({Success: "User Added", Results: results})
-
                                         //Create User State
                                         this._usersManager._userStates[userKey.toString()] = new this._UserState({
                                             userName: userData.userName,
@@ -261,7 +228,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                             }
                                         }
                                         console.log("Done Setting 🟢🟢🟢🟢🟢", objectIndex, this._userListStates[objectIndex])
-
                                     }else if(results[0].affectedRows === 0){
                                         Reject({Error: "No Rows Affected", Results: results})
                                     }else {
@@ -270,7 +236,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 })).catch(function (Error) {
                                     Reject({Error: Error})
                                 });
-
                             }else
                             {
                                 Reject({Error: "Request needs administrative key"});
@@ -278,8 +243,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         })).catch(function (error) {
                             Reject(error);
                         });
-
-
                     }else{
                         Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
                     }
@@ -353,11 +316,73 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }));
             },
-            getUserState: function(userKey)
-            {
-                //todo make state then load from database
-                this.loadIcon(userKey)
-                return this._usersManager._userStates[userKey]
+            //##########################################################################################################
+            //Private Methods
+            //##########################################################################################################
+            getUserInfoState: function(userKey){
+                if (!this._userInfoState[userKey]){
+                    //Create New UserInfoState
+                    let UserInfoState = declare([Stateful], {
+                        userName: null,
+                        userKey: null
+                    });
+                    this._userInfoState[userKey] = new UserInfoState({
+                        userName: "",
+                        userKey: userKey
+                    });
+                }
+                return this._userInfoState[userKey]
+            },
+            isUserAdmin: function(userKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if(userKey){
+
+                        this._dbController.getUserInfoFromDatabaseByKey(userKey).then(function (results) {
+                            //todo update User Store
+                            console.log("🟦🟦🟦🟦", results )
+                            if(results && Array.isArray(results))
+                            {
+                                let userData = results[0]
+                                let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(userData.permission_groups)));
+                                if(permissionGroups && Array.isArray(permissionGroups)
+                                    && permissionGroups.includes("admin")) {
+                                    Resolve(true) ;
+                                }else
+                                {
+                                    Reject({Error: "Not valid administration user Key"});
+                                }
+                            }else{
+                                Reject({Error: "Not valid administration user Key"});
+                            }
+                        }).catch(function (error) {
+                            Reject(error);
+                        });
+                    }else{
+                        Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
+                    }
+                }));
+            },
+            getUserListState: function(userKey){
+                if(!this._userListStates[userKey]){
+                    let UserListState =  declare([Stateful], {})
+                    this._userListStates[userKey] = UserListState({})
+                }
+                return this._userListStates[userKey]
+            },
+            loadUserListFor: function(sessionKey){
+                let userKey = this._sessionCommands.getSessionByKey(sessionKey)
+                let userListState =  this.getUserListState(userKey)
+
+                this._dbController.getUsersFromDatabase().then(function (usersFromDatabase) {
+                    if(typeof usersFromDatabase.forEach === 'function')
+                    {
+                        usersFromDatabase.forEach(lang.hitch(this, function(user){
+                            userListState.set(user.userKey.toString(), user.userKey.toString())
+                        }))
+                    }
+                }).catch(function (Error) {
+                    console.log("loadUserListFor Error", Error);
+                });
             },
             loadIcon: function(userKey){
                 this._dbController.getUserIconFromDatabaseByKey(userKey).then(lang.hitch(this, function (results) {
