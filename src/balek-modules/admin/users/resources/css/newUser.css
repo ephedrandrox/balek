@@ -1,11 +1,11 @@
-.userManagementWidgetUserEditUserImage {
+.userManagementWidgetNewUserUserImage {
     max-width: 100px;
     min-width: 50px;
     min-height: 50px;
     cursor: pointer;
 }
 
-.userManagementWidgetUserEditUserImageDiv {
+.userManagementWidgetNewUserUserImageDiv {
     cursor: pointer;
     border: solid transparent 3px;
     border-radius: 25px;
@@ -13,21 +13,22 @@
     margin: 5px;
 }
 
-.mouseOverUserEditImage {
-    border: solid #7e0000 3px;
+.mouseOverNewUserImage {
+    border: solid #b142cb 3px;
     cursor: pointer;
     border-radius: 25px;
 }
 
-.userManagementWidgetUserEdit {
+.userManagementWidgetNewUser {
     outline: 0px solid transparent;
-    background: rgba(28, 76, 164, 0.56);
+    background: #88cc60;
     display: inline-block;
     text-align: center;
     padding: 30px;
     border: solid black 3px;
     border-radius: 25px;
     visibility: visible;
+
     width: auto;
     position: absolute;
     top: 50%;
@@ -36,7 +37,7 @@
     transform: translate(-50%, -50%);
 }
 
-.userManagementWidgetUserEditFileInput {
+.userManagementWidgetNewUserFileInput {
     width: 0.1px;
     height: 0.1px;
     opacity: 0;
@@ -45,7 +46,7 @@
     z-index: -1;
 }
 
-.userManagementWidgetUserEditIconFileLabel {
+.userManagementWidgetNewUserIconFileLabel {
     cursor: pointer;
     display: inline;
     display: inline-block;
@@ -59,8 +60,8 @@
     border-radius: 5px;
 }
 
-.userManagementWidgetUserEditSubmitButton {
-    background-color: #3142af;
+.userManagementWidgetNewUserSubmitButton {
+    background-color: #4d6c3b;
     border: solid black 1px;
     color: white;
     padding: 12px 12px;
@@ -71,14 +72,14 @@
     border-radius: 5px;
 }
 
-.userManagementWidgetUserEditPasswordField {
+.userManagementWidgetNewUserPasswordField {
     border: solid black 2px;
     background: none;
     margin: 5px;
 }
 
 .passwordError {
-    border: solid red 3px;
+    border: solid #e5db24 3px;
 }
 
 input {
@@ -101,12 +102,14 @@ input {
 }
 
 .dijitInlineEditBoxDisplayModeHover {
-    background-color: #e5f2fe;
-    border: solid 1px #759dc0;
+    background-color: #671546;
+    border: solid 1px #c07594;
 }
 
 .dijitInlineEditBoxDisplayMode {
     border: none;
+    color: #000000;
+
 }
 
 .dijitInputInner {
@@ -122,13 +125,15 @@ input {
 .dijitSelectDisabled,
 .dijitTextBoxDisabled,
 .dijitTextBoxDisabled .dijitInputInner {
-    color: #818181;
+    color: #12123f;
 }
 
 .dj_gecko .dijitTextBox .dijitInputInner,
 .dj_webkit .dijitTextBox .dijitInputInner {
     padding-left: 1px;
     padding-right: 1px;
+    color: #000000;
+
 }
 
 
@@ -136,4 +141,6 @@ input {
 .dj_webkit .dijitTextBox .dijitInputInner {
     padding-left: 1px;
     padding-right: 1px;
+    color: #000000;
+
 }

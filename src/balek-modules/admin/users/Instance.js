@@ -4,6 +4,7 @@ define(['dojo/_base/declare',
 
         'balek-modules/admin/users/Instance/userManagement',
         'balek-modules/admin/users/Instance/userEdit',
+        'balek-modules/admin/users/Instance/newUser',
 
         'balek-modules/components/syncedCommander/Instance',
 
@@ -11,7 +12,8 @@ define(['dojo/_base/declare',
         'balek-server/users/usersController/instanceCommands',
     ],
     function (declare, lang, topic,
-              userManagementInstance, UserEditInstance, _syncedCommanderInstance,
+              userManagementInstance, UserEditInstance, NewUserInstance,
+              _syncedCommanderInstance,
               SessionsControllerInstanceCommands,UsersControllerInstanceCommands) {
 
         return declare("moduleAdminUsersInstance", _syncedCommanderInstance, {
@@ -20,6 +22,8 @@ define(['dojo/_base/declare',
             _userManagementInstance: null,
 
             _editUserInstances: null,
+
+            _newUserInstance: null,
 
             sessionsControllerCommands: null,
             usersControllerCommands: null,
@@ -40,11 +44,15 @@ define(['dojo/_base/declare',
                 this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
 
                 this._commands={
+                    "addNewUser" : lang.hitch(this, this.addNewUser),
+
+
                     "updateUsername" : lang.hitch(this, this.updateUsername),
                     "updateUserIcon" : lang.hitch(this, this.updateUserIcon),
                     "updateUserPassword" : lang.hitch(this, this.updateUserPassword),
 
-                    "getEditUserComponentKey" : lang.hitch(this, this.getEditUserComponentKey)
+                    "getEditUserComponentKey" : lang.hitch(this, this.getEditUserComponentKey),
+                    "getNewUserComponentKey" : lang.hitch(this, this.getNewUserComponentKey)
 
                 };
 
@@ -66,11 +74,30 @@ define(['dojo/_base/declare',
                 }
                 return this._editUserInstances[userKey]
             },
+            getNewUserInstance: function(){
+                if(!this._newUserInstance){
+                    this._newUserInstance = new NewUserInstance({ _instanceKey: this._instanceKey})
+                }
+                return this._newUserInstance
+            },
             getEditUserComponentKey: function(userKey, messageCallback){
 
                 let userEditInstance = this.getEditUserInstance(userKey)
                 let componentKey = userEditInstance._componentKey
                 messageCallback(  {SUCCESS: {userKey:userKey, componentKey: componentKey }} )
+            },
+            getNewUserComponentKey: function(messageCallback){
+                let newUserInstance = this.getNewUserInstance()
+                let componentKey = newUserInstance._componentKey
+                messageCallback(  {SUCCESS: { componentKey: componentKey }} )
+            },
+            addNewUser: function(userData, remoteCommandCallback){
+                let adminUserKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
+                this.usersControllerCommands.addNewUser(userData, adminUserKey).then(lang.hitch(this,function(Result){
+                    remoteCommandCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this,function(Error){
+                    remoteCommandCallback({Error: Error})
+                }))
             },
             updateUsername: function(userKey, userName, remoteCommandCallback){
               //  let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()

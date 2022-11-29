@@ -80,7 +80,19 @@ define(['dojo/_base/declare',
             _onClick: function(event)
             {
                 console.log("movableContainerWidget onClick",event );
+                 //this.workspaceManagerCommands.activateContainerInWorkspace(this.workspaceManagerCommands.getActiveWorkspace(), this._containerKey);
+
             },
+             _onPointerOver: function(event)
+                {
+                            console.log("movableContainerWidget onClick",event );
+
+                            if(event.altKey)
+                            {
+                                     this.workspaceManagerCommands.activateContainerInWorkspace(this.workspaceManagerCommands.getActiveWorkspace(), this._containerKey);
+                            }
+               },
+
             postCreate: function () {
 
                 if(this._containedInterfaceHandle != null && this._containedInterfaceHandle.getDomNode)
@@ -105,9 +117,11 @@ define(['dojo/_base/declare',
 
                 //topic.publish("addToCurrentWorkspace", this);
 
-               this._dnd = new Moveable(this.domNode);
+                this._dnd = new Moveable(this.domNode);
 
                 this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
+
+                this._dnd.on("MoveStart", lang.hitch(this, this.onWidgetMoveStart));
 
                 if(this._containerOnMoved !== null){
                  this._dnd.on("Move", this._containerOnMoved);
@@ -122,6 +136,10 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
+              onWidgetMoveStart: function (){
+                     this.workspaceManagerCommands.activateContainerInWorkspace(this.workspaceManagerCommands.getActiveWorkspace(), this._containerKey);
+
+               },
              onWidgetMoveStop: function (){
                 this.updateMovableContainerElementBox()
              },

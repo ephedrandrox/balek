@@ -30,6 +30,8 @@ define(['dojo/_base/declare',
             getUserInfoFromDatabaseByKey: function (userKey) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    console.log("getUserInfoFromDatabaseByKeygetUserInfoFromDatabaseByKeygetUserInfoFromDatabaseByKey Error", );
+
                     let query = this._dbConnection.query('SELECT id, name, password, userKey, permission_groups FROM ' + this._mysqlSettings.database + '.users WHERE userKey = ?;', userKey);
                     let userToReturn = [];
                     query.on('error', function (err) {
@@ -194,6 +196,48 @@ define(['dojo/_base/declare',
                     }
 
                 }));
+            },
+            addNewUser: function(userName, passwordHash, icon, userKey, permissionGroups){
+                console.log("addNewUseraddNewUseraddNewUseraddNewUseraddNewUser");
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    console.log("addNewUseraddNewUseraddNewUseraddNewUseraddNewUser");
+
+                    if (userName && passwordHash && icon && permissionGroups) {
+                        console.log("addNewUseraddNewUseraddNewUseraddNewUseraddNewUser",userName, passwordHash, icon, userKey, permissionGroups);
+
+
+                        query = this._dbConnection.query('INSERT INTO ' + this._mysqlSettings.database + '.users (name, password, icon, userKey, permission_groups) VALUES (?, ?, ?, ?, ? );',
+                            [userName, passwordHash, icon, userKey, permissionGroups]);
+
+                       let resultToReturn = [];
+
+                       query.on('error', function (err) {
+                           Reject(err.message);
+                       })
+                           .on('result', function (row) {
+                               resultToReturn.push(row);
+                           })
+                           .on('end', function () {
+                               Resolve(resultToReturn);
+                           });
+
+                    } else {
+                        console.log("addNewUseraddNewUseraddNewUseraddNewUseraddNewUser");
+
+                        console.log("not enough user info", {ERROR: "Not Enough arguments to add user", arguments:  { userName : userName ,
+                                passwordHash : passwordHash,
+                                icon : icon,
+                                permissionGroups : permissionGroups} });
+                       Reject( {ERROR: "Not Enough arguments to add user", arguments:  { userName : userName ,
+                           passwordHash : passwordHash,
+                           icon : icon,
+                           permissionGroups : permissionGroups} })
+                    }
+                    console.log("addNewUseraddNewUseraddNewUseraddNewUseraddNewUser");
+
+
+                }));
+
             },
             updateUserInDatabase: function (userData) {
 

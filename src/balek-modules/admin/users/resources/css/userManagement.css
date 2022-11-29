@@ -6,7 +6,14 @@
 }
 
 .userManagementWidget {
+    position: relative;
+    border: solid black 5px;
+    background: rgba(20, 75, 115, 0.41);
+    padding: 50px;
+    border-radius: 10px;
     display: inline-block;
+    pointer-events: all;
+
 }
 
 .userManagementWidgetUserList {

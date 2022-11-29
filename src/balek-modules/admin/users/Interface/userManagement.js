@@ -1,3 +1,6 @@
+//##########################################################################################################
+//User Management Main Interface - Lists, Edits, and Adds Users
+//##########################################################################################################
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
@@ -13,13 +16,14 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/admin/users/resources/css/userManagement.css',
         'balek-modules/admin/users/Interface/userListItem',
         'balek-modules/admin/users/Interface/userEdit',
+        'balek-modules/admin/users/Interface/newUser',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable'
 
     ],
     function (declare, lang, topic, domConstruct, win, aspect, _WidgetBase, _TemplatedMixin,
-              template, cssFile, userListItem, UserEdit,
+              template, cssFile, userListItem, UserEdit, NewUser,
               _syncedCommanderInterface,
               _balekWorkspaceContainerContainable) {
         return declare("moduleAdminUsersInterfaceUserManagementInterface", [_WidgetBase, _TemplatedMixin,
@@ -33,13 +37,17 @@ define(['dojo/_base/declare',
 
             _userListItems: {},
             userListDiv: null,
+
             _userEditWidgets: null,
+            _newUserWidget: null,
 
             usersControllerCommands: null,
 
-
             _userList: null,
             _userStateWatchHandle: null,
+            //##########################################################################################################
+            //Startup Functions Section
+            //##########################################################################################################
             constructor: function (args) {
 
                 declare.safeMixin(this, args)
@@ -50,44 +58,53 @@ define(['dojo/_base/declare',
 
                 if(this.usersControllerCommands !== null){
                     this._userList = this.usersControllerCommands.getUserList()
-                    console.log("YUP", this.usersControllerCommands, this._userList)
-
-
                 }else {
-                    console.log("NOPE", this.usersControllerCommands, this._userList)
+                    console.log("Cannot get User List: no this.usersControllerCommands", this.usersControllerCommands, this._userList)
                 }
 
             },
             postCreate: function () {
                 this.initializeContainable();
-
                 if(this._userList)
                 {
-                    //let userData = this._userList.get("userData")
-                  //  setTimeout(lang.hitch(this, function(){
                         this.loadUserList()
                         this._userListWatchHandle = this._userList.watch( lang.hitch(this, this.userListStateChange));
-
-                   // }), 3000)
-                    //this.updateUserData(userData)
-
                 }
-                 // topic.publish("getUserState", lang.hitch(this, function (userState) {
-                 //     //topic.publish("addToCurrentWorkspace", this);
-                 //     this._userState = userState;
-                 //     let userData = userState.get("userData")
-                 //     this.updateUserData(userData)
-                 //     this._userStateWatchHandle = this._userState.watch("userData", lang.hitch(this, this.userStateChange));
-                 // }));
-
             },
+            startupContainable(){
+                console.log("🟢🟢🟢🟢userManagement Interface containable Started")
+            },
+            //##########################################################################################################
+            //Remote Events and Changes
+            //##########################################################################################################
             onInterfaceStateChange: function (name, oldState, newState) {
                 this.inherited(arguments);     //this has to be done so remoteCommander works
-
             },
             userListStateChange: function(name, oldState, newState){
                 // _userList watcher function
                 this.addUserWidget(newState)
+            },
+            //##########################################################################################################
+            //Local Events and Changes
+            //##########################################################################################################
+            _onClickAddUser: function (clickEvent) {
+                this.newUser()
+            },
+            //##########################################################################################################
+            //UI Functionality
+            //##########################################################################################################
+            loadUserList: function(){
+                //Called before watching _userList state
+                //There may be no objects yet in case it already has
+                //todo add to state utility as triggerInitialState or similar
+                let state = this._userList
+                for (const key in state) {
+                    let value = state[key]
+                    if(typeof value !== 'function' && key != "_attrPairNames"
+                        && key != "declaredClass"){
+                        this.addUserWidget(key)
+                    }
+                }
             },
             addUserWidget: function(userKey){
                 // called when a new userKey is received and set in _userList
@@ -104,104 +121,80 @@ define(['dojo/_base/declare',
                     domConstruct.place(userListItemOBJECT.domNode, this.userListDiv);
                 }
             },
-            startupContainable(){
-                console.log("🟢🟢🟢🟢userManagement Interface containable Started")
-            },
-            loadUserList: function(){
-                //Called before watching _userList state
-                //There may be no objects yet in case it already has
-                //todo add to state utility as triggerInitialState or similar
-                let state = this._userList
-                for (const key in state) {
-                    let value = state[key]
-                    if(typeof value !== 'function' && key != "_attrPairNames"
-                        && key != "declaredClass"){
-                        this.addUserWidget(key)
-                    }
-                }
-            },
-            _onClickAddUser: function (clickEvent) {
-                // let userData = {id: "new", name: this.newUserField.value, icon: ""};
-                // this.editUser(userData);
-            },
-            updateUserData: function (userData) {
-               // this._userData = userData;
-
-                // for (user in userData) {
-                //
-                //     if (this._userListItems[user]) {
-                //         this._userListItems[user].updateData(userData[user]);
-                //     } else {
-                //
-                //         let userListItemOBJECT = new userListItem({
-                //             _interface: this._interface,
-                //             _userManagementInterface: this,
-                //             _instanceKey: this._instanceKey,
-                //             usersControllerCommands: this.usersControllerCommands,
-                //             _userData: userData[user]
-                //         });
-                //         this._userListItems[user] = userListItemOBJECT;
-                //         domConstruct.place(userListItemOBJECT.domNode, this.userListDiv);
-                //     }
-                // }
-            },
             editUser: function (userKey) {
-
-
-                this._interface._instanceCommands.getEditUserComponentKey(userKey).then(lang.hitch(this, function(Result){
-                    let success = Result.SUCCESS
-                    let error = Result.ERROR
-
-                    if(success){
-                        let componentKey = success.componentKey
-                        let userKey = success.userKey
-                        console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey, userKey,Result)
-
-                        if(componentKey && componentKey.toString()){
-                            console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey)
-
-                            let userEdit = null
-                            if (this._userEditWidgets[userKey]){
-                                userEdit = this._userEditWidgets[userKey]
-                            }else{
-                                userEdit = new UserEdit({
-                                    _interface: this._interface,
-                                    _userManagementInterface: this,
-                                    _instanceKey: this._instanceKey,
-                                    _componentKey: componentKey,
-                                    usersControllerCommands: this.usersControllerCommands,
-                                    _userData: {userKey: userKey, name: "" , icon: ""}
-                                });
-
-                                this._userEditWidgets[userKey] = userEdit
-                                aspect.after(this._userEditWidgets[userKey], "destroy", lang.hitch(this, function () {
-                                    this._userEditWidgets[userKey] = null
-                                }));
-                                this._interface.putInWorkspace(this._userEditWidgets[userKey])
-                                // topic.publish("displayAsDialog", newUserEdit);
+                // called to either create or bring to front user edit widget container
+                if (this._userEditWidgets[userKey]) {
+                    this._userEditWidgets[userKey].focus()
+                }else{
+                    this._interface._instanceCommands.getEditUserComponentKey(userKey).then(lang.hitch(this, function(Result){
+                        let success = Result.SUCCESS
+                        let error = Result.ERROR
+                        if(success){
+                            let componentKey = success.componentKey
+                            let userKey = success.userKey
+                            console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey, userKey,Result)
+                            if(componentKey && componentKey.toString()){
+                                let userEdit = null
+                                if (this._userEditWidgets[userKey]){
+                                    userEdit = this._userEditWidgets[userKey]
+                                }else{
+                                    userEdit = new UserEdit({
+                                        _interface: this._interface,
+                                        _userManagementInterface: this,
+                                        _instanceKey: this._instanceKey,
+                                        _componentKey: componentKey,
+                                        usersControllerCommands: this.usersControllerCommands,
+                                        _userData: {userKey: userKey, name: "" , icon: ""}
+                                    });
+                                    this._userEditWidgets[userKey] = userEdit
+                                    aspect.after(this._userEditWidgets[userKey], "destroy", lang.hitch(this, function () {
+                                        this._userEditWidgets[userKey] = null
+                                    }));
+                                    this._interface.putInWorkspace(this._userEditWidgets[userKey])
+                                }
                             }
-
-
-
-
-
+                        }else{
+                            console.log("🟣🟣🟣🟣 editUser Error getEditUserComponentKey not expected result", error, Result)
                         }
-                    }
+                    })).catch(lang.hitch(this, function(Error){
+                        console.log("🟣🟣🟣🟣", Error)
+                    }))
+                }
 
+            },
+            newUser: function(){
+                if(this._newUserWidget !== null)
+                {
+                    console.log("_onClickAddUser Already here, want to bring forward")
+                }else
+                {
+                    this._interface._instanceCommands.getNewUserComponentKey().then(lang.hitch(this, function(Result){
+                        let success = Result.SUCCESS
+                        let error = Result.ERROR
+                        if(success){
+                            let componentKey = success.componentKey
+                            console.log("_onClickAddUser🔹🔹🔻🔻🔺🔺componentKey", componentKey,Result)
+                            if(componentKey && componentKey.toString()){
+                                console.log("_onClickAddUser🔹🔹🔻🔻🔺🔺componentKey", componentKey)
+                                if(this._newUserWidget === null){
+                                    this._newUserWidget = new NewUser({
+                                        _interface: this._interface,
+                                        _userManagementInterface: this,
+                                        _instanceKey: this._instanceKey,
+                                        _componentKey: componentKey,
+                                        usersControllerCommands: this.usersControllerCommands
+                                    })
 
-                    console.log("🟣🟣🟣🟣", Result)
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("🟣🟣🟣🟣", Error)
-                }))
-
-
-
-
-
-//todo make this work and add new user that also floats
-              //  topic.publish("displayAsDialog", this._userEditWidget);
-
-              //  newUserEdit.setFocus();
+                                    this._interface.putInWorkspace(this._newUserWidget)
+                                }else {
+                                    console.log("_onClickAddUser Already have _newUserWidget, must have double clicked, focus widget")
+                                }
+                            }
+                        }
+                    })).catch(lang.hitch(this, function(Error){
+                        console.log("🟣🟣🟣🟣", Error)
+                    }))
+                }
             },
             unload: function () {
                 this._userListWatchHandle.unwatch();

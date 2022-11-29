@@ -52,6 +52,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                     this._instanceCommands = new InstanceCommands();
                     this._instanceCommands.setCommand("getUserState", lang.hitch(this, this.getUserState))
+                    this._instanceCommands.setCommand("addNewUser", lang.hitch(this, this.addNewUser))
                     this._instanceCommands.setCommand("updateUsername", lang.hitch(this, this.updateUsername))
                     this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
                     this._instanceCommands.setCommand("updateUserPassword", lang.hitch(this, this.updateUserPassword))
@@ -183,6 +184,107 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 });
             },
             //Instance Commands
+            isUserAdmin: function(userKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                        if(userKey){
+
+                            this._dbController.getUserInfoFromDatabaseByKey(userKey).then(function (results) {
+                                //todo update User Store
+                                console.log("🟦🟦🟦🟦", results )
+                                if(results && Array.isArray(results))
+                                {
+                                    let userData = results[0]
+                                    let permissionGroups = JSON.parse(String.fromCharCode(...new Uint8Array(userData.permission_groups)));
+                                    if(permissionGroups && Array.isArray(permissionGroups)
+                                    && permissionGroups.includes("admin")) {
+                                        Resolve(true) ;
+                                    }else
+                                    {
+                                        Reject({Error: "Not valid administration user Key"});
+                                    }
+                                }else{
+                                    Reject({Error: "Not valid administration user Key"});
+                                }
+                            }).catch(function (error) {
+                                Reject(error);
+                            });
+                        }else{
+                            Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
+                        }
+                }));
+            },
+            addNewUser: function(userData, adminUserKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if(userData && adminUserKey
+                    && userData.userName && userData.icon && userData.icon.data
+                    && userData.password){
+                        console.log("loadUserListFor Error", Error);
+
+                        const iconData = Object.values(userData.icon.data);
+                        const iconBase64 = Buffer.from(iconData);
+
+
+                        let userKey = this._usersManager.getUniqueUserKey()
+                        let permissionGroups =  Buffer.from(JSON.stringify(["users"]).toString())
+
+                        this.isUserAdmin(adminUserKey).then(lang.hitch(this, function (results) {
+                            //todo update User Store
+                            console.log("🟦🟦🟦🟦", results, userKey )
+                            if(results)
+                            {
+                                console.log("addNewUser" , this._dbController)
+
+                                this._dbController.addNewUser(userData.userName, userData.password, iconBase64, userKey, permissionGroups).then(lang.hitch(this, function (results) {
+                                    console.log("addNewUseraddNewUser",userData.userName, userData.password, userKey )
+                                    if(results[0].affectedRows === 1)
+                                    {
+                                        Resolve({Success: "User Added", Results: results})
+
+                                        //Create User State
+                                        this._usersManager._userStates[userKey.toString()] = new this._UserState({
+                                            userName: userData.userName,
+                                            userKey: userKey,
+                                            icon: iconBase64
+                                        });
+                                        console.log("Userlists 🟢🟢🟢🟢🟢",  this._userListStates)
+                                        //add userKey to userslists
+                                        for(objectIndex in this._userListStates)
+                                        {
+                                            if(this._userListStates[objectIndex] !== null
+                                                && this._userListStates[objectIndex].set
+                                                && typeof this._userListStates[objectIndex].set === 'function'){
+                                                console.log("Setting 🟢🟢🟢🟢🟢", objectIndex, this._userListStates[objectIndex])
+                                                let userListState = this._userListStates[objectIndex]
+                                                userListState.set(userKey.toString(), userKey.toString())
+                                            }else {
+                                                console.log("Skipping 🛑🛑🛑🛑", objectIndex, this._userListStates[objectIndex])
+                                            }
+                                        }
+                                        console.log("Done Setting 🟢🟢🟢🟢🟢", objectIndex, this._userListStates[objectIndex])
+
+                                    }else if(results[0].affectedRows === 0){
+                                        Reject({Error: "No Rows Affected", Results: results})
+                                    }else {
+                                        Reject({Error: "Unexpected Results", Results: results})
+                                    }
+                                })).catch(function (Error) {
+                                    Reject({Error: Error})
+                                });
+
+                            }else
+                            {
+                                Reject({Error: "Request needs administrative key"});
+                            }
+                        })).catch(function (error) {
+                            Reject(error);
+                        });
+
+
+                    }else{
+                        Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
+                    }
+                }));
+            },
             updateUsername: function(userName, userKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userKey && userName){
