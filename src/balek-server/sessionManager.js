@@ -186,7 +186,10 @@ define(['dojo/_base/declare',
             },
             addInstanceToSession: function (sessionKey, instance) {
                 //todo make session.addInstance
-                this._sessions[sessionKey]._instances[instance._instanceKey] = instance;
+                let session = this.getSession(sessionKey)
+                if(session !== null  ){
+                    session.addInstance(instance)
+                }
             },
             requestSessionKey: function (wssConnection) {
                 if (wssConnection._sessionKey === null) {

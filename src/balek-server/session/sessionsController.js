@@ -121,7 +121,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             //##########################################################################################################
             //Instance Commands
             getSessionUserKey: function(sessionKey){
-                let session = this._sessionsManager.getSession(sessionKey)
+                let session = this.getSession(sessionKey)
                 let userKey = null
                 if(session !== null)
                 {
@@ -131,7 +131,14 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             getAvailableSessionsList: function(userKey){
                 return this._sessionsManager.getUserSessionList(userKey)
+            },
+            //##########################################################################################################
+            // Migrate from SessionManager
+            //##########################################################################################################
+            getSession: function(sessionKey){
+                return this._sessionsManager.getSession(sessionKey)
             }
+
         });
     }
 );

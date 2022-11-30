@@ -22,27 +22,22 @@ define(['dojo/_base/declare',
             _instanceCommands: null,
             _sessionCommands: null,
             _dbController: null,
-
             _usersManager: null,
-
 
             _userInfoStates: null,
             _userListStates: null,
 
             _userInfoWatchers: null,
             _userListWatchers: null,
-
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 if(this._usersManager){
                     console.log("balekUsersController  starting...");
-
                     //Create User Infos and User Lists Maps
                     this._userInfoStates = {};
                     this._userListStates = {};
                     this._userInfoWatchers = {}
                     this._userListWatchers = {}
-
                     //Initialize Instance Commands
                     this._instanceCommands = new InstanceCommands();
                     this._instanceCommands.setCommand("addNewUser", lang.hitch(this, this.addNewUser))
@@ -97,7 +92,6 @@ define(['dojo/_base/declare',
             stopWatching(userKey, sessionKey){
                 //todo Make this work and call from command when Interface is done watching
             },
-
             //##########################################################################################################
             //Relay User List State - UserManager Methods
             //##########################################################################################################

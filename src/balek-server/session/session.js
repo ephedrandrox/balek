@@ -197,9 +197,12 @@ define([ 	'dojo/_base/declare',
                     }
                 };
             },
+            addInstance: function( instanceToAdd)
+            {
+                this._instances[instanceToAdd._instanceKey] = instanceToAdd;
+            },
             getInstances: function(){
                 let instancesToReturn = {};
-
                     for(const instanceKey in this._instances)
                     {
                         instancesToReturn[instanceKey] = {instanceKey:instanceKey,
@@ -223,7 +226,6 @@ define([ 	'dojo/_base/declare',
                 });
             },*/
             unload: function(){
-
                 //unload all instances
                 for(const instanceKey in this._instances) {
                     this.unloadModuleInstance(instanceKey).then(function(value){
@@ -240,7 +242,6 @@ define([ 	'dojo/_base/declare',
                     this._availableSessionStateWatchHandles[watchHandle].unwatch();
                     this._availableSessionStateWatchHandles[watchHandle].remove();
                 }
-
 
                 this._sessionStateWatchHandle.unwatch();
                 this._sessionStateWatchHandle.remove();
