@@ -1,10 +1,11 @@
 define([ 	'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'balek-server/session/sessionsController/instanceCommands',
 
         'balek/session/session',
     'balek-server/session/workspaceManager'],
-    function (declare, lang, topic, balekSessionManagerSession, balekWorkspaceManager ) {
+    function (declare, lang, topic, SessionInstanceCommands, balekSessionManagerSession, balekWorkspaceManager ) {
 
         return declare("balekServerSessionManagerSession", balekSessionManagerSession, {
 
@@ -15,32 +16,28 @@ define([ 	'dojo/_base/declare',
             _availableSessionStateWatchHandles: {},
 
 
+            _sessionInstanceCommands: null,
+
             _workspaceManager: null,
             _instances: null,
 
             constructor: function(args){
                 //todo audit/comment this file
 
-
                 declare.safeMixin(this, args);
                 this._instances = {};
                 console.log("Initializing Balek Session Manager session for server...");
 
-
+                let sessionInstanceCommands = new SessionInstanceCommands()
+                this._sessionInstanceCommands = sessionInstanceCommands.getCommands()
 
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "New Session"}});
 
-
                 this._workspaceManager = new  balekWorkspaceManager();
 
-
-
-                this._availableSessionStates = {};
-                this._availableSessionStateWatchHandles = {};
-
-                this._sessionStateWatchHandle = this._syncedState.watch(lang.hitch(this, this.onStateChange));
-
-
+              //  this._availableSessionStates = {};
+              //  this._availableSessionStateWatchHandles = {};
+                // this._sessionStateWatchHandle = this._syncedState.watch(lang.hitch(this, this.onStateChange));
             },
             updateSessionStatus:function(args){
                 //this is what we call to update session statue
@@ -53,65 +50,6 @@ define([ 	'dojo/_base/declare',
                     this._syncedState.set(name, args[name]);
                 }
 
-            },
-            onStateChange: function(name, oldState,newState)
-            {
-                if(name === "userKey"){
-                    topic.publish("getSessionsForUserKey", newState, lang.hitch(this, function(userSessions){
-                       // console.log("User Sessions");
-                        let availableSessions = {};
-                        userSessions.forEach(lang.hitch(this, function(userSession){
-                            //console.log(userSession._sessionKey);
-                            if(userSession._sessionKey!= this._sessionKey)
-                            {
-                                userSession.addAvailableSession(this);
-                                availableSessions[userSession._sessionKey] = userSession.getStatus();
-                                this.watchAvailableSessionState(userSession);
-                            }
-                        }));
-                        this.getState().set("availableSessions", availableSessions);
-                    }));
-
-                }
-            },
-            addAvailableSession: function(availableSession)
-            {
-                let availableSessions = this.getState().get("availableSessions");
-                availableSessions[availableSession._sessionKey] = availableSession.getStatus();
-                this.watchAvailableSessionState(availableSession);
-                this.getState().set("availableSessions", availableSessions);
-
-            },
-            onAvailableStateChange: function(availableSessionKey, name, oldState, newState){
-                //hitched this and available session Key in watch call
-                console.log(name, newState);
-
-                if(name === "unloaded" || name === "sessionStatus")
-                {
-                    let availableSessions = this.getState().get("availableSessions");
-                    if( name === "unloaded")
-                    {
-                        console.log("unloaded");
-                        delete availableSessions[availableSessionKey]
-
-                    }else if(name === "sessionStatus")
-                    {
-                        console.log("sessionStatus");
-                        availableSessions[availableSessionKey] = newState;
-
-                    }
-                    this.getState().set("availableSessions", availableSessions);
-                }
-
-
-            },
-            watchAvailableSessionState: function(availableSession){
-                if(!this._availableSessionStates[availableSession._sessionKey])
-                {
-                    this._availableSessionStates[availableSession._sessionKey] = availableSession.getState();
-                    this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey]
-                        .watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
-                }
             },
             sessionRequest: function(request, messageReplyCallback)
             {
@@ -159,17 +97,22 @@ define([ 	'dojo/_base/declare',
 
                 }));
             },
-           /* getNewWorkspace: function(){
-                //todo delte this after workspace state update
-                this.sendWorkspacesUpdate("new", this._workspaceManager.getNewWorkspace());
+            addInstance: function( instanceToAdd)
+            {
+                this._instances[instanceToAdd._instanceKey] = instanceToAdd;
             },
-            sendWorkspaces: function(){
-                //todo delete this after workspace state update
-                this.sendWorkspacesUpdate("all",  this._workspaceManager.getWorkspaces());
+            getInstances: function(){
+                let instancesToReturn = {};
+                for(const instanceKey in this._instances)
+                {
+                    instancesToReturn[instanceKey] = {instanceKey:instanceKey,
+                        moduleName: this._instances[instanceKey]._moduleName,
+                        displayName: this._instances[instanceKey]._displayName}
+                }
 
+                return instancesToReturn;
             },
 
-            */
             getInterfaceLoadObject: function(){
 
                 let interfaceData = {};
@@ -197,34 +140,6 @@ define([ 	'dojo/_base/declare',
                     }
                 };
             },
-            addInstance: function( instanceToAdd)
-            {
-                this._instances[instanceToAdd._instanceKey] = instanceToAdd;
-            },
-            getInstances: function(){
-                let instancesToReturn = {};
-                    for(const instanceKey in this._instances)
-                    {
-                        instancesToReturn[instanceKey] = {instanceKey:instanceKey,
-                            moduleName: this._instances[instanceKey]._moduleName,
-                            displayName: this._instances[instanceKey]._displayName}
-                    }
-
-                    return instancesToReturn;
-            },
-            /*
-            sendWorkspacesUpdate: function(updateType, workspacesData){
-                    //todo move this to workspaces or delete after state update
-                topic.publish("sendBalekProtocolMessage", this._wssConnection, {
-                    sessionMessage: {
-                        sessionKey: this._sessionKey,
-                        workspacesUpdate: {
-                                updateType: updateType,
-                                workspaceData : workspacesData
-                            }
-                    }
-                });
-            },*/
             unload: function(){
                 //unload all instances
                 for(const instanceKey in this._instances) {
@@ -243,12 +158,94 @@ define([ 	'dojo/_base/declare',
                     this._availableSessionStateWatchHandles[watchHandle].remove();
                 }
 
-                this._sessionStateWatchHandle.unwatch();
-                this._sessionStateWatchHandle.remove();
+                //this._sessionStateWatchHandle.unwatch();
+                //this._sessionStateWatchHandle.remove();
                 //todo delete the states
                 this.inherited(arguments);
 
             }
+            // onStateChange: function(name, oldState,newState)
+            // {
+            //     if(name === "userKey"){
+            //         topic.publish("getSessionsForUserKey", newState, lang.hitch(this, function(userSessions){
+            //            // console.log("User Sessions");
+            //             let availableSessions = {};
+            //             userSessions.forEach(lang.hitch(this, function(userSession){
+            //                 //console.log(userSession._sessionKey);
+            //                 if(userSession._sessionKey!= this._sessionKey)
+            //                 {
+            //                     userSession.addAvailableSession(this);
+            //                     availableSessions[userSession._sessionKey] = userSession.getStatus();
+            //                     this.watchAvailableSessionState(userSession);
+            //                 }
+            //             }));
+            //             this.getState().set("availableSessions", availableSessions);
+            //         }));
+            //
+            //     }
+            // },
+            // addAvailableSession: function(availableSession)
+            // {
+            //     let availableSessions = this.getState().get("availableSessions");
+            //     availableSessions[availableSession._sessionKey] = availableSession.getStatus();
+            //     this.watchAvailableSessionState(availableSession);
+            //     this.getState().set("availableSessions", availableSessions);
+            //
+            // },
+            // onAvailableStateChange: function(availableSessionKey, name, oldState, newState){
+            //     //hitched this and available session Key in watch call
+            //     console.log(name, newState);
+            //
+            //     if(name === "unloaded" || name === "sessionStatus")
+            //     {
+            //         let availableSessions = this.getState().get("availableSessions");
+            //         if( name === "unloaded")
+            //         {
+            //             console.log("unloaded");
+            //             delete availableSessions[availableSessionKey]
+            //
+            //         }else if(name === "sessionStatus")
+            //         {
+            //             console.log("sessionStatus");
+            //             availableSessions[availableSessionKey] = newState;
+            //
+            //         }
+            //         this.getState().set("availableSessions", availableSessions);
+            //     }
+            //
+            //
+            // },
+            // watchAvailableSessionState: function(availableSession){
+            //     if(!this._availableSessionStates[availableSession._sessionKey])
+            //     {
+            //         this._availableSessionStates[availableSession._sessionKey] = availableSession.getState();
+            //         this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey]
+            //             .watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
+            //     }
+            // },
+            /* getNewWorkspace: function(){
+               //todo delte this after workspace state update
+               this.sendWorkspacesUpdate("new", this._workspaceManager.getNewWorkspace());
+           },
+           sendWorkspaces: function(){
+               //todo delete this after workspace state update
+               this.sendWorkspacesUpdate("all",  this._workspaceManager.getWorkspaces());
 
+           },
+
+           */
+            /*
+           sendWorkspacesUpdate: function(updateType, workspacesData){
+                   //todo move this to workspaces or delete after state update
+               topic.publish("sendBalekProtocolMessage", this._wssConnection, {
+                   sessionMessage: {
+                       sessionKey: this._sessionKey,
+                       workspacesUpdate: {
+                               updateType: updateType,
+                               workspaceData : workspacesData
+                           }
+                   }
+               });
+           },*/
         });
     });
