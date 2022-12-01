@@ -117,7 +117,9 @@ define(['dojo/_base/declare',
 
                 //topic.publish("addToCurrentWorkspace", this);
 
-                this._dnd = new Moveable(this.domNode);
+                //Skip True passes clicks to input in container
+                this._dnd = new Moveable(this.domNode, {skip: true});
+
 
                 this._dnd.on("MoveStop", lang.hitch(this, this.onWidgetMoveStop));
 
