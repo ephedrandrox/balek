@@ -21,7 +21,7 @@
 
 .userManagementWidgetNewUser {
     outline: 0px solid transparent;
-    background: #88cc60;
+    background: rgba(136, 204, 96, 0.9);
     display: inline-block;
     text-align: center;
     padding: 30px;
@@ -35,6 +35,8 @@
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+
+    pointer-events: all;
 }
 
 .userManagementWidgetNewUserFileInput {

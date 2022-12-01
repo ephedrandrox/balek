@@ -10,10 +10,28 @@
     border: solid black 5px;
     background: rgba(20, 75, 115, 0.41);
     padding: 50px;
+    padding-top: 30px;
     border-radius: 10px;
     display: inline-block;
     pointer-events: all;
+    margin: auto;
+    margin-right: 30px;
+}
 
+.userManagementWidgetUserAddDiv {
+    position: relative;
+    border: solid black 5px;
+    background: rgba(8, 213, 67, 0.41);
+    padding: 5px;
+    border-radius: 10px;
+    display: inline-block;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.userManagementWidgetUserAddDiv:hover{
+    border: solid rgba(8, 213, 67, 0.41) 5px;
+    background: black;
 }
 
 .userManagementWidgetUserList {

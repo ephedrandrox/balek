@@ -75,7 +75,7 @@ define(['dojo/_base/declare',
             },
             setFocus: function () {
                 //todo may need to check domReady here
-                dijitFocus.focus(this._mainDiv);
+                //dijitFocus.focus(this._mainDiv);
             },
            //##########################################################################################################
             //Remote Events and Changes
