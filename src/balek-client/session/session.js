@@ -136,7 +136,11 @@ define(['dojo/_base/declare',
                 }
             },
             getSessionState: function (sessionStateReturn) {
-                sessionStateReturn(this._syncedState);
+                if(sessionStateReturn){
+                    sessionStateReturn(this._syncedState);
+                }else{
+                    return this._syncedState
+                }
             },
             unload: function () {
                 this._getSessionStateTopicHandle.remove();

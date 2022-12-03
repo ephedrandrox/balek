@@ -32,6 +32,9 @@ define(['dojo/_base/declare',
             _userInfoState: null,
             _userInfoStateWatchHandle: null,
 
+            _sessionState: null,
+            _sessionStateWatchHandle: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -45,14 +48,35 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
-            postCreate() {
-                let userKey = this.sessionControllerCommands.getSessionUserKey()
-                this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
-                if(this._userInfoState.get("icon")){
-                    this.onUserInfoUpdate("icon", null, this._userInfoState.get("icon"))
+            onSessionStateChange(name, oldState, newState){
+                console.log("🔻🔻🔻🔻UserMenu",name, oldState, newState)
+                if(name = "userKey"){
+                    this.checkAndLoadUserInfoState()
                 }
-                this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoUpdate));
             },
+            checkAndLoadUserInfoState(){
+                let userKey = this.sessionControllerCommands.getSessionUserKey()
+                if(userKey && this._userInfoState === null  ) {
+                    console.log("🔵🟣🟣🟡🟡🟡🔵🔵", userKey , this)
+                    this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
+                    console.log("🔵🟣🟣🟡🟡🟡🔵🔵", this._userInfoState , this)
+
+                    if(this._userInfoState.get("icon")){
+                        this.onUserInfoUpdate("icon", null, this._userInfoState.get("icon"))
+                    }
+                    this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoUpdate));
+
+                }
+
+            },
+            postCreate() {
+
+                this._sessionState = this.sessionControllerCommands.getSessionState()
+                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
+                this.checkAndLoadUserInfoState()
+
+
+                  },
             onUserInfoUpdate: function(name, oldValue, newValue){
                 if(name === "icon" && this._userImage){
                     this._userImage.src = newValue;
@@ -79,6 +103,9 @@ define(['dojo/_base/declare',
             unload: function () {
                 this._userInfoStateWatchHandle.unwatch();
                 this._userInfoStateWatchHandle.remove();
+
+                this._sessionStateWatchHandle.unwatch();
+                this._sessionStateWatchHandle.remove()
             }
         });
     });

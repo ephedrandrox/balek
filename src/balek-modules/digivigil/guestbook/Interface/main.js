@@ -39,7 +39,7 @@ define(['dojo/_base/declare',
             _listDiv: null,                     //DomNode
             _createEntry: null,                 //Widget
 
-            entries: null,                      // Objects by id
+            entries: null,                      //Objects by id
 
             availableEntries: null,             //SyncedMap
             availableEntriesWatchHandle: null,
@@ -114,7 +114,11 @@ define(['dojo/_base/declare',
                     this._createEntry.unload();
                 }
 
-                this.availableEntriesWatchHandle.unwatch()
+                if(this.availableEntriesWatchHandle && this.availableEntriesWatchHandle.unwatch)
+                {
+                    this.availableEntriesWatchHandle.unwatch()
+
+                }
 
                 for (const entryWidget in this._EntryWidgets) {
                     this._EntryWidgets[entryWidget].unload();

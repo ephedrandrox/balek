@@ -81,8 +81,8 @@ define(['dojo/_base/declare',
             },
             unload: function () {
                 this._sessionMenuWorkspacesInterface.unload();
-                this._workspacesWatchHandle.remove();
-                this._activeWorkspacesWatchHandle.remove();
+              //  this._workspacesWatchHandle.remove();
+              //  this._activeWorkspacesWatchHandle.remove();
                 this.destroy();
             }
         });

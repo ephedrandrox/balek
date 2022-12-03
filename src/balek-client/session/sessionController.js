@@ -30,7 +30,10 @@ define(['dojo/_base/declare',
 
                 this._interfaceCommands = new InterfaceCommands();
                 this._interfaceCommands.setCommand("getSessionUserKey", lang.hitch(this, this.getSessionUserKey))
+                this._interfaceCommands.setCommand("getSessionState", lang.hitch(this, this.getSessionState))
+
                 this._interfaceCommands.setCommand("getUserSessionsList", lang.hitch(this, this.getUserSessionsList))
+                this._interfaceCommands.setCommand("requestSessionChange", lang.hitch(this, this.requestSessionChange))
 
 
             },
@@ -50,6 +53,8 @@ define(['dojo/_base/declare',
                     }));
             },
             getSessionUserKey(){
+                console.log("🔵🟣🟣🟡🟡🟡🔵🔵",this._session.getUserKey(), this)
+
                 return this._session.getUserKey()
             },
             getUserSessionsList: function(){
@@ -60,6 +65,19 @@ define(['dojo/_base/declare',
                 }
 
                 return this.userSessionsList
+            },
+            requestSessionChange(changeSessionKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    topic.publish("sendBalekProtocolMessage", {
+                        sessionManagerMessage: {
+                            sessionKey: this._session._sessionKey,
+                            changeSessionKey: changeSessionKey
+                        }
+                    });
+                }));
+            },
+            getSessionState(){
+                return this._session.getSessionState()
             },
             setActiveSession: function(session){
                 this._session = session

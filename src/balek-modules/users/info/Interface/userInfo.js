@@ -45,6 +45,8 @@ define(['dojo/_base/declare',
             _userNameNode: null,
 
             _sessionState: null,
+            _sessionStateWatchHandle: null,
+
             _userState: null,
             _availableSessionsState: null,
             _availableSessions: null,
@@ -121,7 +123,7 @@ define(['dojo/_base/declare',
             addSessionWidget: function(sessionKey){
                     if(!this._sessionWidgets[sessionKey]){
                         this._sessionWidgets[sessionKey] = new SessionWidget({_instancekey: this._instancekey,
-                            sessionInfo: {key: sessionKey}})
+                            sessionInfo: {key: sessionKey}, sessionControllerCommands: this.sessionControllerCommands})
                     }
                     domConstruct.place(this._sessionWidgets[sessionKey].domNode, this._availableSessionsNode)
             },
@@ -160,35 +162,50 @@ define(['dojo/_base/declare',
                         console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
+            onSessionStateChange(name, oldState, newState){
+                console.log("🔻🔻🔻🔻UserInfo",name, oldState, newState)
+                if(name = "userKey"){
+                    this.checkAndLoadUserInfoState()
+                }
+            },
+            checkAndLoadUserInfoState(){
+                let userKey = this.sessionControllerCommands.getSessionUserKey()
+                if(userKey && this._userInfoState === null && this._usersSessionsStateList === null ){
+                    this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
+
+                    if(this._userInfoState.get("icon")){
+                        this.onUserInfoStateChange("icon", null, this._userInfoState.get("icon"))
+                    }
+                    if(this._userInfoState.get("userName")){
+                        this.onUserInfoStateChange("userName", null, this._userInfoState.get("userName"))
+                    }
+
+                    this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoStateChange));
+
+
+                    this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
+
+                    for (const key in this._usersSessionsStateList) {
+                        let value = this._usersSessionsStateList[key]
+                        if(typeof value !== 'function' && key != "_attrPairNames"
+                            && key != "declaredClass"){
+                            console.log("adding objects from  State", key, value)
+                            this.onAvailableSessionsStateChange(key, null, value );
+                        }
+                    }
+
+                    this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
+
+                }
+
+            },
 
             postCreate() {
                 this.initializeContainable();
 
-                let userKey = this.sessionControllerCommands.getSessionUserKey()
-                this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
-
-                if(this._userInfoState.get("icon")){
-                    this.onUserInfoStateChange("icon", null, this._userInfoState.get("icon"))
-                }
-                if(this._userInfoState.get("userName")){
-                    this.onUserInfoStateChange("userName", null, this._userInfoState.get("userName"))
-                }
-
-                this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoStateChange));
-
-
-                this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
-
-                for (const key in this._usersSessionsStateList) {
-                    let value = this._usersSessionsStateList[key]
-                    if(typeof value !== 'function' && key != "_attrPairNames"
-                        && key != "declaredClass"){
-                        console.log("adding objects from  State", key, value)
-                        this.onAvailableSessionsStateChange(key, null, value );
-                    }
-                }
-
-                this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
+                this._sessionState = this.sessionControllerCommands.getSessionState()
+                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
+                this.checkAndLoadUserInfoState()
 
             },
             startupContainable: function(){
@@ -196,8 +213,10 @@ define(['dojo/_base/declare',
                 console.log("startupContainable main User Info interface containable");
             },
             unload: function () {
-                this._userStateWatchHandle.unwatch();
-                this._userStateWatchHandle.remove();
+                this._sessionStateWatchHandle.unwatch();
+                this._sessionStateWatchHandle.remove();
+                this._userInfoStateWatchHandle.unwatch();
+               this._userInfoStateWatchHandle.remove();
                 this._usersSessionsStateListWatchHandle.unwatch();
                 this._usersSessionsStateListWatchHandle.remove();
             }

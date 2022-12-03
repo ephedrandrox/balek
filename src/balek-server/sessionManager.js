@@ -130,11 +130,13 @@ define(['dojo/_base/declare',
 
             },
             receiveSessionManagerMessage: function (sessionManagerMessage) {
+                console.log("receiveSessionManagerMessage",sessionManagerMessage , this._sessions)
+
                 if (sessionManagerMessage.sessionKey && sessionManagerMessage.changeSessionKey) {
                     if (this._sessions[sessionManagerMessage.sessionKey]
                         && this._sessions[sessionManagerMessage.sessionKey]._wssConnection) {
                         this.changeSessionConnection(this._sessions[sessionManagerMessage.sessionKey]._wssConnection, sessionManagerMessage.changeSessionKey);
-                        this.unloadAllUserSessionsExcept(sessionManagerMessage.changeSessionKey);
+                       // this.unloadAllUserSessionsExcept(sessionManagerMessage.changeSessionKey);
                     }
                 } else if (sessionManagerMessage.sessionKey && sessionManagerMessage.requestAvailableSessions) {
                 //todo remove this and set up retreievable state object
@@ -268,7 +270,7 @@ define(['dojo/_base/declare',
 
                 //todo put this in a try/catch and use reject
                 //Reject currently isn't in the logic
-
+console.log("unloadSessionunloadSessionunloadSessionunloadSessionunloadSession🟥🟥🟥🟥🔸🔹🔴")
                 //todo check that the session that is being unloaded belongs to the user that is asking for it to be unloaded
                 //And that the session being switched to also is allowed
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
@@ -276,6 +278,7 @@ define(['dojo/_base/declare',
                       let sessionToUnload = this._sessions[sessionKey];
                       let sessionUserKey = sessionToUnload.getUserKey()
                       let resolveMessage = "normal";
+
                       let unloadAndResolve = lang.hitch(this, function(){
                           //todo, this should be a promise being returned from unload
                           sessionToUnload.unload();
@@ -349,6 +352,7 @@ define(['dojo/_base/declare',
             },
             changeSessionConnection: function (wssConnection, changeSessionKey) {
                 //if sessions have same user allow change
+                console.log("changeSessionConnection wssConnection, changeSessionKey",wssConnection, changeSessionKey, this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()],this._sessions)
                 if (wssConnection && wssConnection._sessionKey && this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()]) {
                     let oldSessionKey = wssConnection._sessionKey.toString();
                     let oldSession = this._sessions[oldSessionKey];

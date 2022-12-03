@@ -161,8 +161,8 @@ define(['dojo/_base/declare',
             //     domStyle.set(this._userManagementInterface.domNode, {"visibility": currentStateToggle[domStyle.get(this._userManagementInterface.domNode, "visibility")]});
             // },
             unload: function () {
-                this._userStateWatchHandle.unwatch();
-                this._userStateWatchHandle.remove();
+              //  this._userStateWatchHandle.unwatch();
+              //  this._userStateWatchHandle.remove();
             }
         });
     }

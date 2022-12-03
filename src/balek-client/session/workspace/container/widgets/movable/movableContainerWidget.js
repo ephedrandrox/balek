@@ -85,7 +85,7 @@ define(['dojo/_base/declare',
             },
              _onPointerOver: function(event)
                 {
-                            console.log("movableContainerWidget onClick",event );
+                       //     console.log("movableContainerWidget onClick",event );
 
                             if(event.altKey)
                             {

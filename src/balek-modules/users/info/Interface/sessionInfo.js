@@ -35,6 +35,8 @@ define(['dojo/_base/declare',
             _mainDiv: null,
             _keyDiv: null,
 
+            sessionControllerCommands: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -61,7 +63,9 @@ define(['dojo/_base/declare',
                             });
             },
             _onSwitchAndCloseButtonClicked: function (clickEvent) {
-                topic.publish("requestSessionChangeAndUnloadAll", this.sessionInfo.key);
+                //topic.publish("requestSessionChangeAndUnloadAll", this.sessionInfo.key);
+console.log(this.sessionControllerCommands)
+                this.sessionControllerCommands.requestSessionChange(this.sessionInfo.key)
             },
 
             _onFocus: function () {
