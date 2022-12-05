@@ -14,7 +14,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
                     this._wssConnection.on('close', lang.hitch(this, "onWebSocketClose"));
                     this._wssConnection.on('error', lang.hitch(this, "onWebsocketError"));
 
-                    topic.publish("requestSessionKey", this);
+                    topic.publish("requestNewSession", this);
                 }
             },
             sendDataToClient: function (dataToSend) {

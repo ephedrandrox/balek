@@ -30,8 +30,6 @@ define(['dojo/_base/declare',
             getUserInfoFromDatabaseByKey: function (userKey) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
-                    console.log("getUserInfoFromDatabaseByKeygetUserInfoFromDatabaseByKeygetUserInfoFromDatabaseByKey Error", );
-
                     let query = this._dbConnection.query('SELECT id, name, password, userKey, permission_groups FROM ' + this._mysqlSettings.database + '.users WHERE userKey = ?;', userKey);
                     let userToReturn = [];
                     query.on('error', function (err) {

@@ -55,7 +55,7 @@ define(['dojo/_base/declare',
                 dijitFocus.focus(this.domNode);
             },
             _onSwitchToButtonClicked: function (clickEvent) {
-                topic.publish("requestSessionChange", this.sessionInfo.key);
+                this.sessionControllerCommands.requestSessionChange(this.sessionInfo.key)
             },
             _onCloseButtonClicked: function (clickEvent) {
                 topic.publish("requestSessionUnload", this.sessionInfo.key, function(value){
@@ -63,9 +63,7 @@ define(['dojo/_base/declare',
                             });
             },
             _onSwitchAndCloseButtonClicked: function (clickEvent) {
-                //topic.publish("requestSessionChangeAndUnloadAll", this.sessionInfo.key);
-console.log(this.sessionControllerCommands)
-                this.sessionControllerCommands.requestSessionChange(this.sessionInfo.key)
+                this.sessionControllerCommands.requestSessionChange(this.sessionInfo.key, true)
             },
 
             _onFocus: function () {

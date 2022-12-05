@@ -5,7 +5,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
         'balek-server/session/sessionsController/instanceCommands'
     ],
-    function (declare, lang, topic, Stateful,InstanceCommands
+    function (declare, lang, topic,
+              Stateful,
+              InstanceCommands
     ) {
         return declare("balekSessionsController", null, {
             _sessionsManager: null,
@@ -37,9 +39,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
 
                     this._instanceCommands = new InstanceCommands();
-
                     this._instanceCommands.setCommand("getAvailableSessionsList", lang.hitch(this, this.getAvailableSessionsList))
                     this._instanceCommands.setCommand("getSessionUserKey", lang.hitch(this, this.getSessionUserKey))
+                    this._instanceCommands.setCommand("getSessionByKey", lang.hitch(this, this.getSessionByKey))
+
 
                 }
             },
@@ -81,7 +84,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         console.log("Skipping 🛑🛑🔵🔵🔵🔵🔵🔵", objectKey, userSessionsListState[objectKey], Object.entries(userSessionsListState))
                     }
                 }
-                let watchHandle = userSessionsListState.watch(lang.hitch(this, function(name, oldState, newState){
+                let watchHandle = userSessionsListState.watch(lang.hitch(this, function(name, oldState, newState = null){
                     console.log("✅✅✅ watchHandle ✅✅✅",userKey, sessionKey, messageReplyCallback)
                     console.log("✅✅✅✅✅✅",name, newState)
 
@@ -117,10 +120,22 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 //todo Make this work and call from command when Interface is done watching
             },
             //##########################################################################################################
-            //Relay Available Sessions State End
-            //##########################################################################################################
             //Instance Commands
+            //##########################################################################################################
+            getAvailableSessionsList: function(userKey){
+                // summary:
+                //          Returns the user session list as state
+                //
+                // tags:
+                //          session controller instance command
+                return this.getUserSessionList(userKey)
+            },
             getSessionUserKey: function(sessionKey){
+                // summary:
+                //          Returns the userKey associated with the sessionKey
+                //
+                // tags:
+                //          session controller instance command
                 let session = this.getSession(sessionKey)
                 let userKey = null
                 if(session !== null)
@@ -129,14 +144,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }
                 return userKey
             },
-            getAvailableSessionsList: function(userKey){
-                return this._sessionsManager.getUserSessionList(userKey)
+            getSessionByKey: function(sessionKey, returnCallback = null){
+                // summary:
+                //          Returns the session object associated with the sessionKey
+                //
+                // tags:
+                //          session controller instance command
+                if(typeof returnCallback === 'function'){
+                    returnCallback(this.getSession(sessionKey))
+                }else{
+                    return this.getSession(sessionKey)
+                }
             },
             //##########################################################################################################
-            // Migrate from SessionManager
+            // Migrate from SessionManager as private controller functions
             //##########################################################################################################
             getSession: function(sessionKey){
                 return this._sessionsManager.getSession(sessionKey)
+            },
+            getUserSessionList: function(userKey){
+                return this._sessionsManager.getUserSessionList(userKey)
             }
 
         });
