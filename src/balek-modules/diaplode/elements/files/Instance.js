@@ -1,6 +1,8 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'balek-server/session/sessionsController/instanceCommands',
+
 
         'balek-modules/diaplode/elements/files/Instance/file',
         'balek-modules/diaplode/elements/files/Database/files',
@@ -12,7 +14,7 @@ define(['dojo/_base/declare',
     function (declare,
               lang,
               topic,
-
+              SessionsControllerInstanceCommands,
               fileInstance,
               filesDatabase,
 
@@ -30,6 +32,9 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
+
                 this._fileInstances = {};
 
                 this._commands={
@@ -41,8 +46,9 @@ define(['dojo/_base/declare',
 
                 console.log("moduleDiaplodeElementsFilesInstance starting...");
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
-                    this._userKey = userKey;
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+
+                this._userKey = userKey;
                     this._filesDatabase = new filesDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
                     this._filesDatabase.getUserFiles().then(lang.hitch(this, function (userFilesArray) {
                         console.log("getSessionUserKey", "getUserFiles", userFilesArray)
@@ -66,7 +72,6 @@ define(['dojo/_base/declare',
                     })).catch(function (error) {
                         console.log(error);
                     });
-                }));
 
 
                 this._availableFiles  = new syncedMapInstance({_instanceKey: this._instanceKey});

@@ -1,9 +1,11 @@
 define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/Stateful',
         'dojo/topic',
+        'balek-server/session/sessionsController/instanceCommands',
+
         'dojo/node!crypto'
     ],
-    function (declare, lang, Stateful, topic, crypto ) {
+    function (declare, lang, Stateful, topic, SessionsControllerInstanceCommands,crypto ) {
         return declare("balekuteConnectControllerTarget", null, {
             _module: null,
             _connectController: null,
@@ -12,9 +14,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             sessionKey: null,
 
             targetState: null,
-
+            sessionsControllerCommands: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 TargetState = declare([Stateful], {});
                 this.targetState = new TargetState({status: "waiting"})
@@ -65,38 +69,40 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }
                 if(deviceOwnerUserKey != null)
                 {
-                    topic.publish("getSessionByKey", this.sessionKey, lang.hitch(this, function (sessionReply) {
-                        if (sessionReply && sessionReply._wssConnection) {
-                            let targetSession = sessionReply
-                            let targetSessionWSSConnection = targetSession._wssConnection
 
-                            var credentialsUpdate = {userKey: deviceOwnerUserKey}
-                            topic.publish("getUserInfoFromDatabaseByKey", deviceOwnerUserKey, lang.hitch(this, function (userReply) {
-                                console.log("getUserInfoFromDatabaseByKey",userReply, deviceOwnerUserKey);
-                                if(userReply[0]){
-                                    let user = userReply[0]
-                                    credentialsUpdate.username = user.name
-                                    credentialsUpdate.password = user.password
-                                    credentialsUpdate.permission_groups = user.permission_groups
+                    let session = this.sessionsControllerCommands.getSessionByKey(this.sessionKey)
+                    if (session && session._wssConnection) {
+                        let targetSession = session
+                        let targetSessionWSSConnection = targetSession._wssConnection
 
-                                    topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (sessionReply) {
-                                        console.log("sessionCredentialsUpdate",sessionReply);
+                        var credentialsUpdate = {userKey: deviceOwnerUserKey}
+                        topic.publish("getUserInfoFromDatabaseByKey", deviceOwnerUserKey, lang.hitch(this, function (userReply) {
+                            console.log("getUserInfoFromDatabaseByKey",userReply, deviceOwnerUserKey);
+                            if(userReply[0]){
+                                let user = userReply[0]
+                                credentialsUpdate.username = user.name
+                                credentialsUpdate.password = user.password
+                                credentialsUpdate.permission_groups = user.permission_groups
 
-                                        this.targetState.set("targetActivated", true)
-                                    }));
-                                }else {
-                                    console.log("No User to activate")
-                                }
-                            }));
-                            //  console.log("SessionKey:", this.sessionKey, deviceInfo)
+                                topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
+                                    console.log("sessionCredentialsUpdate",session);
 
-                            //   console.log("SessionKey:", this.sessionKey, deviceInfo, device, targetSession, targetSessionWSSConnection)
-                            // get user info for creditials
-                            //add with wssconnection and sessionkey
-                            //request creditial update
+                                    this.targetState.set("targetActivated", true)
+                                }));
+                            }else {
+                                console.log("No User to activate")
+                            }
+                        }));
+                        //  console.log("SessionKey:", this.sessionKey, deviceInfo)
 
-                        }
-                    }));
+                        //   console.log("SessionKey:", this.sessionKey, deviceInfo, device, targetSession, targetSessionWSSConnection)
+                        // get user info for creditials
+                        //add with wssconnection and sessionkey
+                        //request creditial update
+                    }
+
+
+
                 }else{
                     console.log("getOwnerUserKey return no value");
 

@@ -1,6 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'balek-server/session/sessionsController/instanceCommands',
 
         'balek-modules/diaplode/elements/tasks/Instance/task',
         'balek-modules/diaplode/elements/tasks/Database/tasks',
@@ -12,7 +13,7 @@ define(['dojo/_base/declare',
     function (declare,
               lang,
               topic,
-
+              SessionsControllerInstanceCommands,
               taskInstance,
               tasksDatabase,
 
@@ -24,11 +25,15 @@ define(['dojo/_base/declare',
 
             _tasksDatabase: null,
             _taskInstances: {},
+            sessionsControllerCommands: null,
 
             _availableTasks: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this._taskInstances = {};
 
@@ -41,8 +46,7 @@ define(['dojo/_base/declare',
 
                 console.log("moduleDiaplodeElementsTasksInstance starting...");
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
-                    this._userKey = userKey;
+                    this._userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey);
                     this._tasksDatabase = new tasksDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
                     this._tasksDatabase.getUserTasks().then(lang.hitch(this, function (userTasksArray) {
 
@@ -64,7 +68,6 @@ define(['dojo/_base/declare',
                     })).catch(function (error) {
                         console.log(error);
                     });
-                }));
 
 
                 this._availableTasks  = new syncedMapInstance({_instanceKey: this._instanceKey});

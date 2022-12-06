@@ -3,16 +3,19 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/Instance',
+        'balek-server/session/sessionsController/instanceCommands',
+
         'balek-modules/diaplode/navigator/Instance/navigator',
         'balek-modules/components/syncedCommander/Instance'
 
 
     ],
-    function (declare, lang, topic, baseInstance, navigator, _syncedCommanderInstance) {
+    function (declare, lang, topic, baseInstance,SessionsControllerInstanceCommands, navigator, _syncedCommanderInstance) {
         return declare("moduleDiaplodeNavigatorModuleInstance", _syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
             _navigator: null,
+            sessionsControllerCommands: null,
 
 
             constructor: function (args) {
@@ -22,13 +25,16 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("className", "moduleDiaplodeNavigatorModuleInstance");
 
                 this._interfaceState.set("isVisibile",  true);
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
+
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+                this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: userKey});
+                this._interfaceState.set("navigatorInstanceKeys", {instanceKey: this._instanceKey, componentKey: this._navigator.getComponentKey() });
 
 
-
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
-                    this._navigator = new navigator({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: userKey});
-                    this._interfaceState.set("navigatorInstanceKeys", {instanceKey: this._instanceKey, componentKey: this._navigator.getComponentKey() });
-                }));
+                // topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
+                //    }));
 
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
 

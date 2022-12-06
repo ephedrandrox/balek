@@ -165,6 +165,8 @@ define(['dojo/_base/declare',
                     }
                 }, serverReplyCallback);
             },
+
+            //Todo refactor below this this ------------------------
             sessionStatusActionReceived: function (sessionStatusAction) {
                 if (sessionStatusAction.action) {
                     switch (sessionStatusAction.action) {
@@ -176,7 +178,6 @@ define(['dojo/_base/declare',
                     }
                 }
             },
-
             createNewSessionInterface: function (sessionKey) {
                 if (this._session === null &&  sessionKey != undefined) {
                     //haven't logged in yet

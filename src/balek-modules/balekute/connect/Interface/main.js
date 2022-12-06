@@ -121,10 +121,10 @@ define(['dojo/_base/declare',
                                 {
                                     topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
                                         let availableSessions = sessionState.get("availableSessions");
-                                        let firstSessionKey = Object.keys(availableSessions)[0];
+                                        if(availableSessions){
+                                            let firstSessionKey = Object.keys(availableSessions)[0];
+                                            console.log("requestSessionChangeAndUnloadAll")
 
-                                        if(firstSessionKey && firstSessionKey !== null)
-                                        {
                                             topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
                                         }else
                                         {

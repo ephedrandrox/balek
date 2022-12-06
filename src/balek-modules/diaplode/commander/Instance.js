@@ -5,10 +5,12 @@ define(['dojo/_base/declare',
         'balek-modules/diaplode/commander/Instance/terminal',
         'balek-modules/diaplode/commander/Instance/console',
         'balek-modules/diaplode/commander/Database/settings',
-        'balek-modules/components/syncedCommander/Instance'
+        'balek-modules/components/syncedCommander/Instance',
+        'balek-server/session/sessionsController/instanceCommands'
+
 
     ],
-    function (declare, lang, topic, terminalInstance, consoleInstance, settingsDatabase, _syncedCommanderInstance) {
+    function (declare, lang, topic, terminalInstance, consoleInstance, settingsDatabase, _syncedCommanderInstance, SessionsControllerInstanceCommands) {
         return declare("moduleDiaplodeCommanderModuleInstance", _syncedCommanderInstance, {
             _instanceKey: null,
             _sessionKey: null,
@@ -19,10 +21,14 @@ define(['dojo/_base/declare',
             _settingsDatabase: null,
 
             _userSettings:{ consoleDockedOnLoad: true},  //these will be saved in database if no settings found
-
+            sessionsControllerCommands: null,
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
+
                 this._terminalInstances = [];
                 //set syncedCommander commands
                 this._commands={
@@ -35,7 +41,7 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("className", "moduleDiaplodeCommanderModuleInstance");
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
+                    let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
 
                     this._userKey = userKey;
                     this._settingsDatabase = new settingsDatabase({_instanceKey: this._instanceKey, _userKey: userKey});
@@ -65,7 +71,6 @@ define(['dojo/_base/declare',
                         console.log(error);
                     });
 
-                }));
 
                 console.log("moduleDiaplodeCommanderInstance starting...5");
 

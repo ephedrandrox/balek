@@ -75,13 +75,15 @@ define(['dojo/_base/declare',
                                     {
                                         topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
                                             let availableSessions = sessionState.get("availableSessions");
-                                            let firstSessionKey = Object.keys(availableSessions)[0];
+                                            if(availableSessions){
+                                                let firstSessionKey = Object.keys(availableSessions)[0];
+                                                console.log("requestSessionChangeAndUnloadAll")
 
-                                            if(firstSessionKey && firstSessionKey !== null)
-                                            {
                                                 topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
                                             }else
                                             {
+                                                console.log("requestModuleLoadrequestModuleLoadrequestModuleLoadrequestModuleLoad", sessionState, availableSessions)
+
                                                 topic.publish("requestModuleLoad", "diaplode/elements/files");
 
                                                 topic.publish("requestModuleLoad", "diaplode/elements/notes");
@@ -90,7 +92,7 @@ define(['dojo/_base/declare',
                                                 topic.publish("requestModuleLoad", "diaplode/navigator");
                                                 topic.publish("requestModuleLoad", "diaplode/commander");
 
-                                               // topic.publish("loadBackground", "flowerOfLife");
+                                                topic.publish("loadBackground", "flowerOfLife");
 
                                                 this.destroy();
                                             }

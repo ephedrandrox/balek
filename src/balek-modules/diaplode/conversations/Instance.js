@@ -4,11 +4,15 @@ define(['dojo/_base/declare',
 
         'balek-modules/diaplode/conversations/Instance/main',
 
+        'balek-server/session/sessionsController/instanceCommands',
+
+
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance'
     ],
     function (declare, lang, topic,
               MainInstance,
+              SessionsControllerInstanceCommands,
               syncedCommanderInstance, syncedMapInstance) {
         return declare("moduleDiaplodeConversationsInstance", syncedCommanderInstance, {
             _instanceKey: null,
@@ -18,12 +22,18 @@ define(['dojo/_base/declare',
             _moduleUserConversationsStateList: null,
             _moduleUserConversationsStateListWatchHandle: null,
 
+            sessionsControllerCommands: null,
+
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 console.log("moduleDiaplodeConversationsInstance starting...");
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
-                    this._userKey = userKey;
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+
+                    this._userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
 
                     this._commands={
                         "createConversation" : lang.hitch(this, this.createConversation),
@@ -51,7 +61,6 @@ define(['dojo/_base/declare',
 
                     this.prepareSyncedState();
                     this.setInterfaceCommands();
-                }));
             },
 
             userConversationsStateListChange: function(name, oldState, newState)

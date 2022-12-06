@@ -111,7 +111,7 @@ define(['dojo/_base/declare',
                 }));
 
                 console.log("WWWW", "navigatorCommands", this.navigatorCommands);
-debugger;
+
                 this.navigatorCommands.getCommands().then(lang.hitch(this, function(navigatorCommands){
                     console.log("WWWW", "navigatorCommands", navigatorCommands);
                     debugger;

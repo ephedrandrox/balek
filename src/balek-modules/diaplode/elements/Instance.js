@@ -3,6 +3,8 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/diaplode/elements/Database/elements',
+        'balek-server/session/sessionsController/instanceCommands',
+
 
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance'
@@ -12,6 +14,8 @@ define(['dojo/_base/declare',
               lang,
               topic,
               elementsDatabase,
+              SessionsControllerInstanceCommands,
+
               syncedCommanderInstance,
               syncedMapInstance) {
         return declare("moduleDiaplodeElementsInstance", syncedCommanderInstance, {
@@ -22,12 +26,15 @@ define(['dojo/_base/declare',
             _elementInstances: {},
 
             _availableElements: null,
+            sessionsControllerCommands: null,
 
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
                 this._elementInstances = {};
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this._commands = {
                     "createElement": lang.hitch(this, this.createElement),
@@ -38,7 +45,8 @@ define(['dojo/_base/declare',
 
                 console.log("moduleDiaplodeElementsInstance starting...");
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
+                    let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+
                     this._userKey = userKey;
                     this._elementsDatabase = new elementsDatabase({
                         _instanceKey: this._instanceKey,
@@ -65,7 +73,6 @@ define(['dojo/_base/declare',
                     })).catch(function (error) {
                         console.log(error);
                     });
-                }));
 
 
                 this._availableElements = new syncedMapInstance({_instanceKey: this._instanceKey});

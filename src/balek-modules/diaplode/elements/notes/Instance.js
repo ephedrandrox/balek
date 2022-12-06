@@ -1,6 +1,7 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'balek-server/session/sessionsController/instanceCommands',
 
         'balek-modules/diaplode/elements/notes/Instance/note',
         'balek-modules/diaplode/elements/notes/Database/notes',
@@ -14,6 +15,7 @@ define(['dojo/_base/declare',
               lang,
               topic,
 
+              SessionsControllerInstanceCommands,
               noteInstance,
               notesDatabase,
 
@@ -27,10 +29,15 @@ define(['dojo/_base/declare',
             _notesDatabase: null,
             _noteInstances: {},
 
+            sessionsControllerCommands: null,
+
             _availableNotes: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this._noteInstances = {};
 
@@ -43,8 +50,7 @@ define(['dojo/_base/declare',
 
                 console.log("moduleDiaplodeElementsNotesInstance starting...");
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey) {
-                    this._userKey = userKey;
+                    this._userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey);
                     this._notesDatabase = new notesDatabase({_instanceKey: this._instanceKey, _userKey: this._userKey});
                     this._notesDatabase.getUserNotes().then(lang.hitch(this, function (userNotesArray) {
 
@@ -71,7 +77,6 @@ define(['dojo/_base/declare',
                     })).catch(function (error) {
                         console.log(error);
                     });
-                }));
 
 
                 this._availableNotes  = new syncedMapInstance({_instanceKey: this._instanceKey});

@@ -3,12 +3,13 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/balekute/connect/Instance/main',
+        'balek-server/session/sessionsController/instanceCommands',
 
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance',
 
     ],
-    function (declare, lang, topic, MainInstance, _SyncedCommanderInstance, SyncedMapInstance) {
+    function (declare, lang, topic, MainInstance,SessionsControllerInstanceCommands, _SyncedCommanderInstance, SyncedMapInstance) {
 
         return declare("moduleBalekuteConnectInstance", _SyncedCommanderInstance, {
             _instanceKey: null,
@@ -17,11 +18,15 @@ define(['dojo/_base/declare',
             mainInstance: null,
 
             stateWatchers: null,
+            sessionsControllerCommands: null,
 
             availableInvitations: null,
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this.stateWatchers = {}
                 console.log("moduleBalekuteConnectInstance starting...",this);
@@ -64,7 +69,7 @@ define(['dojo/_base/declare',
             {
                 console.log("acceptDeviceInfo", invitationKey);
 
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
                     if (userKey != null ){
                         this._userKey = userKey;
 
@@ -93,8 +98,6 @@ define(['dojo/_base/declare',
                     }else{
                         remoteCallback({error: "Cannot create Invitation without user Key"})
                     }
-
-                }));
             },
             useTargetKey: function( targetKey, signature, deviceInfo, remoteCallback){
                 console.log("useTargetKey", targetKey, deviceInfo, arguments);
@@ -138,8 +141,8 @@ define(['dojo/_base/declare',
                 console.log("createInvitationKey", input);
 
                 let invitationHost = input
-
-                topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+               // topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function (userKey) {
                     if (userKey != null ){
                         this._userKey = userKey;
                         console.log("createInvitationKey - UserKey", userKey);
@@ -169,7 +172,7 @@ define(['dojo/_base/declare',
                         remoteCallback({error: "Cannot create Invitation without user Key"})
                     }
 
-                }));
+              ///  }));
                 },
             connectInvitationState: function(invitationKey, remoteCallback){
 
