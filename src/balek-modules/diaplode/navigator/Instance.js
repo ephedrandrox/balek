@@ -33,9 +33,6 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("navigatorInstanceKeys", {instanceKey: this._instanceKey, componentKey: this._navigator.getComponentKey() });
 
 
-                // topic.publish("getSessionUserKey", this._sessionKey, lang.hitch(this, function(userKey){
-                //    }));
-
                 console.log("moduleDiaplodeRadialNavigatorInstance starting...");
 
 

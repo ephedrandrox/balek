@@ -54,19 +54,8 @@ define(['dojo/_base/declare',
                 //##########################################################################################################
                 //Migrate to SessionsController Section
                 //##########################################################################################################
-                //   topic.subscribe("getSessionWorkspaces", lang.hitch(this, this.getSessionWorkspaces));
-                //    topic.subscribe("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey));
-                //   this.InstanceCommands.setCommand("getSessionsForUserKey", lang.hitch(this, this.getSessionsForUserKey))
-                // topic.subscribe("getSessionByKey", lang.hitch(this, this.getSessionByKey));
-                //topic.subscribe("getSessionWSSConnection", lang.hitch(this, this.getSessionWSSConnection));
-                // topic.subscribe("getSessionsForUser", lang.hitch(this, this.getSessionsForUser));
-                // topic.subscribe("getSessionUsername", lang.hitch(this, this.getSessionUsername));
-                // topic.subscribe("getSessionUserInfo", lang.hitch(this, this.getSessionUserInfo));
-                //    topic.subscribe("getSessionUserKey", lang.hitch(this, this.getSessionUserKey));
-                //moving to controller
                 topic.subscribe("sessionCredentialsUpdate", lang.hitch(this, this.sessionCredentialsUpdate));
                 this.InstanceCommands.setCommand("getUserSessionList", lang.hitch(this, this.getUserSessionList))
-
                 //##########################################################################################################
                 //SessionsController Functions Section END
                 //##########################################################################################################
@@ -378,72 +367,5 @@ define(['dojo/_base/declare',
                 returnUserGroups(this._sessions[sessionKey].getPermissionGroups());
             }
 
-
-
-            //##########################################################################################################
-            //Removing
-            //##########################################################################################################
-            // getSessionUserKey: function(sessionKey, userKeyReturn){
-            //     userKeyReturn(this._sessions[sessionKey].getUserKey());
-            // }
-
-            // getSessionUserInfo: function (sessionKey, returnUserInfo) {
-            //     //todo use state
-            //     topic.publish("getUserFromDatabase", this._sessions[sessionKey].getUserName(), lang.hitch(this, function (userInfo) {
-            //         returnUserInfo(userInfo)
-            //     }));
-            // },getSessionUserInfo: function (sessionKey, returnUserInfo) {
-            //     //todo use state
-            //     topic.publish("getUserFromDatabase", this._sessions[sessionKey].getUserName(), lang.hitch(this, function (userInfo) {
-            //         returnUserInfo(userInfo)
-            //     }));
-            // },
-            // getSessionUsername: function (sessionKey, usernameReturn) {
-            //     //todo call function in session object
-            //     usernameReturn(this._sessions[sessionKey].getUsername());
-            // },
-            // getSessionWSSConnection: function (sessionKey, statusReturn) {
-            //     if (this._sessions[sessionKey] && this._sessions[sessionKey]._wssConnection !== null) {
-            //         statusReturn(this._sessions[sessionKey]._wssConnection);
-            //     } else {
-            //         statusReturn(null);
-            //     }
-            // },
-            //todo delete this after state update
-            // getSessionWorkspaces: function (sessionKey, workspacesReturn) {
-            //     this._sessions[sessionKey].getWorkspaces();
-            // },
-
-            // getSessionsForUser: function (username, sessionReturn) {
-            //
-            //     let sessionsToReturn = [];
-            //     for (var session in this._sessions) {
-            //
-            //         if (this._sessions[session].getUserName() == username) {
-            //             sessionsToReturn.push({
-            //                 sessionKey: session,
-            //                 sessionStatus: this._sessions[session].getStatus()
-            //             });
-            //         }
-            //     }
-            //     sessionReturn(sessionsToReturn);
-            // },
-
-
-            // getSessionsForUserKey: function (userKey, sessionReturn = null) {
-            //
-            //     let sessionsToReturn = [];
-            //     for (var session in this._sessions) {
-            //
-            //         if (this._sessions[session].getUserKey() == userKey) {
-            //             sessionsToReturn.push(this._sessions[session]);
-            //         }
-            //     }
-            //     if(typeof sessionReturn === 'function'){
-            //         sessionReturn(sessionsToReturn);
-            //     }else{
-            //         return sessionsToReturn
-            //     }
-            // },
         });
     });

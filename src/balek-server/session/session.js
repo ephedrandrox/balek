@@ -34,11 +34,7 @@ define([ 	'dojo/_base/declare',
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "New Session"}});
 
                 this._workspaceManager = new  balekWorkspaceManager();
-
-              //  this._availableSessionStates = {};
-              //  this._availableSessionStateWatchHandles = {};
-                // this._sessionStateWatchHandle = this._syncedState.watch(lang.hitch(this, this.onStateChange));
-            },
+                },
             updateSessionStatus:function(args){
                 //this is what we call to update session statue
                 //Then we update the state from here
@@ -158,94 +154,9 @@ define([ 	'dojo/_base/declare',
                     this._availableSessionStateWatchHandles[watchHandle].remove();
                 }
 
-                //this._sessionStateWatchHandle.unwatch();
-                //this._sessionStateWatchHandle.remove();
                 //todo delete the states
                 this.inherited(arguments);
 
             }
-            // onStateChange: function(name, oldState,newState)
-            // {
-            //     if(name === "userKey"){
-            //         topic.publish("getSessionsForUserKey", newState, lang.hitch(this, function(userSessions){
-            //            // console.log("User Sessions");
-            //             let availableSessions = {};
-            //             userSessions.forEach(lang.hitch(this, function(userSession){
-            //                 //console.log(userSession._sessionKey);
-            //                 if(userSession._sessionKey!= this._sessionKey)
-            //                 {
-            //                     userSession.addAvailableSession(this);
-            //                     availableSessions[userSession._sessionKey] = userSession.getStatus();
-            //                     this.watchAvailableSessionState(userSession);
-            //                 }
-            //             }));
-            //             this.getState().set("availableSessions", availableSessions);
-            //         }));
-            //
-            //     }
-            // },
-            // addAvailableSession: function(availableSession)
-            // {
-            //     let availableSessions = this.getState().get("availableSessions");
-            //     availableSessions[availableSession._sessionKey] = availableSession.getStatus();
-            //     this.watchAvailableSessionState(availableSession);
-            //     this.getState().set("availableSessions", availableSessions);
-            //
-            // },
-            // onAvailableStateChange: function(availableSessionKey, name, oldState, newState){
-            //     //hitched this and available session Key in watch call
-            //     console.log(name, newState);
-            //
-            //     if(name === "unloaded" || name === "sessionStatus")
-            //     {
-            //         let availableSessions = this.getState().get("availableSessions");
-            //         if( name === "unloaded")
-            //         {
-            //             console.log("unloaded");
-            //             delete availableSessions[availableSessionKey]
-            //
-            //         }else if(name === "sessionStatus")
-            //         {
-            //             console.log("sessionStatus");
-            //             availableSessions[availableSessionKey] = newState;
-            //
-            //         }
-            //         this.getState().set("availableSessions", availableSessions);
-            //     }
-            //
-            //
-            // },
-            // watchAvailableSessionState: function(availableSession){
-            //     if(!this._availableSessionStates[availableSession._sessionKey])
-            //     {
-            //         this._availableSessionStates[availableSession._sessionKey] = availableSession.getState();
-            //         this._availableSessionStateWatchHandles[availableSession._sessionKey] = this._availableSessionStates[availableSession._sessionKey]
-            //             .watch(lang.hitch(this, this.onAvailableStateChange, availableSession._sessionKey));
-            //     }
-            // },
-            /* getNewWorkspace: function(){
-               //todo delte this after workspace state update
-               this.sendWorkspacesUpdate("new", this._workspaceManager.getNewWorkspace());
-           },
-           sendWorkspaces: function(){
-               //todo delete this after workspace state update
-               this.sendWorkspacesUpdate("all",  this._workspaceManager.getWorkspaces());
-
-           },
-
-           */
-            /*
-           sendWorkspacesUpdate: function(updateType, workspacesData){
-                   //todo move this to workspaces or delete after state update
-               topic.publish("sendBalekProtocolMessage", this._wssConnection, {
-                   sessionMessage: {
-                       sessionKey: this._sessionKey,
-                       workspacesUpdate: {
-                               updateType: updateType,
-                               workspaceData : workspacesData
-                           }
-                   }
-               });
-           },*/
         });
     });
