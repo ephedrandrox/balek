@@ -34,7 +34,9 @@ define(['dojo/_base/declare',
 
             _sessionState: null,
             _sessionStateWatchHandle: null,
-
+            //##########################################################################################################
+            //Startup Functions Section
+            //##########################################################################################################
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -48,6 +50,31 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
+            postCreate() {
+
+                this._sessionState = this.sessionControllerCommands.getSessionState()
+                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
+                this.checkAndLoadUserInfoState()
+
+            },
+            //##########################################################################################################
+            //Event and State Changes
+            //##########################################################################################################
+            _mouseEnter: function (eventObject) {
+                domClass.add(this._userIconDiv, "mouseOverSessionUserMenuUserIcon");
+            },
+            _mouseLeave: function (eventObject) {
+                domClass.remove(this._userIconDiv, "mouseOverSessionUserMenuUserIcon");
+            },
+            _onClick: function (eventObject) {
+                topic.publish("isModuleLoaded", "users/info", function (moduleIsLoaded) {
+                    if (moduleIsLoaded) {
+                        moduleIsLoaded.toggleShowView();
+                    } else {
+                        topic.publish("requestModuleLoad", "users/info");
+                    }
+                });
+            },
             onSessionStateChange(name, oldState, newState){
                 console.log("🔻🔻🔻🔻UserMenu",name, oldState, newState)
                 if(name = "userKey"){
@@ -57,26 +84,13 @@ define(['dojo/_base/declare',
             checkAndLoadUserInfoState(){
                 let userKey = this.sessionControllerCommands.getSessionUserKey()
                 if(userKey && this._userInfoState === null  ) {
-                    console.log("🔵🟣🟣🟡🟡🟡🔵🔵", userKey , this)
                     this._userInfoState = this.usersControllerCommands.getUserInfoState(userKey)
-                    console.log("🔵🟣🟣🟡🟡🟡🔵🔵", this._userInfoState , this)
-
                     if(this._userInfoState.get("icon")){
                         this.onUserInfoUpdate("icon", null, this._userInfoState.get("icon"))
                     }
                     this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoUpdate));
-
                 }
-
             },
-            postCreate() {
-
-                this._sessionState = this.sessionControllerCommands.getSessionState()
-                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
-                this.checkAndLoadUserInfoState()
-
-
-                  },
             onUserInfoUpdate: function(name, oldValue, newValue){
                 if(name === "icon" && this._userImage){
                     this._userImage.src = newValue;
@@ -84,26 +98,12 @@ define(['dojo/_base/declare',
                     console.log("Unused State Update", name, oldValue, newValue)
                 }
             },
-            _mouseEnter: function (eventObject) {
-                domClass.add(this._userIconDiv, "mouseOverSessionUserMenuUserIcon");
-            },
-            _mouseLeave: function (eventObject) {
-                domClass.remove(this._userIconDiv, "mouseOverSessionUserMenuUserIcon");
-            },
-            _onClick: function (eventObject) {
-                topic.publish("isModuleLoaded", "users/info", function (moduleIsLoaded) {
-
-                    if (moduleIsLoaded) {
-                        moduleIsLoaded.toggleShowView();
-                    } else {
-                        topic.publish("requestModuleLoad", "users/info");
-                    }
-                });
-            },
+            //##########################################################################################################
+            //Unload
+            //##########################################################################################################
             unload: function () {
                 this._userInfoStateWatchHandle.unwatch();
                 this._userInfoStateWatchHandle.remove();
-
                 this._sessionStateWatchHandle.unwatch();
                 this._sessionStateWatchHandle.remove()
             }

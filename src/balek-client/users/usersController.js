@@ -30,7 +30,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                
+
                 if(this._usersManager !== null &&
                     typeof this._shared._usersManager === 'undefined'){
                     this._shared._usersManager = this._usersManager
