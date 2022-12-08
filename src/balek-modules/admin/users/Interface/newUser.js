@@ -59,7 +59,6 @@ define(['dojo/_base/declare',
                 }
             },
             startupContainable(){
-                console.log("🟢🟢🟢🟢newUser Interface containable Started")
                 this.setFocus()
             },
             postCreate() {

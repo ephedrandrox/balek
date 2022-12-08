@@ -46,7 +46,6 @@ define(['dojo/_base/declare',
             getUserFromDatabase: function (username, returnGetUserFromDatabase) {
                 this._dbController.getUserFromDatabase(username).then(function (results) {
                     //todo update User Store
-                    console.log("🟩🟩🟪🟪", results )
                     returnGetUserFromDatabase(results);
                 }).catch(function (error) {
                     returnGetUserFromDatabase(error);
@@ -55,8 +54,6 @@ define(['dojo/_base/declare',
             getUserInfoFromDatabaseByKey: function (userKey, returnGetUserFromDatabase) {
                 this._dbController.getUserInfoFromDatabaseByKey(userKey).then(function (results) {
                     //todo update User Store
-                    console.log("🟦🟦🟦🟦", results )
-
                     returnGetUserFromDatabase(results);
                 }).catch(function (error) {
                     returnGetUserFromDatabase(error);
@@ -64,7 +61,7 @@ define(['dojo/_base/declare',
             },
             getUsersFromDatabase: function (returnGetUsersFromDatabase) {
                 this._dbController.getUsersFromDatabase().then(function (results) {
-                    //update User Store
+                    //todo update User Store
                     returnGetUsersFromDatabase(results);
                 }).catch(function (error) {
                     returnGetUsersFromDatabase(error);
@@ -90,25 +87,6 @@ define(['dojo/_base/declare',
 
                 } else if (userManagerMessage.messageData.updateUserData) {
                     console.log("Should Not Be seeing this....")
-
-                    // let updateUserData = userManagerMessage.messageData.updateUserData;
-                    //
-                    // let updateRequest = this.updateUserFromSession(wssConnection._sessionKey, updateUserData);
-                    //
-                    // updateRequest.then(lang.hitch(this, function (updatedData) {
-                    //     messageReplyCallback({
-                    //         userManagerMessage: {
-                    //             messageData: {userUpdatedData: updatedData}
-                    //         }
-                    //     });
-                    //     //update success send result back
-                    // })).catch(lang.hitch(this, function (error) {
-                    //     messageReplyCallback({
-                    //         userManagerMessage: {
-                    //             messageData: {error: error}
-                    //         }
-                    //     });
-                    // }));
                 }
             },
             getUniqueUserKey: function () {

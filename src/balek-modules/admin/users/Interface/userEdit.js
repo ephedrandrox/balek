@@ -65,7 +65,7 @@ define(['dojo/_base/declare',
 
             },
             startupContainable(){
-                console.log("🟢🟢🟢🟢userEdit Interface containable Started")
+                //called when containable is contained
             },
             postCreate() {
                 this.initializeContainable();
@@ -91,26 +91,14 @@ define(['dojo/_base/declare',
 
             },
             onUserInfoStateChange: function (name, oldState, newState) {
-                console.log("onUserInfoStateChange", name, oldState, newState)
-                console.log("🟡🟡🟡🟢🟢onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
-
                 name = name.toString()
                 if(name == "userName"){
-                    console.log("userName", name, oldState, newState)
                     this._userNameField.innerHTML = newState
-                }else if(name == "userKey"){
-                    console.log("userKey", name, oldState, newState)
                 }else if(name == "icon" ){
-                    console.log("icon", name, oldState, newState)
                     this._userIconImage.src = newState;
-                }else {
-                    console.log("🟡🟡🟡🟢🟢onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             _onClickEditUserButton: function (eventObject) {
-               // this.updateUserInfoAndClose();
-
-
                 let updatedName = this._userNameField.innerHTML
                 let currentName = this._userInfoState.get("userName")
 

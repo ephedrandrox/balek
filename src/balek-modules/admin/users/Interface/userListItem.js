@@ -42,18 +42,11 @@ define(['dojo/_base/declare',
                 }
             },
             onUserInfoStateChange: function (name, oldState, newState) {
-                console.log("onUserInfoStateChange", name, oldState, newState)
                 name = name.toString()
                 if(name == "userName"){
-                    console.log("userName", name, oldState, newState)
                     this._userNameNode.innerHTML = newState
-                }else if(name == "userKey"){
-                    console.log("userKey", name, oldState, newState)
                 }else if(name == "icon" ){
-                    console.log("icon", name, oldState, newState)
                     this._userImageNode.src = newState;
-                }else {
-                    console.log("🟡🟡🟡🟢🟢onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             _onClickUserListItem: function (eventObject) {
@@ -64,11 +57,6 @@ define(['dojo/_base/declare',
             },
             _mouseLeave: function (eventObject) {
                 domClass.remove(this.domNode, "mouseOverUserListItem");
-            },
-            updateData: function (userData) {
-                // this._userData = userData;
-                // this._userImageNode.src = this._userData.icon;
-                // this._userNameNode.innerHTML = this._userData.name;
             },
             unload: function () {
                 this._userInfoStateWatchHandle.unwatch();

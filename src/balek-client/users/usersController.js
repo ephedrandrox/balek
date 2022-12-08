@@ -66,7 +66,6 @@ define(['dojo/_base/declare',
                             returnValue.userInfoState.newState = "data:image/png;base64," + this.convertUint8ToBase64String(returnValue.userInfoState.newState.data);
                         }
                         this.getUserInfoState(userKey).set(returnValue.userInfoState.name, returnValue.userInfoState.newState)
-                        console.log("🔶🔶🔷🔷🔹🔹_requestUserInfoInstanceWatch getUserInfoState set", returnValue.userInfoState.name, returnValue.userInfoState.newState)
                     }else{
                         console.log("🔶🔶🔷🔷🔹🔹_requestUserInfoInstanceWatch userManager received unexpected ❌❌❌❌", returnValue)
                     }
@@ -80,7 +79,6 @@ define(['dojo/_base/declare',
                             && returnValue.userListState.name
                             && returnValue.userListState.newState){
                             this.getUserListState().set(returnValue.userListState.name, returnValue.userListState.newState)
-                            console.log("🔶🔶🔷🔷🔹🔹_requestUserListInstanceWatch getUserListState set", returnValue.userListState.name, returnValue.userListState.newState)
                         }else{
                             console.log("🔶🔶🔷🔷🔹🔹_requestUserListInstanceWatch userManager received unexpected ❌❌❌❌", returnValue)
                         }
@@ -90,13 +88,8 @@ define(['dojo/_base/declare',
             //Interface Commands
             //##########################################################################################################
             getUserList: function(){
-                console.log("YUP2", this._usersManager, this._usersManager._userList)
                 if(typeof this._shared._usersManager !== 'undefined'){
-                   // this._usersManager.getUserData()
-                  // return this._usersManager._userState
-
                     this._requestUserListInstanceWatch();
-
                     return this.getUserListState()
                 }else{
                     return false

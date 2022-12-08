@@ -38,13 +38,8 @@ define(['dojo/_base/declare',
                         } else {
                             this._db = client.db(this._database);
                             this._adminDb = client.db('admin');
-                            console.log("this._db", this._db);
-
                                 this.onDatabaseConnected()
-                            //  this.getDbStats();
-                            //  this.getClientStats();
-                            //  this.getCollectionsList();
-
+                            
                         }
                     });
 
@@ -65,7 +60,6 @@ define(['dojo/_base/declare',
                     }else {
                         //if database is not connected, resolve after it is
                         aspect.after(this, "onDatabaseConnected", lang.hitch(this, function() {
-                            console.log("After ASPECT Database Connected");
                             Resolve(this._db)
                         }))
                     }

@@ -136,22 +136,16 @@ define(['dojo/_base/declare',
                 }
             },
             onUserInfoStateChange: function (name, oldState, newState) {
-                console.log("onUserInfoStateChange", name, oldState, newState)
                  name = name.toString()
                 if(name == "userName"){
-                    console.log("userName", name, oldState, newState)
                     this._userNameNode.innerHTML = newState
-                }else if(name == "userKey"){
-                    console.log("userKey", name, oldState, newState)
                 }else if(name == "icon" ){
-                    console.log("icon", name, oldState, newState)
-                         this._userImageNode.src = newState;
+                    this._userImageNode.src = newState;
                 }else {
                     console.log("onUserInfoStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             onAvailableSessionsStateChange: function (name, oldState, newState) {
-                console.log("onAvailableSessionsStateChange", name, oldState, newState)
                 let id = name.toString()
                 if(newState && typeof newState.toString === 'function' &&
                     id == newState.toString()){

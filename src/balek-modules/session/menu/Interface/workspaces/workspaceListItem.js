@@ -62,16 +62,13 @@ define(['dojo/_base/declare',
                 this._workspaceName = this._workspaceState.get("name");
                 this._activeWorkspace =  this._workspaceManagerState.get("activeWorkspace");
 
-                console.log(this._workspaceState,  this._workspaceName );
+                //console.log(this._workspaceState,  this._workspaceName );
                 //todo should maybe give id and check for these before adding more and more in case body already has style
                 //Or even better, make a style manager that receives events to add styles
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
             _onActivateWorkspaceButtonClick: function () {
-             //   topic.publish("changeActiveWorkspace", this._workspaceKey, lang.hitch(this, function requestCallback(requestReply) {
-                //    this._workspaceState.set("activeWorkspace", requestReply.workspaceKey);
-             //   }));
                 this.workspaceManagerCommands.changeActiveWorkspace(this._workspaceKey, function(requestResult){
                     console.log(requestResult);
                 });
@@ -95,7 +92,6 @@ define(['dojo/_base/declare',
             postCreate: function () {
 
                 this._workspaceStateWatchHandle = this._workspaceState.watch(lang.hitch(this, this.onWorkspaceStateChange));
-
 
                 this._workspaceManagerStateWatchHandle = this._workspaceManagerState.watch(lang.hitch(this, this.onWorkspaceManagerStateChange));
 
@@ -136,7 +132,6 @@ define(['dojo/_base/declare',
                 }
             },
             onNameEditBlur: function (name, oldValue, newValue) {
-
                 if (oldValue !== newValue) {
                     this.requestWorkspaceNameChange();
                 } else {
@@ -144,17 +139,6 @@ define(['dojo/_base/declare',
                 }
             },
             requestWorkspaceNameChange: function () {
-                //changeWorkspaceName is offered by the workspaceManager on the client
-                //it sends a request to change the name and triggers the callback when
-                //message reply is received.
-               /* topic.publish("changeWorkspaceName", this._workspaceKey, this._workspaceInlineEditBox.value,
-                    lang.hitch(this, function requestCallback(requestReply) {
-                        let workspaces = this._workspaceState.get("workspaces");
-                        workspaces[this._workspaceKey]._workspaceName = requestReply.workspaceName;
-                        this._workspaceState.set("workspaces", workspaces);
-                    }));
-                    */
-
                 this.workspaceManagerCommands.changeWorkspaceName(this._workspaceKey, this._workspaceInlineEditBox.value,
                     lang.hitch(this, function requestCallback(requestReply) {
                        console.log(requestReply);

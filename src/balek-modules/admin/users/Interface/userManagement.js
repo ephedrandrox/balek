@@ -72,7 +72,7 @@ define(['dojo/_base/declare',
                 }
             },
             startupContainable(){
-                console.log("🟢🟢🟢🟢userManagement Interface containable Started")
+                //Containable startup event
             },
             //##########################################################################################################
             //Remote Events and Changes
@@ -132,7 +132,6 @@ define(['dojo/_base/declare',
                         if(success){
                             let componentKey = success.componentKey
                             let userKey = success.userKey
-                            console.log("🔹🔹🔻🔻🔺🔺componentKey", componentKey, userKey,Result)
                             if(componentKey && componentKey.toString()){
                                 let userEdit = null
                                 if (this._userEditWidgets[userKey]){
@@ -173,9 +172,7 @@ define(['dojo/_base/declare',
                         let error = Result.ERROR
                         if(success){
                             let componentKey = success.componentKey
-                            console.log("_onClickAddUser🔹🔹🔻🔻🔺🔺componentKey", componentKey,Result)
                             if(componentKey && componentKey.toString()){
-                                console.log("_onClickAddUser🔹🔹🔻🔻🔺🔺componentKey", componentKey)
                                 if(this._newUserWidget === null){
                                     this._newUserWidget = new NewUser({
                                         _interface: this._interface,

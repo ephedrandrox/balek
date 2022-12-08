@@ -56,7 +56,6 @@ define(['dojo/_base/declare',
             //Relay User Info State - UserManager Function
             //##########################################################################################################
             relayUserInfoState: function(userKey, sessionKey, messageReplyCallback){
-                console.log("relayUserInfoState  🔵🔵🔵🔵🛑🛑🔵🔵🔵🔵", sessionKey)
                 let userInfoState =  this.getUserInfoState(userKey)
                 let stateEntries = Object.entries(userInfoState)
                 for(KeyValIndex in stateEntries)
@@ -96,7 +95,6 @@ define(['dojo/_base/declare',
             //Relay User List State - UserManager Methods
             //##########################################################################################################
             relayUserListState: function( sessionKey, messageReplyCallback){
-                console.log("relayUserListState 🛑🛑🔵🔵🔵🔵🔵🔵", sessionKey)
                 let userKey = this._sessionCommands.getSessionByKey(sessionKey)
                  let userListState =  this.getUserListState(userKey)
                  let stateEntries = Object.entries(userListState)

@@ -94,8 +94,6 @@ define(['dojo/_base/declare',
             onUserInfoUpdate: function(name, oldValue, newValue){
                 if(name === "icon" && this._userImage){
                     this._userImage.src = newValue;
-                }else{
-                    console.log("Unused State Update", name, oldValue, newValue)
                 }
             },
             //##########################################################################################################

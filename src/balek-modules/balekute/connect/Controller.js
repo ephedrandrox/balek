@@ -214,7 +214,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             loadDevices: function(){
                 this._devicesDatabase.getDevices().then(lang.hitch(this, function(Result){
-                    console.log("getDevices 🔆🔆🔆 ", Result)
+                    console.log("Balekute Connect Loading Devices", Result)
                     if(Array.isArray(Result)){
                         Result.forEach(lang.hitch(this, function(deviceEntry){
                             if(deviceEntry.deviceContent && deviceEntry.deviceContent.owner && deviceEntry.deviceContent.owner.userKey

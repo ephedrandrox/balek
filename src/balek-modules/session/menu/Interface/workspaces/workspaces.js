@@ -56,7 +56,6 @@ define(['dojo/_base/declare',
                 this._availableWorkspacesStateWatchHandle = this._availableWorkspacesState.watch(lang.hitch(this, this.onAvailableWorkspacesStateChange));
                 for (const name in availableWorkspacesInState)
                 {
-                    console.log(name, availableWorkspacesInState[name]);
                     this.addOrRefreshAvailableWorkspace(availableWorkspacesInState[name]);
                 }
             },

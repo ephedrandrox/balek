@@ -96,10 +96,9 @@ define(['dojo/_base/declare',
                             && returnValue.userSessionsListUpdate.name){
                             this.getUserSessionsList().set(returnValue.userSessionsListUpdate.name,
                                 returnValue.userSessionsListUpdate.newState)
-                            console.log("🟩🟩🔷🔷🔹🔹_requestUserSessionsList Set", returnValue.userSessionsListUpdate.name, returnValue.userSessionsListUpdate.newState)
+
                         }else{
-                            console.log("💠💠💠💠_requestUserSessionsList Set", returnValue)
-                            console.log("🟩🟩🔷🔷🔹🔹_requestUserSessionsList❌❌❌❌ - Unexpected Object", returnValue)
+                           console.log("🟩🟩🔷🔷🔹🔹_requestUserSessionsList❌❌❌❌ - Unexpected Object", returnValue)
                         }
                     }));
             }
