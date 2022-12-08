@@ -63,7 +63,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 // tags:
                 //          private
 
-                console.log("✅✅✅",userKey, sessionKey, messageReplyCallback)
 
                 let userSessionsListState =  this.getAvailableSessionsList(userKey)
                 let stateEntries = Object.entries(userSessionsListState)
@@ -73,7 +72,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     let object = userSessionsListState.get(objectKey)
 
                     if(typeof object !== 'function' ){
-                        console.log("✅✅✅✅✅✅",objectKey, object)
                         let result = messageReplyCallback({userSessionsListUpdate: {name: objectKey,
                                         newState: object}})
                         if(result.Error)
@@ -85,14 +83,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }
                 let watchHandle = userSessionsListState.watch(lang.hitch(this, function(name, oldState, newState = null){
-                    console.log("✅✅✅ watchHandle ✅✅✅",userKey, sessionKey, messageReplyCallback)
-                    console.log("✅✅✅✅✅✅",name, newState)
-
                         let result =  messageReplyCallback({userSessionsListUpdate: {name: name , newState: newState}})
-
                     if(result.Error)
-                    {    console.log("✅✅✅ messageReplyCallback Result Error ❌❌",userKey, sessionKey, result.Error)
-
+                    {
                         watchHandle.unwatch()
                         watchHandle.remove()
                     }

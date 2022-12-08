@@ -34,6 +34,9 @@ define(['dojo/_base/declare',
                 this._interfaceCommands.setCommand("getUserSessionsList", lang.hitch(this, this.getUserSessionsList))
                 this._interfaceCommands.setCommand("requestSessionChange", lang.hitch(this, this.requestSessionChange))
 
+                this._interfaceCommands.setCommand("requestSessionNameChange", lang.hitch(this, this.requestSessionNameChange))
+
+
 
             },
             //##########################################################################################################
@@ -71,6 +74,22 @@ define(['dojo/_base/declare',
                             sessionKey: this._session._sessionKey,
                             changeSessionKey: changeSessionKey,
                             unloadAllOthers: unloadAllOthers
+                        }
+                    });
+                    Resolve({SUCCESS: "Didn't request callback but request was sent"})
+                }));
+            },
+            requestSessionNameChange(changeSessionKey, newName = ""){
+                //  summary:
+                //          Used to rename a session owned by user
+                //
+                //  tags:
+                //          Sessions Controller Interface Commands
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    topic.publish("sendBalekProtocolMessage", {
+                        sessionManagerMessage: {
+                            sessionKey: changeSessionKey,
+                            changeSessionName: newName
                         }
                     });
                     Resolve({SUCCESS: "Didn't request callback but request was sent"})

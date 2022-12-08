@@ -11,6 +11,9 @@ define(['dojo/_base/declare',
         "dojo/ready",
         'dojo/_base/fx',
 
+        "balek-modules/diaplode/ui/input/getUserInput",
+
+
         "dijit/InlineEditBox",
         "dijit/form/TextBox",
         "dijit/_WidgetBase",
@@ -20,7 +23,7 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/users/info/resources/css/sessionInfo.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
+              dijitFocus, dojoReady, fx, getUserInput, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
         return declare("usersInfoSessionInfoInterface", [_WidgetBase, _TemplatedMixin], {
@@ -53,6 +56,14 @@ define(['dojo/_base/declare',
                     dijitFocus.focus(this.domNode);
                 }));
                 dijitFocus.focus(this.domNode);
+            },
+            _onDoubleClick: function (clickEvent) {
+                let getUserInputForName = new getUserInput({question: "Change Session Name...",
+                    inputReplyCallback: lang.hitch(this, function(newName){
+                        this.sessionControllerCommands.requestSessionNameChange(this.sessionInfo.key, newName)
+                        getUserInputForName.unload();
+                    }) });
+
             },
             _onSwitchToButtonClicked: function (clickEvent) {
                 this.sessionControllerCommands.requestSessionChange(this.sessionInfo.key)

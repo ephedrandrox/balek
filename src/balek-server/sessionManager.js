@@ -111,6 +111,10 @@ define(['dojo/_base/declare',
                             this.unloadAllUserSessionsExcept(sessionManagerMessage.changeSessionKey);
                         }
                     }
+                } else if( sessionManagerMessage.sessionKey && sessionManagerMessage.changeSessionName){
+                    if (this._sessions[sessionManagerMessage.sessionKey]) {
+                        this._sessions[sessionManagerMessage.sessionKey].updateSessionStatus({sessionName: sessionManagerMessage.changeSessionName})
+                    }
                 } else
                     {
                     console.log("unknown session Manager message");

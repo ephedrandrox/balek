@@ -39,7 +39,7 @@ define(['dojo/_base/declare',
                             this._db = client.db(this._database);
                             this._adminDb = client.db('admin');
                                 this.onDatabaseConnected()
-                            
+
                         }
                     });
 

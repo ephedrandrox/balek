@@ -1,6 +1,6 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}MainDiv" data-dojo-attach-point='_mainDiv'>
-        <div class="${baseClass}NameDiv" data-dojo-attach-point='_keyDiv'>
+        <div class="${baseClass}NameDiv" data-dojo-attach-point='_keyDiv' data-dojo-attach-event="ondblclick:_onDoubleClick" >
             ${sessionInfo.key}
         </div>
         <div class="${baseClass}ControlDiv">
