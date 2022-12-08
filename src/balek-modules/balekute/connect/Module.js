@@ -14,7 +14,7 @@ define(['dojo/_base/declare',
             _displayName: "Balekute Connect",
             _allowedSessions: [0, 1],
             _instances: {},
-            _iconPath: 'balek-modules/digivigil/guestbook/resources/images/book.svg',
+            _iconPath: 'balek-modules/balekute/connect/resources/images/icon.svg',
 
             _Controller: null,
 

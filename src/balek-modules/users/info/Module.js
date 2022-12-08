@@ -5,6 +5,8 @@ define(['dojo/_base/declare',
         return declare("usersInfoModule", baseModule, {
 
             _displayName: "User Info",
+            _iconPath: 'balek-modules/users/info/resources/images/icon.svg',
+
             _allowedGroups: ["users"],
             _allowedSessions: [1],
 

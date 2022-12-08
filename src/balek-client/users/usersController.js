@@ -30,20 +30,15 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("YUP2Con", this._usersManager, this._shared)
-
+                
                 if(this._usersManager !== null &&
                     typeof this._shared._usersManager === 'undefined'){
-                    console.log("YUP2Con", this._usersManager, this._shared)
                     this._shared._usersManager = this._usersManager
                     //todo removed shared and only create userCOntroller once
                     this._interfaceCommands = new InterfaceCommands();
                     this._interfaceCommands.setCommand("getUserInfoState", lang.hitch(this, this.getUserInfoState))
                     this._interfaceCommands.setCommand("getUserList", lang.hitch(this, this.getUserList))
-
-
                 }
-                console.log("YUP2Con", this._usersManager, this._shared)
 
                 this._UserInfoState = declare([Stateful], {
                    userName: null,
@@ -53,8 +48,6 @@ define(['dojo/_base/declare',
                 this._interfaceCommands = new InterfaceCommands();
                 this._interfaceCommands.setCommand("getUserInfoState", lang.hitch(this, this.getUserInfoState))
                 this._interfaceCommands.setCommand("getUserList", lang.hitch(this, this.getUserList))
-
-
 
             },
             //##########################################################################################################

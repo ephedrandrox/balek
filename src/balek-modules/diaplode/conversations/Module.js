@@ -7,7 +7,7 @@ define(['dojo/_base/declare',
         return declare("diaplodeConversationsModule", baseModule, {
             _displayName: "Diaplode Conversations",
             _allowedSessions: [1],
-            _iconPath: 'balek-modules/diaplode/conversations/resources/images/book.svg',
+            _iconPath: 'balek-modules/diaplode/conversations/resources/images/icon.svg',
 
             _instances: {},
 
