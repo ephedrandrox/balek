@@ -12,6 +12,7 @@ define(['dojo/_base/declare',
         "dijit/focus",
         "dojo/ready",
         'dojo/_base/fx',
+        "balek-client/users/usersController/interfaceCommands",
 
         'balek-modules/diaplode/ui/input/chooseUsers/user',
 
@@ -23,6 +24,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,
+              UsersControllerInterfaceCommands,
               userWidget,
               _WidgetBase, _TemplatedMixin, template,
               mainCss) {
@@ -37,42 +39,42 @@ define(['dojo/_base/declare',
             inputReplyCallback: null,
 
             _mainCssString: mainCss,
+
+            _userListDiv: null,
+
+            usersControllerCommands: null,
+            _userList: null,
+            _userListWatchHandle: null,
+            _userWidgets: null,
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
 
             constructor: function (args) {
-
                 declare.safeMixin(this, args);
 
+                this._userWidgets = {}
+
+                let usersControllerInterfaceCommands = new UsersControllerInterfaceCommands();
+                this.usersControllerCommands = usersControllerInterfaceCommands.getCommands();
+
+                this._userList = this.usersControllerCommands.getUserList()
+
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-                topic.publish("getUserState", lang.hitch(this, function (userState) {
-                    //topic.publish("addToCurrentWorkspace", this);
-                    this._userState = userState;
-                    this.userStateChange();
-                    this._userStateWatchHandle = this._userState.watch("userData", lang.hitch(this, this.userStateChange));
-                }));
             },
             postCreate: function () {
                 topic.publish("displayAsDialog", this);
-
+                //load user list and watch for changes
+                this.loadUserList()
+                this._userListWatchHandle = this._userList.watch( lang.hitch(this, this.userListStateChange));
             },
-            userStateChange: function (name, oldState, newState) {
-                if (name === "userData") {
-                    this.updateUserData();
-                }
-            },
-            updateUserData: function () {
-                let userData = this._userState.get("userData");
-
-                this._userList.innnerHTML = "";
-                for (const user in userData) {
-
-                    let newWidget = userWidget({_userData: userData[user], inputReplyCallback: lang.hitch(this, this.inputReplyCallback)});
-
-                    domConstruct.place(newWidget.domNode, this._userList)
-
-                }
+            //##########################################################################################################
+            //Event and State Changes
+            //##########################################################################################################
+            userListStateChange: function(name, oldState, newState){
+                // _userList watcher function
+                this.addUserWidget(newState)
             },
             _onFocus: function(){
 
@@ -105,18 +107,52 @@ define(['dojo/_base/declare',
 
                 }
             },
-
             //##########################################################################################################
             //UI Functions Section
             //##########################################################################################################
-
+            loadUserList: function(){
+                //Called before watching _userList state
+                //todo add to state utility as triggerInitialState or similar
+                let state = this._userList
+                for (const key in state) {
+                    let value = state[key]
+                    if(typeof value !== 'function' && key != "_attrPairNames"
+                        && key != "declaredClass"){
+                        this.addUserWidget(key)
+                    }
+                }
+            },
+            addUserWidget: function(userKey){
+                // called when a new userKey is received and set in _userList
+                // or when initial _userList state is loaded
+                if (!this._userWidgets[userKey]) {
+                    let newUserWidget = new userWidget({
+                        usersControllerCommands: this.usersControllerCommands,
+                        inputReplyCallback: lang.hitch(this, this.inputReplyCallback),
+                        _userData: {userKey: userKey, icon: "", name: "" }
+                    });
+                    this._userWidgets[userKey] = newUserWidget;
+                    domConstruct.place(newUserWidget.domNode, this._userListDiv);
+                }
+            },
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################
-            
             unload: function () {
-                this._userStateWatchHandle.unwatch();
-                this._userStateWatchHandle.remove();
+                //unload and unwatch user list
+                if (this._userListWatchHandle){
+                    this._userListWatchHandle.unwatch();
+                    this._userListWatchHandle.remove();
+                }
+
+                //unload user widgets
+                for (const userKey in this._userWidgets) {
+                    let userWidget = this._userWidgets[userKey]
+                    if(userWidget && userWidget.unload === 'function' ){
+                        userWidget.unload()
+                    }
+                }
+
                 this.destroy();
             }
         });
