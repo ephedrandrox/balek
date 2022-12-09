@@ -1,11 +1,22 @@
 <div class="${baseClass}">
-    <div class=${baseClass}UserImage>
-    <label for="${baseClass}IconFile" class=${baseClass}FileInputLabel>
-        <img data-dojo-attach-point='_userImageNode' src="//:0">
-    </label>
+    <div class="${baseClass}UserInfoDiv">
+        <div class="${baseClass}UserImage" >
+        <label for="${baseClass}IconFile" title="Click to Change User Icon" class=${baseClass}FileInputLabel >
+            <img data-dojo-attach-point='_userImageNode' src="//:0">
+        </label>
+        </div>
+        <span class=${baseClass}UserLabel data-dojo-attach-point='_userNameNode' data-dojo-attach-event="dblclick:_onChangeNameDblClicked" title="Double Click to Change Username"><b>${_userData.name}</b><br></span>
+    </div>
+
+    <div class="${baseClass}CurrentSessionDiv">
+        <h1 class="${baseClass}CurrentSessionHeader">Current Session :</h1>
+        <div class="${baseClass}CurrentSessionLabelDiv" data-dojo-attach-point="_currentSessionDiv" data-dojo-attach-event="ondblclick:_onChangeSessionNameDoubleClick" title="Double Click to Rename"></div>
+        <br/>
+        <span class="${baseClass}ButtonSessionSpan" data-dojo-attach-event="onclick:_onCloseSessionClicked" title="alt/option click to close">❌ Close</span>
+        <span class="${baseClass}ButtonSessionSpan" data-dojo-attach-event="onclick:_onRenameSessionClicked" title="click to rename" >🤔 Rename</span>
     </div>
     <br/>
-    <div class=${baseClass}UserLabel data-dojo-attach-point='_userNameNode' data-dojo-attach-event="dblclick:_onChangeNameDblClicked" ><b>${_userData.name}</b><br></div>
+
     <div class=${baseClass}AvailableSessions data-dojo-attach-point='_availableSessionsNode' ></div>
     <input type="file" id="${baseClass}IconFile" class=${baseClass}FileInput data-dojo-attach-point='_userIconFile'
            data-dojo-attach-event="onchange:_onIconFileChange">

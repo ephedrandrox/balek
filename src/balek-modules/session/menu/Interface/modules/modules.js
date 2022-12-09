@@ -54,13 +54,16 @@ define(['dojo/_base/declare',
                         if (availableModulesList[moduleID].displayName) {
                             displayName = availableModulesList[moduleID].displayName;
                         }
-                        this._availableModulesList[interfacePath] = new modulesListItem({
-                            _instanceKey: this._instanceKey,
-                            _moduleID: interfacePath,
-                            _displayName: displayName,
-                            _iconPath: iconPath
-                        });
-                        domConstruct.place(this._availableModulesList[interfacePath].domNode, this._modulesListDiv);
+                        if(iconPath !== "balek-modules/resources/images/unknown.svg") {
+                            //module must have an icon path to be displayed for launching
+                            this._availableModulesList[interfacePath] = new modulesListItem({
+                                _instanceKey: this._instanceKey,
+                                _moduleID: interfacePath,
+                                _displayName: displayName,
+                                _iconPath: iconPath
+                            });
+                            domConstruct.place(this._availableModulesList[interfacePath].domNode, this._modulesListDiv);
+                        }
                     }
                 }
             },

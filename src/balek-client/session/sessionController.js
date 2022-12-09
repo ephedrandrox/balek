@@ -16,7 +16,10 @@ define(['dojo/_base/declare',
 
             _interfaceCommands: null,
 
+
             userSessionsList: null,
+
+            userSessionStates: null,
 
             activeSessionInfo: null, //state object
 
@@ -27,6 +30,7 @@ define(['dojo/_base/declare',
                 const ActiveSessionInfo = declare([Stateful], {})
                 this.activeSessionInfo = new ActiveSessionInfo()
 
+                this.userSessionStates = {}
 
                 this._interfaceCommands = new InterfaceCommands();
                 this._interfaceCommands.setCommand("getSessionUserKey", lang.hitch(this, this.getSessionUserKey))
@@ -42,14 +46,25 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Interface Commands
             //##########################################################################################################
-            //Get Current Value
             getSessionUserKey(){
+                //Get session user key
                 return this._session.getUserKey()
             },
-            //Get States
-            getSessionState(){
-                //Returns State of the current loaded session
-                return this._session.getSessionState()
+            getSessionState(sessionKey = null){
+                // summary:
+                //      If no session Key is specified, Returns State of the current loaded session
+                if(sessionKey == null){
+                    return this._session.getSessionState()
+                }
+                else{
+                    if(!this.userSessionStates[sessionKey])
+                    {
+                        let SessionState = declare([Stateful], {});
+                        this.userSessionStates[sessionKey] = new   SessionState()
+                        this._requestUserSessionInfo(sessionKey)
+                    }
+                    return this.userSessionStates[sessionKey]
+                }
             },
             getUserSessionsList: function(){
                 if(this.userSessionsList === null){
@@ -106,6 +121,9 @@ define(['dojo/_base/declare',
             //Private Functions
             //##########################################################################################################
             _requestUserSessionsList: function(){
+                // summary:
+                // Private function to request state changes in the user session list from the server.
+                // This state is then set in a local Stateful Object that is shared through the Client Session Controller
                 topic.publish("sendBalekProtocolMessageWithReplyCallback", {sessionMessage:
                         {sessionKey: this._session._sessionKey, sessionRequest:
                                 {userSessionsListWatch: "userSessionsListWatch", userKey: this._session.getUserKey()}}},
@@ -120,6 +138,26 @@ define(['dojo/_base/declare',
                            console.log("🟩🟩🔷🔷🔹🔹_requestUserSessionsList❌❌❌❌ - Unexpected Object", returnValue)
                         }
                     }));
+            },
+            _requestUserSessionInfo: function(sessionKey){
+                // summary:
+                //	This function is called by Client Session Controller to request state changes
+                //  from the specified session from the server. This state is then set in a local
+                //  Stateful Object that is shared through the Client Session Controller
+                  topic.publish("sendBalekProtocolMessageWithReplyCallback", {sessionMessage:
+                            {sessionKey: this._session._sessionKey, sessionRequest:
+                                    {userSessionInfoWatch: "userSessionInfoWatch", userKey: this._session.getUserKey(),
+                                    sessionKeyToWatch: sessionKey}}},
+                    lang.hitch(this,
+                        function(returnValue){
+                            if(returnValue && returnValue.userSessionInfoUpdate
+                                && returnValue.userSessionInfoUpdate.name){
+                                 this.getSessionState(sessionKey).set(returnValue.userSessionInfoUpdate.name,
+                                    returnValue.userSessionInfoUpdate.newState)
+                            }else{
+                                console.log("🟩🟩🔷🔷🔹🔹_requestUserSessionsList❌❌❌❌ - Unexpected Object - Should not see this!", returnValue)
+                            }
+                        }));
             }
         });
     });

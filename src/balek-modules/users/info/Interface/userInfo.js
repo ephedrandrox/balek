@@ -54,6 +54,7 @@ define(['dojo/_base/declare',
             _availableSessionsNode: null,
 
             _sessionWidgets: null,
+            _currentSessionDiv: null,
 
 
             usersControllerCommands: null,
@@ -68,6 +69,9 @@ define(['dojo/_base/declare',
                 icon: null,
                 name: null
             },
+            //##########################################################################################################
+            //Startup Functions
+            //##########################################################################################################
             constructor: function (args) {
 
                 declare.safeMixin(this, args)
@@ -84,6 +88,22 @@ define(['dojo/_base/declare',
                 domConstruct.place(domConstruct.toDom("<style>" + templateCSS + "</style>"), win.body());
 
             },
+            postCreate() {
+                this.initializeContainable();
+
+                this._sessionState = this.sessionControllerCommands.getSessionState()
+                this.updateSessionName()
+                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
+                this.checkAndLoadUserInfoState()
+
+            },
+            startupContainable: function(){
+                //called after containable is started
+                console.log("startupContainable main User Info interface containable");
+            },
+            //##########################################################################################################
+            //Events and State Changes
+            //##########################################################################################################
             _onIconFileChange: function (eventObject) {
                 let file = eventObject.target.files[0];
                 if (file.size / 1024 < 64) {
@@ -120,23 +140,27 @@ define(['dojo/_base/declare',
                         getDataForName.unload();
                     }) });
             },
-            addSessionWidget: function(sessionKey){
-                    if(!this._sessionWidgets[sessionKey]){
-                        this._sessionWidgets[sessionKey] = new SessionWidget({_instancekey: this._instancekey,
-                            sessionInfo: {key: sessionKey}, sessionControllerCommands: this.sessionControllerCommands})
-                    }
-                    domConstruct.place(this._sessionWidgets[sessionKey].domNode, this._availableSessionsNode)
+            _onChangeSessionNameDoubleClick: function (clickEvent) {
+                this._onRenameSessionClicked(clickEvent)
             },
-            removeSessionWidget: function(sessionKey){
-                if(this._sessionWidgets[sessionKey]){
-                    let removeNode = this._sessionWidgets[sessionKey]
-                    console.log("🔇🔇🔇♥️",removeNode.domNode)
-                    domConstruct.destroy(removeNode.domNode)
-                    delete this._sessionWidgets[sessionKey]
+            _onCloseSessionClicked: function (clickEvent) {
+                if(clickEvent.altKey){
+                    topic.publish("requestSessionUnload", this._sessionKey, function(value){
+                        console.log(value);
+                    });
+                }else {
+                    alert("Must press alt/option key while clicking close button")
                 }
             },
+            _onRenameSessionClicked: function (clickEvent) {
+                let getUserInputForName = new getUserInput({question: "Change Session Name...",
+                    inputReplyCallback: lang.hitch(this, function(newName){
+                        this.sessionControllerCommands.requestSessionNameChange(this._sessionKey, newName)
+                        getUserInputForName.unload();
+                    }) });
+            },
             onUserInfoStateChange: function (name, oldState, newState) {
-                 name = name.toString()
+                name = name.toString()
                 if(name == "userName"){
                     this._userNameNode.innerHTML = newState
                 }else if(name == "icon" ){
@@ -148,18 +172,49 @@ define(['dojo/_base/declare',
             onAvailableSessionsStateChange: function (name, oldState, newState) {
                 let id = name.toString()
                 if(newState && typeof newState.toString === 'function' &&
-                    id == newState.toString()){
+                    id == newState.toString()  && id != this._sessionKey){
                     this.addSessionWidget(id)
-                }else if(newState === null){
+                }else if(newState === null || newState === undefined){
                     this.removeSessionWidget(id)
                 }else {
-                        console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
+                    console.log("onAvailableSessionsStateChange NOT WHAT WE WANT", name, oldState, newState)
                 }
             },
             onSessionStateChange(name, oldState, newState){
                 console.log("🔻🔻🔻🔻UserInfo",name, oldState, newState)
                 if(name = "userKey"){
                     this.checkAndLoadUserInfoState()
+                }
+                if(name = "sessionName"){
+                    this.updateSessionName()
+                }
+            },
+            //##########################################################################################################
+            //UI Functions
+            //##########################################################################################################
+            updateSessionName: function(){
+              let sessionName = this._sessionState.get("sessionName")
+                if (sessionName)
+                {
+                    this._currentSessionDiv.innerHTML = sessionName
+                }else{
+                    this._currentSessionDiv.innerHTML = this._sessionKey
+                }
+            },
+            addSessionWidget: function(sessionKey){
+                    if(!this._sessionWidgets[sessionKey]){
+                        this._sessionWidgets[sessionKey] = new SessionWidget({_instancekey: this._instancekey,
+                            sessionInfo: {key: sessionKey}, sessionControllerCommands: this.sessionControllerCommands})
+                    }
+                    domConstruct.place(this._sessionWidgets[sessionKey].domNode, this._availableSessionsNode)
+            },
+            removeSessionWidget: function(sessionKey){
+                if(this._sessionWidgets[sessionKey]){
+                    let removeNode = this._sessionWidgets[sessionKey]
+                    removeNode.unload()
+                    delete this._sessionWidgets[sessionKey]
+                }else{
+                    console.log("removeSessionWidget🔸🔻🔸🔻 Widget Not Found, SHould not be happening!", this, this._sessionWidgets, sessionKey)
                 }
             },
             checkAndLoadUserInfoState(){
@@ -176,41 +231,35 @@ define(['dojo/_base/declare',
 
                     this._userInfoStateWatchHandle = this._userInfoState.watch( lang.hitch(this, this.onUserInfoStateChange));
 
-
                     this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
 
                     for (const key in this._usersSessionsStateList) {
                         let value = this._usersSessionsStateList[key]
                         if(typeof value !== 'function' && key != "_attrPairNames"
-                            && key != "declaredClass"){
+                            && key != "declaredClass" ){
                             console.log("adding objects from  State", key, value)
                             this.onAvailableSessionsStateChange(key, null, value );
                         }
                     }
-
                     this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
-
                 }
 
             },
-
-            postCreate() {
-                this.initializeContainable();
-
-                this._sessionState = this.sessionControllerCommands.getSessionState()
-                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
-                this.checkAndLoadUserInfoState()
-
-            },
-            startupContainable: function(){
-                //called after containable is started
-                console.log("startupContainable main User Info interface containable");
-            },
+            //##########################################################################################################
+            //Unload
+            //##########################################################################################################
             unload: function () {
+
+                for(const sessionKey in this._sessionWidgets)
+                {
+                    if(this._sessionWidgets[sessionKey] && typeof this._sessionWidgets[sessionKey].unload === 'function')
+                    this._sessionWidgets[sessionKey].unload()
+                }
+
                 this._sessionStateWatchHandle.unwatch();
                 this._sessionStateWatchHandle.remove();
                 this._userInfoStateWatchHandle.unwatch();
-               this._userInfoStateWatchHandle.remove();
+                this._userInfoStateWatchHandle.remove();
                 this._usersSessionsStateListWatchHandle.unwatch();
                 this._usersSessionsStateListWatchHandle.remove();
             }

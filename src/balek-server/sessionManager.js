@@ -88,6 +88,13 @@ define(['dojo/_base/declare',
                         }else{
                             messageReplyCallback({Error: "No UserKey Provided"})
                         }
+                    }else if(sessionMessage.sessionRequest && sessionMessage.sessionRequest.userSessionInfoWatch){
+                        if(sessionMessage.sessionRequest.userKey && sessionMessage.sessionRequest.userKey.toString()
+                        && sessionMessage.sessionRequest.sessionKeyToWatch && sessionMessage.sessionRequest.sessionKeyToWatch.toString()){
+                            this._Controller.relayUserSessionInfo(sessionMessage.sessionRequest.userKey.toString(), sessionMessage.sessionKey, sessionMessage.sessionRequest.sessionKeyToWatch, messageReplyCallback)
+                        }else{
+                            messageReplyCallback({Error: "No UserKey Provided"})
+                        }
                     }else if(this._sessions[sessionMessage.sessionKey]){
                         //Send request to session with matching session Key
                         this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);

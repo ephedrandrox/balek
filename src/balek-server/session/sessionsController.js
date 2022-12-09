@@ -19,6 +19,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             _userSessionsLists: null,
 
             _sessionListWatchers: null,
+            _sessionInfoWatchers: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
@@ -32,6 +33,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._userSessionsLists = {};
 
                     this._sessionListWatchers = {}
+                    this._sessionInfoWatchers = {}
+
 
                     let StatusState = declare([Stateful], {});
                     this.statusAsState = new StatusState({});
@@ -109,12 +112,95 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }
                 sessionWatchers[userKey] = watchHandle
             },
-            stopWatching(userKey, sessionKey){
+            stopRelayingUserSessionsList(userKey, sessionKey){
+                //todo Make this work and call from command when Interface is done watching
+            },
+            //##########################################################################################################
+            //Relay Session Info State
+            //##########################################################################################################
+            relayUserSessionInfo: function(userKey, sessionKey, sessionToWatch, messageReplyCallback){
+                //######################################################################################################
+                //Relay Session Info State
+                //######################################################################################################
+                // summary:
+                //          This method is called when the interface requests a session info state
+                //          The interface is informed of state and updates through the
+                //          messageReplyCallback
+                //
+                // tags:
+                //          private
+
+                let sessionInfoState = this.getUserSessionInfo(sessionToWatch)
+
+                //todo credentials check that the session belongs to user and session and connection
+                if(sessionInfoState){
+                    let stateEntries = Object.entries(sessionInfoState)
+                    for(KeyValIndex in stateEntries)
+                    {
+                        let objectKey = stateEntries[KeyValIndex][0]
+                        let object = sessionInfoState.get(objectKey)
+                        if(typeof object !== 'function' ){
+                            let result = messageReplyCallback({userSessionInfoUpdate: {name: objectKey,
+                                    newState: object}})
+                            if(result.Error)
+                            {
+                                console.log("✅✅✅ messageReplyCallback state load loop relayUserSessionInfo ❌❌",userKey, sessionKey, result.Error)
+                            }
+                        }
+                    }
+                    let watchHandle = sessionInfoState.watch(lang.hitch(this, function(name, oldState, newState = null){
+                        let result =  messageReplyCallback({userSessionInfoUpdate: {name: name , newState: newState}})
+                        if(result.Error)
+                        {
+                            watchHandle.unwatch()
+                            watchHandle.remove()
+                        }
+                    }))
+                    this.putSessionInfoWatcher(userKey, sessionKey,watchHandle)
+                }else{
+                    let result = messageReplyCallback({Error: "Not a valaid session key"})
+                    if(result.Error)
+                    {
+                        console.log("✅✅✅ messageReplyCallback state load loop relayUserSessionInfo ❌❌",userKey, sessionKey, result.Error)
+                    }
+                }
+            },
+            getSessionInfoWatchers(sessionKey)
+            {
+                if(!this._sessionInfoWatchers[sessionKey]){
+                    this._sessionInfoWatchers[sessionKey] = {}
+                }
+                return this._sessionInfoWatchers[sessionKey]
+            },
+            putSessionInfoWatcher(sessionKey, sessionKeyBeingWatched, watchHandle){
+                //Session Info State watchers are organized by session then session being watched
+
+                let sessionWatchers =  this.getSessionInfoWatchers(sessionKey)
+                if(sessionWatchers[sessionKeyBeingWatched]){
+                    sessionWatchers[sessionKeyBeingWatched].unwatch()
+                    sessionWatchers[sessionKeyBeingWatched].remove()
+                }
+                sessionWatchers[sessionKeyBeingWatched] = watchHandle
+            },
+            stopRelayingSessionInfo(userKey, sessionKey){
                 //todo Make this work and call from command when Interface is done watching
             },
             //##########################################################################################################
             //Instance Commands
             //##########################################################################################################
+            getUserSessionInfo: function(sessionKey){
+                // summary:
+                //          Returns the session info as state
+                //          called by controller and by instances
+                // tags:
+                //          session controller instance command
+                let session = this.getSession(sessionKey)
+                let sessionInfoState = null
+                if(session){
+                    sessionInfoState = session.getState()
+                }
+                return sessionInfoState
+            },
             getAvailableSessionsList: function(userKey){
                 // summary:
                 //          Returns the user session list as state

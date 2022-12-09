@@ -3,15 +3,18 @@
         <div class="${baseClass}NameDiv" data-dojo-attach-point='_keyDiv' data-dojo-attach-event="ondblclick:_onDoubleClick" >
             ${sessionInfo.key}
         </div>
+        <div class="${baseClass}NameDiv" data-dojo-attach-point='_statusDiv' data-dojo-attach-event="ondblclick:_onDoubleClick" >
+
+        </div>
         <div class="${baseClass}ControlDiv">
             <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onSwitchToButtonClicked'>
-                Switch To
+                🎚️Switch To
             </div>
             <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onCloseButtonClicked'>
-                Close
+                ❌Close
             </div>
             <div class="${baseClass}ButtonDiv" data-dojo-attach-event='onclick:_onSwitchAndCloseButtonClicked'>
-               Switch And Close
+                🎚️ Switch And Close ❌
             </div>
         </div>
     </div>

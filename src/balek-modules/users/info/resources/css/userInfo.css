@@ -1,6 +1,7 @@
 
 .userInfo {
-    display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
     position: relative;
     top: 100px;
     left: 10px;
@@ -9,6 +10,61 @@
     border: solid black 4px;
     border-radius: 15px;
     padding: 20px;
+
+    float: left;
+
+    width: 700px;
+
+    text-align: center;
+    align-content: stretch;
+}
+
+.userInfoCurrentSessionDiv {
+    display: inline-block;
+    border: solid rgba(0, 0, 0, 0.66) 4px;
+    margin: auto;
+    padding: 15px;
+    text-align:left;
+    border-radius: 10px;
+    background: rgba(12, 51, 79, 0.64);
+
+}
+
+.userInfoCurrentSessionLabelDiv {
+    display: inline-block;
+    border: solid #1e3288 2px;
+    vertical-align: top;
+   margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+.userInfoButtonSessionSpan{
+    display: inline-block;
+    border: solid black 2px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 20px;
+    vertical-align: top;
+}
+.userInfoButtonSessionSpan:hover{
+    color: black;
+}
+.userInfoCurrentSessionHeader{
+    text-align: left;
+    vertical-align: top;
+
+}
+
+
+.userInfoUserInfoDiv{
+    display: inline-block;
+    border: solid rgba(30, 29, 29, 0.64) 2px;
+    background: rgba(10, 14, 20, 0.33);
+    align-content: center;
+    border-radius: 10px;
+    padding: 15px;
 }
 
 .userInfoUserImage {
@@ -18,14 +74,22 @@
     margin: 10px;
     padding: 5px;
     background: rgba(12, 51, 79, 0.64);
+    cursor: pointer;
 }
 
 .userInfoUserLabel {
-    display: inline-block;
+    display: block;
     margin: 10px;
     font-size: 24pt;
+    border: solid rgba(5, 5, 5, 0.45) 2px;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
 }
-
+.userInfoUserLabel:hover {
+    color: black
+}
 .userInfoAvailableSessionDiv {
     cursor: pointer;
     padding: 3px;
@@ -43,6 +107,8 @@
     border: solid #0f0f3b 3px;
     max-height: 500px;
     overflow: scroll;
+    display: block;
+    margin: 20px;
 }
 
 .userInfoFileInput {
@@ -52,4 +118,7 @@
     overflow: hidden;
     position: absolute;
     z-index: -1;
+}
+.userInfoFileInputLabel{
+    cursor: pointer;
 }

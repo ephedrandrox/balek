@@ -37,9 +37,11 @@ define(['dojo/_base/declare',
 
             _mainDiv: null,
             _keyDiv: null,
+            _statusDiv: null,
 
             sessionControllerCommands: null,
 
+            _sessionState: null,
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -55,7 +57,45 @@ define(['dojo/_base/declare',
                 dojoReady(lang.hitch(this, function () {
                     dijitFocus.focus(this.domNode);
                 }));
+
+                this._sessionState = this.sessionControllerCommands.getSessionState(this.sessionInfo.key)
+                console.log("🔻🔻🔻🔻UserInfo",this.sessionInfo.key, this._sessionState)
+
+                this.updateSessionInfo()
+                this._sessionStateWatchHandle = this._sessionState.watch(lang.hitch(this, this.onSessionStateChange))
+
                 dijitFocus.focus(this.domNode);
+            },
+            onSessionStateChange(name, oldState, newState){
+                console.log("🔻🔻🔻🔻UserInfo",name, oldState, newState)
+                if(name = "sessionName"){
+                    this.updateSessionInfo()
+                }
+                if(name = "sessionStatus"){
+                    this.updateSessionInfo()
+                }
+            },
+            updateSessionInfo : function (){
+                let sessionName = this._sessionState.get("sessionName")
+                let sessionStatus = this._sessionState.get("sessionStatus")
+                if (sessionName)
+                {
+                    this._keyDiv.innerHTML = sessionName
+                }else {
+                    this._keyDiv.innerHTML = this.sessionInfo.key
+                }
+                let statusText = ""
+
+                if(sessionStatus === 1)
+                {
+                    statusText = "Connected"
+                }else if(sessionStatus === 2)
+                {
+                    statusText = "Disconnected"
+                }else{
+                    statusText = "unknown Status"
+                }
+                this._statusDiv.innerHTML = statusText
             },
             _onDoubleClick: function (clickEvent) {
                 let getUserInputForName = new getUserInput({question: "Change Session Name...",
@@ -81,6 +121,10 @@ define(['dojo/_base/declare',
                 //todo make it do something
             },
             unload: function () {
+                console.log("💀💀💀unloading usersInfoSessionInfoInterface...");
+                this._sessionStateWatchHandle.unwatch()
+                this._sessionStateWatchHandle.remove()
+
                 this.destroy();
             }
 
