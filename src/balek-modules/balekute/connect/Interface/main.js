@@ -163,7 +163,7 @@ define(['dojo/_base/declare',
             },
             startupContainable: function(){
                 //called after containable is started
-                console.log("startupContainable main scan containable");
+                console.log("startupContainable main connect containable");
             },
             unload: function () {
 

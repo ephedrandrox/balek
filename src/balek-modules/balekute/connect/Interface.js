@@ -9,6 +9,7 @@ define(['dojo/_base/declare',
         'balek-modules/balekute/connect/Interface/main',
         'balek-modules/balekute/connect/Interface/invitation',
 
+        'balek-client/session/workspace/workspaceManagerInterfaceCommands',
         'balek-modules/components/syncedCommander/Interface',
         'balek-modules/components/syncedMap/Interface',
 
@@ -16,11 +17,14 @@ define(['dojo/_base/declare',
     function (declare, lang, topic,
               domConstruct, domStyle, win,
                MainInterface, Invitation,
-               _SyncedCommanderInterface, SyncedMapInterface) {
+              balekWorkspaceManagerInterfaceCommands,_SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleBalekuteConnectInterface", _SyncedCommanderInterface, {
             _instanceKey: null,
             _mainInterface: null,
+
+            workspaceManagerCommands: null,
+
 
             availableInvitations: null,
             availableInvitationsWatchHandle: null,
@@ -34,6 +38,8 @@ define(['dojo/_base/declare',
                 this.invitations = {}
                 declare.safeMixin(this, args);
                 console.log("BKConnect: starting up")
+                let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
+                this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
 
 
             },
@@ -67,11 +73,24 @@ define(['dojo/_base/declare',
                             //         console.log(containerKeys, typeof containerKeys );
                             if(Array.isArray(containerKeys) && containerKeys.length === 0)
                             {
-                                console.log("addToCurrentWorkspace ooooooooooooooooooooooooooooooooooooooooo");
-                                topic.publish("addToCurrentWorkspace",this._mainInterface );
-                            }else
-                            {
-                                //            console.log(containerKeys.length);
+                                // console.log("addToCurrentWorkspace ooooooooooooooooooooooooooooooooooooooooo");
+                                // topic.publish("addToCurrentWorkspace",this._mainInterface );
+
+
+                                let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget"
+                                let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
+                                this.workspaceManagerCommands.addToWorkspaceContainer(this._mainInterface, workspaceContainerWidgetPath )
+                                    .then(lang.hitch(this, function(workspaceContainerKey){
+                                        console.log("gotWorkspaceContainerKey", workspaceContainerKey);
+                                        this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
+                                            .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
+                                                console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                            }))
+                                            .catch(lang.hitch(this, function(error){
+                                                console.log("Error adding container to workspace", error);
+                                            }));
+                                    })).catch(lang.hitch(this, function(error){
+                                }));
                             }
                         })).catch(lang.hitch(this, function(error){
                             console.log(error);
