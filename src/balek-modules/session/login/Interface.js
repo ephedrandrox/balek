@@ -13,6 +13,14 @@ define(['dojo/_base/declare',
                 topic.publish("loadBackground", "flowerOfLife");
                 this.unload();
             },
+            _onClickSendLoginButton(clickEvent){
+                if(clickEvent.altKey){
+                    topic.publish("requestModuleLoad", "balekute/connect");
+                }else {
+                    this.inherited(arguments);
+                }
+
+            },
             unload() {
                 this.inherited(arguments);
                 this.destroy();
