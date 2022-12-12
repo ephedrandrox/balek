@@ -1,16 +1,16 @@
 .usersInfoSessionInfoInterface {
     position: relative;
     color: #ffffff;
-    background: rgba(20, 75, 115, 0.8);
+    background: none;
     display: block;
-    text-align: center;
+    text-align: left;
     padding: 0;
-    border: solid black 2px;
-    border-radius: 15px;
-    min-width: 40vw;
-    margin: 20px;
+
+    min-width: 300px;
+    padding: 10px;
     outline: none;
     cursor: auto;
+
 }
 
 
@@ -19,11 +19,13 @@
     position: relative;
 
     display: inline-block;
-    background: #0c334f;
+    background: rgba(0, 0, 0, 0.18);
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-
+    border: none;
+    border-top: solid #c2c2c2 2px;
+    border-bottom: solid #c2c2c2 2px;
     cursor: pointer;
 }
 
@@ -32,28 +34,35 @@
     position: relative;
 
     display: inline-block;
-    background: #0c334f;
-    border: solid #c2c2c2 2px;
-    border-radius: 5px;
+    background: none;
+
+
     padding: 5px;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
+
+    float: right;
+    margin-top: auto;
+
+    white-space: nowrap;
 
 }
 
 
 .usersInfoSessionInfoInterfaceButtonDiv {
     position: relative;
-
     display: inline-block;
     background: #0c334f;
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-    font-size: 24px;
+    font-size: 14px;
     cursor: pointer;
 
+    margin: 5px;
+
 }
+
 .usersInfoSessionInfoInterfaceButtonDiv:hover {
     background: rgba(187, 131, 199, 0.73);
     border: solid rgba(224, 227, 172, 0.63) 2px;
@@ -62,5 +71,13 @@
 
 .usersInfoSessionInfoInterfaceNameDiv{
     font-weight: bold;
-    font-size: 26px;
+    font-size: 18px;
+    display: inline-block;
+    margin: 5px;
+}
+
+.usersInfoSessionInfoInterfaceStatusDiv{
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
 }

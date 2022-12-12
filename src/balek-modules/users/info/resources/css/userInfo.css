@@ -1,43 +1,96 @@
 
-.userInfo {
-    display: flex;
-    flex-wrap: wrap;
+.userInfoContainer {  display: grid;
     position: relative;
-    top: 100px;
-    left: 10px;
-    background: rgba(12, 51, 79, 0.64);
+    grid-template-columns: 200px auto;
+    grid-template-rows: 200px auto;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+    "User Info"
+    "Sessions Sessions";
+
+}
+
+
+.userInfoSessionsContainer { grid-area: Sessions;
+    position: relative;
+
+    border: none;
+
+
+
+}
+
+.userInfoUserContainer { grid-area: User;
+    position: relative;
+   }
+
+.userInfoInfoContainer { grid-area: Info;
+    position: relative;
+
+
+ }
+
+
+.userInfo {
     color: white;
-    border: solid black 4px;
+    display: block;
+    position: absolute;
+    padding:0;
+    padding-right: 5px;
+
+    border-bottom:  solid rgba(0, 0, 0, 0.68) 4px;
     border-radius: 15px;
-    padding: 20px;
 
-    float: left;
-
-    width: 700px;
+    background: rgba(0, 0, 0, 0.21);
 
     text-align: center;
-    align-content: stretch;
 }
 
 .userInfoCurrentSessionDiv {
     display: inline-block;
-    border: solid rgba(0, 0, 0, 0.66) 4px;
-    margin: auto;
-    padding: 15px;
+    position: relative;
+    top:0px;
+    bottom: 0;
+    left: 0px;
+    right: 0px;
+    height: 100%;
+    border:  solid rgba(30, 29, 29, 0.64)  2px;
+    border-top:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-right:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-bottom:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-top-right-radius: 15px;
+    margin: 0;
+    min-width:300px;
+    padding: 0;
+    width: 100%;
     text-align:left;
-    border-radius: 10px;
     background: rgba(12, 51, 79, 0.64);
+    display: flex;
+    flex-direction: column;
+
+
 
 }
 
 .userInfoCurrentSessionLabelDiv {
     display: inline-block;
-    border: solid #1e3288 2px;
     vertical-align: top;
-   margin: 10px;
+    margin: 10px;
+    margin-top: 0;
     padding: 10px;
     cursor: pointer;
+    word-break: break-all;
+    height: 100px;
+    overflow: scroll;
 }
+
+.userInfoCurrentSessionButtonsSpan{
+    margin-top: auto;
+    padding: 10px;
+}
+
+
 .userInfoButtonSessionSpan{
     display: inline-block;
     border: solid black 2px;
@@ -45,70 +98,85 @@
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    margin-right: 20px;
-    vertical-align: top;
+    float: right;
+    margin: 10px;
+
+
 }
 .userInfoButtonSessionSpan:hover{
     color: black;
+
+    background: rgba(187, 131, 199, 0.73);
+    border: solid rgba(224, 227, 172, 0.63) 2px;
+    color: black;
+
 }
 .userInfoCurrentSessionHeader{
     text-align: left;
     vertical-align: top;
-
+    margin: 10px;
 }
 
 
 .userInfoUserInfoDiv{
     display: inline-block;
-    border: solid rgba(30, 29, 29, 0.64) 2px;
+    position: absolute;
+    top:0px;
+    bottom: 0;
+    left: 0px;
+    right: 0px;
+    height: 100%;
+    border:  solid rgba(30, 29, 29, 0.64)  2px;
+    border-top:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-left:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-bottom:  solid rgba(0, 0, 0, 0.68) 4px;
+    border-top-left-radius: 15px;
     background: rgba(10, 14, 20, 0.33);
     align-content: center;
-    border-radius: 10px;
-    padding: 15px;
+    padding: 0;
 }
 
-.userInfoUserImage {
+.userInfoUserImageDiv {
     display: inline-block;
     border: solid black 4px;
-    border-radius: 15px;
+    border-radius: 10px;
     margin: 10px;
-    padding: 5px;
+    padding: 10px;
     background: rgba(12, 51, 79, 0.64);
     cursor: pointer;
 }
 
+
+.userInfoUserImage {
+   height: 100px;
+}
+
+
 .userInfoUserLabel {
     display: block;
     margin: 10px;
-    font-size: 24pt;
-    border: solid rgba(5, 5, 5, 0.45) 2px;
+    margin-top: 0;
+    font-size: 18pt;
+
     padding: 5px;
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+
 }
 .userInfoUserLabel:hover {
     color: black
 }
-.userInfoAvailableSessionDiv {
-    cursor: pointer;
-    padding: 3px;
-    margin: 4px;
-    border: solid grey 2px;
-    border-radius: 5px;
-}
-
-.userInfoAvailableSessionDiv:hover {
-    color: red;
-    border: solid white 2px;
-}
 
 .userInfoAvailableSessions {
-    border: solid #0f0f3b 3px;
+    border: solid rgba(15, 15, 59, 0.38) 3px;
+    border-radius: 5px;
     max-height: 500px;
     overflow: scroll;
     display: block;
-    margin: 20px;
+    margin: 10px;
+
+    background: rgba(0, 0, 0, 0.18);
 }
 
 .userInfoFileInput {
