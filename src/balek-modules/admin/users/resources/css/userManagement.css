@@ -2,7 +2,9 @@
 */
 
 .userManagement {
-    text-align: center
+    text-align: center;
+    display: flex;
+    max-width: .7vw;
 }
 
 .userManagementWidget {
@@ -27,6 +29,10 @@
     display: inline-block;
     pointer-events: all;
     cursor: pointer;
+
+    margin-top: auto;
+    padding: 10px;
+    float: right;
 }
 
 .userManagementWidgetUserAddDiv:hover{
@@ -39,6 +45,7 @@
     display: flex;
     flex-wrap: wrap;
     width: auto;
+    float: left;
 }
 
 .userManagementWidgetUserListItem {

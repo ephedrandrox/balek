@@ -39,7 +39,13 @@ define(['dojo/_base/declare',
 
             },
             _onClickSendLoginButton: function (eventObject) {
-                this.sendLoginAndClose();
+                if(eventObject.altKey){
+                    topic.publish("requestModuleLoad", "balekute/connect");
+                    this.destroy();
+                }else {
+                    this.sendLoginAndClose();
+                }
+
             },
             _onFocus: function () {
                 this._usernameField.focus();
