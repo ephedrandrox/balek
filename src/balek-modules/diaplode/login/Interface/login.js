@@ -14,20 +14,35 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+        "balek-client/session/sessionController/interfaceCommands",
+
         'dojo/text!balek-modules/diaplode/login/resources/html/login.html',
         'dojo/text!balek-modules/diaplode/login/resources/css/login.css'
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template, templateCSS) {
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,  SessionControllerInterfaceCommands,template, templateCSS) {
 
         return declare("moduleDiaplodeLoginInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
             baseClass: "diaplodeLoginInterface",
 
+            sessionControllerCommands: null,
+            _usersSessionsStateList: null,
+            _usersSessionsStateListWatchHandle: null,
+            _sessionState: null,
+            _sessionStateWatchHandle: null,
+
+
+
             _userData: {},
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+
+                let sessionControllerInterfaceCommands = new SessionControllerInterfaceCommands();
+                this.sessionControllerCommands = sessionControllerInterfaceCommands.getCommands();
+
+
 
                 //todo should maybe give id and check for these before adding more and more in case body already has style
                 //Or even better, make a style manager that receives events to add styles
@@ -37,6 +52,16 @@ define(['dojo/_base/declare',
                     dijitFocus.focus(this._usernameField);
                 }));
 
+            },
+            onSessionStateChange: function(name, oldValue, newValue) {
+              if (name === "sessionStatus") {
+                  if (newValue === 1) {
+                //    this.loadFirstSession()
+                  }
+              }
+            },
+            onAvailableSessionsStateChange: function(name, oldValue, newValue) {
+              debugger;
             },
             _onClickSendLoginButton: function (eventObject) {
                 if(eventObject.altKey){
@@ -66,6 +91,19 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
+            loadFirstSession: function () {
+                this._usersSessionsStateList = this.sessionControllerCommands.getUserSessionsList()
+
+                for (const key in this._usersSessionsStateList) {
+                    let value = this._usersSessionsStateList[key]
+                    if(typeof value !== 'function' && key != "_attrPairNames"
+                        && key != "declaredClass" ){
+                        console.log("adding objects from  State", key, value)
+                        this.onAvailableSessionsStateChange(key, null, value );
+                    }
+                }
+                this._usersSessionsStateListWatchHandle = this._usersSessionsStateList.watch(lang.hitch(this, this.onAvailableSessionsStateChange))
+            },
             sendLoginAndClose: function () {
                 let loginCredentials = {};
 
@@ -73,38 +111,38 @@ define(['dojo/_base/declare',
                     topic.publish("sendLoginCredentials", loginCredentials, lang.hitch(this, function (loginReply) {
                         if (loginReply.error) {
                             alert(loginReply.error.error);
-                        } else {
-
+                        }
+                        else {
                             topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
                                 lang.hitch(this, function (loginReply) {
                                     if(loginReply.error === undefined)
                                     {
-                                        topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
-                                            let availableSessions = sessionState.get("availableSessions");
-                                            if(availableSessions){
-                                                let firstSessionKey = Object.keys(availableSessions)[0];
-                                                console.log("requestSessionChangeAndUnloadAll")
-
-                                                topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
-                                            }else
-                                            {
-                                                console.log("requestModuleLoadrequestModuleLoadrequestModuleLoadrequestModuleLoad", sessionState, availableSessions)
-
-                                                topic.publish("requestModuleLoad", "diaplode/elements/files");
-
-                                                topic.publish("requestModuleLoad", "diaplode/elements/notes");
-                                                topic.publish("requestModuleLoad", "diaplode/elements/tasks");
-
-                                                topic.publish("requestModuleLoad", "diaplode/navigator");
-                                                topic.publish("requestModuleLoad", "diaplode/commander");
-
-                                                topic.publish("loadBackground", "flowerOfLife");
-
-                                                this.destroy();
+                                        this.sessionControllerCommands.getAvailableSessions().then(lang.hitch(this, function (availableSessions) {
+                                            let availableSessionKeys = Object.keys(availableSessions)
+                                            if (availableSessionKeys.length > 1) {
+                                                //todo if more then one, show a chooser
+                                                //todo automatically keep new session with option+return or some keystroke at login
+                                                availableSessionKeys.some(lang.hitch(this, function(availableSessionKey){
+                                                    if (availableSessionKey != this._sessionKey){
+                                                        topic.publish("requestSessionChangeAndUnloadAll", availableSessionKey);
+                                                        return true
+                                                    }else{
+                                                        return false
+                                                    }
+                                                }))
+                                            }else {
+                                                        topic.publish("requestModuleLoad", "diaplode/elements/files");
+                                                        topic.publish("requestModuleLoad", "diaplode/elements/notes");
+                                                        topic.publish("requestModuleLoad", "diaplode/elements/tasks");
+                                                        topic.publish("requestModuleLoad", "diaplode/navigator");
+                                                        topic.publish("requestModuleLoad", "diaplode/commander");
+                                                        topic.publish("loadBackground", "flowerOfLife");
                                             }
-                                        }));
+                                        })).catch(lang.hitch(this, function(Error)  {
+                                            console.log(Error);
+                                        }))
 
-
+                                        this.destroy();
                                     }
                                     else
                                     {
@@ -112,7 +150,6 @@ define(['dojo/_base/declare',
                                         //todo Maybe make a reset switch and use it here,
                                     }
                                 }));
-
                         }
                     }));
                 });
@@ -137,6 +174,7 @@ define(['dojo/_base/declare',
                 }
             },
             unload() {
+
                 this.destroy();
             }
         });

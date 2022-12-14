@@ -86,10 +86,16 @@ var profile = (function () {
 
                     let balekNodeModules = /^balek-modules\/node_modules\/|^balek-modules\/build\//,
                         codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/,
-                        quill = /blots\/text.js/;
+                        quill = /blots\/text.js/,
+                        InstanceFile = /Instance.js/,
+                        InstanceFolder = /Instance/,
+                        ModuleFile = /Module.js/,
+                        BalekuteTargetFile = /balekute\/connect\/Controller/;
 
 
-                    return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid);
+                    return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid)
+                        || InstanceFile.test(mid) || InstanceFile.test(filename) || InstanceFolder.test(mid) || InstanceFolder.test(filename)
+                        || ModuleFile.test(mid) || ModuleFile.test(filename) || BalekuteTargetFile.test(mid) || BalekuteTargetFile.test(filename);
                 }
 
                 //todo

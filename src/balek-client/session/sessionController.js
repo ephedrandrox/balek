@@ -40,6 +40,7 @@ define(['dojo/_base/declare',
 
                 this._interfaceCommands.setCommand("requestSessionNameChange", lang.hitch(this, this.requestSessionNameChange))
 
+                this._interfaceCommands.setCommand("getAvailableSessions", lang.hitch(this, this.getAvailableSessions))
 
 
             },
@@ -74,7 +75,35 @@ define(['dojo/_base/declare',
                 }
                 return this.userSessionsList
             },
+            getAvailableSessions: function(){
+                // summary: gets the current list of available sessions from Instance
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                   this.requestAvailableSessions().then(lang.hitch(this, function (availableSessions) {
+                       Resolve(availableSessions)
+                   })).catch(lang.hitch(this, function (Error) {
+                       console.log("Error in getAvailableSessions: " + Error)
+                       Reject(Error)
+                   }))
+
+                }));
+            },
             //Requests to Instance
+            requestAvailableSessions: function(){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    topic.publish("sendBalekProtocolMessageWithReplyCallback", {sessionMessage:
+                                {sessionKey: this._session._sessionKey, sessionRequest:
+                                        {availableSessions: "availableSessions"}}},
+                        lang.hitch(this,
+                            function(returnValue) {
+                                if (returnValue && returnValue.availableSessions) {
+                                    Resolve(returnValue.availableSessions)
+                                } else {
+                                    Reject({Error: "Could not get available sessions"})
+                                }
+                            })
+                    )
+                }))
+            },
             requestSessionChange(changeSessionKey, unloadAllOthers = false){
                 //  summary:
                 //          Used to switch the Current connection to the requested Session Key

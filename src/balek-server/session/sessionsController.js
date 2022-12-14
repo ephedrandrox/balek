@@ -243,6 +243,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             getUserSessionList: function(userKey){
                 return this._sessionsManager.getUserSessionList(userKey)
+            },
+            getAvailableSessions: function(sessionKey){
+                let session =  this.getSession(sessionKey)
+                let userKey = session.getUserKey()
+                let sessionList = this.getUserSessionList(userKey)
+                return sessionList
+            },
+            sendAvailableSessions: function(sessionKey, messageCallback){
+              let sessionList = this.getAvailableSessions(sessionKey)
+                messageCallback({availableSessions: sessionList})
+
             }
 
         });

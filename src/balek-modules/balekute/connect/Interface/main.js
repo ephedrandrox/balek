@@ -18,6 +18,7 @@ define(['dojo/_base/declare',
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
 
+        "balek-client/session/sessionController/interfaceCommands",
 
 
         'dojo/text!balek-modules/balekute/connect/resources/html/main.html',
@@ -29,6 +30,7 @@ define(['dojo/_base/declare',
               _WidgetBase, _TemplatedMixin,
               _SyncedCommanderInterface,
               _BalekWorkspaceContainerContainable,
+              SessionControllerInterfaceCommands,
               template,
               mainCss,
               invitationCss) {
@@ -49,6 +51,7 @@ define(['dojo/_base/declare',
 
             targetKey: "",
 
+            sessionControllerCommands: null,
 
             _createInvitationClicked: function(clickEvent){
                 console.log(this._instanceCommands)
@@ -77,6 +80,9 @@ define(['dojo/_base/declare',
             },
             constructor: function (args) {
                 this._interface = {};
+
+                let sessionControllerInterfaceCommands = new SessionControllerInterfaceCommands();
+                this.sessionControllerCommands = sessionControllerInterfaceCommands.getCommands();
 
 
                 declare.safeMixin(this, args);
@@ -112,35 +118,38 @@ define(['dojo/_base/declare',
                 })).catch(function(commandErrorResults){
                     console.log("#QRCode", "Create QRCode Received Error Response" + commandErrorResults);
                 });
-            }
+                }
                 if(name == "targetActivated"){
 
                     topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
                         lang.hitch(this, function (loginReply) {
                                 if(loginReply.error === undefined)
                                 {
-                                    topic.publish("getSessionState", lang.hitch(this, function (sessionState) {
-                                        let availableSessions = sessionState.get("availableSessions");
-                                        if(availableSessions){
-                                            let firstSessionKey = Object.keys(availableSessions)[0];
-                                            console.log("requestSessionChangeAndUnloadAll")
-
-                                            topic.publish("requestSessionChangeAndUnloadAll", firstSessionKey);
-                                        }else
-                                        {
+                                    this.sessionControllerCommands.getAvailableSessions().then(lang.hitch(this, function (availableSessions) {
+                                        let availableSessionKeys = Object.keys(availableSessions)
+                                        if (availableSessionKeys.length > 1) {
+                                            //todo if more then one, show a chooser
+                                            //todo automatically keep new session with option+return or some keystroke at login
+                                            availableSessionKeys.some(lang.hitch(this, function(availableSessionKey){
+                                                if (availableSessionKey != this._sessionKey){
+                                                    topic.publish("requestSessionChangeAndUnloadAll", availableSessionKey);
+                                                    return true
+                                                }else{
+                                                    return false
+                                                }
+                                            }))
+                                        }else {
                                             topic.publish("requestModuleLoad", "diaplode/elements/files");
-
                                             topic.publish("requestModuleLoad", "diaplode/elements/notes");
                                             topic.publish("requestModuleLoad", "diaplode/elements/tasks");
-
                                             topic.publish("requestModuleLoad", "diaplode/navigator");
                                             topic.publish("requestModuleLoad", "diaplode/commander");
-
                                             topic.publish("loadBackground", "flowerOfLife");
-
-                                            this.destroy();
                                         }
-                                    }));
+                                    })).catch(lang.hitch(this, function(Error)  {
+                                        console.log(Error);
+                                    }))
+                                    this.destroy();
                                 }
                                 else
                                 {
