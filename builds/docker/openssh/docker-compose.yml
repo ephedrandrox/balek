@@ -8,6 +8,7 @@ services:
       - PGID=1000
       - TZ=PST
       - PASSWORD_ACCESS=false
+      - SUDO_ACCESS=true
      # - PUBLIC_KEY_FILE=../../conf/cert/ssh/id_rsa.pub
       - USER_NAME=diaplode
     volumes:

@@ -1,4 +1,4 @@
-FROM  ghcr.io/linuxserver/openssh-server
+FROM  lscr.io/linuxserver/openssh-server:latest
 
 
 RUN apk update
