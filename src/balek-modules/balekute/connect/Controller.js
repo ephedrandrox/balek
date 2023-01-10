@@ -137,24 +137,29 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     } else {
 
                         if(this._invitations[invitationKey]){
-                            let invitation = this._invitations[invitationKey]
 
-                            if ( typeof invitation.useKey === 'function') {
+                            let invitation = this._invitations[invitationKey]
+                            let invitationState = invitation.getStatusState()
+
+                            let invitationStateStatus = invitationState.get("status")
+
+                            if ( typeof invitation.useKey === 'function' &&
+                                invitationStateStatus == "waiting") {
                                 let invitationStatus = invitation.useKey(invitationKey, deviceInfo);
                                 if( invitationStatus == "used" )
                                 {
                                     console.log("invitation Key Used", deviceInfo)
                                     Resolve({invitationKey: invitationKey, status: invitationStatus});
                                 }else{
+                                     console.log("‼️‼️😅😅😅😅 Key exists but not composed properly", invitationKey, invitationState);
                                     Reject({error: "Not Accepted", status : invitationStatus});
                                 }
                             }else{
+                                console.log("‼️‼️😅😅😅😅 Key exists but wasn't used, probably bad state", invitationKey, invitationState);
                                 Reject({error: "Invitation can not use key!"});
                             }
-
-
-
                         }else{
+                            console.log("😅😅😅😅 Invitation Key Not FOUND")
                             Reject({error: "Invitation is not available"});
                         }
                     }
@@ -170,14 +175,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             let target = this._targets[targetKey]
 
                             if ( typeof target.useKey === 'function') {
-                                let targetStatus = target.useKey(targetKey, signature, deviceInfo);
-                                if( targetStatus == "Success" )
-                                {
-                                    console.log("target Key Used", deviceInfo)
-                                    Resolve({targetKey: targetKey, status: targetStatus});
-                                }else{
-                                    Reject({error: "Not Accepted", status : targetStatus});
-                                }
+                                console.log("Controller useTargetKey" )
+
+                                target.useKey(targetKey, signature, deviceInfo)
+                                    .then(lang.hitch(this, function (targetStatus){
+                                        console.log("targetStatus Success" )
+                                        if( targetStatus == "Success" )
+                                        {
+                                            console.log("target Key Used", deviceInfo)
+                                            delete this._targets[targetKey]
+                                            Resolve({targetKey: targetKey, status: targetStatus});
+                                        }else{
+                                            Reject({error: "Not Accepted", status : targetStatus});
+                                        }
+                                    }))
+                                    .catch(lang.hitch(this,function (Error){
+                                        console.log("😅😅😅😅😅 targetStatus Error", Error )
+                                        Reject({error: "useTargetKey", status : Error});
+                                    }));
+
                             }else{
                                 Reject({error: "Target can not use key!"});
                             }
@@ -247,6 +263,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             && input.deviceInfo && input.deviceInfo.publicSigningKey)
                         {
                             //New Device Created!
+                            console.log("NewUserDevice 🔆🔆🔆 ", input)
+                           //todo check that device doesn't already exist
+                            //if it does, error will be received
                             let newDevice = Device({owner: input.owner,
                                 deviceInfo: input.deviceInfo,
                                 _connectController: this, _module: this._module});
@@ -255,7 +274,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             if(newDeviceKey !== null)
                             {
 
-                                //todo add to mongo database and load on start
 
                                 this._devicesDatabase.newUserDevice(input).then(lang.hitch(this, function(Result){
                                     console.log("NewUserDevice 🔆🔆🔆 ", Result)

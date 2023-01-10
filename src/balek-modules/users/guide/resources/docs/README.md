@@ -24,3 +24,5 @@ The `admin/users` module can be loaded through the Modules Menu if your user is 
 ### System Administration
 The `admin/system` module can be loaded through the Modules Menu if your user is an administrator.
 
+### Settings
+New Settings!

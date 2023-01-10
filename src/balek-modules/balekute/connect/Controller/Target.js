@@ -34,33 +34,35 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             useKey: function(targetKey, signature, deviceInfo)
             {
-                console.log(this.key, targetKey, signature, deviceInfo)
-                if (targetKey == this.key && this.targetState.get('status') == "waiting"
-                    && typeof signature == 'string' && typeof deviceInfo == 'object')
-                {
-                    const publicSigningKey = deviceInfo.publicSigningKey
-                    const message = Uint8Array.from(Buffer.from(this.key, 'utf8'))
-                    const publicKeyBuf = new Buffer(publicSigningKey.toString('ascii'), 'ascii')
-                    const signatureBuf = new Buffer(atob(signature).toString('ascii'), 'ascii')
-                    const verifier = crypto.createVerify('sha256')
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
 
-                    verifier.update(message, 'utf8')
+                    console.log(this.key, targetKey, signature, deviceInfo)
+                    if (targetKey == this.key && this.targetState.get('status') == "waiting"
+                        && typeof signature == 'string' && typeof deviceInfo == 'object') {
+                        const publicSigningKey = deviceInfo.publicSigningKey
+                        const message = Uint8Array.from(Buffer.from(this.key, 'utf8'))
+                        const publicKeyBuf = new Buffer(publicSigningKey.toString('ascii'), 'ascii')
+                        const signatureBuf = new Buffer(atob(signature).toString('ascii'), 'ascii')
+                        const verifier = crypto.createVerify('sha256')
 
-                    const result = verifier.verify(publicKeyBuf, signatureBuf)
+                        verifier.update(message, 'utf8')
 
-                    if(result)
-                    {
-                        this.activate(deviceInfo)
-                        return "Success"
-                    }else {
-                        return "Verification Failed"
+                        const result = verifier.verify(publicKeyBuf, signatureBuf)
+
+                        if (result) {
+                            this.targetState.set('status', 'Activating')
+                            this.activate(deviceInfo)
+                            Resolve("Success")
+                        } else {
+                            Reject({Error: "Verification Failed" })
+                        }
+                    } else {
+                        Reject({Error: "Failed: target key mismatch" })
                     }
-                }else {
-                    return "Failed: target key mismatch"
-                }
+                }))
             },
             activate: function(deviceInfo){
-                var deviceOwnerUserKey = null
+                let deviceOwnerUserKey = null
                 let device = this._connectController.getDeviceByPublicSigningKey(deviceInfo.publicSigningKey)
                 if(typeof device !== 'undefined'){
                     deviceOwnerUserKey = device.getOwnerUserKey();
@@ -86,7 +88,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                                 topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
                                     console.log("sessionCredentialsUpdate",session);
-
+                                    this.targetState.set('status') == "Activated"
                                     this.targetState.set("targetActivated", true)
                                 }));
                             }else {

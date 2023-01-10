@@ -3,7 +3,7 @@ define(['dojo/_base/declare',
     function (declare, databaseController) {
         return declare("diaplodeDatabaseController", [databaseController], {
 
-            _Database: "diaplode",
+            //_Database: "diaplode",
 
             constructor: function (args) {
 

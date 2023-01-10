@@ -1,5 +1,5 @@
 FROM node:18-alpine AS node
-FROM  lscr.io/linuxserver/openssh-server:latest
+FROM lscr.io/linuxserver/openssh-server:latest
 
 RUN apk update
 RUN apk add openssh-client

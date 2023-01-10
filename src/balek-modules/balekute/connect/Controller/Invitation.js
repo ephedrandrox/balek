@@ -68,19 +68,22 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 if(owner.userKey == this.owner.userKey
                 && invitationKey == this.key){
 
-                        this.statusState.set("status", "accepted")
-                    this._connectController.createDevice({owner: {userKey: this.owner.userKey},
-                        deviceInfo: this.deviceInfo }).then(lang.hitch(this, function(Result){
-                        this.statusState.set("status", "accepted")
+                      const invitationStatus =   this.statusState.get("status")
 
-
-                        this.statusState.set("keychainIdentifier", Result.newKey)
-
-                    })).catch(lang.hitch(this, function (error) {
-                        console.log(error);
-                        this.statusState.set("status", "error")
-                        this.statusState.set("error", "Device Creation Failed")
-                    }));
+                    if(invitationStatus == 'used'){
+                        this._connectController.createDevice({owner: {userKey: this.owner.userKey},
+                            deviceInfo: this.deviceInfo }).then(lang.hitch(this, function(Result){
+                            this.statusState.set("keychainIdentifier", Result.newKey)
+                            this.statusState.set("status", "accepted")
+                        })).catch(lang.hitch(this, function (error) {
+                            console.log(error);
+                            this.statusState.set("status", "error")
+                            this.statusState.set("error", "Device Creation Failed")
+                        }));
+                    }else {
+                        console.log("Invitation Status not used!👐👐😈: " + invitationStatus)
+                        return invitationStatus
+                    }
 
                 }else{
                     this.statusState.set("status", "error")
