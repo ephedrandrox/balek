@@ -53,6 +53,8 @@ define(['dojo/_base/declare',
 
             sessionControllerCommands: null,
 
+            beingActivated: false,
+
             _createInvitationClicked: function(clickEvent){
                 console.log(this._instanceCommands)
 
@@ -119,8 +121,8 @@ define(['dojo/_base/declare',
                     console.log("#QRCode", "Create QRCode Received Error Response" + commandErrorResults);
                 });
                 }
-                if(name == "targetActivated"){
-
+                if(name == "targetActivated" && this.beingActivated === false){
+                    this.beingActivated = true
                     topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
                         lang.hitch(this, function (loginReply) {
                                 if(loginReply.error === undefined)
@@ -153,8 +155,9 @@ define(['dojo/_base/declare',
                                 }
                                 else
                                 {
-                                    alert(loginReply.error);
+                                    alert("Oops!" + loginReply.error + "\n refresh to try again");
                                     //todo Maybe make a reset switch and use it here,
+                                    //todo or a variable that logs the failure
                                 }
                         }));
                 }
