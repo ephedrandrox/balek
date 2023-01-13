@@ -121,50 +121,13 @@ define(['dojo/_base/declare',
                     console.log("#QRCode", "Create QRCode Received Error Response" + commandErrorResults);
                 });
                 }
-                if(name == "targetActivated" && this.beingActivated === false){
-                    this.beingActivated = true
-                    topic.publish("requestSessionUnloadModuleInstance", this._instanceKey,
-                        lang.hitch(this, function (loginReply) {
-                                if(loginReply.error === undefined)
-                                {
-                                    this.sessionControllerCommands.getAvailableSessions().then(lang.hitch(this, function (availableSessions) {
-                                        let availableSessionKeys = Object.keys(availableSessions)
-                                        if (availableSessionKeys.length > 1) {
-                                            //todo if more then one, show a chooser
-                                            //todo automatically keep new session with option+return or some keystroke at login
-                                            availableSessionKeys.some(lang.hitch(this, function(availableSessionKey){
-                                                if (availableSessionKey != this._sessionKey){
-                                                    topic.publish("requestSessionChangeAndUnloadAll", availableSessionKey);
-                                                    return true
-                                                }else{
-                                                    return false
-                                                }
-                                            }))
-                                        }else {
-                                            topic.publish("requestModuleLoad", "diaplode/elements/files");
-                                            topic.publish("requestModuleLoad", "diaplode/elements/notes");
-                                            topic.publish("requestModuleLoad", "diaplode/elements/tasks");
-                                            topic.publish("requestModuleLoad", "diaplode/navigator");
-                                            topic.publish("requestModuleLoad", "diaplode/commander");
-                                            topic.publish("loadBackground", "flowerOfLife");
-                                        }
-                                    })).catch(lang.hitch(this, function(Error)  {
-                                        console.log(Error);
-                                    }))
-                                    this.destroy();
-                                }
-                                else
-                                {
-                                    alert("Oops!" + loginReply.error + "\n refresh to try again");
-                                    //todo Maybe make a reset switch and use it here,
-                                    //todo or a variable that logs the failure
-                                }
-                        }));
+                if(name == "targetActivated" && this.beingActivated == false){
+                    topic.publish("loadBackground", "flowerOfLife");
+                    this.destroy();
                 }
             },
             onNewInvitation: function(invitation){
                 console.log("CDD: newIn", invitation);
-
                 domConstruct.place(invitation.domNode, this._invitationsDiv)
 
             },

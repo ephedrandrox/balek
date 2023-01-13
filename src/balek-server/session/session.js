@@ -9,6 +9,7 @@ define([ 	'dojo/_base/declare',
 
         return declare("balekServerSessionManagerSession", balekSessionManagerSession, {
 
+            _wssConnection: null,
             _sessionKey: null,
 
             _sessionStateWatchHandle: null,
@@ -71,6 +72,46 @@ define([ 	'dojo/_base/declare',
                 {
                     console.log("session request uknown.");
                 }
+            },
+            unloadAllInstancesOf(ModuleName){
+                let moduleKeys  = this.getModuleKeysFor(ModuleName)
+
+                moduleKeys.forEach(lang.hitch(this, function(moduleKey){
+                    this.unloadModuleInstance(moduleKey).then(function(){
+                    }).catch(function(Error) {})
+                }))
+            },
+            getModuleKeysFor(ModuleName){
+                const allSessionInstances = Object.keys(this._instances)
+                let moduleKeys  = []
+                allSessionInstances.forEach(lang.hitch(this, function(ModuleKey){
+                   let moduleInstance = this._instances[ModuleKey]
+                    console.log(moduleInstance)
+                    if(moduleInstance && moduleInstance._moduleName == ModuleName)
+                    {
+                        moduleKeys.push(ModuleKey)
+                    }
+                }))
+               return moduleKeys
+
+            },
+            loadModuleInstance: function(moduleName){
+
+                let wssConnection = this._wssConnection
+
+                if(wssConnection)
+                {
+                    topic.publish("loadModuleForClient", wssConnection, moduleName,
+                        function(moduleInterface){
+                            debugger;
+                            if (moduleInterface === null) {
+                                console.log("Error: loadModuleInstance -> loadModuleForClient Could not Load Module")
+                            } else {
+                                topic.publish("sendBalekProtocolMessage", wssConnection, moduleInterface);
+                            }
+                        })
+                }
+
             },
             unloadModuleInstance: function(sessionModuleInstanceKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){

@@ -56,6 +56,8 @@ define(['dojo/_base/declare',
                 //##########################################################################################################
                 topic.subscribe("sessionCredentialsUpdate", lang.hitch(this, this.sessionCredentialsUpdate));
                 this.InstanceCommands.setCommand("getUserSessionList", lang.hitch(this, this.getUserSessionList))
+                this.InstanceCommands.setCommand("switchToSessionAndUnloadOthers", lang.hitch(this, this.switchToSessionAndUnloadOthers))
+
                 //##########################################################################################################
                 //SessionsController Functions Section END
                 //##########################################################################################################
@@ -158,7 +160,15 @@ define(['dojo/_base/declare',
                     session.addInstance(instance)
                 }
             },
+            switchToSessionAndUnloadOthers: function(sessionKey, changeToSessionKey){
+                if(this._sessions[sessionKey] && this._sessions[sessionKey]._wssConnection
+                && this._sessions[changeToSessionKey]){
+                    this.changeSessionConnection(this._sessions[sessionKey]._wssConnection,
+                        changeToSessionKey);
+                    this.unloadAllUserSessionsExcept(changeToSessionKey);
+                }
 
+            },
             unloadSession: function(sessionKey){
                 // summary:
                 //          Returns a Promise to Unload a Session by sessionKey
