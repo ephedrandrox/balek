@@ -45,7 +45,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', "dojo/topic", "dojo/node!fs"],
                     cert: fsNodeObject.readFileSync("src/balek-server/etc/cert/cert.pem").toString()
                 };
 
-                httpsConfig = {
+                const httpsConfig = {
                     httpsOptions: httpsOptions,
                     address: this._configObject["Network Settings"]["Server Address"],
                     port: this._configObject["Network Settings"]["Server Port"],

@@ -409,7 +409,7 @@ define(['dojo/_base/declare',
                         });
                 }
             },
-            _onConsoleUndockButtonClicked: function(clickEvent)
+            _onConsoleUndockButtonClicked: function()
             {
                 this._instanceCommands.undockInterface();
             },

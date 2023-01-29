@@ -76,9 +76,6 @@ define(['dojo/_base/declare',
                 // _userList watcher function
                 this.addUserWidget(newState)
             },
-            _onFocus: function(){
-
-            },
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ENTER:
