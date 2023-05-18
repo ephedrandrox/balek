@@ -87,6 +87,8 @@ define(['dojo/_base/declare',
 
                         currentSession.loadModuleInstance("diaplode/elements/files")
                         currentSession.loadModuleInstance("diaplode/elements/notes")
+                        currentSession.loadModuleInstance("diaplode/elements/tasks")
+
                         currentSession.loadModuleInstance("diaplode/navigator")
                         currentSession.loadModuleInstance("diaplode/commander")
 

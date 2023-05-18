@@ -30,6 +30,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 console.log("***websocket request" + request.origin);
                 //fix this to check if active
                 try {
+                    //todo fix error that crashes server if no protocol is specified
                     var acceptedConnection = request.accept('balek-protocol', request.origin);
                     console.log((new Date()) + ' Connection accepted.');
 

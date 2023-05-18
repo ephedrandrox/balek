@@ -1,12 +1,4 @@
 
-/*
-
-
-This Object can be mixed into both an interface and an instance to
-sync the _interfaceState object between the two
-
-*/
-
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
@@ -50,11 +42,13 @@ define(['dojo/_base/declare',
 
                     console.log("🟥🟧🟨🟩🟦🟪Atempting connecting")
                     topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
+                    console.log("connectToDatabase Promise", mongoDBConfig, this._Database)
 
                         if (this._Database === null)
                         {
                             this._Database = mongoDBConfig.database;
                         }
+                        console.log("################################################################################################", mongoDBConfig, this._Database)
 
                         topic.publish("getMongoDbConnection", mongoDBConfig.host,
                             mongoDBConfig.port,

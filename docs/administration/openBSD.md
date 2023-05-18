@@ -80,3 +80,5 @@ For the terminal to work, we need to be able to ssh to localhost
 
     ssh-keygen
     cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+
+# Set up docker user above links
