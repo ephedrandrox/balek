@@ -6,11 +6,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'balek-modules/balekute/connect/Controller/Device',
         'balek-modules/balekute/connect/Controller/Target',
 
-        'balek-modules/balekute/connect/Database/devices'
+        'balek-modules/balekute/connect/Database/devices',
 
+        'dojo/node!qrcode-terminal'
 
     ],
-    function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase
+    function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase, qrcode
  ) {
         return declare("balekuteConnectController", null, {
             _module: null,
@@ -50,6 +51,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 this.loadDevices()
                 console.log("diaplodeConversationsController  starting...");
+
+                qrcode.generate("Balek", {small: true}, function(invitationCode){
+                    console.log(invitationCode)
+                })
             },
             //Interface Commands:
 
