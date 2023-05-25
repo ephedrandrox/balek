@@ -29,7 +29,7 @@ define(['dojo/_base/declare',
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this.stateWatchers = {}
-                console.log("moduleBalekuteConnectInstance starting...",this);
+                console.log("moduleBalekuteConnectInstance starting...");
 
                 //set setRemoteCommander commands
                 this._commands={

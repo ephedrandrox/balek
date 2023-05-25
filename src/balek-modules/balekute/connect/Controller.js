@@ -158,7 +158,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 let newTargetKey = newTarget.getKey()
                 if(newTargetKey !== null) {
-                    console.log(this._targets,this._targetsBySessionKey, newTargetKey, sessionKey)
+
                     this._targets[newTargetKey.toString()] = newTarget
                     this._targetsBySessionKey[sessionKey.toString()] = newTarget
                 }

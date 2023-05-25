@@ -77,7 +77,10 @@ define(['dojo/_base/declare',
                 topic.publish("requestModuleLoad", "diaplode/login");
             },
             _qrClicked: function(clickEvent){
-                window.open("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + this.targetKey, "_self")
+                if(!clickEvent.metaKey)
+                {
+                    window.open("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + this.targetKey, "_self")
+                }
 
             },
             constructor: function (args) {

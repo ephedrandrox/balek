@@ -43,13 +43,18 @@ text-align:center
 }
 
 .digivigilDigiscanMainInterfaceMainHeaderTitle{
+    position: relative;
     font-size: calc(20px + 2vh);
-    color: grey;
+    color: #000000;
     display: inline-block;
     margin-right: 20px;
     position: absolute;
     left: 30px;
-    top: calc(10px );;
+    top: calc(10px );
+
+    font-family: Arial, Helvetica, sans-serif;
+
+   line-height: 30px;
 }
 
 .digivigilDigiscanMainInterface{
@@ -57,10 +62,10 @@ text-align:center
     display: inline;
     display: inline-block;
     text-align: center;
-    padding: 30px;
-    margin: 30px;
+    padding: 0;
+    margin: 0x;
     border: solid black 3px;
-    border-radius: 25px;
+    border-radius:8px;
     visibility: visible;
     z-index: 5;
     position: absolute;
@@ -76,21 +81,23 @@ text-align:center
 }
 
 .digivigilDigiscanMainInterfaceMainHeaderDiv{
-    border: solid #144b73 6px;
-    background: #144b73;
-    border-top-left-radius: 25px;
+    border: solid #bfe1f1 6px;
+    background: #bfe1f1;
+    border-top-left-radius: 8px;
     position: absolute;
     top: -4px;
     left: -4px;
     right: -4px;
     overflow: hidden;
-    height: 5%;
+    height: 40px;
     min-height: 50px;
     -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     color: white;
     z-index: 100;
+    display: flex;
+    align-items: center;
 }
 .digivigilDigiscanMainInterfaceMainContentDiv{
     position: absolute;
@@ -105,8 +112,8 @@ text-align:center
 }
 
 .digivigilDigiscanMainInterfaceMainDiv{
-    border: solid #144b73 6px;
-    border-radius: 25px;
+    border: solid #bfe1f1 6px;
+    border-radius: 8px;
     position: absolute;
     top: -3px;
     left: -3px;
@@ -117,9 +124,9 @@ text-align:center
 
 
 .digivigilDigiscanMainInterfaceBackgroundDiv{
-    background : rgba(38, 145, 43, 0.3);
+    background : rgba(20, 241, 215, 0.39);
     border: solid black 3px;
-    border-radius: 25px;
+    border-radius: 8px;
     position: absolute;
     top: -3px;
     left: -3px;

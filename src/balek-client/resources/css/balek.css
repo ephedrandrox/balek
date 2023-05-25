@@ -70,11 +70,12 @@ body {
 
 
 
-	/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+3,7db9e8+3,207cca+63,1e5799+97 */
+	/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+3,7db9e8+3,207cca+64,1e5799+97 */
 	background: #7db9e8; /* Old browsers */
-	background: radial-gradient(ellipse at center,  #7db9e8 3%,#7db9e8 3%,#207cca 63%,#1e5799 97%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#1e5799',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
+	background: -moz-linear-gradient(top,  #7db9e8 3%, #7db9e8 3%, #207cca 64%, #1e5799 97%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #7db9e8 3%,#7db9e8 3%,#207cca 64%,#1e5799 97%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #7db9e8 3%,#7db9e8 3%,#207cca 64%,#1e5799 97%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#1e5799',GradientType=0 ); /* IE6-9 */
 
 
 }
