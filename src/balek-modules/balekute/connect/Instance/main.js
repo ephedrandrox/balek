@@ -94,7 +94,7 @@ define(['dojo/_base/declare',
                         //
                         // currentSession.unloadAllInstancesOf("diaplode/login")
 
-                        currentSession.loadModuleInstance("digivigil/guestbook")
+                        currentSession.loadModuleInstance("digivigil/digiscan")
                         currentSession.unloadAllInstancesOf("balekute/connect")
 
 

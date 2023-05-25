@@ -16,17 +16,17 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil/guestbook/resources/html/listItem.html',
-        'dojo/text!balek-modules/digivigil/guestbook/resources/css/listItem.css'
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/listItem.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/listItem.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
-        return declare("digivigilGuestbookListItemInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilDigiscanListItemInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "digivigilGuestbookListItemInterface",
+            baseClass: "digivigilDigiscanListItemInterface",
 
             _mainCssString: mainCss,
 

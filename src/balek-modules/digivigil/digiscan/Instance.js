@@ -1,8 +1,8 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        //Guestbook Instance sub modules
-        'balek-modules/digivigil/guestbook/Instance/main',
+        //Digiscan Instance sub modules
+        'balek-modules/digivigil/digiscan/Instance/main',
         //Balek Components
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance',],
@@ -10,7 +10,7 @@ define(['dojo/_base/declare',
               MainInstance,
               _SyncedCommanderInstance, SyncedMapInstance) {
 
-        return declare("moduleDigivigilGuestbookInstance", _SyncedCommanderInstance, {
+        return declare("moduleDigivigilDigiscanInstance", _SyncedCommanderInstance, {
             _instanceKey: null,
 
             _module: null,
@@ -21,7 +21,7 @@ define(['dojo/_base/declare',
             controllerEntriesWatchHandle: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilGuestbookInstance starting...");
+                console.log("moduleDigivigilDigiscanInstance starting...");
 
                 //set setRemoteCommander commands
                 this._commands={
@@ -31,7 +31,7 @@ define(['dojo/_base/declare',
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
 
-                this._interfaceState.set("Component Name","Digivigil Guestbook");
+                this._interfaceState.set("Component Name","Digivigil Digiscan");
                 this._interfaceState.set("Status", "Starting");
                 //creates component Key that can be used to connect to state
                 this.setInterfaceCommands();
@@ -79,7 +79,7 @@ define(['dojo/_base/declare',
                 //calls inherited _end functions like stateSynced Object
                 this.inherited(arguments);
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying Guestbook Module Instance ");
+                    console.log("destroying Digiscan Module Instance ");
                     this.controllerEntriesWatchHandle.unwatch()
                     Resolve({success: "Unloaded Instance"});
                 }));

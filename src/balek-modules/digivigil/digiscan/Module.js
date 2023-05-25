@@ -3,23 +3,23 @@ define(['dojo/_base/declare',
         'dojo/topic',
 
         'balek-modules/Module',
-        'balek-modules/digivigil/guestbook/Controller',
-        'balek-modules/digivigil/guestbook/Instance',
+        'balek-modules/digivigil/digiscan/Controller',
+        'balek-modules/digivigil/digiscan/Instance',
        ],
     function (declare, lang, topic,
               baseModule, moduleController, moduleInstance) {
-        return declare("digivigilGuestbookModule", baseModule, {
+        return declare("digivigilDigiscanModule", baseModule, {
             //Module Config
-            _displayName: "Digivigil Guestbook",
+            _displayName: "Digivigil Digiscan",
             _allowedSessions: [0, 1],
-            _iconPath: 'balek-modules/digivigil/guestbook/resources/images/book.svg',
+            _iconPath: 'balek-modules/digivigil/digiscan/resources/images/book.svg',
             //End Config
             _instances: {},
             _Controller: null,
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("digivigilGuestbookModule  starting...");
+                console.log("digivigilDigiscanModule  starting...");
                 this._Controller = new moduleController({_module: this});
             },
             newInstance: function (args) {

@@ -14,11 +14,11 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil/guestbook/Interface/createEntry",
-        "balek-modules/digivigil/guestbook/Interface/listItem",
+        "balek-modules/digivigil/digiscan/Interface/createEntry",
+        "balek-modules/digivigil/digiscan/Interface/listItem",
 
-        'dojo/text!balek-modules/digivigil/guestbook/resources/html/main.html',
-        'dojo/text!balek-modules/digivigil/guestbook/resources/css/main.css',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/main.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/main.css',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
@@ -31,7 +31,7 @@ define(['dojo/_base/declare',
         return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
             _instanceKey: null,
             _interface: null,
-            baseClass: "digivigilGuestbookMainInterface",
+            baseClass: "digivigilDigiscanMainInterface",
 
             templateString: template,
             _mainCssString: mainCss,
@@ -51,7 +51,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 this._interface = {};
                 this._createEntry = {};
-                this._guestbookData = {};
+                this._digiscanData = {};
                 this._EntryWidgets = {};
 
                 this.entries = {}
@@ -71,7 +71,7 @@ define(['dojo/_base/declare',
             },
             startupContainable: function(){
                 //called after containable is started
-                console.log("startupContainable main Guestbook interface containable");
+                console.log("startupContainable main Digiscan interface containable");
             },
             //##########################################################################################################
             //Event Functions Section

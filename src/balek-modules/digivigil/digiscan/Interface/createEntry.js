@@ -16,26 +16,26 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil/guestbook/resources/html/createEntry.html',
-        'dojo/text!balek-modules/digivigil/guestbook/resources/css/createEntry.css'
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/createEntry.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/createEntry.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
-        return declare("digivigilGuestbookCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilDigiscanCreateEntryInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             _interface: null,
             templateString: template,
-            baseClass: "digivigilGuestbookCreateEntryInterface",
+            baseClass: "digivigilDigiscanCreateEntryInterface",
 
             _mainCssString: mainCss,
 
-            _guestbookData: {},
+            _digiscanData: {},
             _shiftDown: false,
 
             constructor: function (args) {
                 this._interface = {};
-                this._guestbookData = {};
+                this._digiscanData = {};
                 declare.safeMixin(this, args);
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());

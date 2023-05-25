@@ -4,12 +4,12 @@ define(['dojo/_base/declare',
         'balek-modules/digivigil/Database',
     ],
     function (declare, lang, topic,  digivigilDatabaseController) {
-        return declare("moduleDigivigilGuestbookEntriesDatabaseController", [digivigilDatabaseController], {
-            _Collection: "GuestbookEntries",   //Mongo Collection Name
+        return declare("moduleDigivigilDigiscanEntriesDatabaseController", [digivigilDatabaseController], {
+            _Collection: "DigiscanEntries",   //Mongo Collection Name
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilGuestbookEntriesDatabaseController starting...");
+                console.log("moduleDigivigilDigiscanEntriesDatabaseController starting...");
                 this.checkAndCreateCollection();
             },
             checkAndCreateCollection: function()
@@ -125,7 +125,7 @@ define(['dojo/_base/declare',
                             Reject({error: "Could not get Entry Collection"});
                         }
                     }else{
-                        Reject({error: "Unexpected Guestbook Entry database addEntry()"});
+                        Reject({error: "Unexpected Digiscan Entry database addEntry()"});
                     }
                 }));
             }

@@ -8,14 +8,14 @@ define(['dojo/_base/declare',
 
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
-        'balek-modules/digivigil/guestbook/Interface/main',
+        'balek-modules/digivigil/digiscan/Interface/main',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-modules/components/syncedMap/Interface',
     ],
     function (declare, lang, topic, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, MainInterface, _SyncedCommanderInterface, SyncedMapInterface) {
 
-        return declare("moduleDigivigilGuestbookInterface",   _SyncedCommanderInterface, {
+        return declare("moduleDigivigilDigiscanInterface",   _SyncedCommanderInterface, {
             _instanceKey: null,
             _mainInterface: null,
 
@@ -95,8 +95,8 @@ define(['dojo/_base/declare',
                     }
                 }))
             },
-            sendEntry: function (guestbookEntry) {
-                this._instanceCommands.addEntry(guestbookEntry).then(lang.hitch(this, function(commandReturnResults){
+            sendEntry: function (digiscanEntry) {
+                this._instanceCommands.addEntry(digiscanEntry).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#ADDENTRY", commandReturnResults)
                 })).catch(function(commandErrorResults){
                     console.log("#ADDENTRY", "ADDENTRY Received Error Response" + commandErrorResults);

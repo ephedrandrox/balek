@@ -1,14 +1,14 @@
 define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
-        'balek-modules/digivigil/guestbook/Database/entries',
+        'balek-modules/digivigil/digiscan/Database/entries',
         "dojo/node!sanitize-html",
     ],
     function (declare, lang, topic,
               Stateful,
               entriesDatabase,
               nodeSanitizeHtml) {
-        return declare("digivigilGuestbookController", null, {
+        return declare("digivigilDigiscanController", null, {
             _module: null,              //Module instance
             entries: null,              //Dojo State Object
             _entriesDatabase: null,     //Entries Database controller
@@ -21,10 +21,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this.entries = new EntriesState({})
 
                 if(this._module === null){
-                    console.log("digivigilGuestbookController  Cannot Start!...");
+                    console.log("digivigilDigiscanController  Cannot Start!...");
                 }else{
                     this._entriesDatabase = new entriesDatabase({_instanceKey: this._instanceKey});
-                    console.log("digivigilGuestbookController  starting...");
+                    console.log("digivigilDigiscanController  starting...");
                     this.loadEntries().then(lang.hitch(this, function(Result){
                         console.log("Entries Loaded", Result);
                     }))
@@ -53,7 +53,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             addEntry: function(Entry){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    Entry = this.checkAndReturnValidGuestbookEntry(Entry)
+                    Entry = this.checkAndReturnValidDigiscanEntry(Entry)
                     if(Entry)
                     {
                         this._entriesDatabase.addEntry(Entry).then(lang.hitch(this, function(Result){
@@ -74,7 +74,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             }
                         }))
                     }else {
-                        Reject({ERROR: "Not a valid Guestbook Entry"})
+                        Reject({ERROR: "Not a valid Digiscan Entry"})
                     }
                 }));
             },
@@ -92,16 +92,16 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }));
             },
-            checkAndReturnValidGuestbookEntry(guestbookEntry) {
-                let validGuestbookEntry = {};
+            checkAndReturnValidDigiscanEntry(digiscanEntry) {
+                let validDigiscanEntry = {};
                 let now = new Date(Date.now());
                 let currentDate = (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear();
-                if (guestbookEntry.name && guestbookEntry.home && guestbookEntry.note) {
-                    validGuestbookEntry.name = nodeSanitizeHtml(guestbookEntry.name);
-                    validGuestbookEntry.home = nodeSanitizeHtml(guestbookEntry.home);
-                    validGuestbookEntry.note = nodeSanitizeHtml(guestbookEntry.note);
-                    validGuestbookEntry.date = currentDate;
-                    return validGuestbookEntry;
+                if (digiscanEntry.name && digiscanEntry.home && digiscanEntry.note) {
+                    validDigiscanEntry.name = nodeSanitizeHtml(digiscanEntry.name);
+                    validDigiscanEntry.home = nodeSanitizeHtml(digiscanEntry.home);
+                    validDigiscanEntry.note = nodeSanitizeHtml(digiscanEntry.note);
+                    validDigiscanEntry.date = currentDate;
+                    return validDigiscanEntry;
                 } else {
                     return false;
                 }

@@ -5,10 +5,10 @@ define(['dojo/_base/declare',
     function (declare,
               lang,
               _SyncedCommanderInstance) {
-        return declare("moduleDigivigilGuestbookMainInstance", [_SyncedCommanderInstance], {
+        return declare("moduleDigivigilDigiscanMainInstance", [_SyncedCommanderInstance], {
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("starting moduleDigivigilGuestbookMainInstance");
+                console.log("starting moduleDigivigilDigiscanMainInstance");
                 //creates component Key that can be used to connect to state
                 this.prepareSyncedState();
                 this._interfaceState.set("Status", "Ready");
