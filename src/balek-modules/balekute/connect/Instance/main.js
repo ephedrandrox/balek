@@ -85,15 +85,18 @@ define(['dojo/_base/declare',
                     }else{
                         let currentSession = sessionCommands.getSessionByKey(currentSessionKey)
 
-                        currentSession.loadModuleInstance("diaplode/elements/files")
-                        currentSession.loadModuleInstance("diaplode/elements/notes")
-                        currentSession.loadModuleInstance("diaplode/elements/tasks")
+                        // currentSession.loadModuleInstance("diaplode/elements/files")
+                        // currentSession.loadModuleInstance("diaplode/elements/notes")
+                        // currentSession.loadModuleInstance("diaplode/elements/tasks")
+                        //
+                        // currentSession.loadModuleInstance("diaplode/navigator")
+                        // currentSession.loadModuleInstance("diaplode/commander")
+                        //
+                        // currentSession.unloadAllInstancesOf("diaplode/login")
 
-                        currentSession.loadModuleInstance("diaplode/navigator")
-                        currentSession.loadModuleInstance("diaplode/commander")
-
-                        currentSession.unloadAllInstancesOf("diaplode/login")
+                        currentSession.loadModuleInstance("digivigil/guestbook")
                         currentSession.unloadAllInstancesOf("balekute/connect")
+
 
                     }
 
