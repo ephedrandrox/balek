@@ -1,10 +1,10 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
-        'balek-modules/diaplode/Database',
+        'balek-modules/balekute/Database',
     ],
-    function (declare, lang, topic,  diaplodeDatabaseController) {
-        return declare("moduleBalekuteDevicesDatabaseController", [diaplodeDatabaseController], {
+    function (declare, lang, topic,  balekuteDatabaseController) {
+        return declare("moduleBalekuteDevicesDatabaseController", [balekuteDatabaseController], {
             _instanceKey: null,
             _Collection: "BalekuteDevices",
 
