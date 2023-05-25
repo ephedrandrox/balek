@@ -25,3 +25,5 @@ src/balek-modules/build/quill/node_modules
 src/balek-modules/build/quill/dist
 
 builds/guestbook/mongoDB/
+
+src/balek-server/etc/ownerDevice.json

@@ -37,7 +37,8 @@ define(['dojo/_base/declare',
                     "acceptDeviceInfo" : lang.hitch(this, this.acceptDeviceInfo),
                     "useInvitationKey": lang.hitch(this, this.useInvitationKey),
                     "createInvitationKey" : lang.hitch(this, this.createInvitationKey),
-                    "connectInvitationState" : lang.hitch(this,this.connectInvitationState)
+                    "connectInvitationState" : lang.hitch(this,this.connectInvitationState),
+                    "useOwnerClaimKey" : lang.hitch(this, this.useOwnerClaimKey),
                 };
 
                 this.availableInvitations  = new SyncedMapInstance({_instanceKey: this._instanceKey});
@@ -208,6 +209,24 @@ define(['dojo/_base/declare',
                 }else {
                     remoteCallback({Error: "wrong type", type: typeof invitationState})
                 }
+
+            },
+            useOwnerClaimKey: function( ownerClaimKey, deviceInfo, remoteCallback){
+                console.log("useOwnerClaimKey", ownerClaimKey, deviceInfo, arguments);
+
+                if( typeof ownerClaimKey === 'string' && typeof deviceInfo === 'object' &&
+                    typeof remoteCallback === 'function'  )
+                {
+                    this.moduleController.useOwnerClaimKey(ownerClaimKey,deviceInfo).then(lang.hitch(this, function (Result) {
+                        console.log("this.moduleController.useOwnerClaimKey",Result)
+                        remoteCallback({Result: Result})
+                    })).catch(function(rejectError){
+                        remoteCallback({error: rejectError})
+                    })
+                }else {
+                    console.log("❗️Unexpected Arguments! useAdminSetKey: function( ownerClaimKey, deviceInfo, remoteCallback)‼️",arguments)
+                }
+
 
             },
             _end: function () {

@@ -12,10 +12,15 @@ define(['dojo/_base/declare',
         //Balek Commands and Controller Imports
         'balek-server/users/usersController/instanceCommands',
         'balek-server/session/sessionsController/instanceCommands',
-        "balek-server/users/dbController"
+        "balek-server/users/dbController",
+        "dojo/node!fs",
+        'dojo/node!crypto'
+
+
     ],
     function (declare, lang, topic, Stateful,
-              InstanceCommands, SessionInstanceCommands, userDbController
+              InstanceCommands, SessionInstanceCommands, userDbController,
+              fsNodeObject, crypto
     ) {
         return declare("balekUsersController", null, {
 
@@ -29,6 +34,9 @@ define(['dojo/_base/declare',
 
             _userInfoWatchers: null,
             _userListWatchers: null,
+
+            _ownerIconFileLocation: "./src/balek-modules/balekute/connect/resources/images/ownerIcon.png",
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 if(this._usersManager){
@@ -41,6 +49,9 @@ define(['dojo/_base/declare',
                     //Initialize Instance Commands
                     this._instanceCommands = new InstanceCommands();
                     this._instanceCommands.setCommand("addNewUser", lang.hitch(this, this.addNewUser))
+
+                    this._instanceCommands.setCommand("getOwnerUser", lang.hitch(this, this.getOwnerUser))
+
                     this._instanceCommands.setCommand("updateUsername", lang.hitch(this, this.updateUsername))
                     this._instanceCommands.setCommand("updateUserIcon", lang.hitch(this, this.updateUserIcon))
                     this._instanceCommands.setCommand("updateUserPassword", lang.hitch(this, this.updateUserPassword))
@@ -141,7 +152,11 @@ define(['dojo/_base/declare',
                         const iconBase64 = Buffer.from(iconData);
 
                         let userKey = this._usersManager.getUniqueUserKey()
-                        let permissionGroups =  Buffer.from(JSON.stringify(["users"]).toString())
+
+                        let permissionArray = userData.permissionGroups && Array.isArray(userData.permissionGroups) ? userData.permissionGroups :  ["users"]
+                        let permissionGroups =  Buffer.from(JSON.stringify(permissionArray).toString())
+
+
 
                         this.isUserAdmin(adminUserKey).then(lang.hitch(this, function (results) {
                             //todo update User Store
@@ -191,6 +206,119 @@ define(['dojo/_base/declare',
                         });
                     }else{
                         Reject({Error: "Error - new UserData or admin key not as expected", userInfo: [userData, adminUserKey]})
+                    }
+                }));
+            },
+            getOwnerUser: function(){
+                // Instance Function for getting the Owner User Info
+                // Returns first Owner group user from Database
+                // Creates initial owner if no user found
+            return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                this._dbController.getUsersFromDatabase().then(lang.hitch(this, function (allUsers){
+                    if(Array.isArray(allUsers)){
+                        let ownerFound = false;
+                        allUsers.forEach(lang.hitch(this, function(user){
+                            let permissionGroups  = JSON.parse(String.fromCharCode(...new Uint8Array(user.permission_groups)));
+                            if(Array.isArray(permissionGroups) && permissionGroups.includes("owner")){
+                                ownerFound = true
+                                Resolve(user)
+                            }
+                        }))
+                        if(!ownerFound){
+                            this.addInitialOwnerUser().then(lang.hitch(this, function (newOwnerUser) {
+                                Resolve(newOwnerUser)
+                            })).catch(lang.hitch(this, function (error) {
+                                Reject(error)
+                            }))
+                        }
+                    }else{
+                        Reject({error: "Unexpected result in getOwnerUser"})
+                    }
+                })).catch(lang.hitch(this, function (error) {
+                    Reject(error)
+                }))
+
+            }));
+            },
+
+            addInitialOwnerUser: function(){
+                //Gets Called from the getOwnerUser function if there is no owner found in the database
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    this.readDefaultOwnerIcon().then(lang.hitch(this, function (iconData) {
+                        const hash = crypto.createHash('sha256');
+                        hash.update(String(crypto.randomUUID()));
+                        let password = hash.digest('hex');
+                        let userInfo = {
+                            userName: "Owner",
+                            password: password,
+                            permissionGroups: ["owner", "admin", "users"],
+                            icon: iconData
+                        }
+
+                        this.addNewOwnerUser(userInfo).then(lang.hitch(this, function (newUserResults) {
+                            //if user created Resolve successfully with UserInfo
+                            if(newUserResults.affectedRows && newUserResults.affectedRows >= 1){
+                                Resolve(userInfo)
+                            }else {
+                                Reject({error: "Could Not Create User in Database", results: newUserResults});
+                            }
+                        })).catch(lang.hitch(this, function (error) {
+                            Reject({description: "addInitialOwnerUser: Could Not Create User in Database", error: error });
+                        }))
+                    }))
+                        .catch(lang.hitch(this, function (error) {
+                            Reject({error: "Could not open Icon File"});
+                        }))
+
+                }));
+
+            },
+            addNewOwnerUser: function(userData){
+                //Gets Called from the addInitialOwnerUser which creates the initial owner user
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if(userData
+                        && userData.userName && userData.icon && userData.icon.data
+                        && userData.password && userData.permissionGroups && Array.isArray(userData.permissionGroups)){
+
+                        const iconData = Object.values(userData.icon.data);
+                        const iconBase64 = Buffer.from(iconData);
+
+                        let userKey = this._usersManager.getUniqueUserKey()
+                        let permissionGroups =  Buffer.from(JSON.stringify(userData.permissionGroups ).toString())
+
+
+                        this._dbController.addNewUser(userData.userName, userData.password, iconBase64, userKey, permissionGroups)
+                            .then(lang.hitch(this, function (results) {
+                            if(results[0].affectedRows === 1)
+                            {
+                                Resolve({Success: "User Added", Results: results})
+                                //Create User State
+                                let newUserState = this.getUserInfoState(userKey)
+                                newUserState.set("userName",  userData.userName )
+                                newUserState.set("icon",  iconBase64 )
+
+                                //add userKey to userslists
+                                for(objectIndex in this._userListStates)
+                                {
+                                    if(this._userListStates[objectIndex] !== null
+                                        && this._userListStates[objectIndex].set
+                                        && typeof this._userListStates[objectIndex].set === 'function'){
+                                        let userListState = this._userListStates[objectIndex]
+                                        userListState.set(userKey.toString(), userKey.toString())
+                                    }
+                                }
+                            }else if(results[0].affectedRows === 0){
+                                Reject({Error: "No Rows Affected", Results: results})
+                            }else {
+                                Reject({Error: "Unexpected Results", Results: results})
+                            }
+                        })).catch(function (Error) {
+                            Reject({Error: Error})
+                        });
+
+                    }else{
+                        console.log("🛑🛑🛑🛑Error - new UserData  not as expected in addNewOwnerUser", userData)
+                        Reject({Error: "Error - new UserData not as expected", userInfo: [userData]})
                     }
                 }));
             },
@@ -265,6 +393,19 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Private Methods
             //##########################################################################################################
+
+            readDefaultOwnerIcon: function(){
+                return new Promise((Resolve, Reject) => {
+                    fsNodeObject.readFile(this._ownerIconFileLocation, (err, data) => {
+                        if (err) {
+                            Reject(err);
+                            return;
+                        }
+                        Resolve({type: "Buffer", data: data});
+                    });
+                });
+            },
+
             getUserListState: function(userKey){
                 if(!this._userListStates[userKey]){
                     let UserListState =  declare([Stateful], {})

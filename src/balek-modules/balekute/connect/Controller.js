@@ -8,10 +8,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
         'balek-modules/balekute/connect/Database/devices',
 
-        'dojo/node!qrcode-terminal'
+        'balek-server/users/usersController/instanceCommands',
+
+        'dojo/node!qrcode-terminal',
+        "dojo/node!fs",
+        'dojo/node!crypto',
+        'dojo/node!os'
+
 
     ],
-    function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase, qrcode
+    function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase,
+              UsersControllerInstanceCommands,
+              qrcode, fsNodeObject, crypto, os
  ) {
         return declare("balekuteConnectController", null, {
             _module: null,
@@ -26,10 +34,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             _targets: null,
             _targetsBySessionKey: null,
 
-            statusAsState: null,
+            _ownerClaimKey: null,
+            _ownerPublicKey: null,
+            _ownerClaimFileLocation: "./src/balek-server/etc/ownerDevice.json",
 
+            statusAsState: null,
+            usersControllerCommands: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
+                this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
+
                 this._invitations = {};
                 this._invitationStates = {}
 
@@ -44,19 +60,96 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this.statusAsState = new StatusState({});
 
                 if(this._module === null){
-                    console.log("diaplodeConversationsController  Cannot Start!...");
+                    console.log("balekuteConnectController  Cannot Start!...");
                 }
 
                 this._devicesDatabase = new devicesDatabase({_instanceKey: this._instanceKey});
 
                 this.loadDevices()
-                console.log("diaplodeConversationsController  starting...");
+                console.log("balekuteConnectController  starting...");
 
-                qrcode.generate("Balek", {small: true}, function(invitationCode){
-                    console.log(invitationCode)
-                })
+                this.loadOrCreateOwnerDeviceInvitation().then(lang.hitch(this, function(Result) {
+                    if(Result.ownerClaimKey){
+                        qrcode.generate("Digiscan://"+ os.hostname() +"/ownerClaim/"+
+                            Result.ownerClaimKey, {small: true}, lang.hitch(this, function(invitationCode){
+                            console.log(invitationCode)
+                            this.statusAsState.set("hasOwnerDevice", false)
+                        }))
+                    }else {
+                        this.statusAsState.set("hasOwnerDevice", true)
+                    }
+                }))
+
             },
+           readJSONFromFile: function(fileLocation) {
+            return new Promise((resolve, reject) => {
+                fsNodeObject.readFile(fileLocation, 'utf8', (err, data) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+
+                    try {
+                        const json = JSON.parse(data);
+                        resolve(json);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            });
+        },
             //Interface Commands:
+
+            resetOwnerClaimKey: function(){
+                const ownerClaimFile = this._ownerClaimFileLocation
+                const newData = { ownerClaimKey: String(crypto.randomUUID()) };
+                fsNodeObject.writeFileSync(ownerClaimFile, JSON.stringify(newData));
+
+                this._ownerClaimKey = newData.ownerClaimKey
+
+                return this._ownerClaimKey
+            },
+            loadOrCreateOwnerDeviceInvitation: function(){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                   {
+                       const ownerClaimFile = this._ownerClaimFileLocation
+
+                       this.readJSONFromFile(ownerClaimFile).then(lang.hitch(this, function (parsedJSON){
+                           if (parsedJSON.ownerClaimKey){
+                              Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
+                           }
+                           else if (parsedJSON.ownerPublicKey){
+                               this._ownerPublicKey = parsedJSON.ownerPublicKey
+                               Resolve({ownerPublicKey: parsedJSON.ownerPublicKey})
+                           }
+                       })).catch(lang.hitch(this, function (error){
+                           console.log('Error Occured:', error);
+                           Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
+                       }))
+
+                   }
+                }));
+            },
+            updateOwnerClaimFile: function(publicKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+
+                        const ownerClaimFile = this._ownerClaimFileLocation
+                        const newData = { ownerPublicKey: String(publicKey) };
+                        fsNodeObject.writeFileSync(ownerClaimFile, JSON.stringify(newData));
+
+                        this.readJSONFromFile(ownerClaimFile).then(lang.hitch(this, function (parsedJSON){
+                            if (parsedJSON.ownerPublicKey){
+                                this._ownerPublicKey = parsedJSON.ownerPublicKey
+                                this._ownerClaimKey = null
+                                Resolve({ownerPublicKey: parsedJSON.ownerPublicKey})
+                            }else{
+                                Reject({error: "File did not save properly: updateOwnerClaimFile"})
+                            }
+                        })).catch(lang.hitch(this, function (error){
+                            Reject({error: error, description: "File did not save properly: updateOwnerClaimFile"})
+                        }))
+                }));
+            },
 
             createTarget: function(sessionKey){
                 let newTarget = Target({_connectController: this, _module: this._module,
@@ -78,16 +171,23 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         //Make sure that the Interface sent a conversationContent Object
                             Reject({error: "input === null"});
                     } else {
-                        //Make sure that the conversationContent Object is structured correctly
+                        //Make sure that the invitationContent Object is structured correctly
                         if(input && input.owner && input.owner.userKey)
                         {
-                            //New Conversation Created!
-                            let newInvitation = Invitation({owner: input.owner, host: input.host, _connectController: this, _module: this._module});
+                            //New Invitation Created!
+
+                            if(input.invitationKey){
+                                let newInvitation = Invitation({key: input.invitationKey, owner: input.owner, host: input.host, _connectController: this, _module: this._module});
+                            }else
+                            {
+                                let newInvitation = Invitation({owner: input.owner, host: input.host, _connectController: this, _module: this._module});
+                            }
+
                             let newInvitationKey = newInvitation.getKey()
                             if(newInvitationKey !== null)
                             {
 
-                                //Add it to the conversations array
+                                //Add it to the invitations array
                                 this._invitations[newInvitationKey.toString()]  = newInvitation;
                                 //add to all users lists:
                                 Resolve({result: "success", newKey: newInvitationKey});
@@ -131,6 +231,50 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         }else{
                             Reject({error: "Invitation is not available"});
+                        }
+                    }
+                }));
+            },
+
+            useOwnerClaimKey: function (ownerClaimKey, deviceInfo) {
+                //THis is called when a user wants to claim the server
+                //This is expected to be done once and the owner user
+                //will be created the first time an ownerClaimKey is used.
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (ownerClaimKey === null) {
+                        Reject({error: "invitationKey === null"});
+                    } else {
+                        let hasOwnerDevice = this.statusAsState.get("hasOwnerDevice")
+                        if(!hasOwnerDevice ) {
+                            if (ownerClaimKey === this._ownerClaimKey ) {//isTheAdminKey){
+                             //If there is no owner Device and the claim key matches
+                                this.usersControllerCommands.getOwnerUser().then(lang.hitch(this, function (ownerUser){
+                                    //we got our user, if one is already made, we get the id, if one doesn't exist
+                                    //it is made and we receive the id
+
+                                    // If the Device Info has a Public Signing Key
+                                    // Then Set device to owner
+                                    if (deviceInfo.publicSigningKey && ownerUser.userKey){
+                                        //should check this before getting owner user
+                                        this.createDevice({owner: {userKey: ownerUser.userKey},
+                                            deviceInfo: deviceInfo }).then(lang.hitch(this, function(Result) {
+                                                this.updateOwnerClaimFile(deviceInfo.publicSigningKey)
+                                            this.statusAsState.set("hasOwnerDevice", true)
+                                            Resolve(Result)
+                                        })).catch(lang.hitch(this, function(error) {
+                                            Reject({error: error})
+                                        }))
+                                    }else {
+                                        Reject({error: "Device Info or ownerUser not as expected"})
+                                    }
+                                })).catch(lang.hitch(this, function (error){
+                                    Reject({error: error})
+                                }))
+                            } else {
+                                Reject({error: "Admin Set Key is not available"});
+                            }
+                        }else {
+                            Reject({error: "Admin Device Already Set"});
                         }
                     }
                 }));
@@ -282,6 +426,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                                 this._devicesDatabase.newUserDevice(input).then(lang.hitch(this, function(Result){
                                     console.log("NewUserDevice 🔆🔆🔆 ", Result)
+
                                 })).catch(lang.hitch(this, function(Error){
                                     console.log("NewUserDevice  Error ❌❌❌ ", Error)
                                 }))

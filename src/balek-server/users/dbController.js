@@ -112,7 +112,6 @@ define(['dojo/_base/declare',
 
             },
             getUserFromDatabase: function (username) {
-
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     let query = this._dbConnection.query('SELECT id, name, password, userKey, icon, permission_groups FROM ' + this._mysqlSettings.database + '.users WHERE name = ?;', username);
                     let userToReturn = [];
@@ -137,7 +136,7 @@ define(['dojo/_base/declare',
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
 
-                    let query = this._dbConnection.query('SELECT id, name, userKey, icon FROM ' + this._mysqlSettings.database + '.users;');
+                    let query = this._dbConnection.query('SELECT id, name, userKey, icon, permission_groups FROM ' + this._mysqlSettings.database + '.users;');
                     let usersToReturn = [];
                     query.on('error', function (err) {
                         // Handle error, an 'end' event will be emitted after this as well

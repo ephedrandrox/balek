@@ -1,11 +1,5 @@
 {
 	"Session Settings": {
-		"Main Module": "balekute/connect",
-		"Main Module": "digivigil/guestbook",
-		"Main Module": "session/login",
-		"Main Module": "diaplode/login",
-		"Main Module": "balekute/connect",
-		"Main Module": "session/login",
 		"Main Module": "balekute/connect"
 	},
 	"Network Settings":{

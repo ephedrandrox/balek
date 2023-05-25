@@ -8,7 +8,9 @@
     "preBuild": "npm run buildLibraries --prefix src/balek-modules/",
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
     "buildAll": "npm run preBuild && npm run build && npm run postBuild",
-    "buildCertificates": "sh builds/certificates/build.sh"
+    "buildCertificates": "sh builds/certificates/build.sh",
+    "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode"
+
   },
   "scriptsComments": {
     "start": "Starts Balek",
@@ -16,7 +18,8 @@
     "buildDevelopmentDatabases": "Uses Docker to build database containers for development",
     "startDevelopmentDatabases": "Uses Docker to run database containers for development",
     "stopDevelopmentDatabases": "Uses Docker to stop database containers for development",
-    "buildDocumentation": "Runs the script to build the docs"
+    "buildDocumentation": "Runs the script to build the docs",
+    "showAdminDeviceInvitation": "Shows the Owner Device information or QRcode to claim ownership. Include hostname as first argument"
   },
   "dependencies": {
     "mongodb": "^4.4.1",
