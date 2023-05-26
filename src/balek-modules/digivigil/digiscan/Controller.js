@@ -69,7 +69,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                     Reject({Error: Error})
                                 }))
                             }catch(Error){
-                                console.log("Error Getting Devices:", Error);
+                                console.log("Error Getting Entry:", Error);
                                 Reject(Error)
                             }
                         }))
