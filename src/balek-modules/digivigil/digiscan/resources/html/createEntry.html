@@ -1,21 +1,26 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onfocus:_onFocus,onkeydown:_onKeyDown" tabindex="0">
     <div class="${baseClass}EntryGridDiv">
         <div class="${baseClass}EntryDivTopGrid"><br>
-            <div class="${baseClass}EntryInputDiv">Name : <input tabindex="1"
+            <div class="${baseClass}EntryInputDiv">ID : <input tabindex="1"
                                                                                       data-dojo-attach-event="onfocus:_onInputFocus"
-                                                                                      data-dojo-attach-point='_inputName'
+                                                                                      data-dojo-attach-point='_inputID'
                                                                                       class="${baseClass}EntryInput noFocusOutline"
                                                                                       type="text" value=""></div>
-            <div class="${baseClass}EntryInputDiv">Home : <input tabindex="2"
+            <div class="${baseClass}EntryInputDiv">Recognized Text : <input tabindex="2"
                                                                       data-dojo-attach-event="onfocus:_onInputFocus"
-                                                                      data-dojo-attach-point='_inputHome'
+                                                                      data-dojo-attach-point='_inputRecognizedText'
                                                                       class="${baseClass}EntryInput  noFocusOutline"
                                                                       type="text" value=""></div>
+            <div class="${baseClass}EntryInputDiv">Note : <input tabindex="2"
+                                                                 data-dojo-attach-event="onfocus:_onInputFocus"
+                                                                 data-dojo-attach-point='_inputNote'
+                                                                 class="${baseClass}EntryInput  noFocusOutline"
+                                                                 type="text" value=""></div>
+
+
         </div>
         <div class="${baseClass}EntryDivMiddleGrid">
 
-            <textarea class="${baseClass}NoteTextArea noFocusOutline" data-dojo-attach-event="onfocus:_onInputFocus"
-                      data-dojo-attach-point='_inputNote' type="textarea" tabindex="3">Leave a note!</textarea>
 
         </div>
         <div class="${baseClass}EntryDivBottomGrid">

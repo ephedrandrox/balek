@@ -96,7 +96,7 @@ define(['dojo/_base/declare',
                 }))
             },
             sendEntry: function (digiscanEntry) {
-                this._instanceCommands.addEntry(digiscanEntry).then(lang.hitch(this, function(commandReturnResults){
+                this._instanceCommands.addCapture(digiscanEntry).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#ADDENTRY", commandReturnResults)
                 })).catch(function(commandErrorResults){
                     console.log("#ADDENTRY", "ADDENTRY Received Error Response" + commandErrorResults);

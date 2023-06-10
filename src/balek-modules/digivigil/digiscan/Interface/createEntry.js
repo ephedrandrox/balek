@@ -33,6 +33,9 @@ define(['dojo/_base/declare',
             _digiscanData: {},
             _shiftDown: false,
 
+            _inputID: null,
+            _inputRecognizedText: null,
+
             constructor: function (args) {
                 this._interface = {};
                 this._digiscanData = {};
@@ -55,8 +58,9 @@ define(['dojo/_base/declare',
             _onAddEntryClicked: function (eventObject) {
 
                 this._interface.sendEntry({
-                    name: this._inputName.value,
-                    home: this._inputHome.value,
+                    created: Date.now(),
+                    id: this._inputID.value,
+                    recognizedText: this._inputRecognizedText.value,
                     note: this._inputNote.value
                 });
                 //todo Update interface and wait for response before clsoing
@@ -76,7 +80,7 @@ define(['dojo/_base/declare',
                 }).play();
             },
             _onFocus: function () {
-                this._inputName.focus();
+                this._inputID.focus();
             },
             _onInputFocus: function (event) {
                 console.log(event);

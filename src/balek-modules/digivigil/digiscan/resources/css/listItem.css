@@ -16,7 +16,7 @@
 
 .digivigilDigiscanListItemInterfaceDateDiv {
     display: inline-block;
-    float: right;
+    /*float: right;*/
     background: #0c334f;
     border: solid #c2c2c2 2px;
     border-radius: 5px;
@@ -27,7 +27,7 @@
 
 .digivigilDigiscanListItemInterfacePersonFromDiv {
     display: inline-block;
-    float: left;
+    /*float: left;*/
     background: #0c334f;
     border-radius: 5px;
     border: solid #c2c2c2 2px;

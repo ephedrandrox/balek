@@ -44,7 +44,7 @@ define(['dojo/_base/declare',
                     console.log("Could not Connect To Database", error)
                 });
             },
-            getEntries: function(){
+            getCaptures: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
                         console.log("Got Connection");
@@ -103,29 +103,29 @@ define(['dojo/_base/declare',
 
                 }));
             },
-            addEntry: function(Entry)
+            addCapture: function(Capture)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    if(Entry)
+                    if(Capture && Capture.created && Capture.id && Capture.recognizedText && Capture.note)
                     {
                         let collection = this.shared._DBConnection._db.collection(this._Collection)
                         if(collection){
-                            collection.insertOne({entry: Entry}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({entry: Capture}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
                                 else if(response){
                                     Resolve(response.insertedId);
                                 }else{
-                                    Reject({error: "Could not create Entry"});
+                                    Reject({error: "Could not create Capture"});
                                 }
                             }));
                         }else
                         {
-                            Reject({error: "Could not get Entry Collection"});
+                            Reject({error: "Could not get Capture Collection whilke trying to add Capture to collection"});
                         }
                     }else{
-                        Reject({error: "Unexpected Digiscan Entry database addEntry()"});
+                        Reject({error: "Unexpected Digiscan Entry database addCapture()"});
                     }
                 }));
             }

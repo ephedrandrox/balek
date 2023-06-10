@@ -25,7 +25,7 @@ define(['dojo/_base/declare',
 
                 //set setRemoteCommander commands
                 this._commands={
-                    "addEntry" : lang.hitch(this, this.addEntry)
+                    "addCapture" : lang.hitch(this, this.addCapture)
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
@@ -46,7 +46,7 @@ define(['dojo/_base/declare',
                      componentKey: this.mainInstance._componentKey});
 
                 //Get Controller Entries State
-                let Entries = this._moduleController.getEntries()
+                let Entries = this._moduleController.getCaptures()
                 //Add all Controller Entries to our Available Entries
                 for (const key in Entries) {
                     let value = Entries[key]
@@ -65,8 +65,9 @@ define(['dojo/_base/declare',
                 //When a new entry becomes available, add it to our Available State
                 this.availableEntries.add(name, newState );
             },
-            addEntry: function(Entry, resultCallback){
-                this._moduleController.addEntry(Entry).then(lang.hitch(this, function(Result){
+            addCapture: function(Entry, resultCallback){
+                console.log("addCapture Entry:", Entry)
+                this._moduleController.addCapture(Entry).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})

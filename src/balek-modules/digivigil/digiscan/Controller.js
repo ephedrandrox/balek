@@ -32,31 +32,32 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             loadEntries: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    this._entriesDatabase.getEntries().then(lang.hitch(this, function(Result){
+                    this._entriesDatabase.getCaptures().then(lang.hitch(this, function(Result){
                         if(Array.isArray(Result)){
                             Result.forEach(lang.hitch(this, function(Entry){
                                 let id = Entry._id.toString()
                                 this.entries.set(id, Entry)
                             }))
-                            Resolve({SUCCESS: "getEntries database result"})
+                            Resolve({SUCCESS: "getCaptures database result"})
                         }else{
                             Reject({Error: "Entries are not an array! loadEntries"})
                         }
                     })).catch(lang.hitch(this, function(Error){
                         Reject({Error: Error})
-                        console.log("getEntries  Error:", Error)
+                        console.log("getCaptures  Error:", Error)
                     }))
                 }));
             },
-            getEntries: function() {
+            getCaptures: function() {
                 return this.entries
             },
-            addEntry: function(Entry){
+            addCapture: function(Capture){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    Entry = this.checkAndReturnValidDigiscanEntry(Entry)
-                    if(Entry)
+                    Capture = this.checkAndReturnValidDigiscanEntry(Capture)
+                    if(Capture)
                     {
-                        this._entriesDatabase.addEntry(Entry).then(lang.hitch(this, function(Result){
+                        console.log("Controller Adding Capture to Database", Capture)
+                        this._entriesDatabase.addCapture(Capture).then(lang.hitch(this, function(Result){
                             console.log("Entry Added", Result);
                             try{
                                 const id = Result
@@ -72,9 +73,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 console.log("Error Getting Entry:", Error);
                                 Reject(Error)
                             }
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Controller could not add Capture to Database", Error);
+
+                            Reject({Error})
                         }))
                     }else {
-                        Reject({ERROR: "Not a valid Digiscan Entry"})
+                        Reject({ERROR: "Invalid Digiscan Capture"})
                     }
                 }));
             },
@@ -92,16 +97,16 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }));
             },
-            checkAndReturnValidDigiscanEntry(digiscanEntry) {
-                let validDigiscanEntry = {};
+            checkAndReturnValidDigiscanEntry(Capture) {
+                let validDigiscanCapture = {};
                 let now = new Date(Date.now());
                 let currentDate = (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear();
-                if (digiscanEntry.name && digiscanEntry.home && digiscanEntry.note) {
-                    validDigiscanEntry.name = nodeSanitizeHtml(digiscanEntry.name);
-                    validDigiscanEntry.home = nodeSanitizeHtml(digiscanEntry.home);
-                    validDigiscanEntry.note = nodeSanitizeHtml(digiscanEntry.note);
-                    validDigiscanEntry.date = currentDate;
-                    return validDigiscanEntry;
+                if (Capture.created && Capture.id && Capture.recognizedText && Capture.note) {
+                    validDigiscanCapture.created = nodeSanitizeHtml(Capture.created);
+                    validDigiscanCapture.id = nodeSanitizeHtml(Capture.id);
+                    validDigiscanCapture.recognizedText = nodeSanitizeHtml(Capture.recognizedText);
+                    validDigiscanCapture.note = nodeSanitizeHtml(Capture.note);
+                    return validDigiscanCapture;
                 } else {
                     return false;
                 }
