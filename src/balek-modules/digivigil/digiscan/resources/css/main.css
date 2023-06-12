@@ -9,9 +9,12 @@ text-align:center
     border: solid white 2px;
     display: inline-block;
     border-radius: 5px;
-    position: absolute;
-    right: 30px;
-    top: 15%;
+    position: relative;
+    margin: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    /*right: 30px;*/
+    /*top: 15%;*/
 
 }
 .digivigilDigiscanMainInterfaceButton:hover {
@@ -49,7 +52,7 @@ text-align:center
     display: inline-block;
     margin-right: 20px;
     position: absolute;
-    left: 30px;
+    right: 30px;
     top: calc(10px );
 
     font-family: Arial, Helvetica, sans-serif;
@@ -101,6 +104,7 @@ text-align:center
 }
 .digivigilDigiscanMainInterfaceMainContentDiv{
     position: absolute;
+    padding-top: 30px;
     top: 5%;
     min-top: 50px;
     left: -3px;

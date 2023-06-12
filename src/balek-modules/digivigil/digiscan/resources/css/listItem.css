@@ -1,54 +1,61 @@
-.digivigilDigiscanListItemInterface {
+.digivigilDigiscanCaptureViewInterface {
     color: #ffffff;
     background: rgba(20, 75, 115, 0.8);
     display: block;
-    text-align: center;
-    padding: 30px;
-    border: solid rgb(38, 223, 241) 3px;
+    text-align: left;
+    padding: 0;
+    border: nonex;
     border-radius: 15px;
-    min-width: 40vw;
-    margin: 20px;
-    -webkit-box-shadow: 0px 0px 10px 0px  rgb(38, 223, 241);
-    -moz-box-shadow: 0px 0px 10px 0px  rgb(38, 223, 241);
-    box-shadow: 0px 0px 10px 0px  rgb(38, 223, 241);
+    min-width: 200px;
+    margin: 0;
+
     outline: none;
+white-space: nowrap;
+font-size: 10pt;
 }
 
-.digivigilDigiscanListItemInterfaceDateDiv {
+.digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
     display: inline-block;
     /*float: right;*/
-    background: #0c334f;
+    background: rgba(27, 126, 117, 0.78);
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-    font-size: calc(6px + 2vh);
+    width: 100%;
 }
 
 
-.digivigilDigiscanListItemInterfacePersonFromDiv {
+.digivigilDigiscanCaptureViewInterfaceCreatedDiv {
     display: inline-block;
     /*float: left;*/
-    background: #0c334f;
-    border-radius: 5px;
+    background: rgba(65, 129, 32, 0.86);
+
     border: solid #c2c2c2 2px;
-    font-size: calc(6px + 2vh);
+
     padding: 5px;
+
+
 }
 
-.digivigilDigiscanListItemInterfaceHeaderDiv {
+.digivigilDigiscanCaptureViewInterfaceHeaderDiv {
     display: block;
     background: none;
-    height: 5vh;
-    min-height: 40px;
+
+
 }
 
+.digivigilDigiscanCaptureViewInterfaceContentDiv {
+    display: flex;
+    background: none;
 
-.digivigilDigiscanListItemInterfaceNoteDiv {
-    display: block;
+
+}
+
+.digivigilDigiscanCaptureViewInterfaceNoteDiv {
+    display: inline-block;
     background: #ffffff;
     border: solid #c2c2c2 2px;
-    font-size: 3vh;
-    font-size: calc(12px + 3vh);
-    border-radius: 5px;
     color: black;
+    background: rgba(213, 217, 101, 0.7);
+flex : 1;
 }

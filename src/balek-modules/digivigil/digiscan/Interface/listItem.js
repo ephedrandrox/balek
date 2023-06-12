@@ -23,16 +23,30 @@ define(['dojo/_base/declare',
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
-        return declare("digivigilDigiscanListItemInterface", [_WidgetBase, _TemplatedMixin], {
+        return declare("digivigilDigiscanCaptureViewInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
-            baseClass: "digivigilDigiscanListItemInterface",
+            baseClass: "digivigilDigiscanCaptureViewInterface",
 
             _mainCssString: mainCss,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
+                if(this.itemData && this.itemData.created)
+                {
+                  ///  this.itemData.created = (new Date(parseInt(this.itemData.created))).toString()
+
+                    const createdDate = new Date(parseInt(this.itemData.created));
+                    const formattedDate = createdDate.toLocaleDateString(undefined, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+
+                    this.itemData.created = formattedDate
+
+                }
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 dojoReady(lang.hitch(this, function () {

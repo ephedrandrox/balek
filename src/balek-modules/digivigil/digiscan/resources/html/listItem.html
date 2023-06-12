@@ -1,9 +1,10 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'>
         <div class="${baseClass}HeaderDiv">
-            <div class="${baseClass}PersonFromDiv">${itemData.created} </div>
-            <div class="${baseClass}DateDiv"> ${itemData.recognizedText} </div>
+            <div class="${baseClass}CreatedDiv inline-block">${itemData.created} </div>
+            <div class="${baseClass}RecognizedTextDiv inline-block"> ${itemData.recognizedText} </div>
+
+        <div class="${baseClass}NoteDiv inline-block"> 🗒️ ${itemData.note}</div>
         </div>
-        <div class="${baseClass}NoteDiv"> ${itemData.note}</div>
     </div>
 </div>

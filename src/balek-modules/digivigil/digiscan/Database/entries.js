@@ -106,7 +106,9 @@ define(['dojo/_base/declare',
             addCapture: function(Capture)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    if(Capture && Capture.created && Capture.id && Capture.recognizedText && Capture.note)
+                    if(Capture && Capture.created && Capture.id  &&
+                        typeof Capture.recognizedText !== "undefined" &&
+                        typeof Capture.note !== "undefined")
                     {
                         let collection = this.shared._DBConnection._db.collection(this._Collection)
                         if(collection){

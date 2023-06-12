@@ -106,6 +106,43 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
+
+            _onRemoveClicked: function (eventObject) {
+                this._interface.removeEntries();
+
+            },
+
+            _onSaveClicked: function (eventObject) {
+                // let saleTagScanData =  this._saleTagScanData;
+                //
+                // let tabbedString = "" ;
+                // saleTagScanData.forEach(lang.hitch(this, function (entry) {
+                //     tabbedString += entry.note.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                // }));
+                //
+                //
+                // console.log('tabbed content: ', tabbedString);
+                //
+                //
+                // this.createTabbedDataDownload(tabbedString);
+
+            },
+
+            _onCopyClicked: function (eventObject) {
+                // let saleTagScanData =  this._saleTagScanData;
+                // let tabbedString = "" ;
+                // saleTagScanData.forEach(lang.hitch(this, function (entry) {
+                //     tabbedString += entry.note.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                // }));
+                //
+                //
+                // console.log('tabbed content: ', tabbedString);
+                //
+                // this.copyToClipboard(tabbedString);
+
+
+
+            },
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################
