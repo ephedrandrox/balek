@@ -5,7 +5,7 @@
     </div>
     <div class="${baseClass}MainDiv">
         <div class="${baseClass}MainHeaderDiv">
-            <div class="${baseClass}MainHeaderTitle">DigiScan</div>
+
             <div data-dojo-attach-event="onclick:_onSaveClicked" class="${baseClass}Button" style="background: rgba(166,240,166 , .8)" title="Download Tab Deliminated Text File">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/folder.png">
@@ -14,17 +14,35 @@
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/notepad.png">
             </div>
-            <div data-dojo-attach-event="onclick:_onRemoveClicked" class="${baseClass}Button" style="background: rgba(166,255,255 , .8)" title="Delete all scans">
+            <div data-dojo-attach-event="onclick:_onRemoveClicked" class="${baseClass}Button" style="float: right; background: rgba(255,80,80 , .8)" title="Delete all scans">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/trash.png">
             </div>
-            <div data-dojo-attach-event="onclick:_onAddEntryClicked" class="${baseClass}Button">
+
+            <div data-dojo-attach-event="onclick:_onExportClicked" class="${baseClass}Button" style="float: right; background: rgba(255,255,80 , .8)" title="Delete all scans">
                 <img class="${baseClass}ButtonImage"
-                     src="balek-modules/digivigil/digiscan/resources/images/file.svg">
+                     src="balek-modules/digivigil/digiscan/resources/images/trash.png">
             </div>
+            <div class="${baseClass}MainHeaderTitle">DigiScan</div>
+<!--            <div data-dojo-attach-event="onclick:_onAddEntryClicked" class="${baseClass}Button">-->
+<!--                <img class="${baseClass}ButtonImage"-->
+<!--                     src="balek-modules/digivigil/digiscan/resources/images/file.svg">-->
+<!--            </div>-->
         </div>
         <div class="${baseClass}MainContentDiv">
-            <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'></div>
+            <div class="${baseClass}TabularDiv" data-dojo-attach-point='_tabularDiv'  >Tabular
+                <div class="${baseClass}TabularContainer" data-dojo-attach-point="_tabularContainer" >
+
+                </div>
+                <div class="${baseClass}TabularOutput" data-dojo-attach-point="_tabularOutput" >
+
+                </div>
+                <div  class="${baseClass}TabularStatus" data-dojo-attach-point="_tabularStatus" >
+
+                </div>
+            </div>
+            <div class="${baseClass}PreviewDiv" data-dojo-attach-point='_previewDiv'></div>
         </div>
+
     </div>
 </div>

@@ -1,7 +1,7 @@
 .digivigilDigiscanCaptureViewInterface {
     color: #ffffff;
     background: rgba(20, 75, 115, 0.8);
-    display: block;
+    display: inline-block;
     text-align: left;
     padding: 0;
     border: nonex;
@@ -10,7 +10,6 @@
     margin: 0;
 
     outline: none;
-white-space: nowrap;
 font-size: 10pt;
 }
 
@@ -21,7 +20,7 @@ font-size: 10pt;
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-    width: 100%;
+
 }
 
 
@@ -44,6 +43,13 @@ font-size: 10pt;
 
 }
 
+.digivigilDigiscanCaptureViewInterfaceListDiv {
+    display: block;
+    background: black;
+
+
+}
+
 .digivigilDigiscanCaptureViewInterfaceContentDiv {
     display: flex;
     background: none;
@@ -57,5 +63,4 @@ font-size: 10pt;
     border: solid #c2c2c2 2px;
     color: black;
     background: rgba(213, 217, 101, 0.7);
-flex : 1;
 }

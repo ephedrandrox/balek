@@ -41,12 +41,49 @@ text-align:center
     user-drag: none;
 }
 
-.digivigilDigiscanMainInterfaceListDiv{
+.digivigilDigiscanMainInterfacePreviewDiv{
+    visibility: hidden;
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.digivigilDigiscanMainInterfaceTabularDiv{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    visibility: inherit;
+
+    border: solid pink 2px;
 
 }
 
-.digivigilDigiscanMainInterfaceMainHeaderTitle{
+.digivigilDigiscanMainInterfaceTabularContainer{
+    margin-top: 50px;
+    border: solid blue 2px;
+    display: block;
     position: relative;
+    height: 80%;
+}
+.digivigilDigiscanMainInterfaceTabularOutput{
+    height: 20%;
+    border: solid red 2px;
+    display: block;
+}
+.digivigilDigiscanMainInterfaceTabularStatus{
+display: block;
+border: solid green 2px;
+}
+
+
+
+
+.digivigilDigiscanMainInterfaceMainHeaderTitle{
+
     font-size: calc(20px + 2vh);
     color: #000000;
     display: inline-block;
@@ -103,7 +140,7 @@ text-align:center
     align-items: center;
 }
 .digivigilDigiscanMainInterfaceMainContentDiv{
-    position: absolute;
+    position: realtive;
     padding-top: 30px;
     top: 5%;
     min-top: 50px;

@@ -1,0 +1,31 @@
+<div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus" tabindex="0">
+   <div  data-dojo-attach-point='_dropZone'
+        data-dojo-attach-event="drop:_onDropped,dragenter:_onDragEnter,dragleave:_onDragLeave"
+        class="${baseClass}DropZone">
+       <div class="${baseClass}Header" data-dojo-attach-point='_headerPane'>
+           <div class="${baseClass}InfoGroupDiv" data-dojo-attach-point='_InfoGroupPane'>
+               <div class="${baseClass}SeparatorChoice" data-dojo-attach-point='_separatorChoicePane' data-dojo-attach-event="onmousedown:_onSeparatorChoiceDown">Tab</div>
+               <div class="${baseClass}AutoTrimDiv" data-dojo-attach-point='_autoTrimPane' data-dojo-attach-event="onmousedown:_autoTrimMouseDown">AutoTrim
+               </div>
+               <div class="${baseClass}DataInfoDiv" data-dojo-attach-point='_dataInfoPane'>
+                   Header:<input class="${baseClass}TextInput" type="number" min="0" data-dojo-attach-point='_headerRowInput' data-dojo-attach-event="onchange:_onHeaderInputChange,onkeyup:_onHeaderInputChange" value="0"/>
+                   Footer:<input class="${baseClass}TextInput" type="number" min="0" data-dojo-attach-point='_footerRowInput' data-dojo-attach-event="onchange:_onFooterInputChange,onkeyup:_onFooterInputChange" value="0"/>
+               </div>
+           </div>
+           <div class="${baseClass}FileInfoDiv" data-dojo-attach-point='_fileInfoDiv'>Waiting For File
+           </div>
+       </div>
+
+        <div class="${baseClass}PreviewDiv" data-dojo-attach-point='_previewPane'>
+
+            <div class="${baseClass}PreviewDropInfo">
+                <pre>Drop Tab Seperated Text File Here
+                </pre>
+                <img class="${baseClass}PreviewDivImportImage" src="balek-modules/digivigil/tabular/resources/images/import.png" />
+            </div>
+        </div>
+        <div class="${baseClass}OutputDiv" data-dojo-attach-point='_outputPane'>
+          <div class="${baseClass}OutputPreviewDiv" data-dojo-attach-point='_outputPreviewPane'></div>
+       </div>
+   </div>
+</div>
