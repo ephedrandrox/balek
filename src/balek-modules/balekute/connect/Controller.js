@@ -1,3 +1,4 @@
+
 define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
 
@@ -70,7 +71,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 this.loadOrCreateOwnerDeviceInvitation().then(lang.hitch(this, function(Result) {
                     if(Result.ownerClaimKey){
-                        qrcode.generate("Digiscan://"+ os.hostname() +"/ownerClaim/"+
+                        let hostname = os.hostname();
+
+                        const configFilePath = './src/balek-server/etc/config.json';
+                        const configJSONData = JSON.parse(fsNodeObject.readFileSync(configFilePath, 'utf8'));
+
+                        if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
+                        {
+                            hostname = configJSONData["Network Settings"].Hostname
+                        }
+
+                        qrcode.generate("Digiscan://"+ hostname +"/ownerClaim/"+
                             Result.ownerClaimKey, {small: true}, lang.hitch(this, function(invitationCode){
                             console.log(invitationCode)
                             this.statusAsState.set("hasOwnerDevice", false)
