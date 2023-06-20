@@ -25,7 +25,9 @@ define(['dojo/_base/declare',
 
                 //set setRemoteCommander commands
                 this._commands={
-                    "addCapture" : lang.hitch(this, this.addCapture)
+                    "addCapture" : lang.hitch(this, this.addCapture),
+                    "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures)
+
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
@@ -69,6 +71,22 @@ define(['dojo/_base/declare',
                 console.log("addCapture Entry:", Entry)
                 this._moduleController.addCapture(Entry).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            removeAllCaptures: function( resultCallback){
+                console.log("removeAllCaptures Entry:")
+                this._moduleController.removeAllCaptures().then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                    console.log("resultCallbacked ",Result)
+                    this.availableEntries.forEach(lang.hitch(this, function(id, capture){
+                        console.log("availableEntries", id, capture,  this.availableEntries)
+                        this.availableEntries.add(id, undefined)
+
+                    }))
+                    console.log("resultCallbacked after ",Result)
+
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
                 }))

@@ -3,36 +3,40 @@
     background: rgba(20, 75, 115, 0.8);
     display: inline-block;
     text-align: left;
-    padding: 0;
-    border: nonex;
+    padding: 5px;
+    border: none;
     border-radius: 15px;
     min-width: 200px;
-    margin: 0;
-
+    margin: 10px;
     outline: none;
-font-size: 10pt;
+    font-size: 10pt;
+    max-width: 20%;
+    border: solid #070202 2px;
+
 }
 
 .digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
-    display: inline-block;
+    display: block;
     /*float: right;*/
     background: rgba(27, 126, 117, 0.78);
     border: solid #c2c2c2 2px;
     border-radius: 5px;
     padding: 5px;
-
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 
 
 .digivigilDigiscanCaptureViewInterfaceCreatedDiv {
-    display: inline-block;
+    display: block;
     /*float: left;*/
-    background: rgba(65, 129, 32, 0.86);
+    /*background: rgba(106, 178, 238, 0.86);*/
 
-    border: solid #c2c2c2 2px;
+    /*border: solid #c2c2c2 2px;*/
 
     padding: 5px;
-
+color: black;
 
 }
 
@@ -45,7 +49,7 @@ font-size: 10pt;
 
 .digivigilDigiscanCaptureViewInterfaceListDiv {
     display: block;
-    background: black;
+    background: none;
 
 
 }
@@ -59,8 +63,8 @@ font-size: 10pt;
 
 .digivigilDigiscanCaptureViewInterfaceNoteDiv {
     display: inline-block;
-    background: #ffffff;
-    border: solid #c2c2c2 2px;
+    /*background: #ffffff;*/
+    /*border: solid #c2c2c2 2px;*/
     color: black;
     background: rgba(213, 217, 101, 0.7);
 }

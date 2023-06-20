@@ -102,6 +102,14 @@ define(['dojo/_base/declare',
                     console.log("#ADDENTRY", "ADDENTRY Received Error Response" + commandErrorResults);
                 });
             },
+            removeAllCaptures: function () {
+                this._instanceCommands.removeAllCaptures().then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#Removed ALl Captures", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#Removed ALl Captures", "Removed ALl Captures Received Error Response" + commandErrorResults);
+                });
+            },
+
             unload: function () {
                 this._mainInterface.unload();
             }

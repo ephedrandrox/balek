@@ -5,16 +5,24 @@ const os = require('os');
 
 const providedHostname = process.argv[2];
 
-const hostname = providedHostname || os.hostname();
+let hostname = providedHostname || os.hostname();
 
-const filePath = './src/balek-server/etc/ownerDevice.json';
+const ownerDeviceFilePath = './builds/digiget/config/balek/ownerDevice.json';
+const configFilePath = './builds/digiget/config/balek/config.json';
 
-if (fs.existsSync(filePath)) {
+
+if (fs.existsSync(ownerDeviceFilePath)) {
     // File exists
-    const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const ownerDeviceJSONData = JSON.parse(fs.readFileSync(ownerDeviceFilePath, 'utf8'));
+    const configJSONData = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
 
-    if (jsonData.ownerClaimKey){
-        const url = "Digiscan://" + hostname +"/ownerClaim/"+ jsonData.ownerClaimKey;
+    if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
+    {
+        hostname = configJSONData["Network Settings"].Hostname
+    }
+
+    if (ownerDeviceJSONData.ownerClaimKey){
+        const url = "Digiscan://" + hostname +"/ownerClaim/"+ ownerDeviceJSONData.ownerClaimKey;
 
         // Generate QR code for the key
         qrcode.generate(url, { small: true }, function (qrcode) {
@@ -23,10 +31,10 @@ if (fs.existsSync(filePath)) {
             console.log(qrcode);
         });
     }else {
-        console.log('ownerDevice.json file does not exist.');
-        if(jsonData.ownerPublicKey){
+        console.log('ownerClaimKey file does not exist.');
+        if(ownerDeviceJSONData.ownerPublicKey){
             console.log('Owner Device Public Key:');
-            console.log(jsonData.ownerPublicKey)
+            console.log(ownerDeviceJSONData.ownerPublicKey)
         }else{
             console.log('Owner Device public key does not exist. - try resetting database and deleting ownerDevice.json');
         }

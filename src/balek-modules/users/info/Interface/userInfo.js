@@ -16,7 +16,7 @@ define(['dojo/_base/declare',
         "balek-client/users/usersController/interfaceCommands",
         "balek-client/session/sessionController/interfaceCommands",
 
-        "balek-modules/diaplode/ui/input/getUserInput",
+       // "balek-modules/diaplode/ui/input/getUserInput",
 
 
         'balek-modules/users/info/Interface/sessionInfo',
@@ -34,7 +34,8 @@ define(['dojo/_base/declare',
     function (declare, lang, topic, Stateful, domClass, domConstruct, win,
               on, domAttr, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
               UsersControllerInterfaceCommands, SessionControllerInterfaceCommands,
-              getUserInput,SessionWidget,
+              //getUserInput,
+              SessionWidget,
               template, templateCSS,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleUserInfoInterface", [_WidgetBase, _TemplatedMixin,_SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
             _instanceKey: null,

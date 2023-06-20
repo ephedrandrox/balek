@@ -81,6 +81,8 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 this.initializeContainable();
+
+
                 this._interface.getAvailableEntries().then(lang.hitch(this, function(Entries){
                     this.availableEntries = Entries
                     this.availableEntriesWatchHandle = this.availableEntries.setStateWatcher(lang.hitch(this, this.onAvailableEntriesStateChange));
@@ -112,19 +114,44 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             onAvailableEntriesStateChange: function (name, oldState, newState) {
                 let id = name.toString()
-                this.entries[id] = newState.entry
-                this.addOrUpdateEntryWidget(id)
+                if( newState !== null && newState.entry)
+                {
+
+                    this.entries[id] = newState.entry
+                    this.addOrUpdateEntryWidget(id)
+
+
+                } else
+                {
+
+
+                    this.removeEntryWidget(id)
+                    this.entries[id] = undefined
+                    delete this.entries[id]
+                    console.log("deletedEntry")
+
+                }
+
+                console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
 
                 this.tableModel.setDataString(this.getTabSeperatedEntries())
+
+
 
             },
 
             getTabSeperatedEntries: function(){
                 let entriesArray =  Object.keys(this.entries).map(key => this.entries[key]);
+                console.log("deletedEntry building string", this.entries, entriesArray)
 
                 let tabbedString = "" ;
                 entriesArray.forEach(lang.hitch(this, function (entry) {
-                    tabbedString += entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                    console.log("deletedEntry building string", this.entries, entry)
+
+                    if( entry && entry.recognizedText){
+                        tabbedString += entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+
+                    }
                 }));
                 return tabbedString
             },
@@ -139,6 +166,16 @@ define(['dojo/_base/declare',
                     });
                     console.log("_EntryWidgets", id, this._previewDiv, this._EntryWidgets, this._EntryWidgets[id].domNode);
                     domConstruct.place(this._EntryWidgets[id].domNode, this._previewDiv);
+                }
+            },
+            removeEntryWidget(id){
+                if (this._EntryWidgets[id]) {
+
+                    domConstruct.destroy(this._EntryWidgets[id].domNode, this._previewDiv);
+
+
+                    this._EntryWidgets[id] = undefined;
+                    console.log("Removed ENtryWIdget", id);
                 }
             },
             _onAddEntryClicked: function (eventObject) {
@@ -160,7 +197,7 @@ define(['dojo/_base/declare',
                 this.toggleViews()
             },
             _onRemoveClicked: function (eventObject) {
-                this._interface.removeEntries();
+                this._interface.removeAllCaptures();
 
             },
 

@@ -4,6 +4,14 @@ onmessage = function(e) {
     if(data.parseTabSeperatedString && data.parseParameters ) {
         console.log('👨‍🔧 🛠 parseTabSeperatedString Message received from worker', data.parseParameters );
         parseTabSeperatedString(data.parseTabSeperatedString,data.parseParameters )
+    }else
+    {
+        postMessage({parseTabSeperatedString: {lines: [] }, parseReturnParameters: {
+                mostValuesInALine : 0,
+                autoHeaderStart : 0,
+                autoFooterStart : 0,
+                lastLine : 0
+            }});
     }
 
 }

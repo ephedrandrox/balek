@@ -3,19 +3,18 @@
 		"Main Module": "balekute/connect"
 	},
 	"Network Settings":{
-		"Hostname" : "localhost",
 		"Server Address" : "0.0.0.0",
-		"Server Port" : "443"
+		"Server Port" : "8080"
 	},
 	"Database Settings": {
 		"MySQL Database Connection": {
-			"host": "localhost",
+			"host": "mysqld",
 			"user": "balekAppUser",
 			"password": "balekAppPassword",
 			"database": "balek"
 		},
 		"Mongo Database Connection": {
-			"host": "localhost",
+			"host": "mongodb",
 			"port": "27017",
 			"user": "root",
 			"password": "rootPass",

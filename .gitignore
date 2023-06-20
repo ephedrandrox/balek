@@ -27,3 +27,7 @@ src/balek-modules/build/quill/dist
 builds/guestbook/mongoDB/
 
 src/balek-server/etc/ownerDevice.json
+
+builds/digiget/config/balek/cert/
+
+builds/digiget/config/balek/ownerDevice.json

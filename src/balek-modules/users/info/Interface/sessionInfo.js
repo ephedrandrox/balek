@@ -11,7 +11,7 @@ define(['dojo/_base/declare',
         "dojo/ready",
         'dojo/_base/fx',
 
-        "balek-modules/diaplode/ui/input/getUserInput",
+        //"balek-modules/diaplode/ui/input/getUserInput",
 
 
         "dijit/InlineEditBox",
@@ -23,7 +23,9 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/users/info/resources/css/sessionInfo.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, fx, getUserInput, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
+              dijitFocus, dojoReady, fx,
+              //getUserInput,
+              InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
         return declare("usersInfoSessionInfoInterface", [_WidgetBase, _TemplatedMixin], {

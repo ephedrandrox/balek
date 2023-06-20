@@ -12,10 +12,9 @@ var profile = (function () {
         action: "release",
 
         optimizeOptions: {
-            languageIn: "ECMASCRIPT6",
+            languageIn: "ECMASCRIPT_2019",
             languageOut: "ECMASCRIPT5"
         },
-
         layerOptimize: "closure",
         optimize: "closure",
         mini: true,
@@ -85,17 +84,20 @@ var profile = (function () {
                 copyOnly: function(filename, mid){
 
                     let balekNodeModules = /^balek-modules\/node_modules\/|^balek-modules\/build\//,
-                        codeMirror = /codemirror\/addon\/lint\/|codemirror\/addon\/merge\/|codemirror\/src\/|rollup\.config\.js/,
+                        codeMirror = /codemirror\//,
                         quill = /blots\/text.js/,
                         InstanceFile = /Instance.js/,
                         InstanceFolder = /Instance/,
                         ModuleFile = /Module.js/,
-                        BalekuteTargetFile = /balekute\/connect\/Controller/;
+                        BalekuteTargetFile = /balekute\/connect\/Controller/,
+                        Workers = /.*Worker.js/,
+                        TabularTable = /digivigil\/tabularNAN/;
 
 
                     return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid)
                         || InstanceFile.test(mid) || InstanceFile.test(filename) || InstanceFolder.test(mid) || InstanceFolder.test(filename)
-                        || ModuleFile.test(mid) || ModuleFile.test(filename) || BalekuteTargetFile.test(mid) || BalekuteTargetFile.test(filename);
+                        || ModuleFile.test(mid) || ModuleFile.test(filename) || BalekuteTargetFile.test(mid) || BalekuteTargetFile.test(filename)
+                        || Workers.test(mid) || Workers.test(filename) || TabularTable.test(mid) || TabularTable.test(filename);
                 }
 
                 //todo
@@ -141,30 +143,21 @@ var profile = (function () {
             },
             "balek-modules/admin/system/Interface": {
                 include: [  "balek-modules/admin/system/Interface"]
-            },
-            "balek-modules/digivigil-www/guestbook/Interface": {
-                include: [  "balek-modules/digivigil-www/guestbook/Interface"]
-            },
-            "balek-modules/diaplode/login/Interface": {
-                include: [  "balek-modules/diaplode/login/Interface"]
-            },
-            "balek-modules/diaplode/navigator/Interface": {
-                include: [  "balek-modules/diaplode/navigator/Interface"]
-            },
-            "balek-modules/diaplode/commander/Interface": {
-                    include: [  "balek-modules/diaplode/commander/Interface"]
-            },
-            "balek-modules/diaplode/commander/Interface/terminal": {
-                include: [  "balek-modules/diaplode/commander/Interface/terminal"],
-                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
-                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
-            },
-            "balek-modules/diaplode/commander/Interface/console": {
-                include: [  "balek-modules/diaplode/commander/Interface/console"],
-                exclude:[ 'balek-modules/lib/xterm/lib/xterm',
-                    'balek-modules/lib/xterm-addon-fit/lib/xterm-addon-fit']
             }
+            ,
+            "balek-modules/balekute/connect/Interface": {
+                include: [  "balek-modules/balekute/connect/Interface", "dojo/fx",
+                    "balek-client/session/workspace/container/widgets/movable/movableContainerWidget",
+                "dojox/layout/ResizeHandle", "dojo/dnd/Moveable", "dijit/_base/manager",
+                "dojo/dnd/common", "dojo/dnd/Mover", "dojo/dnd/autoscroll"]
 
+            },
+            "balek-modules/digivigil/digiscan/Interface": {
+                include: [  "balek-modules/digivigil/digiscan/Interface", "balek-client/session/workspace/container/widgets/static/staticContainerWidget"]
+            },
+            "balek-modules/digivigil/tabular/Interface": {
+                include: [  "balek-modules/digivigil/tabular/Interface"]
+            }
         }
     };
 })();

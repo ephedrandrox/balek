@@ -67,7 +67,7 @@ define(['dojo/_base/declare',
         },
 
         parseWorkerDone: function(parseDataReadyEvent){
-            console.log('👨‍🔧 Message received from worker', parseDataReadyEvent.data);
+            console.log('Message received from worker', parseDataReadyEvent.data);
 
             if(parseDataReadyEvent.data.parseTabSeperatedString && parseDataReadyEvent.data.parseTabSeperatedString.lines){
 
@@ -85,7 +85,6 @@ define(['dojo/_base/declare',
             }
         },
         parseDataString: function(){
-
             this.parseWorker.postMessage({ parseTabSeperatedString: this.dataString,
                 parseParameters: {  valueSeparator: this.getValueSeparator(),
                     autoTrim: this.getAutoTrim()

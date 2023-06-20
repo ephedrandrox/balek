@@ -676,7 +676,7 @@ define([//------------------------------|
                     }else {
                         console.log("🔋ERROR should not happen Header or footer out of bounds")
                         console.log(`🔋I:buildPosition: ${buildPosition} numberOfRowsToBuild: ${numberOfRowsToBuild} i: ${i}`);
-                        throw("ERROR should not happen Header or footer out of bounds");
+                       // throw("ERROR should not happen Header or footer out of bounds");
                     }
 
                 }
@@ -692,13 +692,12 @@ define([//------------------------------|
                     require(["dojo/domReady!"], lang.hitch(this, function(){
                         this.updateFooterSpacerHeight();
                         this.updateHeaderSpacerHeight();
-
-                        this.scrollUpdating = false
+                        this.scrollUpdating = false;
                     }));
 
 
-                }catch{
-                    throw("KeepBuilding error")
+                }catch(error){
+                    throw(error)
                 }
 
             },
@@ -728,11 +727,11 @@ define([//------------------------------|
 
                         for ( const node of nodeList)
                         {
-                            domStyle.set(node,"backgroundColor", "rgba(123, 178, 91, 0.8)" )
-                            domStyle.set(node,"cursor", "pointer" )
+                            domStyle.set(node,"backgroundColor", "rgba(123, 178, 91, 0.8)" );
+                            domStyle.set(node,"cursor", "pointer" );
 
                         }
-                    })
+                    });
 
                     on(headerNode, "mouseleave", function (mouseEvent){
                         //query(String("." + tableClassString)).style("backgroundColor", "orange");
@@ -744,7 +743,7 @@ define([//------------------------------|
                             domStyle.set(node,"cursor", "unset" )
 
                         }
-                    })
+                    });
 
                     on(headerNode, "click", function (mouseEvent){
                         let nodeList = query(String("." + tableClassString), this._tableDiv);
@@ -752,7 +751,7 @@ define([//------------------------------|
                         if (mouseEvent.shiftKey && !mouseEvent.altKey ){
                             let nodeList = query(String("." + tableClassString), this._tableDiv);
 
-                            for ( const node of nodeList)
+                            for ( const node in nodeList)
                             {
                                 domStyle.set(node,"visibility", "collapse" )
                             }
@@ -765,7 +764,7 @@ define([//------------------------------|
                         }
 
 
-                    })
+                    });
 
 
                     let currentColumn = valuePosition.valueOf()
@@ -791,7 +790,7 @@ define([//------------------------------|
                         }
 
 
-                    }))
+                    }));
 
                 },
             unload: function () {

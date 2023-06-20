@@ -83,6 +83,22 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }
                 }));
             },
+            removeAllCaptures: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+
+                        this._entriesDatabase.removeAllCaptures().then(lang.hitch(this, function(Result){
+                            console.log("All Captures Removed Request Result", Result);
+
+                                    Resolve({SUCCESS: Result})
+
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Controller could not add Capture to Database", Error);
+
+                            Reject({Error})
+                        }))
+
+                }));
+            },
             getEntry: function(id) {
                 //Returns a promise of an entry based on id
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {

@@ -43,6 +43,23 @@ define(['dojo/_base/declare',
                 }
             }
             ,
+            forEach: function(doThis){
+
+                console.log("forEach")
+
+                if(typeof doThis === "function"){
+                    for (const key in this._interfaceState ){
+                        let value = this._interfaceState.get(key)
+                        console.log("forEach", value, typeof value)
+
+                        if(typeof value === 'object' && key !== '_attrPairNames'
+                            && key !== 'componentKey' && key !== 'Module' ){
+                            console.log("resetting", key, value)
+                            doThis(key, value)
+                        }
+                    }
+                }
+            },
             receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
                 if (moduleMessage.instanceKey == this._instanceKey) {
                     if (moduleMessage.messageData) {
