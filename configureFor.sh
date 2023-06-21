@@ -22,13 +22,20 @@ if [ "$?" -ne 0 ]; then
     exit 1
 fi
 
+
+# Create certificate directory if it doesn't exist
+cert_dir="./builds/digiscan/config/balek/cert"
+if [ ! -d "$cert_dir" ]; then
+    mkdir -p "$cert_dir"
+fi
+
 # Copy certificates
 sudo cp -L "$HOME/certs/live/$hostname/cert.pem" ./builds/digiscan/config/balek/cert/cert.pem
 sudo cp -L "$HOME/certs/live/$hostname/privkey.pem" ./builds/digiscan/config/balek/cert/key.pem
 
 # Change ownership to current user
-sudo chown "$(whoami)" ./builds/digiscan/config/balek/cert.pem
-sudo chown "$(whoami)" ./builds/digiscan/config/balek/key.pem
+sudo chown "$(whoami)" ./builds/digiscan/config/balek/cert/cert.pem
+sudo chown "$(whoami)" ./builds/digiscan/config/balek/cert/key.pem
 
 echo "Certificates copied successfully."
 

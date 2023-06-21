@@ -32,7 +32,7 @@ _Enter commands in a terminal at the repository root:_
 Build the Docker Containers needed for the DigiScan Instance
 Will take a few minutes to complete
 
-    docker-compose -f ./builds/balek/docker-compose.yml build
+    docker-compose -f ./builds/digiscan/docker-compose.yml build
 
 This will create 4 containers: 
  - nginx container for routing

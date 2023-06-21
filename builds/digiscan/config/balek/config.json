@@ -3,7 +3,7 @@
 		"Main Module": "balekute/connect"
 	},
 	"Network Settings":{
-		"Hostname" : "nonamehostname",
+		"Hostname" : "nonamehost",
 		"Server Address" : "0.0.0.0",
 		"Server Port" : "8080"
 	},
