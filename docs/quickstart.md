@@ -16,7 +16,7 @@ Clone the Balek repository and submodules
 > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules`
 > flag is omitted durring cloning, you can run `git submodule update --init --recursive` in
 > the root directory to download the dojo toolkit submodules.
-### Step 2: Checkout to the DigiScan branch
+### Step 2: Checkout the DigiScan branch
 
 switch to the digiscan branch of the repository before **Building** and **Running**
 
@@ -43,13 +43,13 @@ This will create 4 containers:
 
 ### Step 2: Configure
 For the DigiScan iOS app to connect to the DigiScan instance, it must trust the certificates provided.  
-A straightforward way to achieve this is to use an internet facing host and certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
+A straightforward way to achieve this is to have an internet facing host with a fully qualified domain name. You can then use certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
 
 
-Once you have a fully qualified domain name pointing to your DigiScan instance host, you can request certificates from [Let's Encrypt](https://www.letsencrypt.org/) and set the configuration for the domain name using the following command:
+Once you have yourdomain.whatever, you can request certificates from [Let's Encrypt](https://www.letsencrypt.org/) and set the configuration for the domain name using the following command:
 
 
-    docker-compose -f ./builds/balek/docker-compose.yml up -d
+    sh configureFor.sh yourdomain.whatever
 
 This will:
  - Run a certbot Docker container 
@@ -62,20 +62,25 @@ This will:
 You may have to provide admin credentials for the certificate copy and or an email to the certbot.  
 If all goes well, ./builds/digiscan/
 
-### Run:
-Start up the Balek containers in the background
+### Step 3: Run
+Start up the containers and run a Digiscan Instance
 
-    docker-compose -f ./builds/balek/docker-compose.yml up -d
+    docker-compose -f ./builds/digiscan/docker-compose.yml up -d
 
-### Stop:
-Stop the Balek containers
+### Stopping:
+Stop Digiscan and its containers
 
-    docker-compose -f ./builds/balek/docker-compose.yml down
+    docker-compose -f ./builds/digiscan/docker-compose.yml down
 
 
 
 ## Accessing Balek
 
-Once the containers are up and running you can access your Balek instance through [https://localhost/](https://localhost/)
+### Claim Instance
+ **Get Owner Claim Key**
 
-The built/minified interface will be found at [https://localhost/release/](https://localhost/release/)
+    docker-compose logs digiscan
+
+To present a QR code in the terminal that can be scanned from the iOS App.
+
+Once the device has taken ownership of the Digiscan Instance, it can be used to log in through a web browser.

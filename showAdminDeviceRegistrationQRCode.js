@@ -7,8 +7,8 @@ const providedHostname = process.argv[2];
 
 let hostname = providedHostname || os.hostname();
 
-const ownerDeviceFilePath = './builds/digiscan/config/balek/ownerDevice.json';
-const configFilePath = './builds/digiscan/config/balek/config.json';
+const ownerDeviceFilePath = './src/balek-server/etc/ownerDevice.json';
+const configFilePath = './src/balek-server/etc/config.json';
 
 
 if (fs.existsSync(ownerDeviceFilePath)) {
