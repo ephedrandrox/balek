@@ -1,11 +1,13 @@
 # Quickstart
 Run Digiscan on a host using the included Docker build configuration.
 
-You will need
+You will need a host with
 - [Git installed](https://github.com/git-guides/install-git) to clone the repository.
--  [**Docker** and **docker-compose**](https://www.docker.com) to build and run Balek using these instructions.
+-  [**Docker** and **docker-compose**](https://www.docker.com) to build and run Digiscan using these instructions.
+- Fully qualified domain name
+- Incoming ports 80 (*http*) and 443 (*https*) open.
 
-When completed you will be able to access the [User Guide](../src/balek-modules/users/guide/resources/docs/README.md) through a web Interface
+
 ## Getting Digiscan
 Digiscan is currently available as a branch of the Balek repository
 ### Step 1: Get the Balek repository for **Building** and **Running**
@@ -28,7 +30,7 @@ switch to the digiscan branch of the repository before **Building** and **Runnin
 
 _Enter commands in a terminal at the repository root:_
 
-### Step 1: Build
+### Build
 Build the Docker Containers needed for the DigiScan Instance
 Will take a few minutes to complete
 
@@ -40,47 +42,64 @@ This will create 4 containers:
  - mongodb container for Digiscan Captures
  - nodejs container to run Instance
 
+The nodejs container also builds the minified version of the web interface and can take some time/resources. Once complete, you are ready to configure.
 
-### Step 2: Configure
-For the DigiScan iOS app to connect to the DigiScan instance, it must trust the certificates provided.  
-A straightforward way to achieve this is to have an internet facing host with a fully qualified domain name. You can then use certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
-
-
-Once you have yourdomain.whatever, you can request certificates from [Let's Encrypt](https://www.letsencrypt.org/) and set the configuration for the domain name using the following command:
+### Configure
+In order for Digiscan to communicate over HTTPS and establish a connection using secure websockets, it is necessary for the host to provide SSL Certificates. Creating your own certificates and configuring your devices to trust them is an option, but the procedure is outside the scope of this document. Having an internet facing host with a fully qualified domain name, we can use certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
 
 
-    sh configureFor.sh yourdomain.whatever
+To set the configuration for *yourdomain.whatever.net* use the following command:
+
+    sh configureFor.sh yourdomain.whatever.net
 
 This will:
  - Run a certbot Docker container 
- - Creates ~/certs and ~/certsvar directories
+ - Create ~/certs and ~/certsvar directories
  - Request the domain certificate by opening port 80 (http)
- - Uses sudo to copy the domain certificate and private key to the configuration directory
- - Changes the certificate and key ownership to user
+ - Use sudo to copy the domain certificate and private key to the configuration directory
+ - Change the certificate and key ownership to terminal user
  - Updates the config.json file for the given hostname
 
-You may have to provide admin credentials for the certificate copy and or an email to the certbot.  
-If all goes well, ./builds/digiscan/
+You may have to provide some input (sudo password, domain info and email).  
+If all goes well you are ready to start the containers.
 
-### Step 3: Run
-Start up the containers and run a Digiscan Instance
+### Run
+Start up the containers and run a Digiscan Instance:
 
     docker-compose -f ./builds/digiscan/docker-compose.yml up -d
 
+This will bring up the containers in the background.
+
+
+### Status:
+To see the current status of the containers:
+
+    docker-compose -f builds/digiscan/docker-compose.yml ps
+
+
 ### Stopping:
-Stop Digiscan and its containers
+Stop Digiscan and its containers:
 
     docker-compose -f ./builds/digiscan/docker-compose.yml down
 
 
+## Accessing Digiscan
 
-## Accessing Balek
+The host must be claimed by a device to access the Digiscan Web Interface.
 
 ### Claim Instance
- **Get Owner Claim Key**
+ A new owner claim key is generated each time the containers are ran until a device claims ownership of the host.  
 
-    docker-compose logs digiscan
+ **Get Owner Claim Key**  
+To present a QR code in the terminal that can be scanned from the iOS App.  
 
-To present a QR code in the terminal that can be scanned from the iOS App.
+    docker-compose -f builds/digiscan/docker-compose.yml exec -T digiscan npm run showAdminDeviceInvitation
 
-Once the device has taken ownership of the Digiscan Instance, it can be used to log in through a web browser.
+
+
+Once a device has taken ownership of the Digiscan Instance, it can be used to log in through a web browser and the above command will show an ECDSA P256 public signing key for the owning device.
+
+### Load Interface  
+To load the interface in a web browser, navigate to your host using the https protocol. A QR code should appear that can be scanned by the owning device to log in.
+
+

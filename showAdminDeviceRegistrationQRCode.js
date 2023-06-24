@@ -20,7 +20,7 @@ if (fs.existsSync(ownerDeviceFilePath)) {
     {
         hostname = configJSONData["Network Settings"].Hostname
     }
-
+    
     if (ownerDeviceJSONData.ownerClaimKey){
         const url = "Digiscan://" + hostname +"/ownerClaim/"+ ownerDeviceJSONData.ownerClaimKey;
 

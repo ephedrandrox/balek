@@ -9,6 +9,7 @@
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
     "buildAll": "npm run preBuild && npm run build && npm run postBuild",
     "buildCertificates": "sh builds/certificates/build.sh",
+    "getCertificates": "sh ",
     "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode"
 
   },

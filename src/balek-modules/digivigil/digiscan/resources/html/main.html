@@ -1,31 +1,36 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp" tabindex="0">
     <div class="${baseClass}BackgroundDiv">
         <img class="${baseClass}BackgroundDivImage"
-             src="balek-modules/digivigil/digiscan/resources/images/book.svg">
+             src="balek-modules/digivigil/digiscan/resources/images/ScapturaTrans.svg">
     </div>
     <div class="${baseClass}MainDiv">
         <div class="${baseClass}MainHeaderDiv">
 
-            <div data-dojo-attach-event="onclick:_onSaveClicked" class="${baseClass}Button" style="background: rgba(77,53,103,0.8); padding-left: 5px; padding-right: 5px;" title="Download Tab Deliminated Text File">
+            <div data-dojo-attach-event="onclick:_onSaveClicked" class="${baseClass}Button" style=" padding-left: 5px; padding-right: 5px;" title="Download Tab Deliminated Text File">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/file.png">
             </div>
-            <div data-dojo-attach-event="onclick:_onCopyClicked" class="${baseClass}Button" style="background: rgba(166,240,166 , .8)" title="Copy Tab Deliminated Text To Clipboard">
+            <div data-dojo-attach-event="onclick:_onCopyClicked" class="${baseClass}Button" style="filter: invert();" title="Copy Tab Deliminated Text To Clipboard">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/notepad.png">
             </div>
-            <div data-dojo-attach-event="onclick:_onRemoveClicked" class="${baseClass}Button" style="float: right; background: rgba(255,80,80 , .8)" title="Delete all scans">
+            <div data-dojo-attach-event="onclick:_onRemoveClicked" class="${baseClass}Button" style="float: right; filter: invert();" title="Delete All Captures">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/trash.png">
             </div>
 
-            <div data-dojo-attach-event="onclick:_onExportClicked" class="${baseClass}Button" style="float: right; background: rgba(13,78,114,0.8)" title="Delete all scans">
+            <div data-dojo-attach-event="onclick:_onExportClicked" class="${baseClass}Button" style="float: right; " title="Toggle List View">
                 <img class="${baseClass}ButtonImage"
                      src="balek-modules/digivigil/digiscan/resources/images/list.png">
             </div>
-            <div class="${baseClass}MainHeaderTitle"> <img class="${baseClass}ButtonImage" style="position: relative; top: 5px;"
-                                                           src="balek-modules/digivigil/digiscan/resources/images/digivigilLogo.png"> DigiCapture</div>
-<!--            <div data-dojo-attach-event="onclick:_onAddEntryClicked" class="${baseClass}Button">-->
+            <div class="${baseClass}MainHeaderTitle">
+                <img class="${baseClass}ButtonImage" style="position: relative; display: inline; top: 5px; height: 64px;" src="balek-modules/digivigil/digiscan/resources/images/ScapturaIcon.png">
+                <div style="position: relative;  vertical-align: top;  display: inline-block; ">Scaptura</div> <br>
+                <div id="${baseClass}OfDigivigil" >
+                    <img id="${baseClass}OfDigivigilImage"
+                         src="balek-modules/digivigil/digiscan/resources/images/digivigilLogo.png"> Of Digivigil
+                    </div>
+            </div><!--            <div data-dojo-attach-event="onclick:_onAddEntryClicked" class="${baseClass}Button">-->
 <!--                <img class="${baseClass}ButtonImage"-->
 <!--                     src="balek-modules/digivigil/digiscan/resources/images/file.svg">-->
 <!--            </div>-->

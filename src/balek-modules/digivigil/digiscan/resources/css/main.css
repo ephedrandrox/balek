@@ -30,8 +30,29 @@ text-align:center
     border: solid white 2px;
 }
 
+#digivigilDigiscanMainInterfaceOfDigivigil{
+    position: absolute;
+    vertical-align: bottom;
+    display: block;
+    top: 35px;
+    right: 0;
+    font-size: 18px;
+    font-family: serif;
+}
+
+
+#digivigilDigiscanMainInterfaceOfDigivigilImage{
+   position: relative;
+    display: inline;
+    top: 3px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    padding-right: 5px;
+}
+
 .digivigilDigiscanMainInterfaceButtonImage{
-    height: 30px;
+    height: 50px;
     min-height: 25px;
     margin: 3px;
     -webkit-user-drag: none;
@@ -46,12 +67,14 @@ text-align:center
     visibility: inherit;
 
     position: absolute;
-    top: 60px;
+    top: 80px;
     bottom: 0;
     left: 0;
     right: 0;
 
     overflow: scroll;
+    user-select: none;
+
 }
 
 .digivigilDigiscanMainInterfaceTabularDiv{
@@ -63,25 +86,25 @@ text-align:center
     /*visibility: inherit;*/
     visibility: hidden;
 
-    border: solid pink 2px;
 
 }
 
 .digivigilDigiscanMainInterfaceTabularContainer{
-    margin-top: 50px;
-    border: solid blue 2px;
+    margin-top: 68px;
+
     display: block;
     position: relative;
     height: 80%;
 }
 .digivigilDigiscanMainInterfaceTabularOutput{
     height: 20%;
-    border: solid red 2px;
+    background: rgb(150, 125, 130);
     display: block;
+    color: black;
 }
 .digivigilDigiscanMainInterfaceTabularStatus{
 display: block;
-border: solid green 2px;
+
 }
 
 
@@ -96,9 +119,16 @@ border: solid green 2px;
     position: absolute;
     right: 10px;
     top: 0;
+    vertical-align: top;
+    font-family: 'Righteous', Arial, Helvetica, sans-serif;
 
-    font-family: Arial, Helvetica, sans-serif;
 
+padding: 0;
+    margin: 0;
+height: 50px;
+line-height: 50px;
+    vertical-align: top;
+    text-align: center;
 }
 
 .digivigilDigiscanMainInterface{
@@ -124,16 +154,39 @@ border: solid green 2px;
     outline: none;
 }
 
+/*@font-face {*/
+/*    font-family: 'Righteous';*/
+/*    src: url('balek-modules/digivigil/digiscan/resources/fonts/Righteous/Righteous-Regular.ttf') format('truetype');*/
+/*}*/
+
+
+/* latin-ext */
+@font-face {
+    font-family: 'Righteous';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WhnGFq8Kk1doH.woff2) format('woff2');
+    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+    font-family: 'Righteous';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WiHGFq8Kk1Q.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 .digivigilDigiscanMainInterfaceMainHeaderDiv{
-    border: solid #bfe1f1 6px;
-    background: #bfe1f1;
+    border: solid rgba(20, 75, 115, 0.8) 6px;
+    background: rgba(20, 75, 115, 0.8);
     border-top-left-radius: 8px;
     position: absolute;
     top: -4px;
     left: -4px;
     right: -4px;
     overflow: hidden;
-    height: 40px;
+    height: 75px;
     min-height: 50px;
     -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
     -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
@@ -142,12 +195,13 @@ border: solid green 2px;
     z-index: 100;
     display: flex;
     align-items: center;
+
+
 }
 .digivigilDigiscanMainInterfaceMainContentDiv{
-    position: realtive;
-    padding-top: 30px;
-    top: 5%;
-    min-top: 50px;
+    position: absolute;
+    top: 0;
+    min-top: 0;
     left: -3px;
     right: -3px;
     bottom: -3px;
@@ -157,7 +211,7 @@ border: solid green 2px;
 }
 
 .digivigilDigiscanMainInterfaceMainDiv{
-    border: solid #bfe1f1 6px;
+    border: solid rgba(20, 75, 115, 0.8) 6px;
     border-radius: 8px;
     position: absolute;
     top: -3px;
@@ -181,7 +235,7 @@ border: solid green 2px;
 }
 
 .digivigilDigiscanMainInterfaceBackgroundDivImage{
-   opacity: .7;
+   opacity: .4;
     position: absolute;
     top: 0;
     left: 0;
