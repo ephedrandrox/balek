@@ -1,5 +1,19 @@
 <div class="${baseClass}" tabindex="0">
-    <div data-dojo-attach-event="onClick:_qrClicked" data-dojo-attach-point="_qrDiv" class="${baseClass}QRDiv"><img class="${baseClass}QRImage" src="${qrEncodedString}" data-dojo-attach-point="_qrImage" /></div>
+    <div class="${baseClass}MainContent">
+
+        <div data-dojo-attach-event="onClick:_qrClicked" data-dojo-attach-point="_qrDiv" class="${baseClass}QRDiv">
+            <img class="${baseClass}QRImage" src="${qrEncodedString}" data-dojo-attach-point="_qrImage" />
+        </div>
+        <div class="${baseClass}ContentBackground">
+            <img class="${baseClass}ScapturaImage" src="balek-modules/digivigil/digiscan/resources/images/ScapturaTrans.svg"  />
+        </div>
+    </div>
+    <div class="${baseClass}MainBackground">
+
+    </div>
+
 
     <div class="${baseClass}InvitationList" data-dojo-attach-point="_invitationsDiv"></div>
+
+
 </div>

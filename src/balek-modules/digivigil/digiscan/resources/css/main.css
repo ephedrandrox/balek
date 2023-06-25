@@ -40,6 +40,23 @@ text-align:center
     font-family: serif;
 }
 
+#digivigilDigiscanMainInterfaceScapturaTitle{
+    position: relative;  vertical-align: top;  display: inline-block;
+}
+
+
+@media (max-width: 600px) {
+
+    #digivigilDigiscanMainInterfaceOfDigivigil{
+        display: none;
+    }
+
+    #digivigilDigiscanMainInterfaceScapturaTitle{
+        display: none;
+    }
+
+}
+
 
 #digivigilDigiscanMainInterfaceOfDigivigilImage{
    position: relative;
@@ -178,7 +195,7 @@ line-height: 50px;
 }
 
 .digivigilDigiscanMainInterfaceMainHeaderDiv{
-    border: solid rgba(20, 75, 115, 0.8) 6px;
+    /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
     background: rgba(20, 75, 115, 0.8);
     border-top-left-radius: 8px;
     position: absolute;
@@ -211,7 +228,7 @@ line-height: 50px;
 }
 
 .digivigilDigiscanMainInterfaceMainDiv{
-    border: solid rgba(20, 75, 115, 0.8) 6px;
+    /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
     border-radius: 8px;
     position: absolute;
     top: -3px;
@@ -223,8 +240,7 @@ line-height: 50px;
 
 
 .digivigilDigiscanMainInterfaceBackgroundDiv{
-    background : rgba(20, 241, 215, 0.39);
-    border: solid black 3px;
+
     border-radius: 8px;
     position: absolute;
     top: -3px;

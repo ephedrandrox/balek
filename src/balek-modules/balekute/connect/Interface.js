@@ -77,7 +77,7 @@ define(['dojo/_base/declare',
                                 // topic.publish("addToCurrentWorkspace",this._mainInterface );
 
 
-                                let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget"
+                                let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/static/staticContainerWidget"
                                 let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
                                 this.workspaceManagerCommands.addToWorkspaceContainer(this._mainInterface, workspaceContainerWidgetPath )
                                     .then(lang.hitch(this, function(workspaceContainerKey){
