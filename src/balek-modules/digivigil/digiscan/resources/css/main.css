@@ -10,9 +10,12 @@ text-align:center
     display: inline-block;
     border-radius: 5px;
     position: relative;
-    margin: 0;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px;
+    padding: 5px;
+
+    height: 38px;
+    width: 38px;
+
     /*right: 30px;*/
     /*top: 15%;*/
 
@@ -69,15 +72,22 @@ text-align:center
 }
 
 .digivigilDigiscanMainInterfaceButtonImage{
-    height: 50px;
-    min-height: 25px;
-    margin: 3px;
+    height: 32px;
+    width: 32px;
+
     -webkit-user-drag: none;
     -khtml-user-drag: none;
     -moz-user-drag: none;
     -o-user-drag: none;
     user-drag: none;
 }
+
+
+.digivigilDigiscanMainInterfaceScapturaImage{
+   margin-top: 4px;
+}
+
+
 
 .digivigilDigiscanMainInterfacePreviewDiv{
     /*visibility: hidden;*/
@@ -212,6 +222,9 @@ line-height: 50px;
     z-index: 100;
     display: flex;
     align-items: center;
+
+    padding: 0;
+    padding-left: 10px;
 
 
 }
