@@ -118,9 +118,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 let now = new Date(Date.now());
                 let currentDate = (now.getMonth() + 1) + "/" + now.getDate() + "/" + now.getFullYear();
                 if (Capture.created  && Capture.id &&
+                    typeof Capture.barcode !== "undefined" &&
                     typeof Capture.recognizedText !== "undefined" &&
                     typeof Capture.note !== "undefined") {
-                    validDigiscanCapture.created = nodeSanitizeHtml(Capture.created);
+                    validDigiscanCapture.timeStamps = {
+                        savedToInstance : currentDate,
+                        created : nodeSanitizeHtml(Capture.created)
+                    }
+
+                    validDigiscanCapture.barcode = nodeSanitizeHtml(Capture.barcode);
                     validDigiscanCapture.id = nodeSanitizeHtml(Capture.id);
                     validDigiscanCapture.recognizedText = nodeSanitizeHtml(Capture.recognizedText);
                     validDigiscanCapture.note = nodeSanitizeHtml(Capture.note);

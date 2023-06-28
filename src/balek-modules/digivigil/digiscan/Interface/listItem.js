@@ -6,6 +6,8 @@ define(['dojo/_base/declare',
         "dojo/_base/window",
         'dojo/on',
         "dojo/dom-attr",
+        'dojo/dom-style',
+
         "dojo/keys",
         "dijit/focus",
         "dojo/ready",
@@ -19,7 +21,7 @@ define(['dojo/_base/declare',
         'dojo/text!balek-modules/digivigil/digiscan/resources/html/listItem.html',
         'dojo/text!balek-modules/digivigil/digiscan/resources/css/listItem.css'
     ],
-    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, dojoKeys,
+    function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
@@ -28,23 +30,26 @@ define(['dojo/_base/declare',
             templateString: template,
             baseClass: "digivigilDigiscanCaptureViewInterface",
 
+            _noteDiv: null,
             _mainCssString: mainCss,
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                if(this.itemData && this.itemData.created)
+                if(this.itemData && this.itemData.timeStamps && this.itemData.timeStamps.created )
                 {
                   ///  this.itemData.created = (new Date(parseInt(this.itemData.created))).toString()
 
-                    const createdDate = new Date(parseInt(this.itemData.created));
+                    const createdDate = new Date(this.itemData.timeStamps.created);
                     const formattedDate = createdDate.toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'short',
-                        day: 'numeric'
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
                     });
 
-                    this.itemData.created = formattedDate
+                    this.itemData.timeStamps.created = formattedDate
 
                 }
 
@@ -59,6 +64,10 @@ define(['dojo/_base/declare',
                     dijitFocus.focus(this.domNode);
                 }));
                 dijitFocus.focus(this.domNode);
+
+                if (this.itemData.note !== ""){
+                    domStyle.set(this._noteDiv, "display", "block")
+                }
             },
             _onFocus: function () {
                 //todo make it do something

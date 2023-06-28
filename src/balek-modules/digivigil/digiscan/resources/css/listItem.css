@@ -3,7 +3,7 @@
     background: rgba(20, 75, 115, 0.9);
     display: inline-block;
     text-align: left;
-    padding: 5px;
+    padding: 0s;
     border: none;
     border-radius: 15px;
     min-width: 200px;
@@ -11,36 +11,73 @@
     outline: none;
     font-size: 10pt;
     max-width: 20%;
-    border: solid rgba(20, 75, 115, 0.8) 2px;
-border: solid white 2px;
+    /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
+/*border: solid white 2px;*/
 
     filter: drop-shadow(5px 5px 10px #000);
 
 }
 
 .digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
+    position: relative;
     display: block;
     /*float: right;*/
     background: none;
     border-radius: 5px;
     padding: 5px;
     font-family: monospace;
-    white-space: pre-wrap;
-    word-break: break-all;
+
+    padding-right: 20px;
+    /*white-space: pre-wrap;*/
+    /*word-break: break-all;*/
 }
 
 
-.digivigilDigiscanCaptureViewInterfaceCreatedDiv {
+.digivigilDigiscanCaptureViewInterfaceBarcodeDiv {
+    position: relative;
     display: block;
     /*float: left;*/
     /*background: rgba(106, 178, 238, 0.86);*/
 
     /*border: solid #c2c2c2 2px;*/
 
-    padding: 5px;
     color: white;
+    background: black;
+
+    align-items: right;
+    text-align: right;
+
+    line-height: 20px;
+
+    padding: 3px;
 
 }
+
+.digivigilDigiscanCaptureViewInterfaceIconImg {
+    display: inline;
+    width: 20px;
+    height: 20px;
+
+}
+
+.digivigilDigiscanCaptureViewInterfaceCreatedDiv {
+    position: relative;
+    display: block;
+    /*float: left;*/
+    /*background: rgba(106, 178, 238, 0.86);*/
+
+    /*border: solid #c2c2c2 2px;*/    justify-content: right;
+    align-items: right;
+    text-align: right;
+
+    padding: 5px;
+    color: white;
+    margin: 5px;
+    margin-bottom: 0;
+}
+
+
+
 
 .digivigilDigiscanCaptureViewInterfaceHeaderDiv {
     display: block;
@@ -64,9 +101,16 @@ border: solid white 2px;
 }
 
 .digivigilDigiscanCaptureViewInterfaceNoteDiv {
-    display: inline-block;
+    position: relative;
+    display: block;
     /*background: #ffffff;*/
     /*border: solid #c2c2c2 2px;*/
     color: black;
-    background: rgba(213, 217, 101, 0.7);
+    background: rgba(249, 255, 172, 0.95);
+padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+ display: none;
+
+    border-radius: 0 0 15px 15px;
 }

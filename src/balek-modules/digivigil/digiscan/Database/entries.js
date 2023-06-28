@@ -106,7 +106,7 @@ define(['dojo/_base/declare',
             addCapture: function(Capture)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    if(Capture && Capture.created && Capture.id  &&
+                    if(Capture && Capture.timeStamps && Capture.timeStamps.created && Capture.id  &&
                         typeof Capture.recognizedText !== "undefined" &&
                         typeof Capture.note !== "undefined")
                     {

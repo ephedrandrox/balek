@@ -1,10 +1,29 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'>
         <div class="${baseClass}HeaderDiv">
-            <div class="${baseClass}CreatedDiv">${itemData.created} </div>
-            <div class="${baseClass}RecognizedTextDiv">${itemData.recognizedText}  </div>
+            <div class="${baseClass}CreatedDiv">
+                <img class="${baseClass}IconImg"
+                     style="position: absolute; left: 0; top: 0; padding-left: 5px;"
+                     src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"
+                     alt="barcode icon"/>
+                ${itemData.timeStamps.created} </div>
+            <div class="${baseClass}BarcodeDiv">
+                <img class="${baseClass}IconImg"
+                     style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px"
+                     src="balek-modules/digivigil/digiscan/resources/images/barcode.svg"
+                     alt="barcode icon"/>
+               ${itemData.barcode}</div>
+            <div class="${baseClass}RecognizedTextDiv">
+                <img class="${baseClass}IconImg"
+                     style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px"
+                     src="balek-modules/digivigil/digiscan/resources/images/RecognizedText.svg"
+                     alt="barcode icon"/><pre>${itemData.recognizedText}</pre>  </div>
 
-        <div class="${baseClass}NoteDiv"> ${itemData.note}</div>
+        <div class="${baseClass}NoteDiv" data-dojo-attach-point="_noteDiv">
+            <img class="${baseClass}IconImg"
+                 style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px; filter: invert();"
+                 src="balek-modules/digivigil/digiscan/resources/images/Note.svg"
+                 alt="barcode icon"/>${itemData.note}</div>
         </div>
     </div>
 </div>

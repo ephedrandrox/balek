@@ -149,7 +149,7 @@ define(['dojo/_base/declare',
                     console.log("deletedEntry building string", this.entries, entry)
 
                     if( entry && entry.recognizedText){
-                        tabbedString += entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                        tabbedString += entry.barcode + "\t" + entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
 
                     }
                 }));
