@@ -57,6 +57,9 @@ define(['dojo/_base/declare',
             availableEntries: null,             //SyncedMap
             availableEntriesWatchHandle: null,
 
+            uiState: null,             //SyncedMap
+            uiStateWatchHandle: null,
+
             _EntryWidgets: null,
             //##########################################################################################################
             //Startup Functions Section
@@ -86,6 +89,13 @@ define(['dojo/_base/declare',
                 this._interface.getAvailableEntries().then(lang.hitch(this, function(Entries){
                     this.availableEntries = Entries
                     this.availableEntriesWatchHandle = this.availableEntries.setStateWatcher(lang.hitch(this, this.onAvailableEntriesStateChange));
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
+
+                this._interface.getUIState().then(lang.hitch(this, function(uiState){
+                    this.uiState = uiState
+                    this.uiStateWatchHandle = this.uiState.setStateWatcher(lang.hitch(this, this.onUIStateChange));
                 })).catch(lang.hitch(this, function(Error){
                     console.log("Error this._interface.getAvailableEntries()", Error)
                 }))
@@ -139,6 +149,22 @@ define(['dojo/_base/declare',
 
 
             },
+            onUIStateChange: function (name, oldState, newState) {
+
+                console.log("onUIStateChange: name, oldState, newState",name, oldState, newState)
+
+                if(name === "ActiveView")
+                {
+                    if(newState === "previewDiv")
+                    {
+                        this.makePreviewDivActive()
+                    }else if(newState === "tabularDiv")
+                    {
+                        this.makeTabularDivActive()
+                    }
+                }
+
+            },
 
             getTabSeperatedEntries: function(){
                 let entriesArray =  Object.keys(this.entries).map(key => this.entries[key]);
@@ -190,11 +216,22 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            _onExportClicked: function (eventObject) {
+            // _onExportClicked: function (eventObject) {
+            //
+            //     // domStyle.set(this._previewDiv, "display", "none");
+            //     // domStyle.set(this._tabularDiv, "display", "inherit");
+            //     this.toggleViews()
+            // },
+            _onActivatePreviewView: function(){
+                this._interface.setUIActiveView("previewDiv");
 
-                // domStyle.set(this._previewDiv, "display", "none");
-                // domStyle.set(this._tabularDiv, "display", "inherit");
-                this.toggleViews()
+                //this.makePreviewDivActive()
+
+            },
+            _onActivateTabularView: function(){
+                this._interface.setUIActiveView("tabularDiv");
+
+                //this.makeTabularDivActive()
             },
             _onRemoveClicked: function (eventObject) {
                 this._interface.removeAllCaptures();
@@ -235,44 +272,57 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################
-            toggleViews: function () {
-            // Get references to the elements you want to toggle
-            const previewDiv = this._previewDiv;
-            const tabularDiv = this._tabularDiv;
+            makeTabularDivActive: function(){
+                console.log("makeTabularDivActive")
+
+                const previewDiv = this._previewDiv;
+                const tabularDiv = this._tabularDiv;
+
+                this.switchViews(previewDiv, tabularDiv);
+
+            },
+            makePreviewDivActive: function(){
+                console.log("makePreviewDivActive")
+                const previewDiv = this._previewDiv;
+                const tabularDiv = this._tabularDiv;
+
+                this.switchViews(tabularDiv, previewDiv);
+
+            },
+            switchViews: function(fadeOutNode, fadeInNode){
+                // Use the fade animation from the dojo/fx module
+                const fadeOutAnimation = fx.fadeOut({
+                    node: fadeOutNode ,
+                    duration: 100,
+                    onEnd: function(){
+                        domStyle.set(fadeOutNode, "opacity", 0);
+                        domStyle.set(fadeOutNode, "visibility", "hidden");
+                    }
+                });
+                const fadeInAnimation = fx.fadeIn({
+                    node: fadeInNode ,
+                    duration: 100,
+                    onBegin: function(){
+                        domStyle.set(fadeInNode, "opacity", 0);
+
+                        domStyle.set(fadeInNode, "visibility", "inherit");
+                    }
+                });
 
 
-            // Get the current display property of the elements
-            const previewDisplay = domStyle.get(previewDiv, "visibility");
-
-            // Check the current state and determine the next state
-            const nextPreviewState = previewDisplay === "hidden" ? "inherit" : "hidden";
-
-                let fadeOutNode = nextPreviewState === "hidden" ? previewDiv : tabularDiv;
-                let fadeInNode = nextPreviewState === "hidden" ? tabularDiv : previewDiv
-console.log(fadeOutNode, fadeInNode, nextPreviewState)
-            // Use the fade animation from the dojo/fx module
-            const fadeOutAnimation = fx.fadeOut({
-                node: fadeOutNode ,
-                duration: 100,
-                onEnd: function(){
-                    domStyle.set(fadeOutNode, "opacity", 0);
-                    domStyle.set(fadeOutNode, "visibility", "hidden");
-                }
-            });
-            const fadeInAnimation = fx.fadeIn({
-                node: fadeInNode ,
-                duration: 100,
-                onBegin: function(){
-                    domStyle.set(fadeInNode, "opacity", 0);
-
-                    domStyle.set(fadeInNode, "visibility", "inherit");
-                }
-            });
-
-
-            // Start the fade animation
-            fadeOutAnimation.play();
+                // Start the fade animation
+                fadeOutAnimation.play();
                 fadeInAnimation.play();
+            },
+            toggleViews: function () {
+                if(this.uiState !== null)
+                {
+                    let currentlyActiveDiv = this.uiState.get("ActiveView")
+                    console.log("toggleViews",currentlyActiveDiv)
+                    currentlyActiveDiv === "previewDiv" ? this._interface.setUIActiveView("tabularDiv")  : this._interface.setUIActiveView("previewDiv");
+
+                }
+
 
             },
             createTabbedDataDownload: function (tabbedData){
@@ -330,6 +380,14 @@ console.log(fadeOutNode, fadeInNode, nextPreviewState)
                     this.availableEntriesWatchHandle.unwatch()
 
                 }
+
+
+                if(this.uiStateWatchHandle && this.uiStateWatchHandle.unwatch)
+                {
+                    this.uiStateWatchHandle.unwatch()
+
+                }
+
 
                 for (const entryWidget in this._EntryWidgets) {
                     this._EntryWidgets[entryWidget].unload();

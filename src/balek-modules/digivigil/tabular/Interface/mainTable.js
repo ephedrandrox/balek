@@ -582,6 +582,8 @@ define([//------------------------------|
 
 
                             domClass.add(tableData, this.getColumnClass(valuePosition))
+                            domClass.add(tableData, this.baseClass+"TableRowIdentityCell")
+
 
                             valuePosition++;
                             tableData.innerHTML = value;

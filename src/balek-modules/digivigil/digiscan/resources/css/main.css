@@ -6,7 +6,7 @@ text-align:center
     background: transparent;
     cursor: pointer;
     color: white;
-    border: solid white 2px;
+    border: solid transparent 2px;
     display: inline-block;
     border-radius: 5px;
     position: relative;
@@ -25,13 +25,7 @@ text-align:center
     filter: invert(100%);
     background: black;
 }
-.digivigilDigiscanMainInterfaceButton:active {
-    cursor: pointer;
-    background: red;
-    filter: invert(0%);
 
-    border: solid white 2px;
-}
 
 #digivigilDigiscanMainInterfaceOfDigivigil{
     position: absolute;
@@ -91,7 +85,9 @@ text-align:center
 
 .digivigilDigiscanMainInterfacePreviewDiv{
     /*visibility: hidden;*/
-    visibility: inherit;
+    /*visibility: inherit;*/
+    visibility: hidden;
+
 
     position: absolute;
     top: 80px;
@@ -102,6 +98,46 @@ text-align:center
     overflow: scroll;
 
 }
+
+
+.digivigilDigiscanMainInterfaceActiveViewControl{
+   border: solid rgba(123, 131, 134, 0.8) 1px;
+    border-radius:5px;
+    /*background: rgba(185, 217, 232, 0.2)*/
+}
+.digivigilDigiscanMainInterfaceActiveViewControlButton{
+
+    background: transparent;
+    cursor: pointer;
+    color: white;
+    border: solid white 2px;
+    display: inline-block;
+    border-radius: 5px;
+    position: relative;
+    margin: 5px;
+    padding: 5px;
+
+    height: 18px;
+    width: 18px;
+
+}
+
+.digivigilDigiscanMainInterfaceActiveViewControlButton:Hover{
+    color: black;
+    border: solid black 2px;
+}
+
+.digivigilDigiscanMainInterfaceActiveViewControlButtonImage{
+    height: 12px;
+    width: 12px;
+
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
 
 .digivigilDigiscanMainInterfaceTabularDiv{
     position: absolute;

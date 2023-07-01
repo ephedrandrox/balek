@@ -15,7 +15,10 @@ define(['dojo/_base/declare',
 
             _module: null,
             _moduleController: null,
+
             availableEntries: null,             //SyncedMapInstance
+            uiState: null, //SyncedMapInstance
+
 
             controllerEntries: null,            //Controller Entries State
             controllerEntriesWatchHandle: null,
@@ -26,14 +29,19 @@ define(['dojo/_base/declare',
                 //set setRemoteCommander commands
                 this._commands={
                     "addCapture" : lang.hitch(this, this.addCapture),
-                    "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures)
+                    "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures),
 
+                    "setUIActiveView" : lang.hitch(this, this.setUIActiveView)
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
 
-                this._interfaceState.set("Component Name","Digivigil Digiscan");
+                this.uiState = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("uiStateComponentKey", this.uiState._componentKey);
+
+
+                this._interfaceState.set("Component Name","Digivigil Digiscan - Change to Scaptura!");
                 this._interfaceState.set("Status", "Starting");
                 //creates component Key that can be used to connect to state
                 this.setInterfaceCommands();
@@ -91,6 +99,16 @@ define(['dojo/_base/declare',
                     resultCallback({Error: Error})
                 }))
             },
+            setUIActiveView: function(activeView, resultCallback){
+
+                if(typeof activeView === "string"){
+                    this.uiState.add("ActiveView", activeView)
+                    resultCallback({SUCCESS: "set"})
+                }else{
+                    resultCallback({ERROR : "instance -> setUIActiveView: activeView is not a string"})
+                }
+            },
+
             //##########################################################################################################
             //Base Instance Override Function
             //##########################################################################################################

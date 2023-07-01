@@ -22,8 +22,10 @@ define(['dojo/_base/declare',
             workspaceManagerCommands: null,
 
             availableEntries: null,
+            uiState: null,
 
             availableEntriesResolveRequests: null,
+            uiStateResolveRequests: null,
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -32,6 +34,7 @@ define(['dojo/_base/declare',
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
                 this.availableEntriesResolveRequests = []
+                this.uiStateResolveRequests = []
             },
             //##########################################################################################################
             //Event Functions Section
@@ -44,6 +47,16 @@ define(['dojo/_base/declare',
                     //Create availableEntries SyncedMap
                     if(this.availableEntries === null){
                         this.availableEntries = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        for( const ResolveKey in this.availableEntriesResolveRequests)
+                        {
+                            Resolve(this.availableEntries[ResolveKey])
+                        }
+                    }
+                }
+                else if (name === "uiStateComponentKey") {
+                    //Create availableEntries SyncedMap
+                    if(this.uiState === null){
+                        this.uiState = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
                         for( const ResolveKey in this.availableEntriesResolveRequests)
                         {
                             Resolve(this.availableEntries[ResolveKey])
@@ -95,6 +108,17 @@ define(['dojo/_base/declare',
                     }
                 }))
             },
+            getUIState: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    if(this.uiState == null){
+                        this.uiStateResolveRequests.push(Resolve)
+                    }else
+                    {
+                        Resolve(this.uiState)
+                    }
+                }))
+            },
+
             sendEntry: function (digiscanEntry) {
                 this._instanceCommands.addCapture(digiscanEntry).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#ADDENTRY", commandReturnResults)
@@ -109,7 +133,13 @@ define(['dojo/_base/declare',
                     console.log("#Removed ALl Captures", "Removed ALl Captures Received Error Response" + commandErrorResults);
                 });
             },
-
+            setUIActiveView(activeView) {
+                this._instanceCommands.setUIActiveView(activeView).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#Set Active View", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#SetACtive View", "Received Error Response" + commandErrorResults);
+                });
+            },
             unload: function () {
                 this._mainInterface.unload();
             }

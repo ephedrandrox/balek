@@ -63,7 +63,7 @@ define(['dojo/_base/declare',
             },
             forEach: function(forEachFunction){
                 if (typeof forEachFunction === 'function'){
-                    console.log("forEach 🛑🛑🛑🛑",  this._objects)
+                    console.log("Syncedmap forEach 🛑🛑🛑🛑",  this._objects)
                     for(objectIndex in this._objects)
                     {
                         if(this._objects[objectIndex] !== null
@@ -75,6 +75,11 @@ define(['dojo/_base/declare',
                         }
                     }
                 }
+            },
+            get: function(key)
+            {
+                console.log("get", key, this._objects)
+                return this._objects[key.toString()]
             }
         });
     }
