@@ -33,6 +33,11 @@ define(['dojo/_base/declare',
             _noteDiv: null,
             _mainCssString: mainCss,
 
+            interfaceCommands: null,
+
+            uiState: null,
+            captureID: null,
+
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
@@ -68,6 +73,36 @@ define(['dojo/_base/declare',
                 if (this.itemData.note !== ""){
                     domStyle.set(this._noteDiv, "display", "block")
                 }
+
+                this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
+                    console.log("getUIState", uiState)
+
+                    this.uiState = uiState
+
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
+            },
+            // onMarkUninterested: function ()
+            // {
+            //       //  this.interfaceCommands.setCaptureUninterested(this.itemData.id)
+            // },
+
+            onUninterestedClick: function(clickEvent){
+                console.log("onUninterestedClick", this.captureID)
+                if(this.uiState !== null) {
+                    let selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
+
+                    if(selectedCaptureSetID){
+                        this.interfaceCommands.removeCaptureFromSet(selectedCaptureSetID, this.captureID, lang.hitch(this, function(commandResult){
+                            console.log(commandResult)
+                        }))
+                    }else {
+                        alert("No Capture Set Selected")
+                    }
+
+                }
+
             },
             _onFocus: function () {
                 //todo make it do something

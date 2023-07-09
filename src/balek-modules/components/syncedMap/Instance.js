@@ -22,6 +22,9 @@ define(['dojo/_base/declare',
             remove: function(key) {
                 this._interfaceState.set(key.toString(), undefined);
             },
+            getState: function (){
+                return this._interfaceState
+            },
             relayState: function(state){
                 for (const key in state) {
                     let value = state[key]

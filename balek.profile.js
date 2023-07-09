@@ -146,7 +146,7 @@ var profile = (function () {
             }
             ,
             "balek-modules/balekute/connect/Interface": {
-                include: [  "balek-modules/balekute/connect/Interface", "dojo/fx",
+                include: [  "balek-modules/balekute/connect/Interface", // "dojo/fx",
                     "balek-client/session/workspace/container/widgets/movable/movableContainerWidget",
                 "dojox/layout/ResizeHandle", "dojo/dnd/Moveable", "dijit/_base/manager",
                 "dojo/dnd/common", "dojo/dnd/Mover", "dojo/dnd/autoscroll"]

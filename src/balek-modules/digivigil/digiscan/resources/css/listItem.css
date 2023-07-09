@@ -3,14 +3,14 @@
     background: rgba(20, 75, 115, 0.9);
     display: inline-block;
     text-align: left;
-    padding: 0s;
+    padding: 0;
     border: none;
     border-radius: 15px;
     min-width: 200px;
     margin: 10px;
     outline: none;
     font-size: 10pt;
-    max-width: 20%;
+
     /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
 /*border: solid white 2px;*/
 
@@ -24,7 +24,7 @@
     /*float: right;*/
     background: none;
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px;
     font-family: monospace;
 
     padding-right: 20px;
@@ -107,10 +107,8 @@
     /*border: solid #c2c2c2 2px;*/
     color: black;
     background: rgba(249, 255, 172, 0.95);
-padding: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
- display: none;
+    padding: 10px;
+
 
     border-radius: 0 0 15px 15px;
 }

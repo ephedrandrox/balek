@@ -2,11 +2,19 @@
     <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'>
         <div class="${baseClass}HeaderDiv">
             <div class="${baseClass}CreatedDiv">
+
                 <img class="${baseClass}IconImg"
+                     data-dojo-attach-event="onclick:onUninterestedClick"
                      style="position: absolute; left: 0; top: 0; padding-left: 5px;"
+                     src="balek-modules/digivigil/digiscan/resources/images/close.svg"
+                     alt="Remove Capture from current set"/>
+                ${itemData.timeStamps.created}
+
+                <img class="${baseClass}IconImg"
+                     style="position: relative;"
                      src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"
-                     alt="barcode icon"/>
-                ${itemData.timeStamps.created} </div>
+                     alt="Calendar icon" />
+            </div>
             <div class="${baseClass}BarcodeDiv">
                 <img class="${baseClass}IconImg"
                      style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px"

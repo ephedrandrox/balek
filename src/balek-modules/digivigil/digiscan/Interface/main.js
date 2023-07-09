@@ -19,6 +19,7 @@ define(['dojo/_base/declare',
 
         "balek-modules/digivigil/digiscan/Interface/createEntry",
         "balek-modules/digivigil/digiscan/Interface/listItem",
+        'balek-modules/digivigil/digiscan/Interface/listControl',
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
 
@@ -31,7 +32,7 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, domClass, domStyle, domConstruct, win, fx, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, createEntry, listItem, Tabular, TableModel, template,
+              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, createEntry, listItem, listControl, Tabular, TableModel, template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
@@ -49,6 +50,12 @@ define(['dojo/_base/declare',
             _tabularStatus: null,
             _tabularOutput: null,
 
+            _statusDiv: null,
+
+            _listControlContainer: null, //DomNode
+            listControl: null,
+
+
             tableModel: null,
             MainTable: null,
 
@@ -56,9 +63,15 @@ define(['dojo/_base/declare',
 
             availableEntries: null,             //SyncedMap
             availableEntriesWatchHandle: null,
+            //interestedCaptures
+            interestedCaptures: null,             //SyncedMap
+            interestedCapturesWatchHandle: null,
 
             uiState: null,             //SyncedMap
             uiStateWatchHandle: null,
+
+            captureSets: null,
+          //  captureSetsWatchHandle: null,
 
             _EntryWidgets: null,
             //##########################################################################################################
@@ -69,6 +82,7 @@ define(['dojo/_base/declare',
                 this._createEntry = {};
                 this._digiscanData = {};
                 this._EntryWidgets = {};
+
 
                 this.tableModel = new TableModel({
                     mostValuesInAnyLine: 0,
@@ -85,22 +99,6 @@ define(['dojo/_base/declare',
             postCreate: function () {
                 this.initializeContainable();
 
-
-                this._interface.getAvailableEntries().then(lang.hitch(this, function(Entries){
-                    this.availableEntries = Entries
-                    this.availableEntriesWatchHandle = this.availableEntries.setStateWatcher(lang.hitch(this, this.onAvailableEntriesStateChange));
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
-
-                this._interface.getUIState().then(lang.hitch(this, function(uiState){
-                    this.uiState = uiState
-                    this.uiStateWatchHandle = this.uiState.setStateWatcher(lang.hitch(this, this.onUIStateChange));
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
-
-
                 if(this.MainTable == null)
                 {
                     this.MainTable = Tabular({tableModel: this.tableModel,
@@ -113,6 +111,58 @@ define(['dojo/_base/declare',
                 }else{
                     console.log("MainTable already exists", this.MainTable)
                 }
+
+
+                this._interface.getAvailableEntries().then(lang.hitch(this, function(Entries){
+                    this.availableEntries = Entries
+                    this.availableEntriesWatchHandle = this.availableEntries.setStateWatcher(lang.hitch(this, this.onAvailableEntriesStateChange));
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
+
+                this._interface.getInterestedCaptures().then(lang.hitch(this, function(interestedCaptures){
+                    this.interestedCaptures = interestedCaptures
+                    this.interestedCapturesWatchHandle = this.interestedCaptures.setStateWatcher(lang.hitch(this, this.onInterestedCapturesStateChange));
+                    console.log("Interest captures")
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getInterestedCaptures()", Error)
+                }))
+
+
+                this._interface.getUIState().then(lang.hitch(this, function(uiState){
+                    this.uiState = uiState
+                    this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
+                    this.refreshViews()
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getAvailableEntries()", Error)
+                }))
+
+
+                this._interface.getCaptureSets().then(lang.hitch(this, function(captureSets){
+                    // console.log("captureSetcaptureSetcaptureSet", captureSets)
+                    //
+                     this.captureSets = captureSets
+                     this.captureSetsWatchHandle = this.captureSets.watch(lang.hitch(this, this.onCaptureSetsChange));
+                     this.refreshViews()
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error this._interface.getCaptureSets()", Error)
+                }))
+
+                if(this.listControl == null) {
+
+                    //Create list control and insert it into menu
+                    this.listControl = listControl({
+                        interfaceCommands: this._interface,
+                        listsController: this._interface,
+                    })
+                    domConstruct.place(this.listControl.domNode, this._listControlContainer, 'only')
+
+
+
+
+                }
+
+
 
             },
             startupContainable: function(){
@@ -135,7 +185,7 @@ define(['dojo/_base/declare',
                 {
 
 
-                    this.removeEntryWidget(id)
+                   this.removeEntryWidget(id)
                     this.entries[id] = undefined
                     delete this.entries[id]
                     console.log("deletedEntry")
@@ -148,21 +198,54 @@ define(['dojo/_base/declare',
 
 
 
+            },onInterestedCapturesStateChange:function (name, oldState, newState){
+                console.log("onInterestedCapturesStateChange: name, oldState, newState",name, oldState, newState)
+
+                let id = name.toString()
+                if( newState !== null && newState.entry)
+                {
+
+                   // this.entries[id] = newState.entry
+                    this.addOrUpdateEntryWidget(id)
+
+
+                } else
+                {
+
+
+                    this.removeEntryWidget(id)
+                   // this.entries[id] = undefined
+                   // delete this.entries[id]
+                    //console.log("deletedEntry")
+
+                }
+
+               // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
+
+                this.tableModel.setDataString(this.getTabSeperatedEntries())
+
+
             },
+
             onUIStateChange: function (name, oldState, newState) {
 
                 console.log("onUIStateChange: name, oldState, newState",name, oldState, newState)
 
-                if(name === "ActiveView")
+                if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures")
                 {
-                    if(newState === "previewDiv")
-                    {
-                        this.makePreviewDivActive()
-                    }else if(newState === "tabularDiv")
-                    {
-                        this.makeTabularDivActive()
-                    }
+
+                    this.refreshViews()
                 }
+
+            },
+            onCaptureSetsChange: function (name, oldState, newState) {
+
+                console.log("onCaptureSetsChange: name, oldState, newState",name, oldState, newState)
+
+
+
+                    this.refreshViews()
+
 
             },
 
@@ -188,12 +271,16 @@ define(['dojo/_base/declare',
                 if (!(this._EntryWidgets[id])) {
                     this._EntryWidgets[id] = new listItem({
                         _interfaceKey: this._interfaceKey,
-                        itemData: this.entries[id]
+                        itemData: this.entries[id],
+                        interfaceCommands: this._interface,
+                        captureID: id
                     });
                     console.log("_EntryWidgets", id, this._previewDiv, this._EntryWidgets, this._EntryWidgets[id].domNode);
                     domConstruct.place(this._EntryWidgets[id].domNode, this._previewDiv);
                 }
             },
+
+
             removeEntryWidget(id){
                 if (this._EntryWidgets[id]) {
 
@@ -223,15 +310,16 @@ define(['dojo/_base/declare',
             //     this.toggleViews()
             // },
             _onActivatePreviewView: function(){
-                this._interface.setUIActiveView("previewDiv");
+                this.makePreviewDivActive()
 
                 //this.makePreviewDivActive()
 
             },
             _onActivateTabularView: function(){
+                this.makeTabularDivActive()
+
                 this._interface.setUIActiveView("tabularDiv");
 
-                //this.makeTabularDivActive()
             },
             _onRemoveClicked: function (eventObject) {
                 this._interface.removeAllCaptures();
@@ -279,6 +367,7 @@ define(['dojo/_base/declare',
                 const tabularDiv = this._tabularDiv;
 
                 this.switchViews(previewDiv, tabularDiv);
+                this._interface.setUIActiveView("tabularDiv");
 
             },
             makePreviewDivActive: function(){
@@ -288,6 +377,92 @@ define(['dojo/_base/declare',
 
                 this.switchViews(tabularDiv, previewDiv);
 
+                this._interface.setUIActiveView("previewDiv");
+
+
+            },
+            updatePreviewView: function(){
+                if(this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null){}
+                {
+                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
+                    const selectedCaptureSet = this.captureSets.get(selectedCaptureSetID);
+
+
+                    const showHiddenCaptures = this.uiState.get("showHiddenCaptures")
+
+
+                    console.log("🚧🚧updatePreviewView", selectedCaptureSetID,selectedCaptureSet)
+
+                    if(selectedCaptureSet && selectedCaptureSet.CaptureSet
+                    && typeof selectedCaptureSet.CaptureSet.name === "string")
+                    {
+                        this._statusDiv.innerHTML = selectedCaptureSet.CaptureSet.name
+                        let captures = selectedCaptureSet.CaptureSet.captures ? selectedCaptureSet.CaptureSet.captures : {}
+                        let availableCaptures = this._interface.availableEntries
+                        let visibleCaptureViews = {}
+                        console.log("🚧🚧checking list", captures,availableCaptures)
+                        this._previewDiv.innerHTML = ""
+                        availableCaptures.forEach( lang.hitch(this, function (key, value) {
+                            if(captures[key]){
+                                if( captures[key].inSet === true || showHiddenCaptures )
+                                {
+                                    captureView = this.getCaptureView(key)
+                                    domConstruct.place(captureView.domNode, this._previewDiv);
+                                }
+
+                            }else {
+                                //fix this on the backend
+                                console.log("🚧🚧no!", key, value)
+                            }
+                        }));
+
+                        console.log("🚧🚧visibleCaptureViews list" , visibleCaptureViews)
+
+
+                    }
+
+                }
+
+
+            },
+            getCaptureView: function (id){
+                console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
+
+                if (!(this._EntryWidgets[id])) {
+                    this._EntryWidgets[id] = new listItem({
+                        _interfaceKey: this._interfaceKey,
+                        itemData: this.entries[id],
+                        interfaceCommands: this._interface,
+                        captureID: id
+
+                    });
+                    console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
+
+
+                }
+                return this._EntryWidgets[id];
+
+            },
+
+            refreshViews: function(){
+                const activeView = this.uiState.get("ActiveView")
+
+                this.updatePreviewView();
+
+
+                const previewDiv = this._previewDiv;
+                const tabularDiv = this._tabularDiv;
+                console.log("switchViews", activeView)
+
+                if(activeView === "previewDiv")
+                {
+                    this.switchViews(tabularDiv, previewDiv);
+                }else if(activeView === "tabularDiv")
+                {
+                    this.switchViews(previewDiv, tabularDiv);
+                }else {
+                    console.log("switchViews", activeView)
+                }
             },
             switchViews: function(fadeOutNode, fadeInNode){
                 // Use the fade animation from the dojo/fx module
@@ -375,6 +550,8 @@ define(['dojo/_base/declare',
                     this._createEntry.unload();
                 }
 
+
+                //This should be an array of handles that get dealt with by superClass
                 if(this.availableEntriesWatchHandle && this.availableEntriesWatchHandle.unwatch)
                 {
                     this.availableEntriesWatchHandle.unwatch()
@@ -388,6 +565,11 @@ define(['dojo/_base/declare',
 
                 }
 
+                if(this.captureSetsWatchHandle && this.captureSetsWatchHandle.unwatch)
+                {
+                    this.captureSetsWatchHandle.unwatch()
+
+                }
 
                 for (const entryWidget in this._EntryWidgets) {
                     this._EntryWidgets[entryWidget].unload();

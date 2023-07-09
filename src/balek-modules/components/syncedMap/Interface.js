@@ -46,7 +46,12 @@ define(['dojo/_base/declare',
                     this._objects[name.toString()] =newState;
 
                     if(this._stateWatcher !== null){
-                        this._stateWatcher(name.toString(), oldState, newState);
+                        if(typeof this._stateWatcher === 'function'){
+                            this._stateWatcher(name.toString(), oldState, newState);
+                        }else{
+                            //debugger;
+                            console.log("SyncedMap this._stateWatcher 🛑🛑🛑🛑",this._stateWatcher);
+                        }
                     }
 
                 }

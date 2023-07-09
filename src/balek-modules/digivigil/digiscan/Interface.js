@@ -1,6 +1,8 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
+        'dojo/Stateful',
+
 
         "dojo/dom-construct",
         'dojo/dom-style',
@@ -13,7 +15,7 @@ define(['dojo/_base/declare',
         'balek-modules/components/syncedCommander/Interface',
         'balek-modules/components/syncedMap/Interface',
     ],
-    function (declare, lang, topic, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, MainInterface, _SyncedCommanderInterface, SyncedMapInterface) {
+    function (declare, lang, topic, Stateful, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, MainInterface, _SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleDigivigilDigiscanInterface",   _SyncedCommanderInterface, {
             _instanceKey: null,
@@ -22,10 +24,22 @@ define(['dojo/_base/declare',
             workspaceManagerCommands: null,
 
             availableEntries: null,
+            interestedCaptures: null,
+            captureSets: null,
+            captureSetsSyncedMap: null,
+            captureSetsWatchHandle: null,
+
+
             uiState: null,
+            uiStateSyncedMap: null,
+            uiStateWatchHandle: null,
 
             availableEntriesResolveRequests: null,
+            interestedCapturesResolveRequests: null,
+            captureSetsResolveRequests: null,
             uiStateResolveRequests: null,
+
+
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
@@ -34,7 +48,16 @@ define(['dojo/_base/declare',
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
                 this.availableEntriesResolveRequests = []
+                this.interestedCapturesResolveRequests = []
+                this.captureSetsResolveRequests = []
                 this.uiStateResolveRequests = []
+
+
+                let CaptureSetsState = declare([Stateful], {});
+                this.captureSets = CaptureSetsState()
+
+                let UIState = declare([Stateful], {});
+                this.uiState = UIState()
             },
             //##########################################################################################################
             //Event Functions Section
@@ -49,17 +72,41 @@ define(['dojo/_base/declare',
                         this.availableEntries = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
                         for( const ResolveKey in this.availableEntriesResolveRequests)
                         {
-                            Resolve(this.availableEntries[ResolveKey])
+                           this.availableEntries[ResolveKey](this.availableEntries)
+                        }
+                    }
+                } else if (name === "interestedCapturesComponentKey") {
+                    //Create availableEntries SyncedMap
+                    if(this.interestedCaptures === null){
+                        this.interestedCaptures = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        for( const ResolveKey in this.interestedCapturesResolveRequests)
+                        {
+                            this.interestedCapturesResolveRequests[ResolveKey](this.interestedCaptures)
+                        }
+                    }
+                }
+                else if (name === "captureSetsComponentKey") {
+                    //Create availableEntries SyncedMap
+                    if(this.captureSetsSyncedMap === null){
+                        this.captureSetsSyncedMap = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        this.captureSetsWatchHandle = this.captureSetsSyncedMap.setStateWatcher(lang.hitch(this,this.onCaptureSetStateChange))
+
+                        for( const ResolveKey in this.captureSetsResolveRequests)
+                        {
+                            this.captureSetsResolveRequests[ResolveKey](this.captureSets)
                         }
                     }
                 }
                 else if (name === "uiStateComponentKey") {
                     //Create availableEntries SyncedMap
-                    if(this.uiState === null){
-                        this.uiState = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                        for( const ResolveKey in this.availableEntriesResolveRequests)
+                    if(this.uiStateSyncedMap === null){
+                        this.uiStateSyncedMap = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+
+                        this.uiStateWatchHandle = this.uiStateSyncedMap.setStateWatcher(lang.hitch(this,this.onUIStateChange))
+
+                        for( const ResolveKey in this.uiStateResolveRequests)
                         {
-                            Resolve(this.availableEntries[ResolveKey])
+                           this.uiStateResolveRequests[ResolveKey](this.uiState)
                         }
                     }
                 }
@@ -95,6 +142,12 @@ define(['dojo/_base/declare',
                     }
                 }
             },
+            onUIStateChange: function(name, oldValue, newValue){
+                this.uiState.set(name, newValue);
+            },
+            onCaptureSetStateChange: function(name, oldValue, newValue){
+                this.captureSets.set(name, newValue);
+            },
             //##########################################################################################################
             //Interface Functions Section
             //##########################################################################################################
@@ -105,6 +158,27 @@ define(['dojo/_base/declare',
                     }else
                     {
                         Resolve(this.availableEntries)
+                    }
+                }))
+            },
+            getInterestedCaptures: function()
+            {
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    if(this.interestedCaptures == null){
+                        this.interestedCapturesResolveRequests.push(Resolve)
+                    }else
+                    {
+                        Resolve(this.interestedCaptures)
+                    }
+                }))
+            },
+            getCaptureSets: function(){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    if(this.captureSets == null){
+                        this.captureSetsResolveRequests.push(Resolve)
+                    }else
+                    {
+                        Resolve(this.captureSets)
                     }
                 }))
             },
@@ -119,11 +193,53 @@ define(['dojo/_base/declare',
                 }))
             },
 
+            newAllSet : function(setName, resultCallback) {
+                this._instanceCommands.newAllSet(setName).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#newAllSet", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#newAllSet", "newAllSet Received Error Response" + commandErrorResults);
+                });
+            },
+            newClearSet : function(setName, resultCallback){
+                this._instanceCommands.newClearSet(setName).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#newClearSet", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#newClearSet", "newClearSet Received Error Response" + commandErrorResults);
+                });
+            },
+            deleteCaptureSet : function(id){
+                this._instanceCommands.deleteCaptureSet(id).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#deleteCaptureSet", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#deleteCaptureSet", "deleteCaptureSet Received Error Response" + commandErrorResults);
+                });
+            },
+            selectCaptureSet: function(id){
+                this._instanceCommands.selectCaptureSet(id).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#selectCaptureSet", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#selectCaptureSet", "selectCaptureSet Received Error Response" + commandErrorResults);
+                });
+            },
+
             sendEntry: function (digiscanEntry) {
                 this._instanceCommands.addCapture(digiscanEntry).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#ADDENTRY", commandReturnResults)
                 })).catch(function(commandErrorResults){
                     console.log("#ADDENTRY", "ADDENTRY Received Error Response" + commandErrorResults);
+                });
+            },
+            removeCaptureFromSet: function(captureSetID, captureID, resultCallback) {
+                console.log("#removeCaptureFromSet", captureSetID, captureID, resultCallback)
+
+                this._instanceCommands.removeCaptureFromSet(captureSetID, captureID).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#removeCaptureFromSet", commandReturnResults)
+
+                    resultCallback(commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#removeCaptureFromSet", "removeCaptureFromSet Received Error Response" + commandErrorResults);
+                    resultCallback(commandReturnResults)
+
                 });
             },
             removeAllCaptures: function () {
@@ -133,6 +249,20 @@ define(['dojo/_base/declare',
                     console.log("#Removed ALl Captures", "Removed ALl Captures Received Error Response" + commandErrorResults);
                 });
             },
+            showHiddenCaptures: function(showHidden){
+                this._instanceCommands.showHiddenCaptures(showHidden).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#showHiddenCaptures", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#showHiddenCaptures", "Received Error Response" + commandErrorResults);
+                });
+            },
+            // setCaptureUninterested(CaptureID) {
+            //     this._instanceCommands.setCaptureUninterested(CaptureID).then(lang.hitch(this, function(commandReturnResults){
+            //         console.log("#setCaptureUninterested", commandReturnResults)
+            //     })).catch(function(commandErrorResults){
+            //         console.log("#setCaptureUninterested", "Received Error Response" + commandErrorResults);
+            //     });
+            // },
             setUIActiveView(activeView) {
                 this._instanceCommands.setUIActiveView(activeView).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#Set Active View", commandReturnResults)
@@ -141,6 +271,11 @@ define(['dojo/_base/declare',
                 });
             },
             unload: function () {
+                this.uiStateWatchHandle.unwatch()
+                this.uiStateWatchHandle.remove()
+
+                this.captureSetsWatchHandle.remove()
+
                 this._mainInterface.unload();
             }
         });

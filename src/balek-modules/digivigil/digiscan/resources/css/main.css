@@ -105,6 +105,13 @@ text-align:center
     border-radius:5px;
     /*background: rgba(185, 217, 232, 0.2)*/
 }
+
+.digivigilDigiscanMainInterfaceActiveViewControl:hover{
+    border: solid rgba(123, 131, 134, 0.8) 1px;
+    border-radius:5px;
+    background: rgba(185, 217, 232, 0.2)
+}
+
 .digivigilDigiscanMainInterfaceActiveViewControlButton{
 
     background: transparent;
@@ -296,10 +303,12 @@ line-height: 50px;
     right: -3px;
     bottom: -3px;
     overflow: hidden;
+
+    background-color: rgba(255,255,255,0.7);
 }
 
 .digivigilDigiscanMainInterfaceBackgroundDivImage{
-   opacity: .4;
+   opacity: .2;
     position: absolute;
     top: 0;
     left: 0;

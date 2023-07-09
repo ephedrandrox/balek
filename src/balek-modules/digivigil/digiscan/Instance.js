@@ -17,6 +17,10 @@ define(['dojo/_base/declare',
             _moduleController: null,
 
             availableEntries: null,             //SyncedMapInstance
+         //   interestedCaptures: null,
+
+            captureSets: null,
+
             uiState: null, //SyncedMapInstance
 
 
@@ -28,16 +32,41 @@ define(['dojo/_base/declare',
 
                 //set setRemoteCommander commands
                 this._commands={
+                    //captures
                     "addCapture" : lang.hitch(this, this.addCapture),
                     "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures),
+                    //"setCaptureUninterested" : lang.hitch(this, this.setCaptureUninterested),
+                    //uiState Update Commands
+                    "setUIActiveView" : lang.hitch(this, this.setUIActiveView),
+                    "showHiddenCaptures": lang.hitch(this, this.showHiddenCaptures),
+                    //CaptureSets
+                    "newAllSet" : lang.hitch(this, this.newAllSet),
+                    "newClearSet" : lang.hitch(this, this.newClearSet),
+                    "deleteCaptureSet" : lang.hitch(this, this.deleteCaptureSet),
+                    "selectCaptureSet" : lang.hitch(this, this.selectCaptureSet),
+                    "removeCaptureFromSet": lang.hitch(this, this.removeCaptureFromSet),
 
-                    "setUIActiveView" : lang.hitch(this, this.setUIActiveView)
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
 
+
+
+                // this.interestedCaptures = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                // this._interfaceState.set("interestedCapturesComponentKey", this.interestedCaptures._componentKey);
+
+
+
+                this.captureSets = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("captureSetsComponentKey", this.captureSets._componentKey);
+
+                this.captureSets.relayState(this._moduleController.getCaptureSets())
+
                 this.uiState = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this.uiState.add("ActiveView", "previewDiv")
+
+
                 this._interfaceState.set("uiStateComponentKey", this.uiState._componentKey);
 
 
@@ -63,6 +92,7 @@ define(['dojo/_base/declare',
                     if(typeof value !== 'function' && value._id && value._id.toString() == key){
                         console.log("adding Entries from controller entries State", key, value)
                         this.availableEntries.add(key, value );
+                       // this.interestedCaptures.add(value.entry.id, value.entry.id );
                     }
                 }
                 //set and watch the Controller Entries State
@@ -73,12 +103,30 @@ define(['dojo/_base/declare',
             },
             onControllerEntriesStateChange: function (name, oldState, newState) {
                 //When a new entry becomes available, add it to our Available State
+                //check this is our users capture
                 this.availableEntries.add(name, newState );
+                this._moduleController.addCaptureToAllCaptureSets(name, newState)
+                // if(this.interestedCaptures.add !== null){
+                //     this.interestedCaptures.add(name, name );
+                //
+                // }else {
+                //     console.log("Not setting InterestedCaptures")
+                // }
+
             },
             addCapture: function(Entry, resultCallback){
                 console.log("addCapture Entry:", Entry)
                 this._moduleController.addCapture(Entry).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            addCaptureSet: function(CaptureSet, resultCallback){
+                console.log("addCaptureSet:", CaptureSet)
+                this._moduleController.addCaptureSet(CaptureSet).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
                 }))
@@ -99,6 +147,12 @@ define(['dojo/_base/declare',
                     resultCallback({Error: Error})
                 }))
             },
+            // setCaptureUninterested:  function(captureID, resultCallback){
+            //     console.log("setCaptureUninterested Entry", captureID)
+            //     resultCallback({SUCCESS: "set interested"})
+            //
+            //     this.interestedCaptures.add(captureID.toString(), null )
+            // },
             setUIActiveView: function(activeView, resultCallback){
 
                 if(typeof activeView === "string"){
@@ -106,6 +160,98 @@ define(['dojo/_base/declare',
                     resultCallback({SUCCESS: "set"})
                 }else{
                     resultCallback({ERROR : "instance -> setUIActiveView: activeView is not a string"})
+                }
+            },
+            //interface Command
+            newAllSet : function(setName, resultCallback) {
+                this.createCaptureSet(setName, true, resultCallback)
+            },
+            //interface Command
+            newClearSet : function(setName, resultCallback){
+                this.createCaptureSet(setName, false, resultCallback)
+            },
+            //Called from interface Commands
+            createCaptureSet : function(name, appendAll, resultCallback){
+
+
+                if(typeof name === "string" && typeof appendAll === "boolean"){
+
+                    let captures = this.createInitialCaptureSetCaptures(appendAll)
+                    this.addCaptureSet({name: name, appendAll: appendAll, captures: captures}, resultCallback)
+                    resultCallback({SUCCESS: "New Capture Set " + name + "added successfully"})
+                }else{
+                    resultCallback({ERROR : "instance -> newAllSet: setName is not a string"})
+                }
+            },
+            removeCaptureFromSet: function(captureSetID, captureID, resultCallback){
+
+                console.log("removeCaptureFromSet",captureSetID, captureID, resultCallback )
+
+                //resultCallback({  SUCCESS : "instance -> removeCapture"})
+
+                if(typeof captureSetID === "string" && typeof captureID === "string" && typeof resultCallback === "function"){
+                    console.log("removeCaptureFromSet2",captureSetID, captureID, resultCallback )
+
+                    this._moduleController.removeCaptureFromSet(captureSetID, captureID ).then(lang.hitch(this, function(Result){
+                        resultCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this, function(Error){
+                        console.log("removeCaptureFromSetError",captureSetID, captureID, resultCallback )
+
+                        resultCallback({Error: Error})
+                    }))
+
+
+                }else{
+                    resultCallback({ERROR : "instance -> deleteCaptureSet: id is not a string"})
+                }
+
+
+            },
+            showHiddenCaptures: function (showHidden, resultCallback){
+                if(typeof showHidden === "boolean" && typeof resultCallback === "function") {
+                    this.uiState.add("showHiddenCaptures", showHidden)
+                }
+            },
+
+            createInitialCaptureSetCaptures: function(appendAll)
+            {
+                let captures = {}
+                if(appendAll === true){
+
+                    this.availableEntries.forEach(function (key, value){
+                        captures[key] = {inSet: true}
+                    })
+
+                }
+
+                return captures
+            },
+            deleteCaptureSet : function(id, resultCallback){
+                if(typeof id === "string" && typeof resultCallback === "function"){
+                    this._moduleController.deleteCaptureSet(id).then(lang.hitch(this, function(Result){
+                        this.captureSets.add(id, null)
+                        resultCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this, function(Error){
+                        resultCallback({Error: Error})
+                    }))
+
+
+                }else{
+                    resultCallback({ERROR : "instance -> deleteCaptureSet: id is not a string"})
+                }
+            },
+            selectCaptureSet : function(id, resultCallback){
+                if(typeof id === "string" && typeof resultCallback === "function"){
+
+this.uiState.add("selectedCaptureSet", id)
+
+
+                        resultCallback({SUCCESS: "selectCaptureSet selected" + id})
+
+
+
+                }else{
+                    resultCallback({ERROR : "instance -> selectCaptureSet: id is not a string"})
                 }
             },
 

@@ -1,0 +1,65 @@
+.digivigilDigiscanSetControl {
+
+   }
+
+.digivigilDigiscanSetControlButtonImage {
+width: 20px;
+    height: 20px;
+    border: solid black 2px;
+}
+
+
+.digivigilDigiscanSetControlSelectButton{
+    display: inline-block;
+
+    cursor: pointer;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+
+
+.digivigilDigiscanSetControlNewSetButton{
+    display: inline-block;
+
+    cursor: pointer;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+
+
+
+.digivigilDigiscanSetControlSetSelector{
+    display: inline-block;
+
+    cursor: pointer;
+
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid white 1px;
+
+}
+
+.digivigilDigiscanSetControlSelectButton:hover {
+    display: inline-block;
+    background: white;
+    color: black;
+}
+.digivigilDigiscanSetControlSelectButton:hover {
+    display: inline-block;
+    background: RGBA(1,1,1,0.4);
+    color: black;
+}
+
+
+.digivigilDigiscanSetControlSelectedSet{
+    background: RGBA(1,1,1,0.8);
+    border-right: solid white 1px;
+    border-left: solid white 1px;
+}
+
+
