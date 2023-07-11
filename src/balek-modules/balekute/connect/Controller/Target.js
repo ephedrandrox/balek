@@ -36,7 +36,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
 
-                    console.log(this.key, targetKey, signature, deviceInfo)
                     if (targetKey == this.key && this.targetState.get('status') == "waiting"
                         && typeof signature == 'string' && typeof deviceInfo == 'object') {
                         const publicSigningKey = deviceInfo.publicSigningKey
@@ -95,22 +94,14 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 console.log("No User to activate")
                             }
                         }));
-                        //  console.log("SessionKey:", this.sessionKey, deviceInfo)
 
-                        //   console.log("SessionKey:", this.sessionKey, deviceInfo, device, targetSession, targetSessionWSSConnection)
-                        // get user info for creditials
-                        //add with wssconnection and sessionkey
-                        //request creditial update
                     }
-
 
 
                 }else{
                     console.log("getOwnerUserKey return no value");
-
                 }
-                ///get device Owner
-                //set session to owner
+
             },
             getKey: function(){
                 return this.key;

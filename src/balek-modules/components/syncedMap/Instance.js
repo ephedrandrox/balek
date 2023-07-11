@@ -57,7 +57,7 @@ define(['dojo/_base/declare',
 
                         if(typeof value === 'object' && key !== '_attrPairNames'
                             && key !== 'componentKey' && key !== 'Module' ){
-                            console.log("resetting", key, value)
+                            console.log("SyncedMap Instance foreach doing", key, value)
                             doThis(key, value)
                         }
                     }

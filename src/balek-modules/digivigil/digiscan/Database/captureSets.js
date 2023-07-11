@@ -6,7 +6,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic,  digivigilDatabaseController, mongodbNodeObject) {
         return declare("moduleDigivigilDigiscanCaptureSetsDatabaseController", [digivigilDatabaseController], {
-            _Collection: "DigiscanCaptureSets",   //Mongo Collection Name
+            _Collection: "ScapturaCaptureSets",   //Mongo Collection Name
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
@@ -128,10 +128,6 @@ define(['dojo/_base/declare',
                                     Reject({ error: "Could not update CaptureSet" });
                                 }
                             }));
-
-
-
-
 
 
                         } else {

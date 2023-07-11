@@ -174,10 +174,10 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             onAvailableEntriesStateChange: function (name, oldState, newState) {
                 let id = name.toString()
-                if( newState !== null && newState.entry)
+                if( newState !== null && newState.capture)
                 {
 
-                    this.entries[id] = newState.entry
+                    this.entries[id] = newState.capture
                     this.addOrUpdateEntryWidget(id)
 
 
@@ -202,7 +202,7 @@ define(['dojo/_base/declare',
                 console.log("onInterestedCapturesStateChange: name, oldState, newState",name, oldState, newState)
 
                 let id = name.toString()
-                if( newState !== null && newState.entry)
+                if( newState !== null && newState.capture)
                 {
 
                    // this.entries[id] = newState.entry
@@ -394,26 +394,28 @@ define(['dojo/_base/declare',
                     console.log("🚧🚧updatePreviewView", selectedCaptureSetID,selectedCaptureSet)
 
                     if(selectedCaptureSet && selectedCaptureSet.CaptureSet
-                    && typeof selectedCaptureSet.CaptureSet.name === "string")
+                    && typeof selectedCaptureSet.CaptureSet.name === "string"
+                        && typeof selectedCaptureSet.CaptureSet.appendAll === "boolean")
                     {
                         this._statusDiv.innerHTML = selectedCaptureSet.CaptureSet.name
+
+
                         let captures = selectedCaptureSet.CaptureSet.captures ? selectedCaptureSet.CaptureSet.captures : {}
+                        let appendCaptures = selectedCaptureSet.CaptureSet.appendAll
                         let availableCaptures = this._interface.availableEntries
                         let visibleCaptureViews = {}
                         console.log("🚧🚧checking list", captures,availableCaptures)
-                        this._previewDiv.innerHTML = ""
-                        availableCaptures.forEach( lang.hitch(this, function (key, value) {
-                            if(captures[key]){
-                                if( captures[key].inSet === true || showHiddenCaptures )
-                                {
-                                    captureView = this.getCaptureView(key)
-                                    domConstruct.place(captureView.domNode, this._previewDiv);
-                                }
+                        domConstruct.empty(this._previewDiv)
 
-                            }else {
-                                //fix this on the backend
-                                console.log("🚧🚧no!", key, value)
+                        availableCaptures.forEach( lang.hitch(this, function (key, value) {
+                            console.log("🚧🚧availableCaptures.forEach", key, value, captures, selectedCaptureSet)
+
+                            if (showHiddenCaptures || (captures[key] && captures[key].inSet === true)
+                                || (!captures[key] && appendCaptures)){
+                                captureView = this.getCaptureView(key)
+                                domConstruct.place(captureView.domNode, this._previewDiv);
                             }
+
                         }));
 
                         console.log("🚧🚧visibleCaptureViews list" , visibleCaptureViews)
@@ -431,7 +433,7 @@ define(['dojo/_base/declare',
                 if (!(this._EntryWidgets[id])) {
                     this._EntryWidgets[id] = new listItem({
                         _interfaceKey: this._interfaceKey,
-                        itemData: this.entries[id],
+                        //itemData: this.entries[id],
                         interfaceCommands: this._interface,
                         captureID: id
 

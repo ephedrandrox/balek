@@ -9,6 +9,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
         'balek-modules/balekute/connect/Database/devices',
 
+        'balek-modules/balekute/connect/Controller/instanceCommands',
+
         'balek-server/users/usersController/instanceCommands',
 
         'dojo/node!qrcode-terminal',
@@ -19,11 +21,14 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
     ],
     function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase,
+              InstanceCommands,
               UsersControllerInstanceCommands,
               qrcode, fsNodeObject, crypto, os
  ) {
         return declare("balekuteConnectController", null, {
             _module: null,
+
+            _instanceCommands: null,
 
             _invitations: null,
             _invitationStates: null,
@@ -43,6 +48,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             usersControllerCommands: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                this._instanceCommands = new InstanceCommands();
+                this._instanceCommands.setCommand("getDeviceByPublicSigningKey", lang.hitch(this,this.getDeviceByPublicSigningKey));
+                this._instanceCommands.setCommand("verifySignedString", lang.hitch(this,this.verifySignedString));
+
+                this._instanceCommands.setCommand("getStringHash", lang.hitch(this,this.getStringHash));
+
+
+                this._instanceCommands.initialize();
+
+
 
                 let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
                 this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
@@ -458,6 +474,38 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         }
                     }
                 }));
+            },
+            getStringHash: function(stringToCheck){
+               return crypto.createHash('sha256').update(stringToCheck).digest('hex');
+
+            },
+            verifySignedString: function(stringToVerify, signature, publicKey)
+            {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+
+                    console.log("🤖🤖",stringToVerify, signature, publicKey )
+                    if (typeof stringToVerify === 'string' &&
+                        typeof signature === 'string' &&
+                        typeof publicKey === 'string' ) {
+
+                        const message = Uint8Array.from(Buffer.from(stringToVerify, 'utf8'))
+                        const publicKeyBuf = new Buffer(publicKey.toString('ascii'), 'ascii')
+                        const signatureBuf = new Buffer(atob(signature).toString('ascii'), 'ascii')
+                        const verifier = crypto.createVerify('sha256')
+
+                        verifier.update(message, 'utf8')
+
+                        const result = verifier.verify(publicKeyBuf, signatureBuf)
+
+                        if (result) {
+                            Resolve("Success")
+                        } else {
+                            Reject({Error: "Verification Failed" })
+                        }
+                    } else {
+                        Reject({Error: "Failed: verifySignedString expects three strings" })
+                    }
+                }))
             }
         });
     }

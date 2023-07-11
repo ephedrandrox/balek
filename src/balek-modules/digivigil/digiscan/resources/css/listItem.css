@@ -14,41 +14,47 @@
     /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
 /*border: solid white 2px;*/
 
-    filter: drop-shadow(5px 5px 10px #000);
+    /*filter: drop-shadow(5px 5px 10px #000);*/
+    -webkit-box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
+}
 
+.digivigilDigiscanCaptureViewInterfaceNoteText {
+    color: black;
+}
+
+.digivigilDigiscanCaptureViewInterfaceText {
+color: pink;
+}
+
+.digivigilDigiscanCaptureViewInterfaceRecognizedText {
+    color: white;
+    white-space: pre-wrap;
 }
 
 .digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
     position: relative;
     display: block;
-    /*float: right;*/
     background: none;
     border-radius: 5px;
     padding: 10px;
     font-family: monospace;
 
     padding-right: 20px;
-    /*white-space: pre-wrap;*/
-    /*word-break: break-all;*/
+
 }
 
 
 .digivigilDigiscanCaptureViewInterfaceBarcodeDiv {
     position: relative;
     display: block;
-    /*float: left;*/
-    /*background: rgba(106, 178, 238, 0.86);*/
-
-    /*border: solid #c2c2c2 2px;*/
-
     color: white;
     background: black;
-
     align-items: right;
     text-align: right;
-
     line-height: 20px;
-
+    min-height: 20px;
     padding: 3px;
 
 }
@@ -108,6 +114,7 @@
     color: black;
     background: rgba(249, 255, 172, 0.95);
     padding: 10px;
+    min-height: 20px;
 
 
     border-radius: 0 0 15px 15px;

@@ -5,10 +5,12 @@ define(['dojo/_base/declare',
         'balek-modules/digivigil/digiscan/Instance/main',
         //Balek Components
         'balek-modules/components/syncedCommander/Instance',
-        'balek-modules/components/syncedMap/Instance',],
+        'balek-modules/components/syncedMap/Instance',
+        'balek-server/session/sessionsController/instanceCommands'
+    ],
     function (declare, lang, topic,
               MainInstance,
-              _SyncedCommanderInstance, SyncedMapInstance) {
+              _SyncedCommanderInstance, SyncedMapInstance, SessionsControllerInstanceCommands) {
 
         return declare("moduleDigivigilDigiscanInstance", _SyncedCommanderInstance, {
             _instanceKey: null,
@@ -16,6 +18,8 @@ define(['dojo/_base/declare',
             _module: null,
             _moduleController: null,
 
+
+            userCaptures: null, //if session has user key then this is dojo Stateful
             availableEntries: null,             //SyncedMapInstance
          //   interestedCaptures: null,
 
@@ -30,11 +34,20 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
                 console.log("moduleDigivigilDigiscanInstance starting...");
 
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
+
+
+
+
+
                 //set setRemoteCommander commands
                 this._commands={
                     //captures
                     "addCapture" : lang.hitch(this, this.addCapture),
                     "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures),
+                    "getCaptureSyncedMap" : lang.hitch(this, this.getCaptureSyncedMap),
+
                     //"setCaptureUninterested" : lang.hitch(this, this.setCaptureUninterested),
                     //uiState Update Commands
                     "setUIActiveView" : lang.hitch(this, this.setUIActiveView),
@@ -51,12 +64,11 @@ define(['dojo/_base/declare',
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
 
-
-
-                // this.interestedCaptures = new SyncedMapInstance({_instanceKey: this._instanceKey});
-                // this._interfaceState.set("interestedCapturesComponentKey", this.interestedCaptures._componentKey);
-
-
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+                if (userKey != null ) {
+                    this.userCaptures = this._moduleController.getCapturesForUser(userKey)
+                    this.availableEntries.relayState(this.userCaptures)
+                }
 
                 this.captureSets = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("captureSetsComponentKey", this.captureSets._componentKey);
@@ -84,36 +96,44 @@ define(['dojo/_base/declare',
                      sessionKey: this.mainInstance._sessionKey,
                      componentKey: this.mainInstance._componentKey});
 
-                //Get Controller Entries State
-                let Entries = this._moduleController.getCaptures()
-                //Add all Controller Entries to our Available Entries
-                for (const key in Entries) {
-                    let value = Entries[key]
-                    if(typeof value !== 'function' && value._id && value._id.toString() == key){
-                        console.log("adding Entries from controller entries State", key, value)
-                        this.availableEntries.add(key, value );
-                       // this.interestedCaptures.add(value.entry.id, value.entry.id );
-                    }
-                }
-                //set and watch the Controller Entries State
-                this.controllerEntries = Entries
-                this.controllerEntriesWatchHandle = Entries.watch(lang.hitch(this, this.onControllerEntriesStateChange))
+
+                // if(this.userCaptures !== null){
+                //   //  this.availableEntries.relayState(this.userCaptures)
+                // }else{
+                //     //Get Controller Entries State
+                //     let Entries = this._moduleController.getCaptures()
+                //     //Add all Controller Entries to our Available Entries
+                //     for (const key in Entries) {
+                //         let value = Entries[key]
+                //         if(typeof value !== 'function' && value._id && value._id.toString() == key){
+                //             console.log("adding Entries from controller entries State", key, value)
+                //             this.availableEntries.add(key, value );
+                //             // this.interestedCaptures.add(value.entry.id, value.entry.id );
+                //         }
+                //     }
+                //     //set and watch the Controller Entries State
+                //     this.controllerEntries = Entries
+                //     this.controllerEntriesWatchHandle = Entries.watch(lang.hitch(this, this.onControllerEntriesStateChange))
+                // }
+
                 this._interfaceState.set("Status", "Ready");
 
             },
-            onControllerEntriesStateChange: function (name, oldState, newState) {
-                //When a new entry becomes available, add it to our Available State
-                //check this is our users capture
-                this.availableEntries.add(name, newState );
-                this._moduleController.addCaptureToAllCaptureSets(name, newState)
-                // if(this.interestedCaptures.add !== null){
-                //     this.interestedCaptures.add(name, name );
-                //
-                // }else {
-                //     console.log("Not setting InterestedCaptures")
-                // }
-
-            },
+            // onControllerEntriesStateChange: function (name, oldState, newState) {
+            //     //When a new entry becomes available, add it to our Available State
+            //     //check this is our users capture
+            //     this.availableEntries.add(name, newState );
+            //
+            //
+            //     //this._moduleController.addCaptureToAllCaptureSets(name, newState)
+            //     // if(this.interestedCaptures.add !== null){
+            //     //     this.interestedCaptures.add(name, name );
+            //     //
+            //     // }else {
+            //     //     console.log("Not setting InterestedCaptures")
+            //     // }
+            //
+            // },
             addCapture: function(Entry, resultCallback){
                 console.log("addCapture Entry:", Entry)
                 this._moduleController.addCapture(Entry).then(lang.hitch(this, function(Result){
@@ -142,6 +162,16 @@ define(['dojo/_base/declare',
 
                     }))
                     console.log("resultCallbacked after ",Result)
+
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+
+            getCaptureSyncedMap: function(captureID, resultCallback){
+                console.log("getCaptureSyncedMap:", captureID)
+                this._moduleController.getCaptureSyncedMap(captureID, this._instanceKey).then(lang.hitch(this, function(Result){
+                    resultCallback(Result)
 
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
@@ -195,7 +225,7 @@ define(['dojo/_base/declare',
                     this._moduleController.removeCaptureFromSet(captureSetID, captureID ).then(lang.hitch(this, function(Result){
                         resultCallback({SUCCESS: Result})
                     })).catch(lang.hitch(this, function(Error){
-                        console.log("removeCaptureFromSetError",captureSetID, captureID, resultCallback )
+                        console.log("removeCaptureFromSetError",captureSetID, captureID, Error )
 
                         resultCallback({Error: Error})
                     }))
@@ -218,9 +248,21 @@ define(['dojo/_base/declare',
                 let captures = {}
                 if(appendAll === true){
 
-                    this.availableEntries.forEach(function (key, value){
-                        captures[key] = {inSet: true}
-                    })
+
+
+                    for (const captureID in this.userCaptures) {
+                        if (this.userCaptures.hasOwnProperty(captureID)) {
+                            const checkSum = this.userCaptures.get(captureID);
+                            captures[captureID] = {inSet: true}
+                            // Do something with the property
+                            console.log("Property captureID:", captureID);
+                            console.log("Property checkSum:", checkSum);
+                        }
+                    }
+
+                    // this.availableEntries.forEach(function (key, value){
+                    //
+                    // })
 
                 }
 

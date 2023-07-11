@@ -12,14 +12,24 @@ define(['dojo/_base/declare',
 
         'balek-modules/digivigil/digiscan/Interface/main',
 
+        'balek-modules/digivigil/digiscan/Controller/Captures/Interface',
+
+
         'balek-modules/components/syncedCommander/Interface',
         'balek-modules/components/syncedMap/Interface',
     ],
-    function (declare, lang, topic, Stateful, domConstruct, domStyle, win, balekWorkspaceManagerInterfaceCommands, MainInterface, _SyncedCommanderInterface, SyncedMapInterface) {
+    function (declare, lang, topic, Stateful,
+              domConstruct, domStyle, win,
+              balekWorkspaceManagerInterfaceCommands,
+              MainInterface,
+              Captures,
+              _SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleDigivigilDigiscanInterface",   _SyncedCommanderInterface, {
             _instanceKey: null,
             _mainInterface: null,
+
+            _Captures: null,
 
             workspaceManagerCommands: null,
 
@@ -29,6 +39,9 @@ define(['dojo/_base/declare',
             captureSetsSyncedMap: null,
             captureSetsWatchHandle: null,
 
+
+            captureSyncedMaps: null,
+            captureSyncedMapWatchHandles: null,
 
             uiState: null,
             uiStateSyncedMap: null,
@@ -45,6 +58,13 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             constructor: function (args) {
                 declare.safeMixin(this, args);
+
+                this._Captures = new Captures({_interface: this})
+
+                this.captureSyncedMaps = {}
+                this.captureSyncedMapWatchHandles = {}
+
+
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
                 this.availableEntriesResolveRequests = []
@@ -191,6 +211,21 @@ define(['dojo/_base/declare',
                         Resolve(this.uiState)
                     }
                 }))
+            },
+
+            getCaptures: function(){
+                    return this._Captures
+            },
+
+            getCaptureSyncedMap : function(captureID , resultCallback){
+                this._instanceCommands.getCaptureSyncedMap(captureID).then(lang.hitch(this, function(commandReturnResults){
+
+                    console.log("#getCaptureSyncedMap", commandReturnResults)
+                    resultCallback(commandReturnResults)
+
+                })).catch(function(commandErrorResults){
+                    console.log("#getCaptureSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                });
             },
 
             newAllSet : function(setName, resultCallback) {

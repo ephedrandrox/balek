@@ -33,10 +33,17 @@ define(['dojo/_base/declare',
             _noteDiv: null,
             _mainCssString: mainCss,
 
+            _createdText: null,
+            _barcodeText: null,
+            _recognizedText: null,
+            _noteText: null,
+
             interfaceCommands: null,
 
             uiState: null,
             captureID: null,
+            captureState: null,
+            captureStateWatchHandle: null,
 
             constructor: function (args) {
 
@@ -54,7 +61,15 @@ define(['dojo/_base/declare',
                         minute: 'numeric'
                     });
 
-                    this.itemData.timeStamps.created = formattedDate
+                    //this.itemData.timeStamps.created = formattedDate
+
+                }
+
+
+
+                if(this.captureID && this.interfaceCommands){
+                    this.captureState =   this.interfaceCommands.getCaptures().getCaptureByID(this.captureID)
+                    this.captureStateWatchHandle = this.captureState.watch(lang.hitch(this, this.onCaptureStateChange))
 
                 }
 
@@ -64,15 +79,20 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            onCaptureStateChange: function(name, oldValue, newValue){
+                console.log("Captures synced onCaptureStateChange", name, oldValue, newValue)
+
+                this.reloadViewFromState()
+            },
             postCreate: function () {
                 dojoReady(lang.hitch(this, function () {
                     dijitFocus.focus(this.domNode);
                 }));
                 dijitFocus.focus(this.domNode);
-
-                if (this.itemData.note !== ""){
-                    domStyle.set(this._noteDiv, "display", "block")
-                }
+                this.reloadViewFromState()
+                // if (this.itemData.note !== ""){
+                //     domStyle.set(this._noteDiv, "display", "block")
+                // }
 
                 this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
                     console.log("getUIState", uiState)
@@ -87,6 +107,19 @@ define(['dojo/_base/declare',
             // {
             //       //  this.interfaceCommands.setCaptureUninterested(this.itemData.id)
             // },
+
+            reloadViewFromState: function()
+            {
+                const dateString = this.captureState.get("created");
+                const date = new Date(dateString);
+                const shortDateFormat = date.toLocaleDateString();
+
+                this._createdText.innerHTML = shortDateFormat;
+                this._barcodeText.innerHTML = this.captureState.get("barcode");
+                this._recognizedText.innerHTML = this.captureState.get("recognizedText");
+                this._noteText.innerHTML = this.captureState.get("note");
+
+            },
 
             onUninterestedClick: function(clickEvent){
                 console.log("onUninterestedClick", this.captureID)
@@ -108,6 +141,12 @@ define(['dojo/_base/declare',
                 //todo make it do something
             },
             unload: function () {
+
+                if(this.captureStateWatchHandle)
+                {
+                    this.captureStateWatchHandle.unwatch()
+                    this.captureStateWatchHandle.remove()
+                }
                 this.destroy();
             }
 

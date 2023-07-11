@@ -12,11 +12,15 @@ define(['dojo/_base/declare',
             _stateWatcher: null,
 
             constructor: function (args) {
+                console.log("Captures synced _componentKey", this )
+
                 declare.safeMixin(this, args);
                 console.log("moduleBaseSyncedMapInterface started");
               //  console.log("moduleBaseSyncedMapInterface started", this._componentKey, this._instanceKey);
                 this._objects = {};
                 if(!this._componentKey){
+                    console.log("Captures synced _componentKey", this )
+
                     this.sendInstanceCallbackMessage({
                         request: "Component Key",
                     }, lang.hitch(this, function (requestResults) {
@@ -25,6 +29,8 @@ define(['dojo/_base/declare',
                         this.askToConnectInterface();
                     }));
                 }else {
+                    console.log("Captures synced synced4 no keys", this )
+
                     this.askToConnectInterface();
                 }
 

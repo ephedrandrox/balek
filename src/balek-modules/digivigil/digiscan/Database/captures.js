@@ -4,12 +4,12 @@ define(['dojo/_base/declare',
         'balek-modules/digivigil/Database',
     ],
     function (declare, lang, topic,  digivigilDatabaseController) {
-        return declare("moduleDigivigilDigiscanEntriesDatabaseController", [digivigilDatabaseController], {
-            _Collection: "DigiscanEntries",   //Mongo Collection Name
+        return declare("moduleDigivigilScapturaCapturesDatabaseController", [digivigilDatabaseController], {
+            _Collection: "ScapturaCaptures",   //Mongo Collection Name
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilDigiscanEntriesDatabaseController starting...");
+                console.log("moduleDigivigilScapturaCapturesDatabaseController starting...");
                 this.checkAndCreateCollection();
             },
             checkAndCreateCollection: function()
@@ -32,7 +32,8 @@ define(['dojo/_base/declare',
 
                                     }else {
                                         console.log("Created Collection", collection);
-                                        collection.createIndex({"entry.id": 1}, {background: true, unique: true});
+                                        //todo create compound key with userKey
+                                        collection.createIndex({"capture.id": 1}, {background: true, unique: true});
                                     }
                                 }));
                             }
@@ -73,15 +74,15 @@ define(['dojo/_base/declare',
 
                 }));
             },
-            getEntry: function(id){
+            getCapture: function(id){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
                         console.log("Got Connection");
                         try{
                             let collection = devicesDatabase.collection(this._Collection)
                             if(collection && collection.find){
-                                const entryId = this.shared._DBConnection._objectIdConstructor(id)
-                                collection.findOne({_id: entryId},
+                                const captureId = this.shared._DBConnection._objectIdConstructor(id)
+                                collection.findOne({_id: captureId},
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
@@ -106,13 +107,14 @@ define(['dojo/_base/declare',
             addCapture: function(Capture)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    if(Capture && Capture.timeStamps && Capture.timeStamps.created && Capture.id  &&
-                        typeof Capture.recognizedText !== "undefined" &&
+                    if(Capture && Capture.created && Capture.id  && Capture.signature
+                        && Capture.signature && Capture.signature.Hash
+                        && typeof Capture.recognizedText !== "undefined" &&
                         typeof Capture.note !== "undefined")
                     {
                         let collection = this.shared._DBConnection._db.collection(this._Collection)
                         if(collection){
-                            collection.insertOne({entry: Capture}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({capture: Capture}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }
@@ -127,7 +129,7 @@ define(['dojo/_base/declare',
                             Reject({error: "Could not get Capture Collection while trying to add Capture to collection"});
                         }
                     }else{
-                        Reject({error: "Unexpected Digiscan Entry database addCapture()"});
+                        Reject({error: "Unexpected Capture database addCapture()"});
                     }
                 }));
             },
