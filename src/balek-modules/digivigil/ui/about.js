@@ -16,8 +16,8 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil/ui/input/getUserInput/resources/html/getUserInput.html',
-        'dojo/text!balek-modules/digivigil/ui/input/getUserInput/resources/css/getUserInput.css',
+        'dojo/text!balek-modules/digivigil/ui/about/resources/html/about.html',
+        'dojo/text!balek-modules/digivigil/ui/about/resources/css/about.css',
 
 
 
@@ -27,16 +27,12 @@ define(['dojo/_base/declare',
               dijitFocus, dojoReady, fx,  _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
-        return declare("diaplodeUIInputGetUserInput", [_WidgetBase, _TemplatedMixin], {
+        return declare("scapturaUIAbout", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             _menuKey: null,
             templateString: template,
-            baseClass: "diaplodeUIInputGetUserInput",
+            baseClass: "scapturaUIAbout",
 
-            question: null,
-            initialValue: "",
-            inputReplyCallback: null,
-            userInputValue: null,
 
             _mainCssString: mainCss,
 
@@ -57,7 +53,7 @@ define(['dojo/_base/declare',
 
             },
             _onFocus: function(){
-                this.userInputValue.focus();
+               // this.userInputValue.focus();
             },
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {

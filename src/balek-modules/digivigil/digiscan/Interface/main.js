@@ -22,6 +22,8 @@ define(['dojo/_base/declare',
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
 
+        'balek-modules/digivigil/ui/about',
+
 
         'dojo/text!balek-modules/digivigil/digiscan/resources/html/main.html',
         'dojo/text!balek-modules/digivigil/digiscan/resources/css/main.css',
@@ -31,7 +33,9 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, domClass, domStyle, domConstruct, win, fx, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, capturePreviewView, listControl, Tabular, TableModel, template,
+              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, capturePreviewView, listControl, Tabular, TableModel,
+              AboutUI,
+              template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
@@ -234,6 +238,10 @@ define(['dojo/_base/declare',
                     this.refreshViews()
                 }
 
+
+                if(name === "UIStatusText"){
+                    this._statusDiv.innerHTML = newState
+                }
             },
             onCaptureSetsChange: function (name, oldState, newState) {
 
@@ -319,7 +327,30 @@ define(['dojo/_base/declare',
                 this._interface.removeAllCaptures();
 
             },
-
+            _onSaveOver: function (eventObject) {
+                this.updateStatusText("Save captures as tab seperated text file")
+            },
+            _onCopyOver: function (eventObject) {
+                this.updateStatusText("Copy captures as tab seperated text")
+            },
+            _onRemoveOver: function (eventObject) {
+                this.updateStatusText("Remove all captures from database")
+            },
+            _onAboutClicked: function (eventObject) {
+                new AboutUI();
+            },
+            _onAboutOver: function (){
+                this.updateStatusText("About Scaptura")
+            },
+            _onMouseOutResetStatusText: function(){
+                this.updateStatusText("")
+            },
+            updateStatusText: function(newText){
+                if(this.uiState!==null && typeof newText === "string"){}
+                {
+                    this.uiState.set("UIStatusText", newText)
+                }
+            },
             _onSaveClicked: function (eventObject) {
                 let saleTagScanData =  Object.keys(this.entries).map(key => this.entries[key]);
 

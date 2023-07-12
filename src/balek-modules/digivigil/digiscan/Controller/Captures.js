@@ -107,7 +107,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 statefulCapture.set("created", Capture.capture.created);
                 statefulCapture.set("barcode", Capture.capture.barcode);
                 statefulCapture.set("recognizedText", Capture.capture.recognizedText);
-                statefulCapture.set("note", "note"+ Capture.capture.note);
+                statefulCapture.set("note", Capture.capture.note);
             },
 
             getCaptures: function() {
