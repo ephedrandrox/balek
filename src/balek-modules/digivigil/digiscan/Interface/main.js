@@ -17,8 +17,7 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil/digiscan/Interface/createEntry",
-        "balek-modules/digivigil/digiscan/Interface/listItem",
+        "balek-modules/digivigil/digiscan/Interface/capturePreviewView",
         'balek-modules/digivigil/digiscan/Interface/listControl',
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
@@ -32,7 +31,7 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, domClass, domStyle, domConstruct, win, fx, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, createEntry, listItem, listControl, Tabular, TableModel, template,
+              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, capturePreviewView, listControl, Tabular, TableModel, template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
         return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
@@ -45,7 +44,6 @@ define(['dojo/_base/declare',
 
             _previewDiv: null,                     //DomNode
             _tabularDiv: null, //DomNode
-            _createEntry: null,                 //Widget
             _tabularContainer: null, //DomNode
             _tabularStatus: null,
             _tabularOutput: null,
@@ -79,7 +77,6 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             constructor: function (args) {
                 this._interface = {};
-                this._createEntry = {};
                 this._digiscanData = {};
                 this._EntryWidgets = {};
 
@@ -269,7 +266,7 @@ define(['dojo/_base/declare',
             },
             addOrUpdateEntryWidget: function (id) {
                 if (!(this._EntryWidgets[id])) {
-                    this._EntryWidgets[id] = new listItem({
+                    this._EntryWidgets[id] = new capturePreviewView({
                         _interfaceKey: this._interfaceKey,
                         itemData: this.entries[id],
                         interfaceCommands: this._interface,
@@ -291,10 +288,7 @@ define(['dojo/_base/declare',
                     console.log("Removed ENtryWIdget", id);
                 }
             },
-            _onAddEntryClicked: function (eventObject) {
-                this._createEntry = new createEntry({_interface: this._interface});
-                topic.publish("displayAsDialog", this._createEntry);
-            },
+
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
                     case dojoKeys.ESCAPE:
@@ -413,6 +407,25 @@ define(['dojo/_base/declare',
                             if (showHiddenCaptures || (captures[key] && captures[key].inSet === true)
                                 || (!captures[key] && appendCaptures)){
                                 captureView = this.getCaptureView(key)
+
+
+
+                                if(!captures[key])
+                                {
+                                    //hopefully this doesn't happen but if it does, add to list
+                                }
+
+
+
+                                if(!captures[key].inSet)
+                                {
+                                    domClass.add(captureView.domNode, `${this.baseClass}CaptureNotInSet`)
+                                }else{
+                                    domClass.remove(captureView.domNode, `${this.baseClass}CaptureNotInSet`)
+                                }
+
+
+
                                 domConstruct.place(captureView.domNode, this._previewDiv);
                             }
 
@@ -431,7 +444,7 @@ define(['dojo/_base/declare',
                 console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
 
                 if (!(this._EntryWidgets[id])) {
-                    this._EntryWidgets[id] = new listItem({
+                    this._EntryWidgets[id] = new capturePreviewView({
                         _interfaceKey: this._interfaceKey,
                         //itemData: this.entries[id],
                         interfaceCommands: this._interface,
@@ -515,10 +528,6 @@ define(['dojo/_base/declare',
                 document.body.removeChild(element);
             },
             copyToClipboard: function (textToCopy){
-
-
-
-
                 let node = domConstruct.create("div");
                 node.innerHTML = "<pre>" + textToCopy +"</pre>";
                 domStyle.set(node, "display", "float");
@@ -548,9 +557,6 @@ define(['dojo/_base/declare',
             },
 
             unload: function () {
-                if (this._createEntry.unload) {
-                    this._createEntry.unload();
-                }
 
 
                 //This should be an array of handles that get dealt with by superClass

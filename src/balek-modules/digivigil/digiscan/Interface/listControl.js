@@ -58,17 +58,10 @@ define(['dojo/_base/declare',
             },
 
             onCaptureSetsChange: function (name, oldValue, newValue) {
-                console.log("onCaptureSecaptureSetcaptureSetcaptureSettsChangeonCaptureSetsChangeonCaptureSetsChange", name, oldValue, newValue)
-
                 this.refreshViews()
-
             },
             onUIStateChange: function( name, oldValue, newValue ) {
-                console.log("onUIStateChangeonUIStateChangeonUIStateChange", name, oldValue, newValue)
-
                 this.refreshViews()
-
-
             },
             postCreate: function () {
                 dojoReady(lang.hitch(this, function () {
@@ -80,8 +73,6 @@ define(['dojo/_base/declare',
                 if(this.listsController !== null && this.interfaceCommands !== null )
                 {
                     this.interfaceCommands.getCaptureSets().then(lang.hitch(this, function(captureSets){
-                        console.log("captureSetcaptureSetcaptureSet", captureSets)
-
                         this.captureSets = captureSets
                         this.captureSetsWatchHandle = this.captureSets.watch(lang.hitch(this, this.onCaptureSetsChange));
                         this.refreshViews()
@@ -90,8 +81,6 @@ define(['dojo/_base/declare',
                     }))
 
                     this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
-                        console.log("getUIState", uiState)
-
                         this.uiState = uiState
                         this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
                         this.refreshViews()
@@ -104,20 +93,18 @@ define(['dojo/_base/declare',
             },
             refreshViews: function()
             {
-                console.log("captureSetcaptureSetcaptureSetrefreshViewsrefreshViewsrefreshViews")
-
-
                 if(this.uiState != null) {
-
 
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
                     let showHiddenCaptures = this.uiState.get("showHiddenCaptures")
 
                     if(showHiddenCaptures){
-                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/erase.svg" )
-                    }else{
-                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/eraseFill.svg" )
+                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegridfill.svg" )
+                        domAttr.set(this.eraseButtonImage, "title", "Hide Captures not in Set" )
 
+                    }else{
+                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegrid.svg" )
+                        domAttr.set(this.eraseButtonImage, "title", "Show Captures not in Set" )
                     }
 
 

@@ -2,6 +2,11 @@ body {
 text-align:center
 }
 
+.digivigilDigiscanMainInterfaceCaptureNotInSet{
+    filter:grayscale(1)
+}
+
+
 .digivigilDigiscanMainInterfaceButton{
     background: transparent;
     cursor: pointer;
@@ -198,6 +203,9 @@ height: 50px;
 line-height: 50px;
     vertical-align: top;
     text-align: center;
+
+
+    transform: scale(0.5)
 }
 
 .digivigilDigiscanMainInterface{
@@ -281,6 +289,7 @@ line-height: 50px;
     overflow-y: scroll;
     z-index: 50;
 }
+
 
 .digivigilDigiscanMainInterfaceMainDiv{
     /*border: solid rgba(20, 75, 115, 0.8) 6px;*/

@@ -18,8 +18,8 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil/digiscan/resources/html/listItem.html',
-        'dojo/text!balek-modules/digivigil/digiscan/resources/css/listItem.css'
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/capturePreviewView.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/capturePreviewView.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
