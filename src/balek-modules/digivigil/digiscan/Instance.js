@@ -58,22 +58,31 @@ define(['dojo/_base/declare',
                     "deleteCaptureSet" : lang.hitch(this, this.deleteCaptureSet),
                     "selectCaptureSet" : lang.hitch(this, this.selectCaptureSet),
                     "removeCaptureFromSet": lang.hitch(this, this.removeCaptureFromSet),
+                    "addCaptureToSet": lang.hitch(this, this.addCaptureToSet),
+                    "getCaptureSetSyncedMap" : lang.hitch(this, this.getCaptureSetSyncedMap),
 
                 };
 
                 this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
 
+                this.captureSets = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("captureSetsComponentKey", this.captureSets._componentKey);
+
                 let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
                 if (userKey != null ) {
                     this.userCaptures = this._moduleController.getCapturesForUser(userKey)
                     this.availableEntries.relayState(this.userCaptures)
+
+                    this.userCaptureSets = this._moduleController.getCaptureSetsForUser(userKey)
+
+                    console.log("capt🔴🔴🤛", this.userCaptureSets)
+                    this.captureSets.relayState(this.userCaptureSets)
                 }
 
-                this.captureSets = new SyncedMapInstance({_instanceKey: this._instanceKey});
-                this._interfaceState.set("captureSetsComponentKey", this.captureSets._componentKey);
 
-                this.captureSets.relayState(this._moduleController.getCaptureSets())
+
+               // this.captureSets.relayState(this._moduleController.getCaptureSets())
 
                 this.uiState = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this.uiState.add("ActiveView", "previewDiv")
@@ -143,8 +152,10 @@ define(['dojo/_base/declare',
                 }))
             },
             addCaptureSet: function(CaptureSet, resultCallback){
-                console.log("addCaptureSet:", CaptureSet)
-                this._moduleController.addCaptureSet(CaptureSet).then(lang.hitch(this, function(Result){
+                let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
+
+                console.log("addCaptureSet:", CaptureSet, userKey)
+                this._moduleController.addCaptureSet(CaptureSet, userKey).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
 
                 })).catch(lang.hitch(this, function(Error){
@@ -169,10 +180,18 @@ define(['dojo/_base/declare',
             },
 
             getCaptureSyncedMap: function(captureID, resultCallback){
-                console.log("getCaptureSyncedMap:", captureID)
+                console.log("getCaptureSyncedMap1:", captureID)
                 this._moduleController.getCaptureSyncedMap(captureID, this._instanceKey).then(lang.hitch(this, function(Result){
                     resultCallback(Result)
+                })).catch(lang.hitch(this, function(Error){
+                     resultCallback({Error: Error})
+                }))
+            },
 
+            getCaptureSetSyncedMap: function(captureSetID, resultCallback){
+                console.log("getCaptureSetSyncedMap:", captureSetID)
+                this._moduleController.getCaptureSetSyncedMap(captureSetID, this._instanceKey).then(lang.hitch(this, function(Result){
+                    resultCallback(Result)
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
                 }))
@@ -233,6 +252,29 @@ define(['dojo/_base/declare',
 
                 }else{
                     resultCallback({ERROR : "instance -> deleteCaptureSet: id is not a string"})
+                }
+
+
+            },
+            addCaptureToSet: function(captureSetID, captureID, resultCallback){
+                console.log("addCaptureToSet", captureSetID, captureID, resultCallback )
+
+                //resultCallback({  SUCCESS : "instance -> removeCapture"})
+
+                if(typeof captureSetID === "string" && typeof captureID === "string" && typeof resultCallback === "function"){
+                    console.log("addCaptureToSet",captureSetID, captureID, resultCallback )
+
+                    this._moduleController.addCaptureToSet(captureSetID, captureID ).then(lang.hitch(this, function(Result){
+                        resultCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this, function(Error){
+                        console.log("addCaptureToSet Error",captureSetID, captureID, Error )
+
+                        resultCallback({Error: Error})
+                    }))
+
+
+                }else{
+                    resultCallback({ERROR : "instance -> addCaptureToSet: unexpected Data"})
                 }
 
 

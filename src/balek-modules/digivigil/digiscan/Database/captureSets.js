@@ -138,14 +138,17 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
-            addCaptureSet: function(CaptureSet)
+            addCaptureSet: function(CaptureSet, userKey)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                    console.log("addCaptureSet Database:", CaptureSet, userKey)
+
                     if(CaptureSet && CaptureSet.name)
                     {
                         let collection = this.shared._DBConnection._db.collection(this._Collection)
                         if(collection){
-                            collection.insertOne({CaptureSet: CaptureSet}, lang.hitch(this, function (error, response) {
+                            collection.insertOne({userKey: userKey,CaptureSet: CaptureSet}, lang.hitch(this, function (error, response) {
                                 if(error){
                                     Reject(error);
                                 }

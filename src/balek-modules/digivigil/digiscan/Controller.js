@@ -34,6 +34,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             getCaptureSyncedMap: function(captureID, instanceKey){
                 return this.Captures.getCaptureSyncedMap(captureID, instanceKey)
             },
+            getCaptureSetSyncedMap: function(captureSetID, instanceKey){
+                console.log("getCaptureSetSyncedMap2:", captureSetID)
+
+                return this.CaptureSets.getCaptureSetSyncedMap(captureSetID, instanceKey)
+            },
             getCapturesForUser: function(userKey) {
                 return this.Captures.getCapturesForUser(userKey)
             },
@@ -48,14 +53,20 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             getCaptureSets: function() {
                 return this.CaptureSets.getCaptureSets()
             },
-            addCaptureSet: function(CaptureSet){
-                return this.CaptureSets.add(CaptureSet)
+            getCaptureSetsForUser: function(userKey) {
+                return this.CaptureSets.getCaptureSetsForUser(userKey)
+            },
+            addCaptureSet: function(CaptureSet, userKey){
+                return this.CaptureSets.add(CaptureSet, userKey)
             },
             getCaptureSet: function(id) {
                 return this.CaptureSets.get(id)
             },
             removeCaptureFromSet: function(captureSetId, captureID) {
                 return this.CaptureSets.removeCaptureFromSet(captureSetId, captureID)
+            },
+            addCaptureToSet: function(captureSetId, captureID) {
+                return this.CaptureSets.addCaptureToSet(captureSetId, captureID)
             },
             deleteCaptureSet: function(id){
                 return this.CaptureSets.delete(id)

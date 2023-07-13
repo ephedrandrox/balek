@@ -5,9 +5,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
     border: solid white 3px;
-
+    border-radius:10px;
     width: 80%;
     height: 80%;
+
+    background: rgba(78, 85, 115, 0.8);
 }
 
 .scapturaUIAboutMainHeaderTitle{

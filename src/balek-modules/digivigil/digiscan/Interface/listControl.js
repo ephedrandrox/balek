@@ -58,6 +58,7 @@ define(['dojo/_base/declare',
             },
 
             onCaptureSetsChange: function (name, oldValue, newValue) {
+                console.log("onCaptureSetsChange", name, oldValue, newValue)
                 this.refreshViews()
             },
             onUIStateChange: function( name, oldValue, newValue ) {
@@ -113,19 +114,19 @@ define(['dojo/_base/declare',
                     if (this.captureSets !== null) {
 
 
+                        console.log("🚧🚧onCaptureSetsChange" ,this.captureSets)
 
 
                                 for(captureSetID in this.captureSets)
                                 {
-                                    if(this.captureSets[captureSetID] !== null
-                                        && typeof this.captureSets[captureSetID] !== "function"
-                                        && typeof this.captureSets[captureSetID].CaptureSet === "object"){
+                                    if(captureSetID !== "declaredClass" && this.captureSets[captureSetID] !== null
+                                        && typeof this.captureSets[captureSetID] === "string"){
 
-                                            const captureSet = this.captureSets.get(captureSetID).CaptureSet;
+                                            const captureSetName = this.captureSets.get(captureSetID);
 
-                                        console.log("🚧🚧" ,captureSetID,captureSet,this.captureSets)
+                                        console.log("🚧🚧onCaptureSetsChange" ,captureSetID,captureSetName)
 
-                                            const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSet.name)
+                                            const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSetName)
 
                                             if(selectedCaptureSet === captureSetID) {
 

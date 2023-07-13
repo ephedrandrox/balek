@@ -73,9 +73,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             load: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    this._capturesDatabase.getCaptures().then(lang.hitch(this, function(Result){
-                        if(Array.isArray(Result)){
-                            Result.forEach(lang.hitch(this, function(Capture){
+                    this._capturesDatabase.getCaptures().then(lang.hitch(this, function(Captures){
+                        if(Array.isArray(Captures)){
+                            Captures.forEach(lang.hitch(this, function(Capture){
                                 let id = Capture._id.toString()
                                 this.captures.set(id, Capture)
                                 this.updateStatefulCapture(Capture)

@@ -5,16 +5,25 @@
 
                 <img class="${baseClass}IconImg"
                      data-dojo-attach-event="onclick:onUninterestedClick"
-                     style="position: absolute; left: 0; top: 0; padding-left: 5px;"
-                     src="balek-modules/digivigil/digiscan/resources/images/close.svg"
+                     data-dojo-attach-point="uninterestedButton"
+                     style="position: absolute; left: 0; top: 0; padding-left: 5px; display: none; "
+                     src="balek-modules/digivigil/digiscan/resources/images/erase.svg"
+                     alt="Remove Capture from current set"/>
+                <img class="${baseClass}IconImg"
+                     data-dojo-attach-point="interestedButton"
+                     data-dojo-attach-event="onclick:onInterestedClick"
+                     style="position: absolute; left: 0; top: 0; padding-left: 5px; display: none;"
+                     src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"
                      alt="Remove Capture from current set"/>
                <div class="${baseClass}Text"
+                    style="display: inline;"
+
                     data-dojo-attach-point="_createdText"></div>
 
-                <img class="${baseClass}IconImg"
-                     style="position: relative;"
-                     src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"
-                     alt="Calendar icon" />
+<!--                <img class="${baseClass}IconImg"-->
+<!--                     style="position: relative;"-->
+<!--                     src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"-->
+<!--                     alt="Calendar icon" />-->
             </div>
             <div class="${baseClass}BarcodeDiv">
                 <img class="${baseClass}IconImg"
@@ -24,10 +33,14 @@
                 <div class="${baseClass}Text"
                      data-dojo-attach-point="_barcodeText"></div></div>
             <div class="${baseClass}RecognizedTextDiv">
-                <img class="${baseClass}IconImg"
-                     style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px"
-                     src="balek-modules/digivigil/digiscan/resources/images/RecognizedText.svg"
-                     alt="barcode icon"/><div class="${baseClass}RecognizedText"
+
+
+<!--                <img class="${baseClass}IconImg"-->
+<!--                     style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px"-->
+<!--                     src="balek-modules/digivigil/digiscan/resources/images/RecognizedText.svg"-->
+<!--                     alt="barcode icon"/>-->
+
+                <div class="${baseClass}RecognizedText"
                                               data-dojo-attach-point="_recognizedText"></div> </div>
 
         <div class="${baseClass}NoteDiv" data-dojo-attach-point="_noteDiv">

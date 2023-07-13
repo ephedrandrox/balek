@@ -38,7 +38,7 @@ define(['dojo/_base/declare',
               template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
-        return declare("moduleSessionLoginInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
+        return declare("scapturaMainInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
             _instanceKey: null,
             _interface: null,
             baseClass: "digivigilDigiscanMainInterface",
@@ -73,7 +73,10 @@ define(['dojo/_base/declare',
             uiStateWatchHandle: null,
 
             captureSets: null,
-          //  captureSetsWatchHandle: null,
+            captureSetsWatchHandle: null,
+
+
+            currentCaptureSetWatchHandle: null,
 
             _EntryWidgets: null,
             //##########################################################################################################
@@ -149,6 +152,9 @@ define(['dojo/_base/declare',
                     console.log("Error this._interface.getCaptureSets()", Error)
                 }))
 
+
+
+
                 if(this.listControl == null) {
 
                     //Create list control and insert it into menu
@@ -174,56 +180,56 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
             onAvailableEntriesStateChange: function (name, oldState, newState) {
-                let id = name.toString()
-                if( newState !== null && newState.capture)
-                {
-
-                    this.entries[id] = newState.capture
-                    this.addOrUpdateEntryWidget(id)
-
-
-                } else
-                {
-
-
-                   this.removeEntryWidget(id)
-                    this.entries[id] = undefined
-                    delete this.entries[id]
-                    console.log("deletedEntry")
-
-                }
-
-                console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
-
-                this.tableModel.setDataString(this.getTabSeperatedEntries())
-
+                // let id = name.toString()
+                // if( newState !== null && newState.capture)
+                // {
+                //
+                //     this.entries[id] = newState.capture
+                //     this.addOrUpdateEntryWidget(id)
+                //
+                //
+                // } else
+                // {
+                //
+                //
+                //    this.removeEntryWidget(id)
+                //     this.entries[id] = undefined
+                //     delete this.entries[id]
+                //     console.log("deletedEntry")
+                //
+                // }
+                //
+                // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
+                //
+                // this.tableModel.setDataString(this.getTabSeperatedEntries())
+                //
 
 
             },onInterestedCapturesStateChange:function (name, oldState, newState){
-                console.log("onInterestedCapturesStateChange: name, oldState, newState",name, oldState, newState)
-
-                let id = name.toString()
-                if( newState !== null && newState.capture)
-                {
-
-                   // this.entries[id] = newState.entry
-                    this.addOrUpdateEntryWidget(id)
-
-
-                } else
-                {
-
-
-                    this.removeEntryWidget(id)
-                   // this.entries[id] = undefined
-                   // delete this.entries[id]
-                    //console.log("deletedEntry")
-
-                }
-
-               // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
-
-                this.tableModel.setDataString(this.getTabSeperatedEntries())
+               //  console.log("onInterestedCapturesStateChange: name, oldState, newState",name, oldState, newState)
+               //
+               //  let id = name.toString()
+               //  if( newState !== null && newState.capture)
+               //  {
+               //
+               //     // this.entries[id] = newState.entry
+               //      this.addOrUpdateEntryWidget(id)
+               //
+               //
+               //  } else
+               //  {
+               //
+               //
+               //      this.removeEntryWidget(id)
+               //     // this.entries[id] = undefined
+               //     // delete this.entries[id]
+               //      //console.log("deletedEntry")
+               //
+               //  }
+               //
+               // // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
+               //
+               //  this.tableModel.setDataString(this.getTabSeperatedEntries())
 
 
             },
@@ -235,8 +241,11 @@ define(['dojo/_base/declare',
                 if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures")
                 {
 
+
                     this.refreshViews()
+                    this.setCurrentCaptureListWatcher()
                 }
+
 
 
                 if(name === "UIStatusText"){
@@ -247,54 +256,74 @@ define(['dojo/_base/declare',
 
                 console.log("onCaptureSetsChange: name, oldState, newState",name, oldState, newState)
 
-
-
                     this.refreshViews()
 
+            },
+            setCurrentCaptureListWatcher: function(){
+
+                if(this.currentCaptureSetWatchHandle !== null){
+                    this.currentCaptureSetWatchHandle.unwatch()
+                    this.currentCaptureSetWatchHandle.remove()
+                }
+
+                if(this.uiState!==null ) {
+                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
+
+                    if(selectedCaptureSetID){
+                        const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
+                        this.currentCaptureSetWatchHandle = captureSet.watch(lang.hitch(this, function(name, oldValue, newValue){
+                            this.refreshViews()
+                        }))
+                    }
+                }
 
             },
 
             getTabSeperatedEntries: function(){
-                let entriesArray =  Object.keys(this.entries).map(key => this.entries[key]);
-                console.log("deletedEntry building string", this.entries, entriesArray)
-
                 let tabbedString = "" ;
-                entriesArray.forEach(lang.hitch(this, function (entry) {
-                    console.log("deletedEntry building string", this.entries, entry)
+                this.forEachSelectedCapture(lang.hitch(this, function(captureID){
 
-                    if( entry && entry.recognizedText){
-                        tabbedString += entry.barcode + "\t" + entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
-
+                    if(captureID){
+                        let capture  =  this._interface.getCaptures().getCaptureByID(captureID)
+                        if(capture && typeof capture.get === "function"){
+                            const barcode = capture.get("barcode");
+                            const recognizedText = capture.get("recognizedText");
+                            if(typeof recognizedText === "string")
+                            {
+                                tabbedString += barcode + "\t" + recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                            }
+                        }
                     }
-                }));
+
+                }))
                 return tabbedString
             },
             onNewEntry: function(id){
-                this.addOrUpdateEntryWidget(id)
+               // this.addOrUpdateEntryWidget(id)
             },
             addOrUpdateEntryWidget: function (id) {
-                if (!(this._EntryWidgets[id])) {
-                    this._EntryWidgets[id] = new capturePreviewView({
-                        _interfaceKey: this._interfaceKey,
-                        itemData: this.entries[id],
-                        interfaceCommands: this._interface,
-                        captureID: id
-                    });
-                    console.log("_EntryWidgets", id, this._previewDiv, this._EntryWidgets, this._EntryWidgets[id].domNode);
-                    domConstruct.place(this._EntryWidgets[id].domNode, this._previewDiv);
-                }
+                // if (!(this._EntryWidgets[id])) {
+                //     this._EntryWidgets[id] = new capturePreviewView({
+                //         _interfaceKey: this._interfaceKey,
+                //      //   itemData: this.entries[id],
+                //         interfaceCommands: this._interface,
+                //         captureID: id
+                //     });
+                //   //  console.log("_EntryWidgets", id, this._previewDiv, this._EntryWidgets, this._EntryWidgets[id].domNode);
+                //     domConstruct.place(this._EntryWidgets[id].domNode, this._previewDiv);
+                // }
             },
 
 
             removeEntryWidget(id){
-                if (this._EntryWidgets[id]) {
-
-                    domConstruct.destroy(this._EntryWidgets[id].domNode, this._previewDiv);
-
-
-                    this._EntryWidgets[id] = undefined;
-                    console.log("Removed ENtryWIdget", id);
-                }
+                // if (this._EntryWidgets[id]) {
+                //
+                //     domConstruct.destroy(this._EntryWidgets[id].domNode, this._previewDiv);
+                //
+                //
+                //     this._EntryWidgets[id] = undefined;
+                //     console.log("Removed ENtryWIdget", id);
+                // }
             },
 
             _onKeyUp: function (keyUpEvent) {
@@ -352,34 +381,15 @@ define(['dojo/_base/declare',
                 }
             },
             _onSaveClicked: function (eventObject) {
-                let saleTagScanData =  Object.keys(this.entries).map(key => this.entries[key]);
 
-                let tabbedString = "" ;
-                saleTagScanData.forEach(lang.hitch(this, function (entry) {
-                    tabbedString += entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
-                }));
-
-
-                console.log('tabbed content: ', tabbedString);
-
-
+                let tabbedString = this.getTabSeperatedEntries()
                 this.createTabbedDataDownload(tabbedString);
 
             },
 
             _onCopyClicked: function (eventObject) {
-                let saleTagScanData =  Object.keys(this.entries).map(key => this.entries[key]);
-                let tabbedString = "" ;
-                saleTagScanData.forEach(lang.hitch(this, function (entry) {
-                    tabbedString += entry.recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
-                }));
-
-
-                console.log('tabbed content: ', tabbedString);
-
+                let tabbedString = this.getTabSeperatedEntries()
                 this.copyToClipboard(tabbedString);
-
-
 
             },
             //##########################################################################################################
@@ -406,70 +416,39 @@ define(['dojo/_base/declare',
 
 
             },
-            updatePreviewView: function(){
-                if(this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null){}
+            forEachSelectedCapture: function(doThis)
+            {
+
+                if(typeof doThis === 'function' && this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null)
                 {
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    const selectedCaptureSet = this.captureSets.get(selectedCaptureSetID);
-
-
+                    const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
                     const showHiddenCaptures = this.uiState.get("showHiddenCaptures")
 
-
-                    console.log("🚧🚧updatePreviewView", selectedCaptureSetID,selectedCaptureSet)
-
-                    if(selectedCaptureSet && selectedCaptureSet.CaptureSet
-                    && typeof selectedCaptureSet.CaptureSet.name === "string"
-                        && typeof selectedCaptureSet.CaptureSet.appendAll === "boolean")
-                    {
-                        this._statusDiv.innerHTML = selectedCaptureSet.CaptureSet.name
-
-
-                        let captures = selectedCaptureSet.CaptureSet.captures ? selectedCaptureSet.CaptureSet.captures : {}
-                        let appendCaptures = selectedCaptureSet.CaptureSet.appendAll
+                    if (captureSet ) {
                         let availableCaptures = this._interface.availableEntries
-                        let visibleCaptureViews = {}
-                        console.log("🚧🚧checking list", captures,availableCaptures)
-                        domConstruct.empty(this._previewDiv)
+                        availableCaptures.forEach(lang.hitch(this, function (key) {
+                            let keyInCaptureSet = captureSet.get(key)
 
-                        availableCaptures.forEach( lang.hitch(this, function (key, value) {
-                            console.log("🚧🚧availableCaptures.forEach", key, value, captures, selectedCaptureSet)
-
-                            if (showHiddenCaptures || (captures[key] && captures[key].inSet === true)
-                                || (!captures[key] && appendCaptures)){
-                                captureView = this.getCaptureView(key)
-
-
-
-                                if(!captures[key])
-                                {
-                                    //hopefully this doesn't happen but if it does, add to list
-                                }
-
-
-
-                                if(!captures[key].inSet)
-                                {
-                                    domClass.add(captureView.domNode, `${this.baseClass}CaptureNotInSet`)
-                                }else{
-                                    domClass.remove(captureView.domNode, `${this.baseClass}CaptureNotInSet`)
-                                }
-
-
-
-                                domConstruct.place(captureView.domNode, this._previewDiv);
+                            if (showHiddenCaptures || (keyInCaptureSet && keyInCaptureSet === true)) {
+                                doThis(key)
                             }
 
+
                         }));
-
-                        console.log("🚧🚧visibleCaptureViews list" , visibleCaptureViews)
-
-
                     }
-
                 }
 
+            },
+            updatePreviewView: function(){
 
+                domConstruct.empty(this._previewDiv)
+                    this.forEachSelectedCapture(lang.hitch(this, function(captureID){
+                       let captureView = this.getCaptureView(captureID)
+                            dojoReady(lang.hitch(this, function () {
+                                domConstruct.place(captureView.domNode, this._previewDiv);
+                            }));
+                    }));
             },
             getCaptureView: function (id){
                 console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
@@ -494,7 +473,7 @@ define(['dojo/_base/declare',
                 const activeView = this.uiState.get("ActiveView")
 
                 this.updatePreviewView();
-
+                this.tableModel.setDataString(this.getTabSeperatedEntries())
 
                 const previewDiv = this._previewDiv;
                 const tabularDiv = this._tabularDiv;

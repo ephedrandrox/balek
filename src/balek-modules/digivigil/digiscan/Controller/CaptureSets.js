@@ -3,18 +3,30 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/Stateful',
 
         'balek-modules/digivigil/digiscan/Database/captureSets',
+        'balek-modules/components/syncedMap/Instance',
 
         "dojo/node!sanitize-html",
     ],
     function (declare, lang, topic,
               Stateful,
               captureSetsDatabase,
+              SyncedMapInstance,
+
               nodeSanitizeHtml) {
         return declare("digivigilScapturaCaptureSetsController", null, {
             _module: null,              //Module instance
 
             captureSets: null,          //Dojo State Object
+            captureSetsByUserKey: null, //Object of Stateful Sets of all Users CaptureSets
             _captureSetsDatabase: null,
+
+
+
+
+            StatefulCaptureSetChecksumsSet: null,       //stateful object
+            statefulCaptureSetsByCaptureID: null,       //id map of all stateful CaptureSets
+
+            syncedMaps: [],
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 //mixin and declare state Object
@@ -22,6 +34,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 let CaptureSetsState = declare([Stateful], {});
                 this.captureSets = new CaptureSetsState({})
+
+
+                this.captureSetsByUserKey = {}
+
+                this.StatefulCaptureSetChecksumsSet = declare([Stateful], {});
+                this.statefulCaptureSetsByCaptureID = {}
+
 
                 if(this._module === null){
                     console.log("digivigilScapturaCaptureSetsController  Cannot Start!...");
@@ -44,6 +63,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             CaptureSets.forEach(lang.hitch(this, function(CaptureSet){
                                 let id = CaptureSet._id.toString()
                                 this.captureSets.set(id, CaptureSet)
+                                this.updateStatefulCaptureSet(CaptureSet)
+                                this.appendToUserList(CaptureSet)
                             }))
                             Resolve({SUCCESS: "getCaptureSets database results Loaded"})
                         }else{
@@ -55,9 +76,88 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }));
             },
+            appendToUserList: function(CaptureSet){
+                if(CaptureSet.CaptureSet && CaptureSet.userKey && CaptureSet._id && typeof CaptureSet._id.toString === "function")
+                {
+                    let userCaptureSets = this.getCaptureSetsForUser(CaptureSet.userKey)
+                    let checksum = this.getCaptureSetCheckHash(CaptureSet)
+                    userCaptureSets.set(CaptureSet._id.toString(), checksum)
+                    console.log(this.captureSetsByUserKey,CaptureSet.userKey , userCaptureSets)
+                }
+            },
+            getCaptureSetCheckHash: function(CaptureSet) {
+              return CaptureSet.CaptureSet.name
+            },
+            getCaptureSetsForUser: function(userKey){
+                if(!this.captureSetsByUserKey[userKey])
+                {
+                    let CapturesSetState = declare([Stateful], {});
+                    this.captureSetsByUserKey[userKey] = new CapturesSetState({})
+                }
+                return this.captureSetsByUserKey[userKey]
+            },
 
+            updateStatefulCaptureSet: function(CaptureSet){
+
+                if(CaptureSet && CaptureSet.CaptureSet && CaptureSet.CaptureSet.name && typeof CaptureSet.CaptureSet.appendAll === 'boolean'
+                && typeof CaptureSet.CaptureSet.captures === 'object'){
+                    console.log("ok,", CaptureSet)
+                    let statefulCaptureSet = this.getStatefulCaptureSet(CaptureSet._id.toString())
+                    //statefulCaptureSet.set("CaptureSet", CaptureSet.CaptureSet);
+
+                    let capturesArray = Object.keys(CaptureSet.CaptureSet.captures).filter(key => !key.includes('_watchCallbacks'));
+
+                  // let capturesArray = Object.keys(CaptureSet.CaptureSet.captures)
+                    capturesArray.forEach(lang.hitch(this, function(captureID){
+                       statefulCaptureSet.set(captureID, true)
+                    }));
+
+
+                    statefulCaptureSet.set("filterSettings", {appendAll: CaptureSet.CaptureSet.appendAll});
+                }
+
+            },
+            getStatefulCaptureSet: function(id){
+                console.log("ok,", id)
+
+                if (!this.statefulCaptureSetsByCaptureID[id]){
+                    this.statefulCaptureSetsByCaptureID[id] = new this.StatefulCaptureSetChecksumsSet({})
+                }
+                return this.statefulCaptureSetsByCaptureID[id]
+            },
             getCaptureSets: function() {
                 return this.captureSets
+            },
+
+            getCaptureSetSyncedMap: function(captureSetID, instanceKey){
+                console.log("getCaptureSetSyncedMap3:", captureSetID)
+
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+
+                    let CaptureSet =  this.captureSets.get(captureSetID)
+                    console.log("getCaptureSetSyncedMap4:", captureSetID,CaptureSet)
+
+                    if(typeof CaptureSet === "object")
+                    {
+
+                        let newMap = new SyncedMapInstance({_instanceKey: instanceKey});
+
+                        let statefulCaptureSet = this.getStatefulCaptureSet(captureSetID)
+                        Resolve({Success:"Capture Map Created", CaptureID: captureSetID, componentKey: newMap._componentKey, instanceKey: instanceKey})
+                        console.log("getCaptureSetSyncedMap5:", captureSetID,statefulCaptureSet)
+
+                        //todo relay a capture state that gets updated with database return
+                      //  newMap.relayState(statefulCaptureSet) //todo - be able to calcle this
+
+                        newMap.relayState(statefulCaptureSet)
+                        console.log("look at name match",newMap, CaptureSet)
+
+                        this.syncedMaps.push(newMap);
+                    }else {
+                        Reject({Error:"Capture Not found", CaptureID: captureID})
+
+                    }
+                }));
             },
             //
             // addCaptureToAllCaptureSets: function(id, Entry) {
@@ -131,13 +231,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             //         }
             //     }))
             // },
-            add: function(CaptureSet){
+            add: function(CaptureSet, userKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     CaptureSet = this.checkAndReturnValidCaptureSet(CaptureSet)
-                    if(CaptureSet)
+                    if(CaptureSet && typeof userKey === "string")
                     {
                         console.log("Controller Adding Capture Set to Database", CaptureSet)
-                        this._captureSetsDatabase.addCaptureSet(CaptureSet).then(lang.hitch(this, function(Result){
+                        this._captureSetsDatabase.addCaptureSet(CaptureSet, userKey).then(lang.hitch(this, function(Result){
                             console.log("Capture Set Added", Result);
                             try{
                                 const id = Result
@@ -145,6 +245,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                     console.log("Capture Set Retreived", DBCaptureSet);
                                     let id = DBCaptureSet._id.toString()
                                     this.captureSets.set(id, DBCaptureSet)
+                                    this.updateStatefulCaptureSet(DBCaptureSet)
+                                    this.appendToUserList(DBCaptureSet)
                                     Resolve({SUCCESS: Entry})
                                 })).catch(lang.hitch(this, function(Error){
                                     Reject({Error: Error})
@@ -177,34 +279,35 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }));
             },
-            removeCaptureFromSet: function(captureSetId, captureID) {
-
+            setCaptureInSet: function(captureSetId, captureID, inSet)
+            {
+                //todo set in database first
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     console.log("Controller removeCaptureFromSet:", captureSetId, captureID, this.captureSets);
 
                     //get the capture set
-                    let captureSet = this.captureSets.get(captureSetId)
+                   // let captureSet = this.captureSets.get(captureSetId)
 
+                    let captureSet = this.getStatefulCaptureSet(captureSetId)
 
                     console.log("Controller removeCaptureFromSet:", captureSetId, captureID, captureSet);
 
 
                     //if the capture set exists in state
-                    if (captureSet && captureSet.CaptureSet
-                    && typeof captureSet.CaptureSet.captures[captureID] === "object")
+                    if (captureSet )
                     {
                         //edit the capture set
-                        captureSet.CaptureSet.captures[captureID].inSet = false
-
+                       // captureSet.CaptureSet.captures[captureID].inSet = inSet
+                        captureSet.set(captureID, inSet)
                         //save the capture set
 
                         //transmit the capture set
 
-                        console.log("UnSetting Capture Set:", captureSetId, captureSet);
+                      //  console.log("UnSetting Capture Set:", captureSetId, captureSet);
 
 
-                        this.captureSets.set(captureSetId, captureSet)
-                        console.log("UnSetting Capture Set   this.captureSets:",  this.captureSets);
+                        //this.captureSets.set(captureSetId, captureSet)
+                        console.log("UnSetting Capture Set  ",  captureSet);
 
                         Resolve({SUCCESS: "removeCaptureFromSet"})
 
@@ -214,12 +317,19 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 }));
 
+            },
+            removeCaptureFromSet: function(captureSetId, captureID) {
+
+               return this.setCaptureInSet(captureSetId, captureID, false);
+
+            },
+            addCaptureToSet: function(captureSetId, captureID) {
+
+                return this.setCaptureInSet(captureSetId, captureID, true);
 
             },
             delete: function(id){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-
-
                     try{
 
                         this._captureSetsDatabase.removeCaptureSet(id).then(lang.hitch(this, function(Result){

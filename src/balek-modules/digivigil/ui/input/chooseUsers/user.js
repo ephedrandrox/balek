@@ -4,7 +4,7 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/diaplode/ui/input/chooseUsers/resources/html/user.html',
+        'dojo/text!balek-modules/digivigil/ui/input/chooseUsers/resources/html/user.html',
     ],
     function (declare, topic, domClass, _WidgetBase, _TemplatedMixin, template) {
         return declare("diaplodeUIChooseUsersUser", [_WidgetBase, _TemplatedMixin], {

@@ -90,6 +90,9 @@ var profile = (function () {
                         InstanceFolder = /Instance/,
                         ModuleFile = /Module.js/,
                         BalekuteTargetFile = /balekute\/connect\/Controller/,
+                        DigiscanControllerTargetFile = /digivigil\/digiscan\/Controller/,
+                        DigiscanDatabaseTargetFile = /digivigil\/digiscan\/Database/,
+
                         Workers = /.*Worker.js/,
                         TabularTable = /digivigil\/tabularNAN/;
 
@@ -97,7 +100,9 @@ var profile = (function () {
                     return codeMirror.test(mid) || quill.test(filename) || codeMirror.test(filename) || balekNodeModules.test(mid)
                         || InstanceFile.test(mid) || InstanceFile.test(filename) || InstanceFolder.test(mid) || InstanceFolder.test(filename)
                         || ModuleFile.test(mid) || ModuleFile.test(filename) || BalekuteTargetFile.test(mid) || BalekuteTargetFile.test(filename)
-                        || Workers.test(mid) || Workers.test(filename) || TabularTable.test(mid) || TabularTable.test(filename);
+                        || Workers.test(mid) || Workers.test(filename) || TabularTable.test(mid) || TabularTable.test(filename)
+                        || DigiscanControllerTargetFile.test(mid) || DigiscanControllerTargetFile.test(filename)|| DigiscanDatabaseTargetFile.test(mid) || DigiscanDatabaseTargetFile.test(filename)
+
                 }
 
                 //todo

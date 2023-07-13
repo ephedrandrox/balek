@@ -8,7 +8,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
               Stateful, SyncedMapInterface) {
         return declare("digivigilDigiscanCapturesInterfaceController", null, {
             _interface: null,              //Module instance
-            captures: null,              //Dojo State Object
+            captures: null,
 
             captureSyncedMaps: null,
 
@@ -32,10 +32,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     let CapturesState = declare([Stateful], {});
                     this.captures[captureID] = new CapturesState({})
 
-                    this.captures[captureID].set("created", "bogocer")
-                    this.captures[captureID].set("barcode", "bogo123")
-                    this.captures[captureID].set("recognizedText", "bogorec")
-                    this.captures[captureID].set("note", "bogonote")
+                    this.captures[captureID].set("created", "")
+                    this.captures[captureID].set("barcode", "")
+                    this.captures[captureID].set("recognizedText", "")
+                    this.captures[captureID].set("note", "")
 
                     //get the syncedmap Keys from the instance
                     this._interface.getCaptureSyncedMap(captureID,  lang.hitch(this, function(syncedMapKeys){

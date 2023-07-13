@@ -12,7 +12,8 @@ define(['dojo/_base/declare',
 
         'balek-modules/digivigil/digiscan/Interface/main',
 
-        'balek-modules/digivigil/digiscan/Controller/Captures/Interface',
+        'balek-modules/digivigil/digiscan/Interface/Controller/Captures/Interface',
+        'balek-modules/digivigil/digiscan/Interface/Controller/CaptureSets/Interface',
 
 
         'balek-modules/components/syncedCommander/Interface',
@@ -22,7 +23,7 @@ define(['dojo/_base/declare',
               domConstruct, domStyle, win,
               balekWorkspaceManagerInterfaceCommands,
               MainInterface,
-              Captures,
+              Captures,CaptureSets,
               _SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleDigivigilDigiscanInterface",   _SyncedCommanderInterface, {
@@ -30,6 +31,7 @@ define(['dojo/_base/declare',
             _mainInterface: null,
 
             _Captures: null,
+            _CaptureSets: null,
 
             workspaceManagerCommands: null,
 
@@ -60,6 +62,7 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 this._Captures = new Captures({_interface: this})
+                this._CaptureSets = new CaptureSets({_interface: this})
 
                 this.captureSyncedMaps = {}
                 this.captureSyncedMapWatchHandles = {}
@@ -213,6 +216,11 @@ define(['dojo/_base/declare',
                 }))
             },
 
+
+            getCaptureSetsController: function(){
+                return this._CaptureSets
+            },
+
             getCaptures: function(){
                     return this._Captures
             },
@@ -225,6 +233,18 @@ define(['dojo/_base/declare',
 
                 })).catch(function(commandErrorResults){
                     console.log("#getCaptureSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                });
+            },
+            getCaptureSetSyncedMap : function(captureSetID , resultCallback){
+                console.log("#getCaptureSetSyncedMap", captureSetID)
+
+                this._instanceCommands.getCaptureSetSyncedMap(captureSetID).then(lang.hitch(this, function(commandReturnResults){
+
+                    console.log("#getCaptureSetSyncedMap", commandReturnResults)
+                    resultCallback(commandReturnResults)
+
+                })).catch(function(commandErrorResults){
+                    console.log("#getCaptureSetSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
                 });
             },
 
@@ -268,6 +288,19 @@ define(['dojo/_base/declare',
                 console.log("#removeCaptureFromSet", captureSetID, captureID, resultCallback)
 
                 this._instanceCommands.removeCaptureFromSet(captureSetID, captureID).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#removeCaptureFromSet", commandReturnResults)
+
+                    resultCallback(commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#removeCaptureFromSet", "removeCaptureFromSet Received Error Response" + commandErrorResults);
+                    resultCallback(commandReturnResults)
+
+                });
+            },
+            addCaptureToSet: function(captureSetID, captureID, resultCallback) {
+                console.log("#removeCaptureFromSet", captureSetID, captureID, resultCallback)
+
+                this._instanceCommands.addCaptureToSet(captureSetID, captureID).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#removeCaptureFromSet", commandReturnResults)
 
                     resultCallback(commandReturnResults)

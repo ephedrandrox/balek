@@ -13,13 +13,13 @@ define(['dojo/_base/declare',
         "dojo/ready",
         'dojo/_base/fx',
 
-        'balek-modules/diaplode/ui/input/chooseUsers/user',
+        'balek-modules/digivigil/ui/input/chooseUsers/user',
 
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/diaplode/ui/input/chooseUsers/resources/html/chooseUsers.html',
-        'dojo/text!balek-modules/diaplode/ui/input/chooseUsers/resources/css/chooseUsers.css',
+        'dojo/text!balek-modules/digivigil/ui/input/chooseUsers/resources/html/chooseUsers.html',
+        'dojo/text!balek-modules/digivigil/ui/input/chooseUsers/resources/css/chooseUsers.css',
     ],
     function (declare, lang, topic, Stateful, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx,
