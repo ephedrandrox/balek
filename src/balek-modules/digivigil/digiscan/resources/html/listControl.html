@@ -1,9 +1,11 @@
 <div class="${baseClass}" tabindex="0">
-    <div data-dojo-attach-event="onclick:onClickNewSet" class="${baseClass}NewSetButton">
+    <div class="${baseClass}StatusTextDiv"  data-dojo-attach-point="_statusDiv">status is...</div>
+
+    <div data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}NewSetButton" >
         <img class="${baseClass}ButtonImage" data-dojo-attach-point="eraseButtonImage"
              src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg"></div>
     <div data-dojo-attach-point="listNameOptions" class="${baseClass}SetSelector"></div>
-    <div data-dojo-attach-event="onclick:onShowHiddenCaptures" class="${baseClass}NewSetButton">
+    <div data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:_onHiddenOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}NewSetButton">
         <img class="${baseClass}ButtonImage" data-dojo-attach-point="eraseButtonImage"
              src="balek-modules/digivigil/digiscan/resources/images/erase.svg">
 

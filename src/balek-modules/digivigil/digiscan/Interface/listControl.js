@@ -31,6 +31,7 @@ define(['dojo/_base/declare',
             baseClass: "digivigilDigiscanSetControl",
 
             _noteDiv: null,
+            _statusDiv: null,
             _mainCssString: mainCss,
 
             interfaceCommands: null,
@@ -56,13 +57,37 @@ define(['dojo/_base/declare',
                 }));
 
             },
-
+            _onMouseOutResetStatusText: function (overEvent){
+                this.updateStatusText("")
+            },
             onCaptureSetsChange: function (name, oldValue, newValue) {
                 console.log("onCaptureSetsChange", name, oldValue, newValue)
                 this.refreshViews()
             },
             onUIStateChange: function( name, oldValue, newValue ) {
+                console.log("onCaptureSetsChange", name, oldValue, newValue)
+
+                if(name === "UIListControlStatusText"){
+                    this._statusDiv.innerHTML = newValue
+                }
                 this.refreshViews()
+
+            },
+            _onNewOver: function (overEvent){
+                console.log("mouseover")
+
+                this.updateStatusText("Create New Set")
+            },
+            _onHiddenOver:function (overEvent){
+                console.log("mouseover")
+
+                this.updateStatusText("Show or Hide Captures not in Set")
+            },
+            updateStatusText: function(newText){
+                if(this.uiState!==null && typeof newText === "string"){}
+                {
+                    this.uiState.set("UIListControlStatusText", newText)
+                }
             },
             postCreate: function () {
                 dojoReady(lang.hitch(this, function () {
@@ -112,20 +137,12 @@ define(['dojo/_base/declare',
                     //Capture Views
                     this.listNameOptions.innerHTML = ""
                     if (this.captureSets !== null) {
-
-
-                        console.log("🚧🚧onCaptureSetsChange" ,this.captureSets)
-
-
                                 for(captureSetID in this.captureSets)
                                 {
                                     if(captureSetID !== "declaredClass" && this.captureSets[captureSetID] !== null
                                         && typeof this.captureSets[captureSetID] === "string"){
 
                                             const captureSetName = this.captureSets.get(captureSetID);
-
-                                        console.log("🚧🚧onCaptureSetsChange" ,captureSetID,captureSetName)
-
                                             const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSetName)
 
                                             if(selectedCaptureSet === captureSetID) {
@@ -156,23 +173,24 @@ define(['dojo/_base/declare',
                 on(selectButton, ["click"], lang.hitch(this, function (clickEvent) {
 
                     if (clickEvent.altKey) {
-
                         this.interfaceCommands.deleteCaptureSet(id)
-
-
                     }else{
                         this.interfaceCommands.selectCaptureSet(id)
-
                     }
 
                 }));
                 return selectButton
             },
             onClickNewSet: function (clickEvent){
+
                 let getNameForList = new getUserInput({question: "Choose Set Name",
                     inputReplyCallback: lang.hitch(this, function(newListNameChoice){
                         getNameForList.unload();
-                        this.interfaceCommands.newAllSet(newListNameChoice)
+                        if(clickEvent.altKey){
+                            this.interfaceCommands.newClearSet(newListNameChoice)
+                        }else{
+                            this.interfaceCommands.newAllSet(newListNameChoice)
+                        }
                     }) });
             },
             onClickNewClearSet: function (clickEvent){

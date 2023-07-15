@@ -23,8 +23,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("digivigilDigiscanController  Cannot Start!...");
                 }else{
                     //initialize controllers
-                    this.Captures = new Captures({_module: this._module})
-                    this.CaptureSets = new CaptureSets({_module: this._module})
+                    this.Captures = new Captures({_module: this._module, _instanceController: this})
+                    this.CaptureSets = new CaptureSets({_module: this._module, _instanceController: this})
                 }
             },
             //Captures Relays
@@ -38,6 +38,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 console.log("getCaptureSetSyncedMap2:", captureSetID)
 
                 return this.CaptureSets.getCaptureSetSyncedMap(captureSetID, instanceKey)
+            },
+            getStatefulCaptureSet: function(captureID){
+                return this.CaptureSets.getStatefulCaptureSet(captureID)
             },
             getCapturesForUser: function(userKey) {
                 return this.Captures.getCapturesForUser(userKey)

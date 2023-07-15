@@ -80,7 +80,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 this.captures.set(id, Capture)
                                 this.updateStatefulCapture(Capture)
                                 this.appendToUserList(id, Capture)
-
+                               // this.addCaptureToCaptureSets(id, Capture)
                             }))
                             Resolve({SUCCESS: "getCaptures database result"})
                         }else{
@@ -92,7 +92,32 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }));
             },
-
+            addCaptureToCaptureSets: function(id, Capture){
+                //todo: move this to CaptureSets
+                if(Capture.capture
+                    && Capture.capture.signature
+                    && Capture.capture.signature.ownerUserKey)
+                {
+                    //get user Ca[ture Sets Stateful
+                    let userCaptureSets = this._instanceController.getCaptureSetsForUser(Capture.capture.signature.ownerUserKey)
+                    //filter out _watchCallbacks and create an array of Capture Set IDs
+                    let captureSetsArray = Object.keys(userCaptureSets).filter(key => !key.includes('_watchCallbacks'));
+                    //iterate through the array of Capture Set IDs
+                    captureSetsArray.forEach(lang.hitch(this, function(captureSetID){
+                       //get statefulCaptureSet which has FilterSettings and CaptureIDs
+                        let captureSet = this._instanceController.getStatefulCaptureSet(captureSetID);
+                        if(captureSet ){
+                            let filterSettings = captureSet.get("filterSettings");
+                            //get the filter settings and if appendAll is true
+                            if (filterSettings && filterSettings.appendAll){
+                                this._instanceController.addCaptureToSet(captureSetID, id, function(result){
+                                   //Capture added to set
+                                })
+                            }
+                        }
+                    }));
+                }
+            },
             appendToUserList: function(id, Capture){
                 if(Capture.capture && Capture.capture.signature && Capture.capture.signature.ownerUserKey && Capture.capture.signature.ownerUserKey)
                 {
@@ -175,7 +200,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                         this.updateStatefulCapture(Capture)
                                         this.appendToUserList(id, Capture)
 
-                                        // this.addCaptureToAllCaptureSets(id, Capture)
+                                        this.addCaptureToCaptureSets(id, Capture)
                                         Resolve({SUCCESS: Capture})
                                     })).catch(lang.hitch(this, function(Error){
                                         Reject({Error: Error})

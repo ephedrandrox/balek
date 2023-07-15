@@ -26,57 +26,38 @@ define(['dojo/_base/declare',
               mainCss) {
 
         return declare("digivigilDigiscanCaptureViewInterface", [_WidgetBase, _TemplatedMixin], {
-            _instanceKey: null,
-            templateString: template,
             baseClass: "digivigilDigiscanCaptureViewInterface",
+            _instanceKey: null,
 
-            _noteDiv: null,
+            templateString: template,
             _mainCssString: mainCss,
 
-            _createdText: null,
-            _barcodeText: null,
-            _recognizedText: null,
-            _noteText: null,
+            _barcodeDiv: null,
+            _noteDiv: null,                 //domNode
+            _createdText: null,             //domNode
+            _barcodeText: null,             //domNode
+            _recognizedText: null,          //domNode
+            _noteText: null,                //domNode
 
-            interestedButton: null,
-            uninterestedButton: null,
+            interestedButton: null,         //domNode
+            uninterestedButton: null,       //domNode
 
-            interfaceCommands: null,
+            interfaceCommands: null,        //passed argument
 
-            captureID: null,
-            captureState: null,
-            captureStateWatchHandle: null,
+            captureID: null,                //passed argument
+            captureState: null,             //loaded Stateful
+            captureStateWatchHandle: null,  //set
 
 
-            uiState: null, //SyncedMap
-            uiStateWatchHandle: null,
+            uiState: null,                  //loaded Stateful
+            uiStateWatchHandle: null,       //set
 
-            captureSets: null,
-              captureSetsWatchHandle: null,
 
-            currentCaptureSetWatchHandle: null,
+            currentCaptureSetWatchHandle: null, //multiple sets
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                if(this.itemData && this.itemData.timeStamps && this.itemData.timeStamps.created )
-                {
-                  ///  this.itemData.created = (new Date(parseInt(this.itemData.created))).toString()
-
-                    const createdDate = new Date(this.itemData.timeStamps.created);
-                    const formattedDate = createdDate.toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric'
-                    });
-
-                    //this.itemData.timeStamps.created = formattedDate
-
-                }
-
-
 
                 if(this.captureID && this.interfaceCommands){
                     this.captureState =   this.interfaceCommands.getCaptures().getCaptureByID(this.captureID)
@@ -93,96 +74,61 @@ define(['dojo/_base/declare',
 
             },
             onCaptureStateChange: function(name, oldValue, newValue){
-                console.log("Captures synced onCaptureStateChange", name, oldValue, newValue)
-
                 this.reloadViewFromState()
             },
             setCurrentCaptureListWatcher: function(){
-
-
-
+                //if a handle has been set, shut it down
                 if(this.currentCaptureSetWatchHandle !== null){
                     this.currentCaptureSetWatchHandle.unwatch()
                     this.currentCaptureSetWatchHandle.remove()
                 }
-
+                //Check that we can get the current selected capture Set ID
                 if(this.uiState!==null ) {
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
                     if(selectedCaptureSetID)
                     {
                         const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-
-                        this.currentCaptureSetWatchHandle = captureSet.watch(lang.hitch(this, function(name, oldValue, newValue){
-                            this.reloadViewFromState()
-
-                        }))
+                        if(captureSet)
+                        {
+                            this.currentCaptureSetWatchHandle = captureSet.watch(
+                                lang.hitch(this, function(name, oldValue, newValue){
+                                this.reloadViewFromState()
+                            }))
+                        }
                     }
-
                 }
-
-
 
             },
             postCreate: function () {
-                dojoReady(lang.hitch(this, function () {
-                    dijitFocus.focus(this.domNode);
-                }));
-                dijitFocus.focus(this.domNode);
-                //this.reloadViewFromState()
-                // if (this.itemData.note !== ""){
-                //     domStyle.set(this._noteDiv, "display", "block")
-                // }
-
                 this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
-                    console.log("getUIState", uiState)
-
                     this.uiState = uiState
                     this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
+                    this.setCurrentCaptureListWatcher()
                     this.reloadViewFromState()
                 })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
-
-
-
-
-                this.interfaceCommands.getCaptureSets().then(lang.hitch(this, function(captureSets){
-                    // console.log("captureSetcaptureSetcaptureSet", captureSets)
-                    //
-                    this.captureSets = captureSets
-                    this.captureSetsWatchHandle = this.captureSets.watch(lang.hitch(this, this.onCaptureSetsChange));
-                    this.reloadViewFromState()
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getCaptureSets()", Error)
+                    console.warn("Error interfaceCommands getUIState() from capturePreviewView", Error)
                 }))
             },
-            // onMarkUninterested: function ()
-            // {
-            //       //  this.interfaceCommands.setCaptureUninterested(this.itemData.id)
-            // },
             onUIStateChange: function(name, oldValue, newValue){
-            this.reloadViewFromState()
-
                 if("selectedCaptureSet")
                 {
-
-
-
                     this.setCurrentCaptureListWatcher()
                 }
+                this.reloadViewFromState()
             },
             onCaptureSetsChange: function(name, oldValue, newValue){
                 this.reloadViewFromState()
             },
             reloadViewFromState: function()
             {
-                console.log("reloadViewFromState", this)
+                //Needs Capture State and UI State
                 if(this.captureState !== null
-                    && this.uiState !== null
-                && this.captureSets !== null) {
+                    && this.uiState !== null) {
                     const dateString = this.captureState.get("created");
                     const date = new Date(dateString);
-                    const shortDateFormat = date.toLocaleDateString(undefined, {
+
+                    //Set data by node handles
+                    this._createdText.innerHTML = date.toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric',
@@ -190,86 +136,97 @@ define(['dojo/_base/declare',
                         minute: 'numeric'
                     });
 
-                    this._createdText.innerHTML = shortDateFormat;
-                    this._barcodeText.innerHTML = this.captureState.get("barcode");
+                    let barcode = this.captureState.get("barcode");
+                    if(barcode && barcode !== ""){
+                        domStyle.set(this._barcodeDiv, "display", "block")
+                        this._barcodeText.innerHTML = barcode
+                    }else{
+                        domStyle.set(this._barcodeDiv, "display", "none")
+                    }
                     this._recognizedText.innerHTML = this.captureState.get("recognizedText");
-                    this._noteText.innerHTML = this.captureState.get("note");
 
+                    let note = this.captureState.get("note");
+                    if(note && note !== ""){
+                        domStyle.set(this._noteDiv, "display", "block")
+                        this._noteText.innerHTML = note
+                    }else{
+                        domStyle.set(this._noteDiv, "display", "none")
+                    }
 
+                    //get the selected Capture Set
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
                     const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-                    //const selectedCaptureSet = this.captureSets.get(selectedCaptureSetID);
 
                     if (captureSet) {
-                        // this._statusDiv.innerHTML = selectedCaptureSet.CaptureSet.name
-
-
-                       // let captures = selectedCaptureSet.CaptureSet.captures ? selectedCaptureSet.CaptureSet.captures : {}
-
-
                         let captureInSet  = captureSet.get(this.captureID)
-
+                        //if capture is in set
                         if (captureInSet === true) {
+                            //Set Class and show correct set/unset toggle button
                             domClass.remove(this.domNode, `${this.baseClass}CaptureNotInSet`)
                             domStyle.set(this.interestedButton, "display", "none")
                             domStyle.set(this.uninterestedButton, "display", "inline-block")
-
                         } else {
-
+                            //Set Class and show correct set/unset toggle button
                             domClass.add(this.domNode, `${this.baseClass}CaptureNotInSet`)
                             domStyle.set(this.interestedButton, "display", "inline-block")
                             domStyle.set(this.uninterestedButton, "display", "none")
-
-
                         }
-
                     }
 
                 }
 
             },
             onInterestedClick: function(clickEvent){
-                console.log("onUninterestedClick", this.captureID)
+                //Called from HTML Click to unset capture from set
                 if(this.uiState !== null) {
                     let selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-
                     if(selectedCaptureSetID){
+                        //Send Command to add capture from capture set
                         this.interfaceCommands.addCaptureToSet(selectedCaptureSetID, this.captureID, lang.hitch(this, function(commandResult){
-                            console.log(commandResult)
                         }))
-                    }else {
-                        alert("No Capture Set Selected")
+                        //Update State before it is updated from Instance
+                        const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
+                        if(captureSet){
+                            captureSet.set(this.captureID, true)
+                        }
                     }
-
                 }
-
             },
             onUninterestedClick: function(clickEvent){
-                console.log("onUninterestedClick", this.captureID)
+                //Called from HTML Click to set capture to set
                 if(this.uiState !== null) {
                     let selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-
                     if(selectedCaptureSetID){
+                        //Send Command to remove capture from capture set
                         this.interfaceCommands.removeCaptureFromSet(selectedCaptureSetID, this.captureID, lang.hitch(this, function(commandResult){
-                            console.log(commandResult)
                         }))
-                    }else {
-                        alert("No Capture Set Selected")
+                        //Update State before it is updated from Instance
+                        const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
+                        if(captureSet){
+                            captureSet.set(this.captureID, false)
+                        }
                     }
-
                 }
-
             },
             _onFocus: function () {
                 //todo make it do something
             },
             unload: function () {
-
+                if(this.currentCaptureSetWatchHandle !== null){
+                    this.currentCaptureSetWatchHandle.unwatch()
+                    this.currentCaptureSetWatchHandle.remove()
+                }
                 if(this.captureStateWatchHandle)
                 {
                     this.captureStateWatchHandle.unwatch()
                     this.captureStateWatchHandle.remove()
                 }
+                if(this.uiStateWatchHandle)
+                {
+                    this.uiStateWatchHandle.unwatch()
+                    this.uiStateWatchHandle.remove()
+                }
+
                 this.destroy();
             }
 

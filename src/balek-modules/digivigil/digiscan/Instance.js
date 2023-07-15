@@ -187,7 +187,9 @@ define(['dojo/_base/declare',
                      resultCallback({Error: Error})
                 }))
             },
-
+            getStatefulCaptureSet: function(captureID){
+                return this._moduleController.getStatefulCaptureSet(captureID)
+            },
             getCaptureSetSyncedMap: function(captureSetID, resultCallback){
                 console.log("getCaptureSetSyncedMap:", captureSetID)
                 this._moduleController.getCaptureSetSyncedMap(captureSetID, this._instanceKey).then(lang.hitch(this, function(Result){
@@ -293,7 +295,7 @@ define(['dojo/_base/declare',
 
 
                     for (const captureID in this.userCaptures) {
-                        if (this.userCaptures.hasOwnProperty(captureID)) {
+                        if (this.userCaptures.hasOwnProperty(captureID) && captureID !== "_watchCallbacks") {
                             const checkSum = this.userCaptures.get(captureID);
                             captures[captureID] = {inSet: true}
                             // Do something with the property

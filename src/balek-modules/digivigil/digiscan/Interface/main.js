@@ -180,60 +180,10 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
             onAvailableEntriesStateChange: function (name, oldState, newState) {
-                // let id = name.toString()
-                // if( newState !== null && newState.capture)
-                // {
-                //
-                //     this.entries[id] = newState.capture
-                //     this.addOrUpdateEntryWidget(id)
-                //
-                //
-                // } else
-                // {
-                //
-                //
-                //    this.removeEntryWidget(id)
-                //     this.entries[id] = undefined
-                //     delete this.entries[id]
-                //     console.log("deletedEntry")
-                //
-                // }
-                //
-                // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
-                //
-                // this.tableModel.setDataString(this.getTabSeperatedEntries())
-                //
-
-
-            },onInterestedCapturesStateChange:function (name, oldState, newState){
-               //  console.log("onInterestedCapturesStateChange: name, oldState, newState",name, oldState, newState)
-               //
-               //  let id = name.toString()
-               //  if( newState !== null && newState.capture)
-               //  {
-               //
-               //     // this.entries[id] = newState.entry
-               //      this.addOrUpdateEntryWidget(id)
-               //
-               //
-               //  } else
-               //  {
-               //
-               //
-               //      this.removeEntryWidget(id)
-               //     // this.entries[id] = undefined
-               //     // delete this.entries[id]
-               //      //console.log("deletedEntry")
-               //
-               //  }
-               //
-               // // console.log("deletedEntry building string", this.entries, this.getTabSeperatedEntries())
-               //
-               //  this.tableModel.setDataString(this.getTabSeperatedEntries())
-
+             //todo change to availableCaptures
+                this.refreshViews()
 
             },
-
             onUIStateChange: function (name, oldState, newState) {
 
                 console.log("onUIStateChange: name, oldState, newState",name, oldState, newState)
