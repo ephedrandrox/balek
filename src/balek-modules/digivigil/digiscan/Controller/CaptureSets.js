@@ -60,7 +60,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 let id = CaptureSet._id.toString()
                                 this.captureSets.set(id, CaptureSet)
                                 this.updateStatefulCaptureSet(CaptureSet)
-                                this.appendToUserList(CaptureSet)
+                                this.updateToUserList(CaptureSet)
                             }))
                             Resolve({SUCCESS: "getCaptureSets database results Loaded"})
                         }else{
@@ -87,7 +87,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                     let id = DBCaptureSet._id.toString()
                                     this.captureSets.set(id, DBCaptureSet)
                                     this.updateStatefulCaptureSet(DBCaptureSet)
-                                    this.appendToUserList(DBCaptureSet)
+                                    this.updateToUserList(DBCaptureSet)
                                     Resolve({SUCCESS: Entry})
                                 })).catch(lang.hitch(this, function(Error){
                                     Reject({Error: Error})
@@ -107,7 +107,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }));
             },
 
-            appendToUserList: function(CaptureSet){
+            updateToUserList: function(CaptureSet){
+                console.log("upda", CaptureSet)
+
                 if(CaptureSet.CaptureSet && CaptureSet.userKey && CaptureSet._id && typeof CaptureSet._id.toString === "function")
                 {
                     let userCaptureSets = this.getCaptureSetsForUser(CaptureSet.userKey)
@@ -358,6 +360,49 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }catch(Error){
                         console.log("Error Deleting Capture Set:", id, Error);
                         Reject(Error)
+                    }
+                }));
+            },
+            rename : function(captureSetId, newName){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    //get the capture set
+                    let statefulCaptureSet = this.getStatefulCaptureSet(captureSetId)
+                    let captureSet = this.captureSets.get(captureSetId)
+                    //if the capture set exists in state
+                    if (statefulCaptureSet && captureSet && captureSet.CaptureSet && typeof newName === 'string' )
+                    {
+                        //set the capture set
+                        let CaptureSet = captureSet.CaptureSet
+
+                        //set name to newName
+                        CaptureSet.name = newName
+                        //save to Database
+                        this._captureSetsDatabase.updateCaptureSet(captureSetId, CaptureSet).then(lang.hitch(this, function(Result){
+                            console.log("Capture Set Updated", Result);
+
+                            if(Result.modifiedCount === 1){
+                                //this.captureSets.set(captureSetId, {_id: captureSetId, CaptureSet: CaptureSet})
+                                console.log("Updating user list", {_id: captureSetId,
+                                    userKey: captureSet.userKey, CaptureSet: CaptureSet});
+
+                                this.updateToUserList({_id: captureSetId,
+                                    userKey: captureSet.userKey, CaptureSet: CaptureSet})
+
+                            }else
+                            {
+                                console.log("Database didnt save captures Set:", CaptureSet, captureSetId);
+                            }
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Controller could not add Capture to Database", Error);
+
+                            console.log({Error})
+                        }))
+
+                        //update Stateful CaptureSet list
+                       // statefulCaptureSet.set(captureID, inSet)
+                        Resolve({SUCCESS: "removeCaptureFromSet"})
+                    }else {
+                        Reject({Error: "Capture set is not as expected"})
                     }
                 }));
             },

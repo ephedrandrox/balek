@@ -56,6 +56,8 @@ define(['dojo/_base/declare',
                     "newAllSet" : lang.hitch(this, this.newAllSet),
                     "newClearSet" : lang.hitch(this, this.newClearSet),
                     "deleteCaptureSet" : lang.hitch(this, this.deleteCaptureSet),
+                    "renameCaptureSet" : lang.hitch(this, this.renameCaptureSet),
+
                     "selectCaptureSet" : lang.hitch(this, this.selectCaptureSet),
                     "removeCaptureFromSet": lang.hitch(this, this.removeCaptureFromSet),
                     "addCaptureToSet": lang.hitch(this, this.addCaptureToSet),
@@ -316,6 +318,20 @@ define(['dojo/_base/declare',
                 if(typeof id === "string" && typeof resultCallback === "function"){
                     this._moduleController.deleteCaptureSet(id).then(lang.hitch(this, function(Result){
                         this.captureSets.add(id, null)
+                        resultCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this, function(Error){
+                        resultCallback({Error: Error})
+                    }))
+
+
+                }else{
+                    resultCallback({ERROR : "instance -> deleteCaptureSet: id is not a string"})
+                }
+            },
+            renameCaptureSet : function(id, name, resultCallback){
+                if(typeof id === "string" && typeof name === "string" && typeof resultCallback === "function"){
+                    this._moduleController.renameCaptureSet(id, name).then(lang.hitch(this, function(Result){
+                     //   this.captureSets.add(id, null)
                         resultCallback({SUCCESS: Result})
                     })).catch(lang.hitch(this, function(Error){
                         resultCallback({Error: Error})

@@ -74,6 +74,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             deleteCaptureSet: function(id){
                 return this.CaptureSets.delete(id)
             },
+            renameCaptureSet: function(id, name){
+                return this.CaptureSets.rename(id, name)
+            }
 
         });
     }

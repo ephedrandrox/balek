@@ -18,8 +18,8 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        'dojo/text!balek-modules/digivigil/digiscan/resources/html/capturePreviewView.html',
-        'dojo/text!balek-modules/digivigil/digiscan/resources/css/capturePreviewView.css'
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/captureGridView.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/captureGridView.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
               dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
@@ -106,7 +106,7 @@ define(['dojo/_base/declare',
                     this.setCurrentCaptureListWatcher()
                     this.reloadViewFromState()
                 })).catch(lang.hitch(this, function(Error){
-                    console.warn("Error interfaceCommands getUIState() from capturePreviewView", Error)
+                    console.warn("Error interfaceCommands getUIState() from captureGridView", Error)
                 }))
             },
             onUIStateChange: function(name, oldValue, newValue){

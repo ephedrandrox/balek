@@ -18,8 +18,6 @@ text-align:center
     height: 38px;
     width: 38px;
 
-    /*right: 30px;*/
-    /*top: 15%;*/
 
 }
 .digivigilDigiscanMainInterfaceButton:hover {
@@ -77,13 +75,12 @@ text-align:center
 
 .digivigilDigiscanMainInterfaceSetViewControl{
     /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    border-radius:5px;
+    border-radius: 0 0 15px 15px;
     background: rgba(54, 56, 58, 0.3)
 }
 
 .digivigilDigiscanMainInterfaceSetViewControl:hover{
     /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    border-radius:5px;
     background: rgba(54, 56, 58, 0.8);
     color: white;
 }

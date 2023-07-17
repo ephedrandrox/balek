@@ -38,11 +38,11 @@
                 </div>
             </div>
             <div class="${baseClass}ActiveViewControl" style="position: fixed; top: 0; right: 0;">
-                <div data-dojo-attach-event="onclick:_onActivatePreviewView" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">
+                <div data-dojo-attach-event="onclick:_onActivatePreviewView,onmouseover:_onActivatePreviewOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">
                     <img class="${baseClass}ActiveViewControlButtonImage"
                          src="balek-modules/digivigil/digiscan/resources/images/grid.svg">
                 </div>
-                <div data-dojo-attach-event="onclick:_onActivateTabularView" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">
+                <div data-dojo-attach-event="onclick:_onActivateTabularView,onmouseover:_onActivateTabularOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">
                     <img class="${baseClass}ActiveViewControlButtonImage"
                          src="balek-modules/digivigil/digiscan/resources/images/list.svg">
                 </div>

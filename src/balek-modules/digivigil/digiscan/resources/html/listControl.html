@@ -1,14 +1,19 @@
 <div class="${baseClass}" tabindex="0">
-    <div class="${baseClass}StatusTextDiv"  data-dojo-attach-point="_statusDiv">status is...</div>
+    <div class="${baseClass}GridContainer">
 
-    <div data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}NewSetButton" >
-        <img class="${baseClass}ButtonImage" data-dojo-attach-point="eraseButtonImage"
-             src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg"></div>
-    <div data-dojo-attach-point="listNameOptions" class="${baseClass}SetSelector"></div>
-    <div data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:_onHiddenOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}NewSetButton">
-        <img class="${baseClass}ButtonImage" data-dojo-attach-point="eraseButtonImage"
-             src="balek-modules/digivigil/digiscan/resources/images/erase.svg">
+        <div class="${baseClass}NewButtonDiv" data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText"  >
+            <img class="${baseClass}ButtonImage"
+                 src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg"></div>
 
+        <div class="${baseClass}StatusTextDiv"  data-dojo-attach-point="_statusDiv"></div>
+
+        <div class="${baseClass}SetSelectionDiv" data-dojo-attach-point="listNameOptions"></div>
+
+        <div class="${baseClass}HiddenButtonDiv" data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:_onHiddenOver,onmouseout:_onMouseOutResetStatusText" >
+            <img class="${baseClass}ButtonImage" data-dojo-attach-point="eraseButtonImage"
+                 src="balek-modules/digivigil/digiscan/resources/images/erase.svg">
+
+        </div>
     </div>
 
 </div>

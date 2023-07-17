@@ -156,12 +156,18 @@ define(['dojo/_base/declare',
                                     }
                                 }
 
-
-
                     }
 
                 }
 
+            },
+            renameCaptureSet: function(captureSetID){
+                let getNameForSet = new getUserInput({question: "Rename Set",
+                    inputReplyCallback: lang.hitch(this, function(newSetNameChoice){
+                        getNameForSet.unload();
+                            this.interfaceCommands.renameCaptureSet(captureSetID, newSetNameChoice)
+
+                    }) });
             },
             captureSetSelectButton: function(id, name)
             {
@@ -174,6 +180,8 @@ define(['dojo/_base/declare',
 
                     if (clickEvent.altKey) {
                         this.interfaceCommands.deleteCaptureSet(id)
+                    }else  if (clickEvent.shiftKey) {
+                        this.renameCaptureSet(id)
                     }else{
                         this.interfaceCommands.selectCaptureSet(id)
                     }

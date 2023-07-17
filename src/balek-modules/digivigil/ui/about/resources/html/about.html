@@ -1,11 +1,44 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus" tabindex="0">
     <div class="${baseClass}MainHeaderTitle">
+        <div class="${baseClass}MainHeaderTitleGridContainer">
 
-        <div id="${baseClass}ScapturaTitle" >Scaptura</div> <br>
-        <img class="${baseClass}ScapturaImage" style="position: relative; display: inline; top: 5px; height: 64px;" src="balek-modules/digivigil/digiscan/resources/images/ScapturaIcon.png">
-        <div id="${baseClass}OfDigivigil" >
-            <img id="${baseClass}OfDigivigilImage"
-                 src="balek-modules/digivigil/digiscan/resources/images/digivigilLogo.png"> Of Digivigil
+
+            <div id="${baseClass}ScapturaImageDiv">
+                <img class="${baseClass}ScapturaImage"
+                     style="position: relative; display: inline; top: 5px; height: 200px; padding: 20px;"
+                     src="balek-modules/digivigil/ui/about/resources/images/ScapturaIcon.svg">
+
+            </div>
+
+
+            <div id="${baseClass}ScapturaTitle" >Captura
+                <div id="${baseClass}OfDigivigil" >
+                    <a href="https://www.digivigil.com/" target="_blank" style="text-decoration: none; color: inherit;">
+                <span style="vertical-align: bottom; text-decoration: none;">Digivigil
+</span>
+                    <img id="${baseClass}OfDigivigilImage"
+                         src="balek-modules/digivigil/digiscan/resources/images/digivigilLogo.png">
+</a>
+                </div>
+                <div id="${baseClass}OfDiv" >
+                    from
+                </div>
+            </div> <br>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="${baseClass}DescriptionDiv">
+            For reviewing, organizing, and downloading captures from the iOS application
+        </div>
+        <br/>
+        <div class="${baseClass}DescriptionDiv">
+            See the User Manual for help getting started
         </div>
     </div>
 </div>

@@ -17,7 +17,7 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil/digiscan/Interface/capturePreviewView",
+        "balek-modules/digivigil/digiscan/Interface/captureGridView",
         'balek-modules/digivigil/digiscan/Interface/listControl',
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
@@ -33,7 +33,7 @@ define(['dojo/_base/declare',
 
     ],
     function (declare, lang, topic, domClass, domStyle, domConstruct, win, fx, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, capturePreviewView, listControl, Tabular, TableModel,
+              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, captureGridView, listControl, Tabular, TableModel,
               AboutUI,
               template,
               mainCss,
@@ -253,7 +253,7 @@ define(['dojo/_base/declare',
             },
             addOrUpdateEntryWidget: function (id) {
                 // if (!(this._EntryWidgets[id])) {
-                //     this._EntryWidgets[id] = new capturePreviewView({
+                //     this._EntryWidgets[id] = new captureGridView({
                 //         _interfaceKey: this._interfaceKey,
                 //      //   itemData: this.entries[id],
                 //         interfaceCommands: this._interface,
@@ -330,13 +330,24 @@ define(['dojo/_base/declare',
                     this.uiState.set("UIStatusText", newText)
                 }
             },
+            updateListControlStatusText: function(newText){
+                if(this.uiState!==null && typeof newText === "string"){}
+                {
+                    this.uiState.set("UIListControlStatusText", newText)
+                }
+            },
             _onSaveClicked: function (eventObject) {
 
                 let tabbedString = this.getTabSeperatedEntries()
                 this.createTabbedDataDownload(tabbedString);
 
             },
-
+            _onActivatePreviewOver: function(){
+                this.updateListControlStatusText("Grid View")
+            },
+            _onActivateTabularOver: function(){
+                this.updateListControlStatusText("List View")
+            },
             _onCopyClicked: function (eventObject) {
                 let tabbedString = this.getTabSeperatedEntries()
                 this.copyToClipboard(tabbedString);
@@ -404,7 +415,7 @@ define(['dojo/_base/declare',
                 console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
 
                 if (!(this._EntryWidgets[id])) {
-                    this._EntryWidgets[id] = new capturePreviewView({
+                    this._EntryWidgets[id] = new captureGridView({
                         _interfaceKey: this._interfaceKey,
                         //itemData: this.entries[id],
                         interfaceCommands: this._interface,

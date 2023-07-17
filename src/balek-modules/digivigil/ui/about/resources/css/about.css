@@ -4,17 +4,53 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: solid white 3px;
     border-radius:10px;
     width: 80%;
     height: 80%;
 
-    background: rgba(78, 85, 115, 0.8);
+
 }
 
 .scapturaUIAboutMainHeaderTitle{
 
-    font-size: 40px;
+}
+
+.scapturaUIAboutDescriptionDiv{
+    color: black;
+    text-align: left;
+
+    padding: 50px;
+    margin: 20px;
+
+padding-top: 10px;
+    border: solid #0c0c10 3px;
+    background: rgba(253, 249, 249, 0.89);
+}
+
+.scapturaUIAboutMainHeaderTitleGridContainer {
+position: relative;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto ;
+    gap: 0px 0px;
+    grid-template-areas:
+    "ScapturaImage ScapturaTitle";
+
+
+
+    border: solid #0c0c10 3px;
+background: rgba(128, 128, 128, 0.9);
+    border-radius: 10px;
+}
+
+
+.scapturaUIAboutScapturaImage{
+    margin-top: 4px;
+}
+
+#scapturaUIAboutScapturaTitle{
+position: relative;
+    font-size: 80px;
     color: #000000;
     display: inline-block;
 
@@ -22,36 +58,59 @@
     font-family: 'Righteous', Arial, Helvetica, sans-serif;
 
 
-    padding: 0;
+    padding: 10px;
+
+    padding-top: 20px;
     margin: 0;
-    height: 50px;
-    line-height: 50px;
+    line-height: 100px;
 
-    text-align: center;
-
+    text-align: left;
 
 
-}
-
-.scapturaUIAboutScapturaImage{
-    margin-top: 4px;
-}
-
-#scapturaUIAboutScapturaTitle{
+    grid-area: ScapturaTitle;
 
 }
 
 
+#scapturaUIAboutScapturaImageDiv{
+
+    grid-area: ScapturaImage;
+
+}
 
 #scapturaUIAboutOfDigivigil{
     right: 0;
-    font-size: 18px;
+    font-size: 56px;
     font-family: serif;
+    color: black;
+
+    padding: 10px;
+
+    grid-area: OfDigivigil;
+
+    vertical-align: top;
+
+    line-height: 40px;
+
+}
+
+
+#scapturaUIAboutOfDiv{
+    position: absolute;
+    font-size: 36px;
+    font-family: serif;
+    color: black;
+
+    top: 75px;
+    left: 130px;
+
 }
 
 
 #scapturaUIAboutOfDigivigilImage{
-height: 50px;
+
+height: 60px;
+    padding: 0;
 }
 
 @media (max-width: 600px) {
