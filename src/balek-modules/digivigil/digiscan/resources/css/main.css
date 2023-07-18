@@ -261,6 +261,9 @@ display: block;
 }
 .digivigilDigiscanMainInterfaceStatusDiv{
     min-height: 20px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .digivigilDigiscanMainInterfaceBackgroundDiv{

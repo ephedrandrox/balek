@@ -307,7 +307,7 @@ define(['dojo/_base/declare',
 
             },
             _onSaveOver: function (eventObject) {
-                this.updateStatusText("Save captures as tab seperated text file")
+                this.updateStatusText("Save captures as text file")
             },
             _onCopyOver: function (eventObject) {
                 this.updateStatusText("Copy captures as tab seperated text")

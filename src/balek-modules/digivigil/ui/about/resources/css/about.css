@@ -1,18 +1,21 @@
 .scapturaUIAbout{
     position: absolute;
-    display: block;
+
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius:10px;
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
+    color: black;
 
-
+    display: inline-block;
+    border: solid #0c0c10 3px;
+    background: rgba(248, 247, 247, 0.76);
 }
 
 .scapturaUIAboutMainHeaderTitle{
-
+margin: 30px;
 }
 
 .scapturaUIAboutDescriptionDiv{
@@ -22,13 +25,14 @@
     padding: 50px;
     margin: 20px;
 
-padding-top: 10px;
-    border: solid #0c0c10 3px;
-    background: rgba(253, 249, 249, 0.89);
+    padding-top: 10px;
+
+    display: inline-block;
+
 }
 
 .scapturaUIAboutMainHeaderTitleGridContainer {
-position: relative;
+    position: relative;
     display: inline-grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto ;
@@ -49,24 +53,16 @@ background: rgba(128, 128, 128, 0.9);
 }
 
 #scapturaUIAboutScapturaTitle{
-position: relative;
+    position: relative;
     font-size: 80px;
     color: #000000;
     display: inline-block;
-
-
     font-family: 'Righteous', Arial, Helvetica, sans-serif;
-
-
     padding: 10px;
-
     padding-top: 20px;
     margin: 0;
     line-height: 100px;
-
     text-align: left;
-
-
     grid-area: ScapturaTitle;
 
 }
