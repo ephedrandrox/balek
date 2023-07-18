@@ -35,7 +35,7 @@ define(['dojo/_base/declare',
 
             workspaceManagerCommands: null,
 
-            availableEntries: null,
+            availableCaptures: null,
             interestedCaptures: null,
             captureSets: null,
             captureSetsSyncedMap: null,
@@ -49,7 +49,7 @@ define(['dojo/_base/declare',
             uiStateSyncedMap: null,
             uiStateWatchHandle: null,
 
-            availableEntriesResolveRequests: null,
+            availableCapturesResolveRequests: null,
             interestedCapturesResolveRequests: null,
             captureSetsResolveRequests: null,
             uiStateResolveRequests: null,
@@ -70,7 +70,7 @@ define(['dojo/_base/declare',
 
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
-                this.availableEntriesResolveRequests = []
+                this.availableCapturesResolveRequests = []
                 this.interestedCapturesResolveRequests = []
                 this.captureSetsResolveRequests = []
                 this.uiStateResolveRequests = []
@@ -89,17 +89,17 @@ define(['dojo/_base/declare',
                 //this has to be here so remoteCommander works
                 this.inherited(arguments);
 
-                if (name === "availableEntriesComponentKey") {
-                    //Create availableEntries SyncedMap
-                    if(this.availableEntries === null){
-                        this.availableEntries = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                        for( const ResolveKey in this.availableEntriesResolveRequests)
+                if (name === "availableCapturesComponentKey") {
+                    //Create availableCaptures SyncedMap
+                    if(this.availableCaptures === null){
+                        this.availableCaptures = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
+                        for( const ResolveKey in this.availableCapturesResolveRequests)
                         {
-                           this.availableEntries[ResolveKey](this.availableEntries)
+                           this.availableCaptures[ResolveKey](this.availableCaptures)
                         }
                     }
                 } else if (name === "interestedCapturesComponentKey") {
-                    //Create availableEntries SyncedMap
+                    //Create availableCaptures SyncedMap
                     if(this.interestedCaptures === null){
                         this.interestedCaptures = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
                         for( const ResolveKey in this.interestedCapturesResolveRequests)
@@ -109,7 +109,7 @@ define(['dojo/_base/declare',
                     }
                 }
                 else if (name === "captureSetsComponentKey") {
-                    //Create availableEntries SyncedMap
+                    //Create availableCaptures SyncedMap
                     if(this.captureSetsSyncedMap === null){
                         this.captureSetsSyncedMap = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
                         this.captureSetsWatchHandle = this.captureSetsSyncedMap.setStateWatcher(lang.hitch(this,this.onCaptureSetStateChange))
@@ -121,7 +121,7 @@ define(['dojo/_base/declare',
                     }
                 }
                 else if (name === "uiStateComponentKey") {
-                    //Create availableEntries SyncedMap
+                    //Create availableCaptures SyncedMap
                     if(this.uiStateSyncedMap === null){
                         this.uiStateSyncedMap = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
 
@@ -176,11 +176,11 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             getAvailableEntries: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    if(this.availableEntries == null){
-                        this.availableEntriesResolveRequests.push(Resolve)
+                    if(this.availableCaptures == null){
+                        this.availableCapturesResolveRequests.push(Resolve)
                     }else
                     {
-                        Resolve(this.availableEntries)
+                        Resolve(this.availableCaptures)
                     }
                 }))
             },

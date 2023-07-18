@@ -20,7 +20,7 @@ define(['dojo/_base/declare',
 
 
             userCaptures: null, //if session has user key then this is dojo Stateful
-            availableEntries: null,             //SyncedMapInstance
+            availableCaptures: null,             //SyncedMapInstance
          //   interestedCaptures: null,
 
             captureSets: null,
@@ -65,8 +65,8 @@ define(['dojo/_base/declare',
 
                 };
 
-                this.availableEntries = new SyncedMapInstance({_instanceKey: this._instanceKey});
-                this._interfaceState.set("availableEntriesComponentKey", this.availableEntries._componentKey);
+                this.availableCaptures = new SyncedMapInstance({_instanceKey: this._instanceKey});
+                this._interfaceState.set("availableCapturesComponentKey", this.availableCaptures._componentKey);
 
                 this.captureSets = new SyncedMapInstance({_instanceKey: this._instanceKey});
                 this._interfaceState.set("captureSetsComponentKey", this.captureSets._componentKey);
@@ -74,7 +74,7 @@ define(['dojo/_base/declare',
                 let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
                 if (userKey != null ) {
                     this.userCaptures = this._moduleController.getCapturesForUser(userKey)
-                    this.availableEntries.relayState(this.userCaptures)
+                    this.availableCaptures.relayState(this.userCaptures)
 
                     this.userCaptureSets = this._moduleController.getCaptureSetsForUser(userKey)
 
@@ -109,7 +109,7 @@ define(['dojo/_base/declare',
 
 
                 // if(this.userCaptures !== null){
-                //   //  this.availableEntries.relayState(this.userCaptures)
+                //   //  this.availableCaptures.relayState(this.userCaptures)
                 // }else{
                 //     //Get Controller Entries State
                 //     let Entries = this._moduleController.getCaptures()
@@ -118,7 +118,7 @@ define(['dojo/_base/declare',
                 //         let value = Entries[key]
                 //         if(typeof value !== 'function' && value._id && value._id.toString() == key){
                 //             console.log("adding Entries from controller entries State", key, value)
-                //             this.availableEntries.add(key, value );
+                //             this.availableCaptures.add(key, value );
                 //             // this.interestedCaptures.add(value.entry.id, value.entry.id );
                 //         }
                 //     }
@@ -133,7 +133,7 @@ define(['dojo/_base/declare',
             // onControllerEntriesStateChange: function (name, oldState, newState) {
             //     //When a new entry becomes available, add it to our Available State
             //     //check this is our users capture
-            //     this.availableEntries.add(name, newState );
+            //     this.availableCaptures.add(name, newState );
             //
             //
             //     //this._moduleController.addCaptureToAllCaptureSets(name, newState)
@@ -169,9 +169,9 @@ define(['dojo/_base/declare',
                 this._moduleController.removeAllCaptures().then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
                     console.log("resultCallbacked ",Result)
-                    this.availableEntries.forEach(lang.hitch(this, function(id, capture){
-                        console.log("availableEntries", id, capture,  this.availableEntries)
-                        this.availableEntries.add(id, undefined)
+                    this.availableCaptures.forEach(lang.hitch(this, function(id, capture){
+                        console.log("availableCaptures", id, capture,  this.availableCaptures)
+                        this.availableCaptures.add(id, undefined)
 
                     }))
                     console.log("resultCallbacked after ",Result)
@@ -306,7 +306,7 @@ define(['dojo/_base/declare',
                         }
                     }
 
-                    // this.availableEntries.forEach(function (key, value){
+                    // this.availableCaptures.forEach(function (key, value){
                     //
                     // })
 

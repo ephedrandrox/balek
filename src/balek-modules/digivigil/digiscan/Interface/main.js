@@ -348,13 +348,13 @@ define(['dojo/_base/declare',
 
                 //todo move this to interface controller
                 //and change entries to captures
-                if(typeof doThis === 'function' && this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null)
+                if(typeof doThis === 'function' && this.uiState!==null && this.captureSets!==null && this._interface.availableCaptures!==null)
                 {
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
                     const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
                     const showHiddenCaptures = this.uiState.get("showHiddenCaptures")
                     if (captureSet ) {
-                        let availableCaptures = this._interface.availableEntries
+                        let availableCaptures = this._interface.availableCaptures
                         availableCaptures.forEach(lang.hitch(this, function (key) {
                             let keyInCaptureSet = captureSet.get(key)
 
