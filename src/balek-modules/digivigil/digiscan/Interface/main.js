@@ -1,12 +1,9 @@
 define(['dojo/_base/declare',
         'dojo/_base/lang',
-        'dojo/topic',
-        'dojo/dom-class',
         'dojo/dom-style',
         'dojo/dom-construct',
         "dojo/_base/window",
         "dojo/_base/fx",
-
         'dojo/on',
         "dojo/dom-attr",
         "dojo/keys",
@@ -21,20 +18,17 @@ define(['dojo/_base/declare',
         'balek-modules/digivigil/digiscan/Interface/listControl',
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
-
         'balek-modules/digivigil/ui/about',
-
 
         'dojo/text!balek-modules/digivigil/digiscan/resources/html/main.html',
         'dojo/text!balek-modules/digivigil/digiscan/resources/css/main.css',
 
         'balek-modules/components/syncedCommander/Interface',
         'balek-client/session/workspace/container/containable',
-
     ],
-    function (declare, lang, topic, domClass, domStyle, domConstruct, win, fx, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, captureGridView, listControl, Tabular, TableModel,
-              AboutUI,
+    function (declare, lang, domStyle, domConstruct, win, fx,
+              on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
+              captureGridView, listControl, Tabular, TableModel, AboutUI,
               template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
@@ -57,52 +51,37 @@ define(['dojo/_base/declare',
             _listControlContainer: null, //DomNode
             listControl: null,
 
-
             tableModel: null,
             MainTable: null,
-
-            entries: null,                      //Objects by id
-
-            availableEntries: null,             //SyncedMap
-            availableEntriesWatchHandle: null,
-            //interestedCaptures
-            interestedCaptures: null,             //SyncedMap
-            interestedCapturesWatchHandle: null,
 
             uiState: null,             //SyncedMap
             uiStateWatchHandle: null,
 
             captureSets: null,
             captureSetsWatchHandle: null,
-
-
             currentCaptureSetWatchHandle: null,
 
-            _EntryWidgets: null,
+            CaptureViews: null,
             //##########################################################################################################
             //Startup Functions Section
             //##########################################################################################################
             constructor: function (args) {
                 this._interface = {};
                 this._digiscanData = {};
-                this._EntryWidgets = {};
-
-
+                this.CaptureViews = {};
                 this.tableModel = new TableModel({
                     mostValuesInAnyLine: 0,
                     headerStart : 0,
                     footerStart : 0
                 });
 
-                this.entries = {}
-
                 declare.safeMixin(this, args);
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-
             },
             postCreate: function () {
                 this.initializeContainable();
 
+                //Create the Main Table Widget
                 if(this.MainTable == null)
                 {
                     this.MainTable = Tabular({tableModel: this.tableModel,
@@ -110,29 +89,23 @@ define(['dojo/_base/declare',
                         outputPreviewPane: this._tabularOutput
                     })
                     console.log("MainTable was created", this.MainTable)
-
                     domConstruct.place(this.MainTable.domNode, this._tabularContainer, 'only')
                 }else{
                     console.log("MainTable already exists", this.MainTable)
                 }
 
+                //Should be null but check anyway
+                if(this.listControl == null) {
+                    //Create list control Widget
+                    this.listControl = listControl({
+                        interfaceCommands: this._interface,
+                        listsController: this._interface,
+                    })
+                    // insert it into container
+                    domConstruct.place(this.listControl.domNode, this._listControlContainer, 'only')
+                }
 
-                this._interface.getAvailableEntries().then(lang.hitch(this, function(Entries){
-                    this.availableEntries = Entries
-                    this.availableEntriesWatchHandle = this.availableEntries.setStateWatcher(lang.hitch(this, this.onAvailableEntriesStateChange));
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getAvailableEntries()", Error)
-                }))
-
-                this._interface.getInterestedCaptures().then(lang.hitch(this, function(interestedCaptures){
-                    this.interestedCaptures = interestedCaptures
-                    this.interestedCapturesWatchHandle = this.interestedCaptures.setStateWatcher(lang.hitch(this, this.onInterestedCapturesStateChange));
-                    console.log("Interest captures")
-                })).catch(lang.hitch(this, function(Error){
-                    console.log("Error this._interface.getInterestedCaptures()", Error)
-                }))
-
-
+                //Get UI State from the interface
                 this._interface.getUIState().then(lang.hitch(this, function(uiState){
                     this.uiState = uiState
                     this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
@@ -141,84 +114,52 @@ define(['dojo/_base/declare',
                     console.log("Error this._interface.getAvailableEntries()", Error)
                 }))
 
-
+                //Get Users Capture Sets List from interface
                 this._interface.getCaptureSets().then(lang.hitch(this, function(captureSets){
-                    // console.log("captureSetcaptureSetcaptureSet", captureSets)
-                    //
                      this.captureSets = captureSets
                      this.captureSetsWatchHandle = this.captureSets.watch(lang.hitch(this, this.onCaptureSetsChange));
                      this.refreshViews()
                 })).catch(lang.hitch(this, function(Error){
                     console.log("Error this._interface.getCaptureSets()", Error)
                 }))
-
-
-
-
-                if(this.listControl == null) {
-
-                    //Create list control and insert it into menu
-                    this.listControl = listControl({
-                        interfaceCommands: this._interface,
-                        listsController: this._interface,
-                    })
-                    domConstruct.place(this.listControl.domNode, this._listControlContainer, 'only')
-
-
-
-
-                }
-
-
+                
 
             },
             startupContainable: function(){
                 //called after containable is started
-                console.log("startupContainable main Digiscan interface containable");
+                //keep stub for future use
             },
             //##########################################################################################################
             //Event Functions Section
             //##########################################################################################################
-            onAvailableEntriesStateChange: function (name, oldState, newState) {
-             //todo change to availableCaptures
+            onAvailableCapturesStateChange: function (name, oldState, newState) {
                 this.refreshViews()
-
             },
             onUIStateChange: function (name, oldState, newState) {
-
-                console.log("onUIStateChange: name, oldState, newState",name, oldState, newState)
-
+                //if active view, selected capture set or show hidden captures changed
                 if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures")
                 {
-
-
                     this.refreshViews()
-                    this.setCurrentCaptureListWatcher()
+                    this.setCurrentCaptureSetWatcher()
                 }
-
-
-
+                //If just status text Changes then update the div
                 if(name === "UIStatusText"){
                     this._statusDiv.innerHTML = newState
                 }
             },
-            onCaptureSetsChange: function (name, oldState, newState) {
-
-                console.log("onCaptureSetsChange: name, oldState, newState",name, oldState, newState)
-
+            onCaptureSetsChange: function (captureSetID, oldName, newName) {
+                   //if the users capture sets list changes
                     this.refreshViews()
-
             },
-            setCurrentCaptureListWatcher: function(){
-
+            setCurrentCaptureSetWatcher: function(){
+                //refresh the view when the selected capture set changes
+                //but first remove the previous watch event
                 if(this.currentCaptureSetWatchHandle !== null){
                     this.currentCaptureSetWatchHandle.unwatch()
                     this.currentCaptureSetWatchHandle.remove()
                 }
-
                 if(this.uiState!==null ) {
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-
                     if(selectedCaptureSetID){
                         const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
                         this.currentCaptureSetWatchHandle = captureSet.watch(lang.hitch(this, function(name, oldValue, newValue){
@@ -226,55 +167,11 @@ define(['dojo/_base/declare',
                         }))
                     }
                 }
-
             },
 
-            getTabSeperatedEntries: function(){
-                let tabbedString = "" ;
-                this.forEachSelectedCapture(lang.hitch(this, function(captureID){
-
-                    if(captureID){
-                        let capture  =  this._interface.getCaptures().getCaptureByID(captureID)
-                        if(capture && typeof capture.get === "function"){
-                            const barcode = capture.get("barcode");
-                            const recognizedText = capture.get("recognizedText");
-                            if(typeof recognizedText === "string")
-                            {
-                                tabbedString += barcode + "\t" + recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
-                            }
-                        }
-                    }
-
-                }))
-                return tabbedString
-            },
-            onNewEntry: function(id){
-               // this.addOrUpdateEntryWidget(id)
-            },
-            addOrUpdateEntryWidget: function (id) {
-                // if (!(this._EntryWidgets[id])) {
-                //     this._EntryWidgets[id] = new captureGridView({
-                //         _interfaceKey: this._interfaceKey,
-                //      //   itemData: this.entries[id],
-                //         interfaceCommands: this._interface,
-                //         captureID: id
-                //     });
-                //   //  console.log("_EntryWidgets", id, this._previewDiv, this._EntryWidgets, this._EntryWidgets[id].domNode);
-                //     domConstruct.place(this._EntryWidgets[id].domNode, this._previewDiv);
-                // }
-            },
-
-
-            removeEntryWidget(id){
-                // if (this._EntryWidgets[id]) {
-                //
-                //     domConstruct.destroy(this._EntryWidgets[id].domNode, this._previewDiv);
-                //
-                //
-                //     this._EntryWidgets[id] = undefined;
-                //     console.log("Removed ENtryWIdget", id);
-                // }
-            },
+            //##########################################################################################################
+            //Widget Event Functions Section
+            //##########################################################################################################
 
             _onKeyUp: function (keyUpEvent) {
                 switch (keyUpEvent.keyCode) {
@@ -284,27 +181,15 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            // _onExportClicked: function (eventObject) {
-            //
-            //     // domStyle.set(this._previewDiv, "display", "none");
-            //     // domStyle.set(this._tabularDiv, "display", "inherit");
-            //     this.toggleViews()
-            // },
             _onActivatePreviewView: function(){
                 this.makePreviewDivActive()
-
-                //this.makePreviewDivActive()
-
             },
             _onActivateTabularView: function(){
                 this.makeTabularDivActive()
-
                 this._interface.setUIActiveView("tabularDiv");
-
             },
             _onRemoveClicked: function (eventObject) {
                 this._interface.removeAllCaptures();
-
             },
             _onSaveOver: function (eventObject) {
                 this.updateStatusText("Save captures as text file")
@@ -354,55 +239,43 @@ define(['dojo/_base/declare',
 
             },
             //##########################################################################################################
-            //Interface Functions Section
+            //Interface Commands Functions Section
             //##########################################################################################################
             makeTabularDivActive: function(){
-                console.log("makeTabularDivActive")
-
                 const previewDiv = this._previewDiv;
                 const tabularDiv = this._tabularDiv;
-
                 this.switchViews(previewDiv, tabularDiv);
                 this._interface.setUIActiveView("tabularDiv");
-
             },
             makePreviewDivActive: function(){
-                console.log("makePreviewDivActive")
+                const previewDiv = this._previewDiv;
+                const tabularDiv = this._tabularDiv;
+                this.switchViews(tabularDiv, previewDiv);
+                this._interface.setUIActiveView("previewDiv");
+            },
+            //##########################################################################################################
+            //UI Update Functions Section
+            //##########################################################################################################
+            refreshViews: function(){
+                const activeView = this.uiState.get("ActiveView")
+                this.updatePreviewViews();
+
+                this.tableModel.setDataString(this.getTabSeperatedEntries())
+
                 const previewDiv = this._previewDiv;
                 const tabularDiv = this._tabularDiv;
 
-                this.switchViews(tabularDiv, previewDiv);
-
-                this._interface.setUIActiveView("previewDiv");
-
-
-            },
-            forEachSelectedCapture: function(doThis)
-            {
-
-                if(typeof doThis === 'function' && this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null)
+                if(activeView === "previewDiv")
                 {
-                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-                    const showHiddenCaptures = this.uiState.get("showHiddenCaptures")
-
-                    if (captureSet ) {
-                        let availableCaptures = this._interface.availableEntries
-                        availableCaptures.forEach(lang.hitch(this, function (key) {
-                            let keyInCaptureSet = captureSet.get(key)
-
-                            if (showHiddenCaptures || (keyInCaptureSet && keyInCaptureSet === true)) {
-                                doThis(key)
-                            }
-
-
-                        }));
-                    }
+                    this.switchViews(tabularDiv, previewDiv);
+                }else if(activeView === "tabularDiv")
+                {
+                    this.switchViews(previewDiv, tabularDiv);
+                }else {
+                    console.log("switchViews unexpected", activeView)
                 }
-
             },
-            updatePreviewView: function(){
-
+            updatePreviewViews: function(){
                 domConstruct.empty(this._previewDiv)
                     this.forEachSelectedCapture(lang.hitch(this, function(captureID){
                        let captureView = this.getCaptureView(captureID)
@@ -412,44 +285,18 @@ define(['dojo/_base/declare',
                     }));
             },
             getCaptureView: function (id){
-                console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
-
-                if (!(this._EntryWidgets[id])) {
-                    this._EntryWidgets[id] = new captureGridView({
+                if (!(this.CaptureViews[id])) {
+                    this.CaptureViews[id] = new captureGridView({
                         _interfaceKey: this._interfaceKey,
-                        //itemData: this.entries[id],
                         interfaceCommands: this._interface,
                         captureID: id
-
                     });
-                    console.log("🚧🚧getCaptureView!",  this._EntryWidgets, this._EntryWidgets[id] )
-
-
                 }
-                return this._EntryWidgets[id];
+                return this.CaptureViews[id];
 
             },
 
-            refreshViews: function(){
-                const activeView = this.uiState.get("ActiveView")
 
-                this.updatePreviewView();
-                this.tableModel.setDataString(this.getTabSeperatedEntries())
-
-                const previewDiv = this._previewDiv;
-                const tabularDiv = this._tabularDiv;
-                console.log("switchViews", activeView)
-
-                if(activeView === "previewDiv")
-                {
-                    this.switchViews(tabularDiv, previewDiv);
-                }else if(activeView === "tabularDiv")
-                {
-                    this.switchViews(previewDiv, tabularDiv);
-                }else {
-                    console.log("switchViews", activeView)
-                }
-            },
             switchViews: function(fadeOutNode, fadeInNode){
                 // Use the fade animation from the dojo/fx module
                 const fadeOutAnimation = fx.fadeOut({
@@ -475,27 +322,56 @@ define(['dojo/_base/declare',
                 fadeOutAnimation.play();
                 fadeInAnimation.play();
             },
-            toggleViews: function () {
-                if(this.uiState !== null)
+            //##########################################################################################################
+            //Export and Data Functions Section
+            //##########################################################################################################
+            getTabSeperatedEntries: function(){
+                let tabbedString = "" ;
+                this.forEachSelectedCapture(lang.hitch(this, function(captureID){
+                    if(captureID){
+                        let capture  =  this._interface.getCaptures().getCaptureByID(captureID)
+                        if(capture && typeof capture.get === "function"){
+                            const barcode = capture.get("barcode");
+                            const recognizedText = capture.get("recognizedText");
+                            if(typeof recognizedText === "string")
+                            {
+                                tabbedString += barcode + "\t" + recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
+                            }
+                        }
+                    }
+
+                }))
+                return tabbedString
+            },
+            forEachSelectedCapture: function(doThis)
+            {
+
+                //todo move this to interface controller
+                //and change entries to captures
+                if(typeof doThis === 'function' && this.uiState!==null && this.captureSets!==null && this._interface.availableEntries!==null)
                 {
-                    let currentlyActiveDiv = this.uiState.get("ActiveView")
-                    console.log("toggleViews",currentlyActiveDiv)
-                    currentlyActiveDiv === "previewDiv" ? this._interface.setUIActiveView("tabularDiv")  : this._interface.setUIActiveView("previewDiv");
+                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
+                    const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
+                    const showHiddenCaptures = this.uiState.get("showHiddenCaptures")
+                    if (captureSet ) {
+                        let availableCaptures = this._interface.availableEntries
+                        availableCaptures.forEach(lang.hitch(this, function (key) {
+                            let keyInCaptureSet = captureSet.get(key)
 
+                            if (showHiddenCaptures || (keyInCaptureSet && keyInCaptureSet === true)) {
+                                doThis(key)
+                            }
+                        }));
+                    }
                 }
-
-
             },
             createTabbedDataDownload: function (tabbedData){
-                var element = document.createElement('a');
+                let element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tabbedData));
                 element.setAttribute('download', "Digivigil Data.txt");
-
                 element.style.display = 'none';
                 document.body.appendChild(element);
-
                 element.click();
-
                 document.body.removeChild(element);
             },
             copyToClipboard: function (textToCopy){
@@ -526,17 +402,10 @@ define(['dojo/_base/declare',
                 }
                 domConstruct.destroy(node);
             },
-
+            //##########################################################################################################
+            //Widget Deconstruction Section
+            //##########################################################################################################
             unload: function () {
-
-
-                //This should be an array of handles that get dealt with by superClass
-                if(this.availableEntriesWatchHandle && this.availableEntriesWatchHandle.unwatch)
-                {
-                    this.availableEntriesWatchHandle.unwatch()
-
-                }
-
 
                 if(this.uiStateWatchHandle && this.uiStateWatchHandle.unwatch)
                 {
@@ -550,8 +419,8 @@ define(['dojo/_base/declare',
 
                 }
 
-                for (const entryWidget in this._EntryWidgets) {
-                    this._EntryWidgets[entryWidget].unload();
+                for (const captureView in this.CaptureViews) {
+                    this.CaptureViews[captureView].unload();
                 }
             }
         });

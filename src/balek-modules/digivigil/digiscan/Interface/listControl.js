@@ -65,7 +65,7 @@ define(['dojo/_base/declare',
                 this.refreshViews()
             },
             onUIStateChange: function( name, oldValue, newValue ) {
-                console.log("onCaptureSetsChange", name, oldValue, newValue)
+                console.log("onUIStateChange:ListCOntrol", name, oldValue, newValue)
 
                 if(name === "UIListControlStatusText"){
                     this._statusDiv.innerHTML = newValue
