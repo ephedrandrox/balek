@@ -71,6 +71,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }))
                 }
             },
+            resetCaptureMemory: function() {
+
+                let capturesByUserKey = this.capturesByUserKey
+
+                let capturesByUserKeyArray = Object.keys(capturesByUserKey).filter(key => !(key.includes('_watchCallbacks') || key.includes('filterSettings')));
+                console.log("Clearing these:", capturesByUserKeyArray);
+                capturesByUserKeyArray.forEach(lang.hitch(this, function(userKey) {
+                    let captures = capturesByUserKey[userKey]
+                    console.log("Clearing these:",userKey,captures );
+
+                    let capturesArray = Object.keys(captures).filter(key => !(key.includes('_watchCallbacks') || key.includes('filterSettings')));
+                    console.log("Clearing these:", capturesArray);
+                    capturesArray.forEach(lang.hitch(this, function(captureId) {
+                       captures.set(captureId, undefined)
+                        console.log("Clearing these@@@@@@:",captureId,captures );
+                    }));
+
+
+                }));
+            },
             load: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this._capturesDatabase.getCaptures().then(lang.hitch(this, function(Captures){
@@ -233,12 +253,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
 
 
-            remove: function(){
+            removeAll: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
 
                     this._capturesDatabase.removeAllCaptures().then(lang.hitch(this, function(Result){
                         console.log("All Captures Removed Request Result", Result);
-
+                        this.resetCaptureMemory();
                         Resolve({SUCCESS: Result})
 
                     })).catch(lang.hitch(this, function(Error){

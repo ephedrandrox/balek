@@ -136,7 +136,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     let statefulCaptureSet = this.getStatefulCaptureSet(CaptureSet._id.toString())
                     //statefulCaptureSet.set("CaptureSet", CaptureSet.CaptureSet);
 
-                    let capturesArray = Object.keys(CaptureSet.CaptureSet.captures).filter(key => !key.includes('_watchCallbacks'));
+                    let capturesArray = Object.keys(CaptureSet.CaptureSet.captures).filter(key => !key.includes('_watchCallbacks') );
 
                   // let capturesArray = Object.keys(CaptureSet.CaptureSet.captures)
                     capturesArray.forEach(lang.hitch(this, function(captureID){
@@ -400,6 +400,56 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         //update Stateful CaptureSet list
                        // statefulCaptureSet.set(captureID, inSet)
+                        Resolve({SUCCESS: "removeCaptureFromSet"})
+                    }else {
+                        Reject({Error: "Capture set is not as expected"})
+                    }
+                }));
+            },
+            clear : function(captureSetId){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    //get the capture set
+                    let statefulCaptureSet = this.getStatefulCaptureSet(captureSetId)
+                    let captureSet = this.captureSets.get(captureSetId)
+                    //if the capture set exists in state
+                    if (statefulCaptureSet && captureSet && captureSet.CaptureSet  )
+                    {
+                        //set the capture set
+                        let CaptureSet = captureSet.CaptureSet
+
+                        //set captures to empty object
+                        CaptureSet.captures = {}
+                        //save to Database
+                        this._captureSetsDatabase.updateCaptureSet(captureSetId, CaptureSet).then(lang.hitch(this, function(Result){
+                            console.log("Capture Set Updated", Result);
+
+                            if(Result.modifiedCount === 1){
+                                console.log("Updating user list", {_id: captureSetId,
+                                    userKey: captureSet.userKey, CaptureSet: CaptureSet});
+
+                                this.captureSets.set(captureSetId, {_id: captureSetId,
+                                    userKey: captureSet.userKey, CaptureSet: CaptureSet})
+
+                                let capturesArray = Object.keys(statefulCaptureSet).filter(key => !(key.includes('_watchCallbacks') || key.includes('filterSettings')));
+                                console.log("Clearing these:", capturesArray);
+                                capturesArray.forEach(lang.hitch(this, function(capture) {
+                                    statefulCaptureSet.set(capture, false)
+                                }));
+                              //  statefulCaptureSet.set(captureSetId, {_id: captureSetId,
+                               //     userKey: captureSet.userKey, CaptureSet: CaptureSet})
+
+                            }else
+                            {
+                                console.log("Database didnt save captures Set:", CaptureSet, captureSetId);
+                            }
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Controller could not add Capture to Database", Error);
+
+                            console.log({Error})
+                        }))
+
+                        //update Stateful CaptureSet list
+                        // statefulCaptureSet.set(captureID, inSet)
                         Resolve({SUCCESS: "removeCaptureFromSet"})
                     }else {
                         Reject({Error: "Capture set is not as expected"})

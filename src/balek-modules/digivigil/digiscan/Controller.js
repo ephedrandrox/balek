@@ -76,8 +76,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             renameCaptureSet: function(id, name){
                 return this.CaptureSets.rename(id, name)
+            },
+            clearCaptureSet: function(id){
+                return this.CaptureSets.clear(id)
             }
-
         });
     }
 );

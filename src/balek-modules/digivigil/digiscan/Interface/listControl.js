@@ -36,6 +36,8 @@ define(['dojo/_base/declare',
 
             interfaceCommands: null,
 
+
+
             listNameOptions: null,
             eraseButtonImage: null,
 
@@ -46,56 +48,19 @@ define(['dojo/_base/declare',
 
             uiState: null,
             uiStateWatchHandle: null,
-
+            //##########################################################################################################
+            //Startup Functions Section
+            //##########################################################################################################
             constructor: function (args) {
-
                 declare.safeMixin(this, args);
-
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 dojoReady(lang.hitch(this, function () {
                     dijitFocus.focus(this.domNode);
                 }));
 
             },
-            _onMouseOutResetStatusText: function (overEvent){
-                this.updateStatusText("")
-            },
-            onCaptureSetsChange: function (name, oldValue, newValue) {
-                console.log("onCaptureSetsChange", name, oldValue, newValue)
-                this.refreshViews()
-            },
-            onUIStateChange: function( name, oldValue, newValue ) {
-                console.log("onUIStateChange:ListCOntrol", name, oldValue, newValue)
-
-                if(name === "UIListControlStatusText"){
-                    this._statusDiv.innerHTML = newValue
-                }
-                this.refreshViews()
-
-            },
-            _onNewOver: function (overEvent){
-                console.log("mouseover")
-
-                this.updateStatusText("Create New Set")
-            },
-            _onHiddenOver:function (overEvent){
-                console.log("mouseover")
-
-                this.updateStatusText("Show or Hide Captures not in Set")
-            },
-            updateStatusText: function(newText){
-                if(this.uiState!==null && typeof newText === "string"){}
-                {
-                    this.uiState.set("UIListControlStatusText", newText)
-                }
-            },
             postCreate: function () {
-                dojoReady(lang.hitch(this, function () {
-                    dijitFocus.focus(this.domNode);
-                }));
                 dijitFocus.focus(this.domNode);
-
-
                 if(this.listsController !== null && this.interfaceCommands !== null )
                 {
                     this.interfaceCommands.getCaptureSets().then(lang.hitch(this, function(captureSets){
@@ -114,8 +79,110 @@ define(['dojo/_base/declare',
                         console.log("Error this._interface.getAvailableEntries()", Error)
                     }))
                 }
+            },
+            //##########################################################################################################
+            //State Change Event Functions Section
+            //##########################################################################################################
+            onCaptureSetsChange: function (name, oldValue, newValue) {
+                this.refreshViews()
+            },
+            onUIStateChange: function( name, oldValue, newValue ) {
+                if(name === "UIListControlStatusText"){
+                    this._statusDiv.innerHTML = newValue
+                }
+                this.refreshViews()
+            },
+            //##########################################################################################################
+            //UI Event Functions Section
+            //##########################################################################################################
+            onClickNewSet: function (clickEvent){
+                let getNameForList = new getUserInput({question: "Choose Set Name",
+                    inputReplyCallback: lang.hitch(this, function(newListNameChoice){
+                        getNameForList.unload();
+                        if(clickEvent.altKey){
+                            this.interfaceCommands.newClearSet(newListNameChoice)
+                        }else{
+                            this.interfaceCommands.newAllSet(newListNameChoice)
+                        }
+                    }) });
+            },
+            onShowHiddenCaptures: function(clickEvent){
+                if(this.uiState !== null) {
+                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
+                    if(showingHiddenCaptures ){
+                        this.uiState.set("showingHiddenCaptures", false)
+                        this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
+                        }))
+                    }else {
+                        this.uiState.set("showingHiddenCaptures", true)
+                        this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
+                        }))
+                    }
+                }
 
+            },
+            _onMouseOutResetStatusText: function (overEvent){
+                this.updateStatusText("")
+            },
+            _onActivatePreviewOver: function(){
+                this.updateStatusText("Grid View")
+            },
+            _onActivateTabularOver: function(){
+                this.updateStatusText("List View")
+            },
+            _onClearOver: function (overEvent){
+                this.updateStatusText("Clear all Captures from Set")
+            },
+            _onNewOver: function (overEvent){
+                this.updateStatusText("Create New Set")
+            },
+            _onHiddenOver:function (overEvent){
+                this.updateStatusText("Show or Hide Captures not in Set")
+            },
+            _onActivatePreviewView: function(){
+               // this.makePreviewDivActive()
+                this.interfaceCommands.setUIActiveView("previewDiv");
 
+            },
+            _onActivateTabularView: function(){
+                //this.makeTabularDivActive()
+                this.interfaceCommands.setUIActiveView("tabularDiv");
+            },
+            _onClearCapturesFromSet: function(){
+                if(this.uiState != null) {
+
+                    let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
+                    if(selectedCaptureSet)
+                    {
+                        this.interfaceCommands.clearCaptureSet(selectedCaptureSet);
+                    }else{
+                        alert("Select a capture set first")
+                    }
+                }
+
+            },
+
+            //##########################################################################################################
+            //Interface Commands Functions Section
+            //##########################################################################################################
+
+            renameCaptureSet: function(captureSetID){
+                let getNameForSet = new getUserInput({question: "Rename Set",
+                    inputReplyCallback: lang.hitch(this, function(newSetNameChoice){
+                        getNameForSet.unload();
+                            this.interfaceCommands.renameCaptureSet(captureSetID, newSetNameChoice)
+
+                    }) });
+            },
+
+            //##########################################################################################################
+            //UI Update Functions Section
+            //##########################################################################################################
+            updateStatusText: function(newText){
+                if(this.uiState!==null && typeof newText === "string"){}
+                {
+                    this.uiState.set("UIListControlStatusText", newText)
+                }
             },
             refreshViews: function()
             {
@@ -137,37 +204,29 @@ define(['dojo/_base/declare',
                     //Capture Views
                     this.listNameOptions.innerHTML = ""
                     if (this.captureSets !== null) {
-                                for(captureSetID in this.captureSets)
-                                {
-                                    if(captureSetID !== "declaredClass" && this.captureSets[captureSetID] !== null
-                                        && typeof this.captureSets[captureSetID] === "string"){
+                        for(captureSetID in this.captureSets)
+                        {
+                            if(captureSetID !== "declaredClass" && this.captureSets[captureSetID] !== null
+                                && typeof this.captureSets[captureSetID] === "string"){
 
-                                            const captureSetName = this.captureSets.get(captureSetID);
-                                            const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSetName)
+                                const captureSetName = this.captureSets.get(captureSetID);
+                                const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSetName)
 
-                                            if(selectedCaptureSet === captureSetID) {
+                                if(selectedCaptureSet === captureSetID) {
 
-                                                domClass.add(captureSetSelectDiv, `${this.baseClass}SelectedSet`)
-                                            }
-
-                                            domConstruct.place(captureSetSelectDiv, this.listNameOptions)
-
-
-                                    }
+                                    domClass.add(captureSetSelectDiv, `${this.baseClass}SelectedSet`)
                                 }
+
+                                domConstruct.place(captureSetSelectDiv, this.listNameOptions)
+
+
+                            }
+                        }
 
                     }
 
                 }
 
-            },
-            renameCaptureSet: function(captureSetID){
-                let getNameForSet = new getUserInput({question: "Rename Set",
-                    inputReplyCallback: lang.hitch(this, function(newSetNameChoice){
-                        getNameForSet.unload();
-                            this.interfaceCommands.renameCaptureSet(captureSetID, newSetNameChoice)
-
-                    }) });
             },
             captureSetSelectButton: function(id, name)
             {
@@ -188,45 +247,6 @@ define(['dojo/_base/declare',
 
                 }));
                 return selectButton
-            },
-            onClickNewSet: function (clickEvent){
-
-                let getNameForList = new getUserInput({question: "Choose Set Name",
-                    inputReplyCallback: lang.hitch(this, function(newListNameChoice){
-                        getNameForList.unload();
-                        if(clickEvent.altKey){
-                            this.interfaceCommands.newClearSet(newListNameChoice)
-                        }else{
-                            this.interfaceCommands.newAllSet(newListNameChoice)
-                        }
-                    }) });
-            },
-            onClickNewClearSet: function (clickEvent){
-                let getNameForList = new getUserInput({question: "Choose Set Name",
-                    inputReplyCallback: lang.hitch(this, function(newListNameChoice){
-                        getNameForList.unload();
-                        this.interfaceCommands.newClearSet(newListNameChoice)
-                    }) });
-            },
-            onShowHiddenCaptures: function(clickEvent){
-                console.log("onShowHiddenCaptures", this.captureID)
-                if(this.uiState !== null) {
-                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
-                    if(showingHiddenCaptures ){
-                        this.uiState.set("showingHiddenCaptures", false)
-                        this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
-                            console.log(commandResult)
-                            //if error set ui state back?
-                        }))
-                    }else {
-                        this.uiState.set("showingHiddenCaptures", true)
-                        this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
-                            console.log(commandResult)
-                            //if error set back?
-                        }))
-                    }
-                }
-
             },
 
             _onFocus: function () {

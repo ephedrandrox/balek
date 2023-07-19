@@ -100,6 +100,7 @@ define(['dojo/_base/declare',
                     this.listControl = listControl({
                         interfaceCommands: this._interface,
                         listsController: this._interface,
+                        mainInterface: this,
                     })
                     // insert it into container
                     domConstruct.place(this.listControl.domNode, this._listControlContainer, 'only')
@@ -181,13 +182,13 @@ define(['dojo/_base/declare',
                         break;
                 }
             },
-            _onActivatePreviewView: function(){
-                this.makePreviewDivActive()
-            },
-            _onActivateTabularView: function(){
-                this.makeTabularDivActive()
-                this._interface.setUIActiveView("tabularDiv");
-            },
+            // _onActivatePreviewView: function(){
+            //     this.makePreviewDivActive()
+            // },
+            // _onActivateTabularView: function(){
+            //     this.makeTabularDivActive()
+            //     this._interface.setUIActiveView("tabularDiv");
+            // },
             _onRemoveClicked: function (eventObject) {
                 this._interface.removeAllCaptures();
             },
@@ -226,12 +227,6 @@ define(['dojo/_base/declare',
                 let tabbedString = this.getTabSeperatedEntries()
                 this.createTabbedDataDownload(tabbedString);
 
-            },
-            _onActivatePreviewOver: function(){
-                this.updateListControlStatusText("Grid View")
-            },
-            _onActivateTabularOver: function(){
-                this.updateListControlStatusText("List View")
             },
             _onCopyClicked: function (eventObject) {
                 let tabbedString = this.getTabSeperatedEntries()

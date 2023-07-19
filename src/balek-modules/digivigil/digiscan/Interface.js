@@ -273,7 +273,14 @@ define(['dojo/_base/declare',
                 this._instanceCommands.renameCaptureSet(id, name).then(lang.hitch(this, function(commandReturnResults){
                     console.log("#renameCaptureSet", commandReturnResults)
                 })).catch(function(commandErrorResults){
-                    console.log("#renameCaptureSet", "deleteCaptureSet Received Error Response" + commandErrorResults);
+                    console.log("#renameCaptureSet", "renameCaptureSet Received Error Response" + commandErrorResults);
+                });
+            },
+            clearCaptureSet : function(id, name){
+                this._instanceCommands.clearCaptureSet(id, name).then(lang.hitch(this, function(commandReturnResults){
+                    console.log("#clearCaptureSet", commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("#clearCaptureSet", "clearCaptureSet Received Error Response" + commandErrorResults);
                 });
             },
             selectCaptureSet: function(id){
