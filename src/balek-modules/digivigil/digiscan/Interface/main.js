@@ -94,6 +94,7 @@ define(['dojo/_base/declare',
                     console.log("MainTable already exists", this.MainTable)
                 }
 
+                //Create List Control Widget
                 //Should be null but check anyway
                 if(this.listControl == null) {
                     //Create list control Widget
@@ -252,22 +253,44 @@ define(['dojo/_base/declare',
             //UI Update Functions Section
             //##########################################################################################################
             refreshViews: function(){
-                const activeView = this.uiState.get("ActiveView")
-                this.updatePreviewViews();
+                if(this.uiState != null) {
+                    const activeView = this.uiState.get("ActiveView")
+                    this.updatePreviewViews();
 
-                this.tableModel.setDataString(this.getTabSeperatedEntries())
+                    this.tableModel.setDataString(this.getTabSeperatedEntries())
 
-                const previewDiv = this._previewDiv;
-                const tabularDiv = this._tabularDiv;
+                    const previewDiv = this._previewDiv;
+                    const tabularDiv = this._tabularDiv;
 
-                if(activeView === "previewDiv")
-                {
-                    this.switchViews(tabularDiv, previewDiv);
-                }else if(activeView === "tabularDiv")
-                {
-                    this.switchViews(previewDiv, tabularDiv);
-                }else {
-                    console.log("switchViews unexpected", activeView)
+console.log("RefreshViews:", this.captureSets)
+
+
+                    if (activeView === "previewDiv") {
+                        this.switchViews(tabularDiv, previewDiv);
+                    } else if (activeView === "tabularDiv") {
+                        this.switchViews(previewDiv, tabularDiv);
+                    } else {
+                        console.log("switchViews unexpected", activeView)
+                    }
+                    let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
+
+                    if (selectedCaptureSet
+                        && this.captureSets && this.captureSets[selectedCaptureSet]
+                    ) {
+                        console.log("RefreshViews inherit:", selectedCaptureSet, this.captureSets[selectedCaptureSet])
+
+                        domStyle.set(previewDiv, "visibility", "inherit")
+                       domStyle.set(tabularDiv, "visibility", "inherit")
+
+                    } else {
+                        console.log("RefreshViews hidden:", selectedCaptureSet, this.captureSets[selectedCaptureSet])
+
+                        domStyle.set(previewDiv, "visibility", "hidden")
+                        domStyle.set(tabularDiv, "visibility", "hidden")
+                    }
+
+
+
                 }
             },
             updatePreviewViews: function(){

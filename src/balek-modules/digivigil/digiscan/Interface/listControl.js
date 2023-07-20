@@ -28,13 +28,18 @@ define(['dojo/_base/declare',
         return declare("digivigilDigiscanCaptureViewInterface", [_WidgetBase, _TemplatedMixin], {
             _instanceKey: null,
             templateString: template,
+            _mainCssString: mainCss,
+
             baseClass: "digivigilDigiscanSetControl",
 
             _noteDiv: null,
             _statusDiv: null,
-            _mainCssString: mainCss,
+
+            clearSetButtonDiv: null,
+            deleteSetButtonDiv: null,
 
             interfaceCommands: null,
+            mainInterface: null,
 
 
 
@@ -106,6 +111,22 @@ define(['dojo/_base/declare',
                         }
                     }) });
             },
+            onClickDeleteSet: function (clickEvent){
+                if(this.uiState !== null) {
+
+                    let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
+                    if(selectedCaptureSet)
+                    {
+                        this.interfaceCommands.deleteCaptureSet(selectedCaptureSet)
+                    }else{
+                        alert("Select a capture set first")
+                    }
+                }else
+                {
+                    alert("Please select")
+                }
+
+            },
             onShowHiddenCaptures: function(clickEvent){
                 if(this.uiState !== null) {
                     let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
@@ -113,14 +134,21 @@ define(['dojo/_base/declare',
                         this.uiState.set("showingHiddenCaptures", false)
                         this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
                         }))
+                        this.updateStatusText("Show Captures not in Set")
+
                     }else {
                         this.uiState.set("showingHiddenCaptures", true)
                         this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
                         }))
+                        this.updateStatusText("Hide Captures not in Set")
+
                     }
                 }
 
             },
+            //##########################################################################################################
+            //UI Status Updates
+            //##########################################################################################################
             _onMouseOutResetStatusText: function (overEvent){
                 this.updateStatusText("")
             },
@@ -136,21 +164,30 @@ define(['dojo/_base/declare',
             _onNewOver: function (overEvent){
                 this.updateStatusText("Create New Set")
             },
-            _onHiddenOver:function (overEvent){
-                this.updateStatusText("Show or Hide Captures not in Set")
+            _onDeleteOver: function (overEvent){
+                this.updateStatusText("Remove Set")
             },
+            _onHiddenOver:function (overEvent){
+                if(this.uiState !== null) {
+                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
+                    if(showingHiddenCaptures ){
+                        this.updateStatusText("Hide Captures not in Set")
+                    }else {
+                        this.updateStatusText("Show Captures not in Set")
+                    }
+                }
+            },
+            //##########################################################################################################
+            //UI Actions
+            //##########################################################################################################
             _onActivatePreviewView: function(){
-               // this.makePreviewDivActive()
-                this.interfaceCommands.setUIActiveView("previewDiv");
-
+                this.mainInterface.makePreviewDivActive()
             },
             _onActivateTabularView: function(){
-                //this.makeTabularDivActive()
-                this.interfaceCommands.setUIActiveView("tabularDiv");
+                this.mainInterface.makeTabularDivActive()
             },
             _onClearCapturesFromSet: function(){
                 if(this.uiState != null) {
-
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
                     if(selectedCaptureSet)
                     {
@@ -159,22 +196,18 @@ define(['dojo/_base/declare',
                         alert("Select a capture set first")
                     }
                 }
-
             },
 
             //##########################################################################################################
             //Interface Commands Functions Section
             //##########################################################################################################
-
             renameCaptureSet: function(captureSetID){
                 let getNameForSet = new getUserInput({question: "Rename Set",
                     inputReplyCallback: lang.hitch(this, function(newSetNameChoice){
                         getNameForSet.unload();
                             this.interfaceCommands.renameCaptureSet(captureSetID, newSetNameChoice)
-
                     }) });
             },
-
             //##########################################################################################################
             //UI Update Functions Section
             //##########################################################################################################
@@ -187,7 +220,6 @@ define(['dojo/_base/declare',
             refreshViews: function()
             {
                 if(this.uiState != null) {
-
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
                     let showHiddenCaptures = this.uiState.get("showHiddenCaptures")
 
@@ -200,6 +232,18 @@ define(['dojo/_base/declare',
                         domAttr.set(this.eraseButtonImage, "title", "Show Captures not in Set" )
                     }
 
+                    if(selectedCaptureSet
+                        && this.captureSets[selectedCaptureSet]
+                    )
+                    {
+                        domStyle.set(this.clearSetButtonDiv, "display", "block" )
+                        domStyle.set(this.deleteSetButtonDiv, "display", "block" )
+
+                    }else{
+                        domStyle.set(this.clearSetButtonDiv, "display", "none" )
+                        domStyle.set(this.deleteSetButtonDiv, "display", "none" )
+
+                    }
 
                     //Capture Views
                     this.listNameOptions.innerHTML = ""
@@ -208,32 +252,22 @@ define(['dojo/_base/declare',
                         {
                             if(captureSetID !== "declaredClass" && this.captureSets[captureSetID] !== null
                                 && typeof this.captureSets[captureSetID] === "string"){
-
                                 const captureSetName = this.captureSets.get(captureSetID);
                                 const captureSetSelectDiv = this.captureSetSelectButton(captureSetID, captureSetName)
-
                                 if(selectedCaptureSet === captureSetID) {
-
                                     domClass.add(captureSetSelectDiv, `${this.baseClass}SelectedSet`)
                                 }
-
                                 domConstruct.place(captureSetSelectDiv, this.listNameOptions)
-
-
                             }
                         }
-
                     }
-
                 }
-
             },
             captureSetSelectButton: function(id, name)
             {
                 let selectButton = domConstruct.create("div")
                 domClass.add(selectButton, `${this.baseClass}SelectButton`)
                 selectButton.innerHTML = name
-
 
                 on(selectButton, ["click"], lang.hitch(this, function (clickEvent) {
 
@@ -248,19 +282,14 @@ define(['dojo/_base/declare',
                 }));
                 return selectButton
             },
-
-            _onFocus: function () {
-                //todo make it do something
-            },
+            //##########################################################################################################
+            //Clean Up Function Section
+            //##########################################################################################################
             unload: function () {
-
-
                 this.captureSetsWatchHandle.unwatch();
                     this.uiStateWatchHandle.unwatch();
-
                 this.destroy();
             }
-
 
         });
     });

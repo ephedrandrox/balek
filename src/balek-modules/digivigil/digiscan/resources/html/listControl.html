@@ -1,20 +1,36 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}GridContainer">
-        <div class="${baseClass}NewButtonDiv"  >
-            <img class="${baseClass}ButtonImage"
-                 data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText"
-                 src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg">
-           </div>
+<!--Set Buttons-->
+        <div class="${baseClass}SetButtonsDiv">
+            <div class="${baseClass}SetButtonsGrid">
+                <div class="${baseClass}NewSetButtonDiv"
+                     style="grid-area: NewSetButton">
+
+                    <img class="${baseClass}SetButtonImage"
+                         data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText"
+                         src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg">
+                </div>
+                <div class="${baseClass}DeleteButtonDiv"
+                     data-dojo-attach-point="deleteSetButtonDiv"
+                     style="grid-area: DeleteSetButton">
+                    <img class="${baseClass}SetButtonImage"
+                         data-dojo-attach-event="onclick:onClickDeleteSet,onmouseover:_onDeleteOver,onmouseout:_onMouseOutResetStatusText"
+                         src="balek-modules/digivigil/digiscan/resources/images/minusCircle.svg">
+                </div>
+            </div>
+        </div>
+<!--Status Text: TODO - Move outside and put Set options buttons here-->
         <div class="${baseClass}StatusTextDiv"  data-dojo-attach-point="_statusDiv"></div>
-
+<!--Set Name Selection Buttons-->
         <div class="${baseClass}SetSelectionDiv" data-dojo-attach-point="listNameOptions"></div>
-
+<!--View Control Buttons-->
         <div class="${baseClass}ViewButtonsDiv"  >
             <div class="${baseClass}ViewButtonsGrid">
                 <div data-dojo-attach-event="onclick:_onClearCapturesFromSet,onmouseover:_onClearOver,onmouseout:_onMouseOutResetStatusText"
                      class="${baseClass}ViewButtonDiv"
                      style="grid-area: ClearSetButton"
-                     title="Toggle Grid View">
+                     data-dojo-attach-point="clearSetButtonDiv"
+                     title="Clear Set Button">
                     <img class="${baseClass}ViewButtonImage"
                          src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"
                     >
@@ -41,12 +57,7 @@
                     <img class="${baseClass}ViewButtonImage"
                          src="balek-modules/digivigil/digiscan/resources/images/list.svg">
                 </div>
-
             </div>
-
         </div>
-
-
     </div>
-
 </div>
