@@ -1,0 +1,120 @@
+.digivigilDigiscanCaptureRowViewInterface {
+    color: #ffffff;
+    background: rgba(20, 75, 115, 0.9);
+    display: block;
+    text-align: left;
+    padding: 0;
+    border: none;
+    margin: 0;
+    outline: none;
+    font-size: 10pt;
+
+    border: solid black 2px;
+    width: 100%;
+
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceButton:hover {
+cursor: pointer;
+filter: invert();
+}
+
+
+
+.digivigilDigiscanCaptureRowViewInterfaceRowDiv {
+    display: grid;
+    grid-template-columns: 70px 100px 150px 150px auto;
+    grid-template-rows: auto;
+    gap: 0px 0px;
+    grid-template-areas:
+    "SetActionsDiv CreatedDiv BarcodeDiv NoteDiv  RecognizedTextDiv";
+
+}
+.digivigilDigiscanCaptureRowViewInterfaceSetActionsDiv {
+    position: relative;
+    display: inline;
+
+    color: rgba(189, 113, 113, 0.66);
+    background: rgba(229, 53, 200, 0.76);
+
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceCreatedDiv {
+    position: relative;
+    display: inline;
+    color: rgba(189, 113, 113, 0.66);
+    background: #0d8cf1;
+
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceBarcodeDiv {
+    position: relative;
+    display: inline;
+    color: rgba(189, 113, 113, 0.66);
+    background: rgba(136, 197, 227, 0.7);
+    align-items: right;
+    text-align: right;
+
+
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceRecognizedTextDiv {
+    position: relative;
+    display: inline;
+    background: none;
+    font-family: monospace;
+
+    margin: 10px;
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceNoteDiv {
+    position: relative;
+    display: inline;
+    /*background: #ffffff;*/
+    /*border: solid #c2c2c2 2px;*/
+    color: black;
+    background: rgba(249, 255, 172, 0.95);
+
+    min-height: 20px;
+}
+
+.digivigilDigiscanCaptureRowViewInterfaceIconImg {
+    display: inline;
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+
+}
+
+
+.digivigilDigiscanCaptureRowViewInterfaceText {
+    color: #edffc0;
+    padding: 3px;
+}
+
+
+.digivigilDigiscanCaptureRowViewInterfaceCaptureNotInSet{
+    filter:grayscale(1)
+}
+
+
+.digivigilDigiscanCaptureRowViewInterfaceNoteText {
+    color: black;
+}
+
+
+.digivigilDigiscanCaptureRowViewInterfaceRecognizedText {
+    color: #e5e1e1;
+    padding: 3px;
+}
+
+
+
+.digivigilDigiscanCaptureRowViewInterfaceRowCell {
+    text-wrap: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+

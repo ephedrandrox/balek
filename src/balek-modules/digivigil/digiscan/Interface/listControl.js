@@ -46,7 +46,6 @@ define(['dojo/_base/declare',
             listNameOptions: null,
             eraseButtonImage: null,
 
-            listsController: null,
 
             captureSets: null,
             captureSetsWatchHandle: null,
@@ -66,7 +65,7 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 dijitFocus.focus(this.domNode);
-                if(this.listsController !== null && this.interfaceCommands !== null )
+                if(this.interfaceCommands !== null )
                 {
                     this.interfaceCommands.getCaptureSets().then(lang.hitch(this, function(captureSets){
                         this.captureSets = captureSets

@@ -1,29 +1,17 @@
 <div class="${baseClass}" tabindex="0">
-    <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'>
-        <div class="${baseClass}HeaderDiv">
-            <div class="${baseClass}CreatedDiv">
-                <img class="${baseClass}IconImg"
-                     style="position: absolute; left: 0; top: 0; padding-left: 5px;"
-                     src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"
-                     alt="barcode icon"/>
-                ${itemData.timeStamps.created} </div>
-            <div class="${baseClass}BarcodeDiv">
-                <img class="${baseClass}IconImg"
-                     style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px"
-                     src="balek-modules/digivigil/digiscan/resources/images/barcode.svg"
-                     alt="barcode icon"/>
-               ${itemData.barcode}</div>
-            <div class="${baseClass}RecognizedTextDiv">
-                <img class="${baseClass}IconImg"
-                     style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px"
-                     src="balek-modules/digivigil/digiscan/resources/images/RecognizedText.svg"
-                     alt="barcode icon"/><pre>${itemData.recognizedText}</pre>  </div>
+    <div class="${baseClass}HeaderDiv">
+        <div class="${baseClass}HeaderCellDiv" style="grid-area: SetActionsHeaderDiv; display: inline-block; background: rgba(229, 53, 200, 0.76);">Actions</div>
+        <div class="${baseClass}HeaderCellDiv"  style="grid-area: CreatedHeaderDiv; display: inline-block; background: #0d8cf1;">Date</div>
+        <div class="${baseClass}HeaderCellDiv"  style="grid-area: BarcodeHeaderDiv; display: inline-block;background: rgba(136, 197, 227, 0.7)">
+            <img class="${baseClass}IconImg ${baseClass}Button"
+                 data-dojo-attach-event="onclick:onCopyCodeListClick"
+                 style="width: 20px; height: 10px; padding-left: 5px; padding-top: 3px"
+                 src="balek-modules/digivigil/digiscan/resources/images/copy.svg"
+                 alt="barcode icon"/>Code</div>
+        <div class="${baseClass}HeaderCellDiv"  style="color: black; grid-area: NoteHeaderDiv; display: inline-block;  background: rgba(249, 255, 172, 0.95);">Note</div>
+        <div class="${baseClass}HeaderCellDiv"  style="grid-area: RecognizedTextHeaderDiv; display: inline-block; text-wrap: none; background: rgba(20, 75, 115, 0.9);">Recognized Text</div>
+    </div>
+    <div class="${baseClass}ContentDiv" data-dojo-attach-point='contentDiv'>
 
-        <div class="${baseClass}NoteDiv" data-dojo-attach-point="_noteDiv">
-            <img class="${baseClass}IconImg"
-                 style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px; filter: invert();"
-                 src="balek-modules/digivigil/digiscan/resources/images/Note.svg"
-                 alt="barcode icon"/>${itemData.note}</div>
-        </div>
     </div>
 </div>

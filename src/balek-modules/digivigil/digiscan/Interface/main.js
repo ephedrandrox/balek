@@ -16,6 +16,8 @@ define(['dojo/_base/declare',
 
         "balek-modules/digivigil/digiscan/Interface/captureGridView",
         'balek-modules/digivigil/digiscan/Interface/listControl',
+        "balek-modules/digivigil/digiscan/Interface/tabular",
+
         'balek-modules/digivigil/tabular/Interface/mainTable',
         'balek-modules/digivigil/tabular/Model/table',
         'balek-modules/digivigil/ui/about',
@@ -28,7 +30,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, domStyle, domConstruct, win, fx,
               on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
-              captureGridView, listControl, Tabular, TableModel, AboutUI,
+              captureGridView, listControl, TableView, Tabular, TableModel, AboutUI,
               template,
               mainCss,
               _SyncedCommanderInterface, _BalekWorkspaceContainerContainable) {
@@ -84,9 +86,14 @@ define(['dojo/_base/declare',
                 //Create the Main Table Widget
                 if(this.MainTable == null)
                 {
-                    this.MainTable = Tabular({tableModel: this.tableModel,
-                        domStatusDiv: this._tabularStatus,
-                        outputPreviewPane: this._tabularOutput
+                    // this.MainTable = Tabular({tableModel: this.tableModel,
+                    //     domStatusDiv: this._tabularStatus,
+                    //     outputPreviewPane: this._tabularOutput
+                    // })
+                    this.MainTable = TableView({
+                        _interfaceKey: this._interfaceKey,
+                        interfaceCommands: this._interface,
+                        mainInterface: this,
                     })
                     console.log("MainTable was created", this.MainTable)
                     domConstruct.place(this.MainTable.domNode, this._tabularContainer, 'only')
@@ -100,7 +107,6 @@ define(['dojo/_base/declare',
                     //Create list control Widget
                     this.listControl = listControl({
                         interfaceCommands: this._interface,
-                        listsController: this._interface,
                         mainInterface: this,
                     })
                     // insert it into container
@@ -124,7 +130,6 @@ define(['dojo/_base/declare',
                 })).catch(lang.hitch(this, function(Error){
                     console.log("Error this._interface.getCaptureSets()", Error)
                 }))
-                
 
             },
             startupContainable: function(){
@@ -262,9 +267,6 @@ define(['dojo/_base/declare',
                     const previewDiv = this._previewDiv;
                     const tabularDiv = this._tabularDiv;
 
-console.log("RefreshViews:", this.captureSets)
-
-
                     if (activeView === "previewDiv") {
                         this.switchViews(tabularDiv, previewDiv);
                     } else if (activeView === "tabularDiv") {
@@ -277,19 +279,12 @@ console.log("RefreshViews:", this.captureSets)
                     if (selectedCaptureSet
                         && this.captureSets && this.captureSets[selectedCaptureSet]
                     ) {
-                        console.log("RefreshViews inherit:", selectedCaptureSet, this.captureSets[selectedCaptureSet])
-
                         domStyle.set(previewDiv, "visibility", "inherit")
                        domStyle.set(tabularDiv, "visibility", "inherit")
-
                     } else {
-                        console.log("RefreshViews hidden:", selectedCaptureSet, this.captureSets[selectedCaptureSet])
-
                         domStyle.set(previewDiv, "visibility", "hidden")
                         domStyle.set(tabularDiv, "visibility", "hidden")
                     }
-
-
 
                 }
             },
@@ -420,6 +415,32 @@ console.log("RefreshViews:", this.captureSets)
                 }
                 domConstruct.destroy(node);
             },
+             copyTextToClipboard: function(textToCopy) {
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = 'absolute';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+
+            // Select the text inside the textarea
+            textArea.select();
+
+            try {
+                // Use the Clipboard API to copy the text to the clipboard
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    console.log('Text copied to clipboard!');
+                }, (err) => {
+                    console.error('Unable to copy text:', err);
+                });
+            } catch (err) {
+                console.error('Clipboard writeText method not available:', err);
+            }
+
+            // Clean up: Remove the temporary textarea from the DOM
+            document.body.removeChild(textArea);
+        },
             //##########################################################################################################
             //Widget Deconstruction Section
             //##########################################################################################################

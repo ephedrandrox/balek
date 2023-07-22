@@ -1,116 +1,41 @@
-.digivigilDigiscanCaptureViewInterface {
+.digivigilDigiscanCapturesTabularViewInterface {
     color: #ffffff;
-    background: rgba(20, 75, 115, 0.9);
-    display: inline-block;
+    background: none;
+    display: block;
     text-align: left;
-    padding: 0s;
-    border: none;
-    border-radius: 15px;
-    min-width: 200px;
-    margin: 10px;
-    outline: none;
-    font-size: 10pt;
-    max-width: 20%;
-    /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
-/*border: solid white 2px;*/
-
-    filter: drop-shadow(5px 5px 10px #000);
-
+    padding: 0;
+    margin:0;
+    width: 100%;
+    border: solid black 2px;
 }
-
-.digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
-    position: relative;
-    display: block;
-    /*float: right;*/
-    background: none;
-    border-radius: 5px;
-    padding: 5px;
-    font-family: monospace;
-
-    padding-right: 20px;
-    /*white-space: pre-wrap;*/
-    /*word-break: break-all;*/
-}
-
-
-.digivigilDigiscanCaptureViewInterfaceBarcodeDiv {
-    position: relative;
-    display: block;
-    /*float: left;*/
-    /*background: rgba(106, 178, 238, 0.86);*/
-
-    /*border: solid #c2c2c2 2px;*/
-
-    color: white;
+.digivigilDigiscanCapturesTabularViewInterfaceHeaderDiv {
+    color: #ffffff;
     background: black;
-
-    align-items: right;
-    text-align: right;
-
-    line-height: 20px;
-
-    padding: 3px;
-
+    width: 100%;
+    display: grid;
+    grid-template-columns: 70px 100px 150px 150px auto;
+    grid-template-rows: auto;
+    gap: 0px 0px;
+    grid-template-areas:
+    "SetActionsHeaderDiv CreatedHeaderDiv BarcodeHeaderDiv NoteHeaderDiv  RecognizedTextHeaderDiv";
+    padding: 2px;
+    margin:0;
 }
-
-.digivigilDigiscanCaptureViewInterfaceIconImg {
-    display: inline;
-    width: 20px;
-    height: 20px;
-
-}
-
-.digivigilDigiscanCaptureViewInterfaceCreatedDiv {
-    position: relative;
+.digivigilDigiscanCapturesTabularViewInterfaceContentDiv {
+    color: #ffffff;
+    background: rgba(47, 115, 20, 0.9);
     display: block;
-    /*float: left;*/
-    /*background: rgba(106, 178, 238, 0.86);*/
+    text-align: left;
+    padding: 0;
+    margin:0;
+    width: 100%;
+}
 
-    /*border: solid #c2c2c2 2px;*/    justify-content: right;
-    align-items: right;
-    text-align: right;
 
-    padding: 5px;
+.digivigilDigiscanCapturesTabularViewInterfaceHeaderCellDiv {
     color: white;
-    margin: 5px;
-    margin-bottom: 0;
+    font-weight: bold;
+    padding: 3px;
+    margin: 3px;
 }
 
-
-
-
-.digivigilDigiscanCaptureViewInterfaceHeaderDiv {
-    display: block;
-    background: none;
-
-
-}
-
-.digivigilDigiscanCaptureViewInterfaceListDiv {
-    display: block;
-    background: none;
-
-
-}
-
-.digivigilDigiscanCaptureViewInterfaceContentDiv {
-    display: flex;
-    background: none;
-
-
-}
-
-.digivigilDigiscanCaptureViewInterfaceNoteDiv {
-    position: relative;
-    display: block;
-    /*background: #ffffff;*/
-    /*border: solid #c2c2c2 2px;*/
-    color: black;
-    background: rgba(249, 255, 172, 0.95);
-padding: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
- display: none;
-
-    border-radius: 0 0 15px 15px;
-}
