@@ -1,15 +1,17 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}HeaderDiv">
-        <div class="${baseClass}HeaderCellDiv" style="grid-area: SetActionsHeaderDiv; display: inline-block; background: rgba(229, 53, 200, 0.76);">Actions</div>
+        <div class="${baseClass}HeaderCellDiv" style="grid-area: SetActionsHeaderDiv; display: inline-block; color: black;background: rgba(248,177,236,0.82);">Actions</div>
         <div class="${baseClass}HeaderCellDiv"  style="grid-area: CreatedHeaderDiv; display: inline-block; background: #0d8cf1;">Date</div>
         <div class="${baseClass}HeaderCellDiv"  style="grid-area: BarcodeHeaderDiv; display: inline-block;background: rgba(136, 197, 227, 0.7)">
             <img class="${baseClass}IconImg ${baseClass}Button"
-                 data-dojo-attach-event="onclick:onCopyCodeListClick"
+                 data-dojo-attach-event="onclick:onCopyCodeListClick,onmouseover:onCopyCodeListOver,onmouseout:_onMouseOutResetStatusText"
                  style="width: 20px; height: 10px; padding-left: 5px; padding-top: 3px"
                  src="balek-modules/digivigil/digiscan/resources/images/copy.svg"
                  alt="barcode icon"/>Code</div>
         <div class="${baseClass}HeaderCellDiv"  style="color: black; grid-area: NoteHeaderDiv; display: inline-block;  background: rgba(249, 255, 172, 0.95);">Note</div>
         <div class="${baseClass}HeaderCellDiv"  style="grid-area: RecognizedTextHeaderDiv; display: inline-block; text-wrap: none; background: rgba(20, 75, 115, 0.9);">Recognized Text</div>
+    </div>
+    <div  class="${baseClass}HeaderDivShadow" >
     </div>
     <div class="${baseClass}ContentDiv" data-dojo-attach-point='contentDiv'>
 

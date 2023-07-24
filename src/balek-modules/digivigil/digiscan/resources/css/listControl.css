@@ -1,8 +1,10 @@
 .digivigilDigiscanSetControl {
-
+    z-index: 100;
 }
 
 .digivigilDigiscanSetControlGridContainer {
+    z-index: 100;
+
     display: grid;
     grid-template-columns: auto auto auto;
     grid-template-rows: auto auto;
@@ -40,6 +42,13 @@
     padding: 5px;
 
 }
+
+
+.digivigilDigiscanSetControlSetButtonImage:hover {
+
+    filter: invert();
+}
+
 
 .digivigilDigiscanSetControlSetButtonsGrid {
 

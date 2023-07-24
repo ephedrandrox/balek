@@ -98,7 +98,22 @@ define(['dojo/_base/declare',
             onUIStateChange: function( name, oldValue, newValue ) {
                 this.refreshUI()
             },
+            onCopyCodeListOver: function(overEvent) {
+                if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
+                    this.mainInterface.updateAllStatusText("Copy Comma Seperated Values")
+                }else{
+                    console.log(this.mainInterface)
+                }
 
+            },
+            _onMouseOutResetStatusText: function(overEvent) {
+                if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
+                    this.mainInterface.updateAllStatusText("")
+                }else{
+                    console.log(this.mainInterface)
+                }
+
+            },
             onCopyCodeListClick: function(clickEvent) {
 
                 if(this.mainInterface !== null  && typeof this.mainInterface.forEachSelectedCapture === 'function') {

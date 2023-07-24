@@ -4,15 +4,15 @@
             <div class="${baseClass}SetActionsDiv  ${baseClass}RowCell"
             style="grid-area: SetActionsDiv;">
                 <img class="${baseClass}IconImg"
-                     data-dojo-attach-event="onclick:onUninterestedClick"
+                     data-dojo-attach-event="onclick:onUninterestedClick,onmouseover:onUninterestedOver,onmouseout:onUninterestedOut"
                      data-dojo-attach-point="uninterestedButton"
-                     style="padding-left: 5px; display: none; cursor: pointer;"
+                     style="padding-left: 5px; display: none; cursor: pointer;  filter: invert();"
                      src="balek-modules/digivigil/digiscan/resources/images/erase.svg"
                      alt="Remove Capture from current set"/>
                 <img class="${baseClass}IconImg"
                      data-dojo-attach-point="interestedButton"
                      data-dojo-attach-event="onclick:onInterestedClick"
-                     style="padding-left: 5px; display: none; cursor: pointer;"
+                     style="padding-left: 5px; display: none; cursor: pointer;  filter: invert();"
                      src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"
                      alt="Remove Capture from current set"/>
             </div>
@@ -21,7 +21,6 @@
 
 
                <div class="${baseClass}Text"
-                    style="display: inline;"
                     data-dojo-attach-point="_createdText"></div>
             </div>
 
@@ -30,8 +29,8 @@
                  style="grid-area: BarcodeDiv;"
             >
                 <img class="${baseClass}IconImg ${baseClass}Button"
-                     data-dojo-attach-event="onclick:onCopyCodeClick"
-                     style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px"
+                     data-dojo-attach-event="onclick:onCopyCodeClick,onmouseover:onCopyCodeOver,onmouseout:_onMouseOutResetStatusText"
+                     style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px;"
                      src="balek-modules/digivigil/digiscan/resources/images/barcode.svg"
                      alt="barcode icon"/>
                 <div class="${baseClass}Text"
@@ -41,11 +40,9 @@
 
             <div class="${baseClass}NoteDiv  ${baseClass}RowCell" data-dojo-attach-point="_noteDiv"
                  style="grid-area: NoteDiv; ">
-                <span class="${baseClass}NoteText"
-                     style=" padding: 3px"
-
+                <div class="${baseClass}NoteText"
                      data-dojo-attach-point="_noteText">
-                </span>
+                </div>
             </div>
 
             <div class="${baseClass}RecognizedTextDiv ${baseClass}RowCell"

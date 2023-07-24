@@ -130,8 +130,7 @@ define(['dojo/_base/declare',
 
                     //Set data by node handles
                     this._createdText.innerHTML = date.toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
+                        month: 'numeric',
                         day: 'numeric',
                         hour: 'numeric',
                         minute: 'numeric'
@@ -188,6 +187,30 @@ define(['dojo/_base/declare',
                     alert("Try again.")
                 }
 
+            },
+            onUninterestedOver(){
+                this.setStatusText("Hide in Set")
+                domAttr.set(this.uninterestedButton, "src", "balek-modules/digivigil/digiscan/resources/images/eraseFill.svg" )
+
+            },
+            onUninterestedOut(){
+                this.setStatusText("")
+                domAttr.set(this.uninterestedButton, "src", "balek-modules/digivigil/digiscan/resources/images/erase.svg" )
+
+
+            },
+            onCopyCodeOver: function(overEvent) {
+                this.setStatusText("Copy Read Code")
+
+
+            },
+            setStatusText: function(newStatusText) {
+                if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
+                    this.mainInterface.updateAllStatusText(newStatusText)
+                }
+            },
+            _onMouseOutResetStatusText: function(overEvent) {
+                this.setStatusText("")
             },
             onInterestedClick: function(clickEvent){
                 //Called from HTML Click to unset capture from set

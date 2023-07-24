@@ -1,4 +1,9 @@
 .digivigilDigiscanCapturesTabularViewInterface {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     color: #ffffff;
     background: none;
     display: block;
@@ -6,8 +11,17 @@
     padding: 0;
     margin:0;
     width: 100%;
-    border: solid black 2px;
+    overflow: hidden;
 }
+
+.digivigilDigiscanCapturesTabularViewInterfaceButton {
+    cursor: pointer;
+}
+
+.digivigilDigiscanCapturesTabularViewInterfaceButton:hover {
+    filter: invert();
+}
+
 .digivigilDigiscanCapturesTabularViewInterfaceHeaderDiv {
     color: #ffffff;
     background: black;
@@ -20,15 +34,55 @@
     "SetActionsHeaderDiv CreatedHeaderDiv BarcodeHeaderDiv NoteHeaderDiv  RecognizedTextHeaderDiv";
     padding: 2px;
     margin:0;
+    position: absolute;
+    top:0px;
+    left: 0;
+    height: 25px;
+    z-index: 10;
+    /*border-bottom: 2px solid black;*/
+
+
+
 }
-.digivigilDigiscanCapturesTabularViewInterfaceContentDiv {
+
+.digivigilDigiscanCapturesTabularViewInterfaceHeaderDivShadow {
     color: #ffffff;
-    background: rgba(47, 115, 20, 0.9);
+    background: black;
+    width: 100%;
+    display: block;
+    padding: 2px;
+    margin:0;
+    position: absolute;
+    top:0;
+    left: 0;
+    height: 25px;
+    z-index: 9;
+    /*border-bottom: 2px solid black;*/
+    -webkit-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
+
+}
+
+.digivigilDigiscanCapturesTabularViewInterfaceContentDiv {
+    position: absolute;
+    color: #ffffff;
+
     display: block;
     text-align: left;
     padding: 0;
+    padding-top: 27px;
+
     margin:0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
+    z-index: 1;
+    overflow: scroll;
+
+
 }
 
 
@@ -36,6 +90,6 @@
     color: white;
     font-weight: bold;
     padding: 3px;
-    margin: 3px;
+    /*margin: 3px;*/
 }
 

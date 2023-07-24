@@ -44,9 +44,9 @@ define(['dojo/_base/declare',
 
             _previewDiv: null,                     //DomNode
             _tabularDiv: null, //DomNode
-            _tabularContainer: null, //DomNode
-            _tabularStatus: null,
-            _tabularOutput: null,
+           // _tabularContainer: null, //DomNode
+           // _tabularStatus: null,
+           // _tabularOutput: null,
 
             _statusDiv: null,
 
@@ -96,7 +96,7 @@ define(['dojo/_base/declare',
                         mainInterface: this,
                     })
                     console.log("MainTable was created", this.MainTable)
-                    domConstruct.place(this.MainTable.domNode, this._tabularContainer, 'only')
+                    domConstruct.place(this.MainTable.domNode, this._tabularDiv, 'only')
                 }else{
                     console.log("MainTable already exists", this.MainTable)
                 }
@@ -220,6 +220,14 @@ define(['dojo/_base/declare',
                 if(this.uiState!==null && typeof newText === "string"){}
                 {
                     this.uiState.set("UIStatusText", newText)
+                }
+            },
+            updateAllStatusText: function(newStatusText){
+                if(this.uiState!==null && typeof newStatusText === "string"){}
+                {
+                    this.uiState.set("UIStatusText", newStatusText)
+                    this.uiState.set("UIListControlStatusText", newStatusText)
+
                 }
             },
             updateListControlStatusText: function(newText){
