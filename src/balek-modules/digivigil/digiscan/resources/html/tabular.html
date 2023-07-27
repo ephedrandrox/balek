@@ -1,15 +1,50 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}HeaderDiv">
-        <div class="${baseClass}HeaderCellDiv" style="grid-area: SetActionsHeaderDiv; display: inline-block; color: black;background: rgba(248,177,236,0.82);">Actions</div>
-        <div class="${baseClass}HeaderCellDiv"  style="grid-area: CreatedHeaderDiv; display: inline-block; background: #0d8cf1;">Date</div>
-        <div class="${baseClass}HeaderCellDiv"  style="grid-area: BarcodeHeaderDiv; display: inline-block;background: rgba(136, 197, 227, 0.7)">
+        <div class="${baseClass}HeaderCellDiv"
+             style="grid-area: SetActionsHeaderDiv;
+             display: inline-block;
+             color: black;
+             background: rgba(176,77,161,0.89);
+border-right: 2px solid black;   ">
+            <img class="${baseClass}IconImg ${baseClass}Button"
+                 data-dojo-attach-event="onclick:_onClearCapturesFromSet,onmouseover:onClearCapturesFromSetOver,onmouseout:_onMouseOutResetStatusText"
+                 style="padding-left: 5px; padding-top: 0"
+                 src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"
+                 alt="erase icon"/>
+            <img class="${baseClass}IconImg ${baseClass}Button"
+                 data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:onShowHiddenCapturesOver,onmouseout:_onMouseOutResetStatusText"
+                 style="padding-left: 5px; padding-top: 0px"
+                 src="balek-modules/digivigil/digiscan/resources/images/circlegrid.svg"
+                 alt="circle grid icon"/>
+            </div>
+        <div class="${baseClass}HeaderCellDiv"
+             style="grid-area: CreatedHeaderDiv;
+             display: inline-block;
+             background: rgba(108,156,178,0.95);
+border-right: 2px solid black;
+text-align: right; padding-right: 5px;">Captured</div>
+        <div class="${baseClass}HeaderCellDiv"
+             style="grid-area: BarcodeHeaderDiv;
+             display: inline-block;
+             background:  rgba(206, 178, 248, 0.95);
+             border-right: 2px solid black;">
             <img class="${baseClass}IconImg ${baseClass}Button"
                  data-dojo-attach-event="onclick:onCopyCodeListClick,onmouseover:onCopyCodeListOver,onmouseout:_onMouseOutResetStatusText"
-                 style="width: 20px; height: 10px; padding-left: 5px; padding-top: 3px"
+                 style="padding-left: 5px; padding-top: 0px; padding-right: 5px; display: inline;"
                  src="balek-modules/digivigil/digiscan/resources/images/copy.svg"
-                 alt="barcode icon"/>Code</div>
-        <div class="${baseClass}HeaderCellDiv"  style="color: black; grid-area: NoteHeaderDiv; display: inline-block;  background: rgba(249, 255, 172, 0.95);">Note</div>
-        <div class="${baseClass}HeaderCellDiv"  style="grid-area: RecognizedTextHeaderDiv; display: inline-block; text-wrap: none; background: rgba(20, 75, 115, 0.9);">Recognized Text</div>
+                 alt="barcode icon"/><span  style="position: relative; top: -2px;">Code</span> </div>
+        <div class="${baseClass}HeaderCellDiv"
+             style="color: black;
+             grid-area: NoteHeaderDiv;
+             display: inline-block;
+             background: rgba(249, 255, 172, 0.95);
+border-right: 2px solid black;">Note</div>
+        <div class="${baseClass}HeaderCellDiv"  style="grid-area: RecognizedTextHeaderDiv;
+        display: inline-block;
+        text-wrap: none;
+        background: rgba(20, 75, 115, 0.9);
+        border-right: 2px solid black;
+color: white;">Recognized Text</div>
     </div>
     <div  class="${baseClass}HeaderDivShadow" >
     </div>

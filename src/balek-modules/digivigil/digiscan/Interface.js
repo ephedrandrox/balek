@@ -228,38 +228,38 @@ define(['dojo/_base/declare',
             getCaptureSyncedMap : function(captureID , resultCallback){
                 this._instanceCommands.getCaptureSyncedMap(captureID).then(lang.hitch(this, function(commandReturnResults){
 
-                    console.log("#getCaptureSyncedMap", commandReturnResults)
+                   // console.log("#getCaptureSyncedMap", commandReturnResults)
                     resultCallback(commandReturnResults)
 
                 })).catch(function(commandErrorResults){
-                    console.log("#getCaptureSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                   // console.log("#getCaptureSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
                 });
             },
             getCaptureSetSyncedMap : function(captureSetID , resultCallback){
-                console.log("#getCaptureSetSyncedMap", captureSetID)
+               // console.log("#getCaptureSetSyncedMap", captureSetID)
 
                 this._instanceCommands.getCaptureSetSyncedMap(captureSetID).then(lang.hitch(this, function(commandReturnResults){
 
-                    console.log("#getCaptureSetSyncedMap", commandReturnResults)
+                  //  console.log("#getCaptureSetSyncedMap", commandReturnResults)
                     resultCallback(commandReturnResults)
 
                 })).catch(function(commandErrorResults){
-                    console.log("#getCaptureSetSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                 //   console.log("#getCaptureSetSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
                 });
             },
 
             newAllSet : function(setName, resultCallback) {
                 this._instanceCommands.newAllSet(setName).then(lang.hitch(this, function(commandReturnResults){
-                    console.log("#newAllSet", commandReturnResults)
+                 //   console.log("#newAllSet", commandReturnResults)
                 })).catch(function(commandErrorResults){
-                    console.log("#newAllSet", "newAllSet Received Error Response" + commandErrorResults);
+                  //  console.log("#newAllSet", "newAllSet Received Error Response" + commandErrorResults);
                 });
             },
             newClearSet : function(setName, resultCallback){
                 this._instanceCommands.newClearSet(setName).then(lang.hitch(this, function(commandReturnResults){
-                    console.log("#newClearSet", commandReturnResults)
+                   console.log("#newClearSet", commandReturnResults)
                 })).catch(function(commandErrorResults){
-                    console.log("#newClearSet", "newClearSet Received Error Response" + commandErrorResults);
+                   console.log("#newClearSet", "newClearSet Received Error Response" + commandErrorResults);
                 });
             },
             deleteCaptureSet : function(id){

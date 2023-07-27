@@ -168,7 +168,7 @@ define(['dojo/_base/declare',
             {
                 let workspaceContainers = this._workspaceContainers;
 
-                console.log("workspaceUpdate", containerKey, workspaceContainers, this );
+                //console.log("workspaceUpdate", containerKey, workspaceContainers, this );
 
                 if(workspaceContainers[containerKey]){
                     let workspaceContainerDomNode =  workspaceContainers[containerKey].getWorkspaceDomNode();
@@ -198,7 +198,7 @@ define(['dojo/_base/declare',
                 if(workspaceContainers[containerKey] && workspaceContainers[containerKey].getWorkspaceDomNode) {
 
                     let workspaceContainerDomNode =  workspaceContainers[containerKey].getWorkspaceDomNode();
-                    console.log("workspaceUpdate", workspaceContainers[containerKey], workspaceContainerDomNode );
+                   // console.log("workspaceUpdate", workspaceContainers[containerKey], workspaceContainerDomNode );
 
                     domConstruct.place(workspaceContainerDomNode, this.domNode);
                     this._activeContainerKey = containerKey;
@@ -244,14 +244,14 @@ define(['dojo/_base/declare',
 
             },
             onWorkspaceContainersStateUpdate: function (name, oldState, newState) {
-                console.log(name, oldState, newState);
+              //  console.log(name, oldState, newState);
 
                 if(newState === undefined){
                   this.removeContainer(String(name));
                 } else if(this._workspaceContainers[String(name)] === undefined )
                 {
                     this._workspaceContainers[String(name)] = this.containerManager.getContainer(String(name));
-                    console.log("workspaceUpdate", name, this._workspaceContainers );
+                   // console.log("workspaceUpdate", name, this._workspaceContainers );
                 }
 
             },

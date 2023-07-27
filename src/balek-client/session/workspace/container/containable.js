@@ -61,8 +61,6 @@ define([ 	'dojo/_base/declare',
                 }
             },
             setContainerName: function(containerName){
-                console.log("quill - setContainerName", this,  containerName, this._componentStateSet);
-
                 this._componentStateSet("workspaceContainable", "containerName", containerName);
 
                 if(this._workspaceContainableState){

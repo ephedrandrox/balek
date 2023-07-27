@@ -2,7 +2,6 @@ onmessage = function(e) {
     let data = e.data
 
     if(data.parseTabSeperatedString && data.parseParameters ) {
-        console.log('👨‍🔧 🛠 parseTabSeperatedString Message received from worker', data.parseParameters );
         parseTabSeperatedString(data.parseTabSeperatedString,data.parseParameters )
     }else
     {

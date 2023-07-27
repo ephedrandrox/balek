@@ -95,10 +95,10 @@ define(['dojo/_base/declare',
                         interfaceCommands: this._interface,
                         mainInterface: this,
                     })
-                    console.log("MainTable was created", this.MainTable)
+                   // console.log("MainTable was created", this.MainTable)
                     domConstruct.place(this.MainTable.domNode, this._tabularDiv, 'only')
                 }else{
-                    console.log("MainTable already exists", this.MainTable)
+                   // console.log("MainTable already exists", this.MainTable)
                 }
 
                 //Create List Control Widget

@@ -1,6 +1,6 @@
 .digivigilDigiscanCaptureRowViewInterface {
     color: #ffffff;
-    background: rgba(20, 75, 115, 0.9);
+    background: rgba(69, 103, 128, 0.77);
     display: block;
     text-align: left;
     padding: 0;
@@ -9,25 +9,32 @@
     outline: none;
     font-size: 10pt;
 
-    border: solid black 2px;
+    border: solid rgb(20, 27, 47) 2px;
     width: 100%;
 
 }
 
+
+.digivigilDigiscanCaptureRowViewInterfaceButton {
+    cursor: pointer;
+    filter: invert();
+}
+
+
 .digivigilDigiscanCaptureRowViewInterfaceButton:hover {
 cursor: pointer;
-filter: invert();
+filter: none;
 }
 
 
 
 .digivigilDigiscanCaptureRowViewInterfaceRowDiv {
     display: grid;
-    grid-template-columns: 70px 100px 150px 150px auto;
+    grid-template-columns: 70px  150px 150px auto 100px;
     grid-template-rows: auto;
     gap: 0px 0px;
     grid-template-areas:
-    "SetActionsDiv CreatedDiv BarcodeDiv NoteDiv  RecognizedTextDiv";
+    "SetActionsDiv  BarcodeDiv NoteDiv   RecognizedTextDiv CreatedDiv";
 
 }
 .digivigilDigiscanCaptureRowViewInterfaceSetActionsDiv {
@@ -35,14 +42,16 @@ filter: invert();
     display: inline;
     color: black;
     background: rgba(248,177,236,0.82);
-
+    border-right: 2px solid #676767;
 }
 
 .digivigilDigiscanCaptureRowViewInterfaceCreatedDiv {
     position: relative;
     display: inline;
     color: rgba(189, 113, 113, 0.66);
-    background: #0d8cf1;
+    background: rgba(206, 178, 248, 0.95);
+    background: rgba(174, 213, 232, 0.95);
+    border-right: 2px solid #676767;
 
 }
 
@@ -50,9 +59,11 @@ filter: invert();
     position: relative;
     display: inline;
     color: rgba(189, 113, 113, 0.66);
-    background: rgba(136, 197, 227, 0.7);
+    background: rgba(174, 213, 232, 0.95);
     align-items: right;
     text-align: right;
+    background: rgba(206, 178, 248, 0.95);
+    border-right: 2px solid #676767;
 
 
 }
@@ -74,7 +85,8 @@ filter: invert();
     /*background: #ffffff;*/
     /*border: solid #c2c2c2 2px;*/
     color: black;
-    background: rgba(249, 255, 172, 0.95);
+    background: rgba(253, 255, 222, 0.95);
+    border-right: 2px solid #676767;
 
     margin-top: 200px;
     min-height: 20px;
@@ -90,7 +102,7 @@ filter: invert();
 
 
 .digivigilDigiscanCaptureRowViewInterfaceText {
-    color: #edffc0;
+    color: black;
     padding: 3px;
 }
 

@@ -98,6 +98,63 @@ define(['dojo/_base/declare',
             onUIStateChange: function( name, oldValue, newValue ) {
                 this.refreshUI()
             },
+            onClearCapturesFromSetOver: function(){
+                if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
+                    this.mainInterface.updateAllStatusText("Clear all captures from set")
+                }else{
+                    console.log(this.mainInterface)
+                }
+            },
+
+            _onClearCapturesFromSet: function(){
+                if(this.uiState != null) {
+                    let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
+                    if(selectedCaptureSet)
+                    {
+                        this.interfaceCommands.clearCaptureSet(selectedCaptureSet);
+                    }else{
+                        alert("Select a capture set first")
+                    }
+                }
+            },
+            onShowHiddenCapturesOver: function(overEvent) {
+                if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
+
+                    if(this.uiState !== null) {
+                        let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
+                        if(showingHiddenCaptures ){
+                            this.mainInterface.updateAllStatusText("Hide Captures not in Set")
+                        }else {
+                            this.mainInterface.updateAllStatusText("Show Captures not in Set")
+                        }
+                    }
+
+
+
+                }else{
+                    console.log(this.mainInterface)
+                }
+
+            },
+            onShowHiddenCaptures: function(clickEvent){
+                if(this.uiState !== null) {
+                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
+                    if(showingHiddenCaptures ){
+                        this.uiState.set("showingHiddenCaptures", false)
+                        this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
+                        }))
+                        this.mainInterface.updateAllStatusText("Show Captures not in Set")
+
+                    }else {
+                        this.uiState.set("showingHiddenCaptures", true)
+                        this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
+                        }))
+                        this.mainInterface.updateAllStatusText("Hide Captures not in Set")
+
+                    }
+                }
+
+            },
             onCopyCodeListOver: function(overEvent) {
                 if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
                     this.mainInterface.updateAllStatusText("Copy Comma Seperated Values")

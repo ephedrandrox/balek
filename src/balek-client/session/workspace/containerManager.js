@@ -82,7 +82,7 @@ define([ 	'dojo/_base/declare',
                         for (const name in availableContainersState)
                         {
                             this._availableContainersState.set(name, availableContainersState[name]);
-                            console.log("AAA", name, availableContainersState[name]);
+                            //console.log("AAA", name, availableContainersState[name]);
 
                         }
                     }catch(error){

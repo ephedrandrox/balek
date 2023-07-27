@@ -111,7 +111,7 @@ define(['dojo/_base/declare',
                                 remoteCommand: interfaceLinks[linkKey],
                                 remoteCommandArguments: commandArguments,
                             }, function (commandResults) {
-                                console.log("got command return results");
+                               // console.log("got command return results");
                                 Resolve(commandResults);
                             });
 

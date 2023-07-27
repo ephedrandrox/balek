@@ -1,8 +1,10 @@
 .digivigilDigiscanSetControl {
     z-index: 100;
 }
-
+.digivigilDigiscanSetControlMain {
+}
 .digivigilDigiscanSetControlGridContainer {
+    position: relative;
     z-index: 100;
 
     display: grid;
@@ -12,6 +14,8 @@
     grid-template-areas:
     "SetButtonsDiv StatusTextDiv ViewButtonsDiv"
     "SetButtonsDiv SetSelectionDiv ViewButtonsDiv";
+
+
 }
 
 .digivigilDigiscanSetControlSetButtonsDiv{
@@ -43,7 +47,16 @@
 
 }
 
+.digivigilDigiscanSetControlNewSetButtonDiv{
+    display: inline-block;
 
+}
+
+
+.digivigilDigiscanSetControlDeleteButtonDiv{
+    display: inline-block;
+
+}
 .digivigilDigiscanSetControlSetButtonImage:hover {
 
     filter: invert();
@@ -51,26 +64,25 @@
 
 
 .digivigilDigiscanSetControlSetButtonsGrid {
-
-    /*display: grid;*/
-    /*grid-template-columns: auto;*/
-    /*grid-template-rows: auto auto;*/
-
-    /*grid-template-areas:*/
-    /*"NewSetButtom"*/
-    /*"DeleteSetButton";*/
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto ;
+    gap: 0px 0px;
+    grid-template-areas:
+    "NewSetButton DeleteSetButton";
 
 }
+
+
 
 .digivigilDigiscanSetControlViewButtonsGrid {
 
     display: grid;
     grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto ;
     gap: 0px 0px;
     grid-template-areas:
-    "ShowHiddenButton ListViewButton"
-    "ClearSetButton GridViewButton";
+    "ListViewButton GridViewButton";
 
 }
 

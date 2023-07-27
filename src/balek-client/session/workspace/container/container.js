@@ -215,7 +215,7 @@ define(['dojo/_base/declare',
 
                     }else
                     {
-                        console.log("Cannot make widget without path and interface", containerWidgetPath,this._containedInterfaceHandle );
+                      //  console.log("Cannot make widget without path and interface", containerWidgetPath,this._containedInterfaceHandle );
                     }
                 }
             },
@@ -333,7 +333,7 @@ define(['dojo/_base/declare',
                    this.refreshContainerWidget();
                 }
                 if(name === 'isDocked' ){
-                    console.log("Mousedown", name, oldState, newState);
+                   // console.log("Mousedown", name, oldState, newState);
 
                     if(newState === true)
                     {
@@ -446,7 +446,7 @@ define(['dojo/_base/declare',
                 let domNode =this.getWorkspaceDomNode();
 
                 let displayStyle= domStyle.get(domNode, "display");
-                console.log(this._cachedDisplayStyle, displayStyle);
+                //console.log(this._cachedDisplayStyle, displayStyle);
 
 
                 if(displayStyle !== "none" && displayStyle !== this._cachedDisplayStyle){

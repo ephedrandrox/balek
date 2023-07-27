@@ -56,8 +56,8 @@ color: pink;
 .digivigilDigiscanCaptureViewInterfaceBarcodeDiv {
     position: relative;
     display: block;
-    color: white;
-    background: black;
+    color: black;
+
     align-items: right;
     text-align: right;
     line-height: 20px;
@@ -84,7 +84,7 @@ color: pink;
     text-align: right;
 
     padding: 5px;
-    color: white;
+    color: black;
     margin: 5px;
     margin-bottom: 0;
 }

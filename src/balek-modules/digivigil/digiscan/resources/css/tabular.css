@@ -14,24 +14,30 @@
     overflow: hidden;
 }
 
-.digivigilDigiscanCapturesTabularViewInterfaceButton {
-    cursor: pointer;
-}
 
-.digivigilDigiscanCapturesTabularViewInterfaceButton:hover {
+
+
+.digivigilDigiscanCapturesTabularViewInterfaceButton {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
     filter: invert();
 }
 
+.digivigilDigiscanCapturesTabularViewInterfaceButton:hover {
+    filter: none;
+}
+
 .digivigilDigiscanCapturesTabularViewInterfaceHeaderDiv {
-    color: #ffffff;
-    background: black;
+    color: black;
+
     width: 100%;
     display: grid;
-    grid-template-columns: 70px 100px 150px 150px auto;
+    grid-template-columns: 70px  150px 150px auto 100px;
     grid-template-rows: auto;
     gap: 0px 0px;
     grid-template-areas:
-    "SetActionsHeaderDiv CreatedHeaderDiv BarcodeHeaderDiv NoteHeaderDiv  RecognizedTextHeaderDiv";
+    "SetActionsHeaderDiv  BarcodeHeaderDiv NoteHeaderDiv   RecognizedTextHeaderDiv CreatedHeaderDiv";
     padding: 2px;
     margin:0;
     position: absolute;
@@ -87,9 +93,13 @@
 
 
 .digivigilDigiscanCapturesTabularViewInterfaceHeaderCellDiv {
-    color: white;
+    color: black;
     font-weight: bold;
     padding: 3px;
+    padding-left: 5px;
+    line-height: 18px;
+    height: 18px;
+    vertical-align: top;
     /*margin: 3px;*/
 }
 

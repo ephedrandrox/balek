@@ -46,22 +46,17 @@ define(['dojo/_base/declare',
             onInterfaceStateChange: function (name, oldState, newState) {
                 //this has to be here so remoteCommander works
                 this.inherited(arguments);
-                console.log("Instance Status:",name, oldState, newState);
 
                 if (name === "Status" && newState === "Ready") {
-                    console.log("Instance Status:", newState);
-                    //we could do something based on error status here
+                     //we could do something based on status here
                 }else if (name === "availableInvitationsComponentKey") {
                     if(this.availableInvitations === null){
                         this.availableInvitations = new SyncedMapInterface({_instanceKey: this._instanceKey, _componentKey: newState.toString()});
-                        console.log("CDD:onInterfaceStateChange ", this.availableInvitations)
-
                         this.availableInvitationsWatchHandle = this.availableInvitations.setStateWatcher(lang.hitch(this, this.onAvailableInvitationsStateChange));
-
                     }
                 }
                 else if (name === "mainInstanceKeys") {
-                    console.log("mainInstanceKeys:", newState);
+                    //console.log("mainInstanceKeys:", newState);
 
                     if(this._mainInterface === null){
                         this._mainInterface = new MainInterface({_instanceKey: newState.instanceKey,
@@ -81,13 +76,13 @@ define(['dojo/_base/declare',
                                 let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
                                 this.workspaceManagerCommands.addToWorkspaceContainer(this._mainInterface, workspaceContainerWidgetPath )
                                     .then(lang.hitch(this, function(workspaceContainerKey){
-                                        console.log("gotWorkspaceContainerKey", workspaceContainerKey);
+                                      //  console.log("gotWorkspaceContainerKey", workspaceContainerKey);
                                         this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
                                             .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
-                                                console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                               // console.log("Container added to workspace", addContainerToWorkspaceResponse);
                                             }))
                                             .catch(lang.hitch(this, function(error){
-                                                console.log("Error adding container to workspace", error);
+                                              //  console.log("Error adding container to workspace", error);
                                             }));
                                     })).catch(lang.hitch(this, function(error){
                                 }));

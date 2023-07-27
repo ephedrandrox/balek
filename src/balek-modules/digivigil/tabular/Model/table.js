@@ -22,7 +22,7 @@ define(['dojo/_base/declare',
         constructor: function(args){
             this.lineArray = []
             declare.safeMixin(this, args);
-            console.log("tabularTableModel")
+            //console.log("tabularTableModel")
 
 
 
@@ -67,7 +67,7 @@ define(['dojo/_base/declare',
         },
 
         parseWorkerDone: function(parseDataReadyEvent){
-            console.log('Message received from worker', parseDataReadyEvent.data);
+         //   console.log('Message received from worker', parseDataReadyEvent.data);
 
             if(parseDataReadyEvent.data.parseTabSeperatedString && parseDataReadyEvent.data.parseTabSeperatedString.lines){
 
@@ -146,7 +146,7 @@ define(['dojo/_base/declare',
                 this.modelState.set("footerStart", parseInt(footerRow))
             }else
             {
-                console.log('################Attempting to set to same"')
+             //   console.log('################Attempting to set to same"')
                 this.modelState.set("footerStart", this.getFooterRow())
             }
         },

@@ -91,7 +91,7 @@ define(['dojo/_base/declare',
 
 
                 declare.safeMixin(this, args);
-                console.log("BKConnect: staring up")
+                console.log("BKConnect: staring up main interface")
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._invitationCssString + "</style>"), win.body());
                 this.setContainerName(" 📱 - Balekute Connect - ");
@@ -103,7 +103,7 @@ define(['dojo/_base/declare',
             },
 
             onInterfaceStateChange: function (name, oldState, newState) {
-                console.log("🆘🆘calling", name, oldState, newState);
+               // console.log("🆘🆘calling", name, oldState, newState);
                 this.inherited(arguments);     //this has to be done so remoteCommander works
 
             if(name == "targetKey"){

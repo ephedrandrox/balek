@@ -126,25 +126,7 @@ define(['dojo/_base/declare',
                 }
 
             },
-            onShowHiddenCaptures: function(clickEvent){
-                if(this.uiState !== null) {
-                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
-                    if(showingHiddenCaptures ){
-                        this.uiState.set("showingHiddenCaptures", false)
-                        this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
-                        }))
-                        this.updateStatusText("Show Captures not in Set")
 
-                    }else {
-                        this.uiState.set("showingHiddenCaptures", true)
-                        this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
-                        }))
-                        this.updateStatusText("Hide Captures not in Set")
-
-                    }
-                }
-
-            },
             //##########################################################################################################
             //UI Status Updates
             //##########################################################################################################
@@ -175,6 +157,25 @@ define(['dojo/_base/declare',
                         this.updateStatusText("Show Captures not in Set")
                     }
                 }
+            },
+            onShowHiddenCaptures: function(clickEvent){
+                if(this.uiState !== null) {
+                    let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
+                    if(showingHiddenCaptures ){
+                        this.uiState.set("showingHiddenCaptures", false)
+                        this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
+                        }))
+                        this.updateStatusText("Show Captures not in Set")
+
+                    }else {
+                        this.uiState.set("showingHiddenCaptures", true)
+                        this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
+                        }))
+                        this.updateStatusText("Hide Captures not in Set")
+
+                    }
+                }
+
             },
             //##########################################################################################################
             //UI Actions
@@ -222,24 +223,24 @@ define(['dojo/_base/declare',
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
                     let showHiddenCaptures = this.uiState.get("showHiddenCaptures")
 
-                    if(showHiddenCaptures){
-                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegridfill.svg" )
-                        domAttr.set(this.eraseButtonImage, "title", "Hide Captures not in Set" )
-
-                    }else{
-                        domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegrid.svg" )
-                        domAttr.set(this.eraseButtonImage, "title", "Show Captures not in Set" )
-                    }
+                    // if(showHiddenCaptures){
+                    //     domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegridfill.svg" )
+                    //     domAttr.set(this.eraseButtonImage, "title", "Hide Captures not in Set" )
+                    //
+                    // }else{
+                    //     domAttr.set(this.eraseButtonImage, "src", "balek-modules/digivigil/digiscan/resources/images/circlegrid.svg" )
+                    //     domAttr.set(this.eraseButtonImage, "title", "Show Captures not in Set" )
+                    // }
 
                     if(selectedCaptureSet
                         && this.captureSets[selectedCaptureSet]
                     )
                     {
-                        domStyle.set(this.clearSetButtonDiv, "display", "block" )
+                       // domStyle.set(this.clearSetButtonDiv, "display", "block" )
                         domStyle.set(this.deleteSetButtonDiv, "display", "block" )
 
                     }else{
-                        domStyle.set(this.clearSetButtonDiv, "display", "none" )
+                       // domStyle.set(this.clearSetButtonDiv, "display", "none" )
                         domStyle.set(this.deleteSetButtonDiv, "display", "none" )
 
                     }
