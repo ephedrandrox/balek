@@ -250,9 +250,9 @@ define(['dojo/_base/declare',
 
             newAllSet : function(setName, resultCallback) {
                 this._instanceCommands.newAllSet(setName).then(lang.hitch(this, function(commandReturnResults){
-                 //   console.log("#newAllSet", commandReturnResults)
+                    console.log("#newAllSet", commandReturnResults)
                 })).catch(function(commandErrorResults){
-                  //  console.log("#newAllSet", "newAllSet Received Error Response" + commandErrorResults);
+                    console.log("#newAllSet", "newAllSet Received Error Response" + commandErrorResults);
                 });
             },
             newClearSet : function(setName, resultCallback){

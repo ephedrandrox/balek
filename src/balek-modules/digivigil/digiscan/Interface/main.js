@@ -151,7 +151,15 @@ define(['dojo/_base/declare',
                 }
                 //If just status text Changes then update the div
                 if(name === "UIStatusText"){
+
+                    if(newState === "")
+                    {
+                        domStyle.set(this._statusDiv, "display", "none" )
+                    }else {
+                        domStyle.set(this._statusDiv, "display", "block" )
+                    }
                     this._statusDiv.innerHTML = newState
+
                 }
             },
             onCaptureSetsChange: function (captureSetID, oldName, newName) {
@@ -226,7 +234,7 @@ define(['dojo/_base/declare',
                 if(this.uiState!==null && typeof newStatusText === "string"){}
                 {
                     this.uiState.set("UIStatusText", newStatusText)
-                    this.uiState.set("UIListControlStatusText", newStatusText)
+                    //this.uiState.set("UIListControlStatusText", newStatusText)
 
                 }
             },
@@ -268,7 +276,7 @@ define(['dojo/_base/declare',
             refreshViews: function(){
                 if(this.uiState != null) {
                     const activeView = this.uiState.get("ActiveView")
-                    this.updatePreviewViews();
+
 
                     this.tableModel.setDataString(this.getTabSeperatedEntries())
 
@@ -277,8 +285,13 @@ define(['dojo/_base/declare',
 
                     if (activeView === "previewDiv") {
                         this.switchViews(tabularDiv, previewDiv);
+                        this.updatePreviewViews();
                     } else if (activeView === "tabularDiv") {
                         this.switchViews(previewDiv, tabularDiv);
+                        if(this.MainTable !== null)
+                        {
+                            this.MainTable.refreshUI();
+                        }
                     } else {
                         console.log("switchViews unexpected", activeView)
                     }

@@ -212,10 +212,12 @@ define(['dojo/_base/declare',
             //UI Update Functions Section
             //##########################################################################################################
             updateStatusText: function(newText){
-                if(this.uiState!==null && typeof newText === "string"){}
-                {
-                    this.uiState.set("UIListControlStatusText", newText)
-                }
+                // if(this.uiState!==null && typeof newText === "string"){}
+                // {
+                //     this.uiState.set("UIListControlStatusText", newText)
+                // }
+
+            this.mainInterface.updateStatusText(newText)
             },
             refreshViews: function()
             {
