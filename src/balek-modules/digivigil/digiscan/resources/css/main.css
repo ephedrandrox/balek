@@ -166,7 +166,7 @@ text-align:center
     text-align: center;
     padding: 0;
     margin: 0x;
-    border: solid black 3px;
+    border: solid transparent 3px;
     border-radius:8px;
     visibility: visible;
     z-index: 5;
