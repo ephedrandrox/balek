@@ -189,7 +189,7 @@ define(['dojo/_base/declare',
 
             },
             onUninterestedOver(){
-                this.setStatusText("Hide in Set")
+                this.setStatusText("🔆 Hide this Capture in Set")
                 domAttr.set(this.uninterestedButton, "src", "balek-modules/digivigil/digiscan/resources/images/eraseFill.svg" )
 
             },
@@ -200,7 +200,7 @@ define(['dojo/_base/declare',
 
             },
             onCopyCodeOver: function(overEvent) {
-                this.setStatusText("Copy Read Code")
+                this.setStatusText("🔆 Copy Code to Clipboard 📋")
 
 
             },

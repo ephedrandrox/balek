@@ -34,6 +34,10 @@ define(['dojo/_base/declare',
 
             _noteDiv: null,
             _statusDiv: null,
+            _ToggleListViewDiv: null,
+            _ToggleGridViewDiv: null,
+
+
 
             clearSetButtonDiv: null,
             deleteSetButtonDiv: null,
@@ -91,10 +95,11 @@ define(['dojo/_base/declare',
                 this.refreshViews()
             },
             onUIStateChange: function( name, oldValue, newValue ) {
-                if(name === "UIListControlStatusText"){
-                    this._statusDiv.innerHTML = newValue
+                if(name !== "UIStatusText"){
+
+                    this.refreshViews()
+
                 }
-                this.refreshViews()
             },
             //##########################################################################################################
             //UI Event Functions Section
@@ -134,27 +139,28 @@ define(['dojo/_base/declare',
                 this.updateStatusText("")
             },
             _onActivatePreviewOver: function(){
-                this.updateStatusText("Grid View")
+                this.updateStatusText("🔆 Click and Switch To Grid View ")
             },
             _onActivateTabularOver: function(){
-                this.updateStatusText("List View")
+                this.updateStatusText("🔆 Click and Switch To List View")
             },
             _onClearOver: function (overEvent){
-                this.updateStatusText("Clear all Captures from Set")
+                this.updateStatusText("🔆 Click and Clear all Captures from Set")
             },
             _onNewOver: function (overEvent){
-                this.updateStatusText("Create New Set")
+                this.updateStatusText("🔆 Click To Create New Set <br/>" +
+                                             "💬 After Input Dialog")
             },
             _onDeleteOver: function (overEvent){
-                this.updateStatusText("Remove Set")
+                this.updateStatusText("🔆 Click To Remove Set")
             },
             _onHiddenOver:function (overEvent){
                 if(this.uiState !== null) {
                     let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
                     if(showingHiddenCaptures ){
-                        this.updateStatusText("Hide Captures not in Set")
+                        this.updateStatusText("🔆 Hide Captures not in Set")
                     }else {
-                        this.updateStatusText("Show Captures not in Set")
+                        this.updateStatusText("🔆 Show Captures not in Set")
                     }
                 }
             },
@@ -165,13 +171,13 @@ define(['dojo/_base/declare',
                         this.uiState.set("showingHiddenCaptures", false)
                         this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
                         }))
-                        this.updateStatusText("Show Captures not in Set")
+                        this.updateStatusText("🔆 Show Captures not in Set")
 
                     }else {
                         this.uiState.set("showingHiddenCaptures", true)
                         this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
                         }))
-                        this.updateStatusText("Hide Captures not in Set")
+                        this.updateStatusText("🔆 Hide Captures not in Set")
 
                     }
                 }
@@ -181,9 +187,11 @@ define(['dojo/_base/declare',
             //UI Actions
             //##########################################################################################################
             _onActivatePreviewView: function(){
+                this.updateStatusText("")
                 this.mainInterface.makePreviewDivActive()
             },
             _onActivateTabularView: function(){
+                this.updateStatusText("")
                 this.mainInterface.makeTabularDivActive()
             },
             _onClearCapturesFromSet: function(){
@@ -221,8 +229,23 @@ define(['dojo/_base/declare',
             },
             refreshViews: function()
             {
+                console.log("Refresh Set Control view")
                 if(this.uiState != null) {
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
+                    const activeView = this.uiState.get("ActiveView")
+
+                    if (activeView === "previewDiv") {
+                       domStyle.set(this._ToggleListViewDiv, "display", "block")
+                        domStyle.set(this._ToggleGridViewDiv, "display", "none")
+
+                    } else if (activeView === "tabularDiv") {
+                        domStyle.set(this._ToggleListViewDiv, "display", "none")
+                        domStyle.set(this._ToggleGridViewDiv, "display", "block")
+
+
+                    }
+
+
                     let showHiddenCaptures = this.uiState.get("showHiddenCaptures")
 
                     // if(showHiddenCaptures){
@@ -271,6 +294,20 @@ define(['dojo/_base/declare',
                 domClass.add(selectButton, `${this.baseClass}SelectButton`)
                 selectButton.innerHTML = name
 
+
+                on(selectButton, ["mouseover"], lang.hitch(this, function (clickEvent) {
+
+                    this.updateStatusText("🔆 Click and switch to <b>" + name + "</b> Set" +
+                        "\n</br>\n</br>💬 Shift ➕ Click to Rename")
+
+                }));
+
+                on(selectButton, ["mouseout"], lang.hitch(this, function (clickEvent) {
+
+                    this.updateStatusText("")
+
+                }));
+
                 on(selectButton, ["click"], lang.hitch(this, function (clickEvent) {
 
                     if (clickEvent.altKey) {
@@ -282,6 +319,7 @@ define(['dojo/_base/declare',
                     }
 
                 }));
+
                 return selectButton
             },
             //##########################################################################################################

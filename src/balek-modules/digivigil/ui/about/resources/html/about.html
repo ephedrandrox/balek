@@ -1,6 +1,16 @@
 <div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp,onkeydown:_onKeyDown,onfocus:_onFocus" tabindex="0">
 <br/>
-    Esc Button to Close<br/>
+    <span data-dojo-attach-event="onclick:_onCloseClicked"
+          class="${baseClass}Button"
+
+         title="Close Settings">
+        <img class="${baseClass}ButtonImage"
+             style="width: 20px; height: 20px;"
+             src="balek-modules/digivigil/digiscan/resources/images/chevronCircle.svg">
+<br/>
+    <b>Close Settings</b>
+    </span>
+    <br/>
     <div class="${baseClass}MainHeaderTitle">
         <div class="${baseClass}MainHeaderTitleGridContainer">
 
@@ -36,6 +46,15 @@
         <br/>
         <div class="${baseClass}DescriptionDiv">
             See the User Manual for help getting started
+        </div>
+        <br/>
+        <div data-dojo-attach-event="onclick:_onRemoveClicked"
+             class="${baseClass}Button"
+             title="Delete All Captures">
+            <img class="${baseClass}ButtonImage"
+                 src="balek-modules/digivigil/digiscan/resources/images/trash.svg">
+            <br/>
+           <b>Delete All Captures</b>
         </div>
     </div>
 </div>

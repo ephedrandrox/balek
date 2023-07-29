@@ -14,6 +14,20 @@
     background: rgba(248, 247, 247, 0.76);
 }
 
+.scapturaUIAboutButton{
+    display: inline-block;
+    cursor: pointer;
+}
+.scapturaUIAboutButton:hover{
+    filter: invert();
+}
+
+    .scapturaUIAboutButtonImage {
+    width: 100px;
+    height: 100px;
+   filter: invert();
+}
+
 .scapturaUIAboutMainHeaderTitle{
 margin: 30px;
 }

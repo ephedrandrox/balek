@@ -100,7 +100,7 @@ define(['dojo/_base/declare',
             },
             onClearCapturesFromSetOver: function(){
                 if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
-                    this.mainInterface.updateAllStatusText("Clear all captures from set")
+                    this.mainInterface.updateAllStatusText("🔆 Clear all captures from set")
                 }else{
                     console.log(this.mainInterface)
                 }
@@ -123,9 +123,9 @@ define(['dojo/_base/declare',
                     if(this.uiState !== null) {
                         let showingHiddenCaptures = this.uiState.get("showingHiddenCaptures")
                         if(showingHiddenCaptures ){
-                            this.mainInterface.updateAllStatusText("Hide Captures not in Set")
+                            this.mainInterface.updateAllStatusText("🔆 Hide Captures not in Set")
                         }else {
-                            this.mainInterface.updateAllStatusText("Show Captures not in Set")
+                            this.mainInterface.updateAllStatusText("🔆 Show Captures not in Set")
                         }
                     }
 
@@ -143,13 +143,13 @@ define(['dojo/_base/declare',
                         this.uiState.set("showingHiddenCaptures", false)
                         this.interfaceCommands.showHiddenCaptures( false,lang.hitch(this, function(commandResult){
                         }))
-                        this.mainInterface.updateAllStatusText("Show Captures not in Set")
+                        this.mainInterface.updateAllStatusText("🔆 Show Captures not in Set")
 
                     }else {
                         this.uiState.set("showingHiddenCaptures", true)
                         this.interfaceCommands.showHiddenCaptures( true, lang.hitch(this, function(commandResult){
                         }))
-                        this.mainInterface.updateAllStatusText("Hide Captures not in Set")
+                        this.mainInterface.updateAllStatusText("🔆 Hide Captures not in Set")
 
                     }
                 }
@@ -157,7 +157,7 @@ define(['dojo/_base/declare',
             },
             onCopyCodeListOver: function(overEvent) {
                 if(this.mainInterface !== null  && typeof this.mainInterface.updateStatusText === 'function') {
-                    this.mainInterface.updateAllStatusText("Copy Comma Seperated Values")
+                    this.mainInterface.updateAllStatusText("🔆 Copy Comma Seperated List Of Codes to Clipboard  📋")
                 }else{
                     console.log(this.mainInterface)
                 }

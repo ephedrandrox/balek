@@ -66,12 +66,12 @@ height: 28px;
 
 .digivigilDigiscanSetControlSetButtonsGrid {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 20px 20px;
     grid-template-rows: auto ;
-    gap: 0px 0px;
+    gap: 3px 10px;
     grid-template-areas:
     "NewSetButton DeleteSetButton";
-
+    margin-left: 10px;
 }
 
 
@@ -83,7 +83,7 @@ height: 28px;
     grid-template-rows: auto ;
     gap: 0px 0px;
     grid-template-areas:
-    "ListViewButton GridViewButton";
+    "GridViewButton ListViewButton";
 
 }
 
@@ -110,7 +110,10 @@ height: 28px;
     cursor: pointer;
     padding-left: 10px;
     padding-right: 10px;
+    background: transparent;
 
+    z-index:100;
+    position: relative;
 
 }
 .digivigilDigiscanSetControlSetSelectionDiv{
@@ -125,11 +128,6 @@ height: 28px;
     vertical-align: center;
 }
 
-.digivigilDigiscanSetControlSelectButton:hover {
-    display: inline-block;
-    /*background: white;*/
-    color: black;
-}
 .digivigilDigiscanSetControlSelectButton:hover {
     display: inline-block;
     background: RGBA(1,1,1,0.4);

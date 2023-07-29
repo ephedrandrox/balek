@@ -207,19 +207,20 @@ define(['dojo/_base/declare',
                 this._interface.removeAllCaptures();
             },
             _onSaveOver: function (eventObject) {
-                this.updateStatusText("Save captures as text file")
+                this.updateStatusText("🔆 Click to Save Captures")
             },
             _onCopyOver: function (eventObject) {
-                this.updateStatusText("Copy captures as tab seperated text")
+                this.updateStatusText("🔆 Click to Copy Captures to Clipboard 📋")
             },
             _onRemoveOver: function (eventObject) {
-                this.updateStatusText("Remove all captures from database")
+                this.updateStatusText("🔆 Click to Remove All Captures From Server")
             },
             _onAboutClicked: function (eventObject) {
-                new AboutUI();
+                new AboutUI({interfaceCommands: this._interface,
+                mainInterface: this});
             },
             _onAboutOver: function (){
-                this.updateStatusText("About Scaptura")
+                this.updateStatusText("🔆 Click For Settings")
             },
             _onMouseOutResetStatusText: function(){
                 this.updateStatusText("")

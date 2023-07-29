@@ -35,6 +35,8 @@ define(['dojo/_base/declare',
 
 
             _mainCssString: mainCss,
+            mainInterface: null,
+            interfaceCommands: null,
 
             //##########################################################################################################
             //Startup Functions Section
@@ -82,6 +84,12 @@ define(['dojo/_base/declare',
                         break;
 
                 }
+            },
+            _onRemoveClicked: function (eventObject) {
+                this.interfaceCommands.removeAllCaptures();
+            },
+            _onCloseClicked: function (eventObject) {
+                this.unload();
             },
 
             //##########################################################################################################
