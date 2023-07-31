@@ -11,6 +11,9 @@
             <div class="${baseClass}PreviewDiv" data-dojo-attach-point='_previewDiv'></div>
             <div data-dojo-attach-point="_statusDiv" class="${baseClass}StatusDiv">
             </div>
+            <div data-dojo-attach-point="_noSelectionDiv" class="${baseClass}NoSelectionDiv">
+                No Set Selected
+            </div>
 
             <div class="${baseClass}ExportControl" style="position: fixed; bottom: 0; left: 50%;   transform: translate(-50%, 0); z-index: 100;">
 
@@ -23,7 +26,9 @@
                          src="balek-modules/digivigil/digiscan/resources/images/copy.svg">
                 </div>
 
-                <div data-dojo-attach-event="onclick:_onAboutClicked,onmouseover:_onAboutOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}Button" style="float: right;" title="About Scaptura">
+                <div data-dojo-attach-event="onclick:_onAboutClicked,onmouseover:_onAboutOver,onmouseout:_onMouseOutResetStatusText"
+                     class="${baseClass}Button" style="float: right;"
+                     title="Control Panel">
                     <img class="${baseClass}ButtonImage"
                          src="balek-modules/digivigil/digiscan/resources/images/gear.svg">
                 </div>

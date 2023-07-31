@@ -44,6 +44,7 @@ define(['dojo/_base/declare',
 
             _previewDiv: null,                     //DomNode
             _tabularDiv: null, //DomNode
+            _noSelectionDiv: null,
            // _tabularContainer: null, //DomNode
            // _tabularStatus: null,
            // _tabularOutput: null,
@@ -214,12 +215,11 @@ define(['dojo/_base/declare',
                 // new AboutUI({interfaceCommands: this._interface,
                 // mainInterface: this});
 
-if(eventObject.altKey )
-{
-    this._interface.hideSettings()
-}else {
-    this._interface.showSettings()
-}
+                if(eventObject.altKey )
+                {
+                    this._interface.hideSettings()
+                }else {
+                    this._interface.showSettings()}
 
             },
             _onAboutOver: function (){
@@ -286,6 +286,7 @@ if(eventObject.altKey )
 
                     const previewDiv = this._previewDiv;
                     const tabularDiv = this._tabularDiv;
+                    const noSelectionDiv = this._noSelectionDiv
 
                     if (activeView === "previewDiv") {
                         this.switchViews(tabularDiv, previewDiv);
@@ -306,9 +307,13 @@ if(eventObject.altKey )
                     ) {
                         domStyle.set(previewDiv, "visibility", "inherit")
                        domStyle.set(tabularDiv, "visibility", "inherit")
+                        domStyle.set(noSelectionDiv, "display", "none")
+
                     } else {
                         domStyle.set(previewDiv, "visibility", "hidden")
                         domStyle.set(tabularDiv, "visibility", "hidden")
+                        domStyle.set(noSelectionDiv, "display", "inline-block")
+
                     }
 
                 }
