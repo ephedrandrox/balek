@@ -1,0 +1,118 @@
+
+
+
+.digivigilDigiscanSettingsInterfaceAboutGridContainer {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto ;
+    gap: 0px 0px;
+    grid-template-areas:
+    "ScapturaImage ScapturaTitle";
+height: 160px;
+
+
+    border: solid #0c0c10 3px;
+    background: rgba(128, 128, 128, 0.9);
+    border-radius: 10px;
+}
+
+
+.digivigilDigiscanSettingsInterfaceOfDigivigil{
+    position: relative;
+    right: -20px;
+    top: -20px;
+
+    font-size: 16px;
+    font-family:'Righteous', Arial, Helvetica, sans-serif;
+    color: #14aff1;
+    padding: 10px;
+    vertical-align: top;
+    line-height: 20px;
+    text-align: right;
+
+}
+
+
+.digivigilDigiscanSettingsInterfaceSpanButton {
+    cursor: pointer;
+
+    line-height: 40px;
+    border: solid transparent 2px;
+    border-radius: 5px;
+
+}
+.digivigilDigiscanSettingsInterfaceSpanButton:hover {
+    border: solid   #14aff1 2px;
+    border-radius: 5px;
+}
+
+
+.digivigilDigiscanSettingsInterfaceImageButton {
+    cursor: pointer;
+}
+
+.digivigilDigiscanSettingsInterfaceImageButton:hover {
+    filter: invert();
+}
+
+.digivigilDigiscanSettingsInterfaceButton{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.digivigilDigiscanSettingsInterface{
+    background: rgba(28, 110, 164, 0.2);
+    display: inline-block;
+
+    margin: 0;
+    border: solid transparent 3px;
+    border-radius:8px;
+    visibility: visible;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+    outline: none;
+    color: #14aff1;
+    background: rgba(80, 78, 78, 0.85);
+
+    text-align: left;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+
+
+.digivigilDigiscanSettingsInterfaceSectionDiv{
+    position: relative;
+    border: solid #14aff1 1px;
+    border-radius: 10px;
+
+    padding-left: 10px;
+    padding-right: 10px;
+
+    margin-top: 30px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    background: rgba(80, 78, 78, 0.85);
+
+}
+
+.digivigilDigiscanSettingsInterfaceSectionDivHeaderSpan{
+    position: absolute;
+    top: -20px;
+    left: -5px;
+    border-radius: 10px;
+    background: rgba(80, 78, 78, 0.9);
+    color: #14aff1;
+    border: solid #14aff1 1px;
+
+    padding: 5px;
+}

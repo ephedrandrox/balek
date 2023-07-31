@@ -150,18 +150,13 @@ define(['dojo/_base/declare',
                     this.setCurrentCaptureSetWatcher()
                 }
                 //If just status text Changes then update the div
-                if(name === "UIStatusText"){
+                if(name === "UIStatusText" ||  name === "showHelpfulHints"){
 
-                    if(newState === "")
-                    {
-                        domStyle.set(this._statusDiv, "display", "none" )
-                    }else {
-                        domStyle.set(this._statusDiv, "display", "block" )
-                    }
-                    this._statusDiv.innerHTML = newState
+                 this.updateStatusTextView()
 
                 }
             },
+
             onCaptureSetsChange: function (captureSetID, oldName, newName) {
                    //if the users capture sets list changes
                     this.refreshViews()
@@ -216,11 +211,19 @@ define(['dojo/_base/declare',
                 this.updateStatusText("🔆 Click to Remove All Captures From Server")
             },
             _onAboutClicked: function (eventObject) {
-                new AboutUI({interfaceCommands: this._interface,
-                mainInterface: this});
+                // new AboutUI({interfaceCommands: this._interface,
+                // mainInterface: this});
+
+if(eventObject.altKey )
+{
+    this._interface.hideSettings()
+}else {
+    this._interface.showSettings()
+}
+
             },
             _onAboutOver: function (){
-                this.updateStatusText("🔆 Click For Settings")
+                this.updateStatusText("🔆 Show Control Panel")
             },
             _onMouseOutResetStatusText: function(){
                 this.updateStatusText("")
@@ -309,6 +312,30 @@ define(['dojo/_base/declare',
                     }
 
                 }
+            },
+            updateStatusTextView: function()
+            {
+
+
+                if(this.uiState != null) {
+                    const showHelpfulHints = this.uiState.get("showHelpfulHints")
+                    const UIStatusText = this.uiState.get("UIStatusText")
+
+                    if(UIStatusText === "" || UIStatusText === undefined ||
+                        showHelpfulHints === false || showHelpfulHints === undefined)
+                    {
+                        domStyle.set(this._statusDiv, "display", "none" )
+                    }else {
+                        domStyle.set(this._statusDiv, "display", "block" )
+                        this._statusDiv.innerHTML = UIStatusText
+                    }
+
+
+
+
+                }
+
+
             },
             updatePreviewViews: function(){
                 domConstruct.empty(this._previewDiv)

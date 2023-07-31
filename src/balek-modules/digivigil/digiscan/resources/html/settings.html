@@ -1,0 +1,104 @@
+<div class="${baseClass}">
+
+    <img style="width: 40px; position: absolute; left: 10px; top: 5px; opacity: 0.4"
+         src="balek-modules/digivigil/digiscan/resources/images/gear.svg">
+
+    <img class="${baseClass}ImageButton"
+         style="width: 20px; position: absolute; right: 10px; top: 5px; z-index: 10000;"
+         data-dojo-attach-event="onclick:onCloseButtonClicked"
+         src="balek-modules/digivigil/digiscan/resources/images/circleX.svg">
+    <span style="
+   position: relative;
+   font-weight: bold;
+    font-size: 24px;
+    font-family: 'Righteous', Arial, Helvetica, sans-serif;
+    padding-right: 40px;
+    padding-left: 40px;
+
+    ">Control Panel
+
+   </span>
+    <br/>
+    <br/>
+
+
+
+
+
+        <div class="${baseClass}AboutGridContainer">
+
+
+            <div style="grid-area: ScapturaImage">
+                <img
+                     style="position: relative; display: inline; top: 5px; height: 100px; padding: 20px; margin-top: 4px;"
+                     src="balek-modules/digivigil/ui/about/resources/images/ScapturaIcon.svg">
+
+            </div>
+
+
+            <div style="grid-area: ScapturaTitle; font-family: 'Righteous', Arial, Helvetica, sans-serif; font-size: 76px; color: black; padding-right: 40px;" >Scaptura
+                <div class="${baseClass}OfDigivigil" >
+                    <a href="https://www.digivigil.com/" target="_blank" style="text-decoration: none; color: inherit;">
+                        <span style="position: relative; top: -20px;">from Digivigil
+                        </span>
+                        <img style="position: relative; height: 60px;
+                                    padding: 0;"
+                             src="balek-modules/digivigil/digiscan/resources/images/digivigilLogo.png">
+                    </a>
+                </div>
+
+            </div> <br>
+        </div>
+
+
+
+
+
+    <div class="${baseClass}SectionDiv">
+         <span class="${baseClass}SectionDivHeaderSpan" style="font-weight: bold;
+        font-size: 18px;
+        font-family: 'Righteous', Arial, Helvetica, sans-serif;
+        ">Help</span>
+        <br/>
+        <span style="font-weight: bold;
+        font-size: 16px;
+        font-family: 'Righteous', Arial, Helvetica, sans-serif;
+        "> Show helpful hints
+            </span>
+        <span style="font-weight: normal;
+        font-size: 16px;
+        font-family: 'Righteous', Arial, Helvetica, sans-serif;
+        z-index: 10000;
+        " class="${baseClass}SpanButton"
+              data-dojo-attach-point="_showHelpfulHintsCheckboxSpan"
+        data-dojo-attach-event="onclick:_onShowHelpfulHintsClicked">
+            </span>
+
+    </div>
+
+    <div class="${baseClass}SectionDiv">
+         <span class="${baseClass}SectionDivHeaderSpan" style="font-weight: bold;
+        font-size: 18px;
+        font-family: 'Righteous', Arial, Helvetica, sans-serif;
+        ">Database</span>
+        <br/>
+
+
+            <div data-dojo-attach-event="onclick:_onRemoveClicked"
+                 class="${baseClass}Button"
+
+                 title="Delete All Captures">
+
+                <b style=" font-size: 16px;
+        font-family: 'Righteous', Arial, Helvetica, sans-serif; line-height: 30px; position: relative; top: -10px;">Delete All Captures</b>
+                <img class="${baseClass}ImageButton"
+                     style="width: 30px;"
+                     src="balek-modules/digivigil/digiscan/resources/images/trash.svg">
+
+            </div>
+
+    </div>
+
+
+
+</div>

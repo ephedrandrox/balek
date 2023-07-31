@@ -11,6 +11,8 @@ define(['dojo/_base/declare',
         'balek-client/session/workspace/workspaceManagerInterfaceCommands',
 
         'balek-modules/digivigil/digiscan/Interface/main',
+        'balek-modules/digivigil/digiscan/Interface/settings',
+
 
         'balek-modules/digivigil/digiscan/Interface/Controller/Captures/Interface',
         'balek-modules/digivigil/digiscan/Interface/Controller/CaptureSets/Interface',
@@ -22,13 +24,14 @@ define(['dojo/_base/declare',
     function (declare, lang, topic, Stateful,
               domConstruct, domStyle, win,
               balekWorkspaceManagerInterfaceCommands,
-              MainInterface,
+              MainInterface,SettingsInterface,
               Captures,CaptureSets,
               _SyncedCommanderInterface, SyncedMapInterface) {
 
         return declare("moduleDigivigilDigiscanInterface",   _SyncedCommanderInterface, {
             _instanceKey: null,
             _mainInterface: null,
+            _settingsInterface: null,
 
             _Captures: null,
             _CaptureSets: null,
@@ -152,6 +155,42 @@ define(['dojo/_base/declare',
                                         this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
                                             .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
                                                 console.log("Container added to workspace", addContainerToWorkspaceResponse);
+
+                                            }))
+                                            .catch(lang.hitch(this, function(error){
+                                                console.log("Error adding container to workspace", error);
+                                            }));
+                                    })).catch(lang.hitch(this, function(error){
+                                }));
+                            }
+                        })).catch(lang.hitch(this, function(error){
+                            console.log(error);
+                        }));
+                    }
+                }else if (name === "settingsInstanceKeys") {
+                    //Create Main Interface
+                    if(this._settingsInterface === null){
+                        this._settingsInterface = new SettingsInterface({_instanceKey: newState.instanceKey,
+                            _sessionKey: newState.sessionKey,
+                            _componentKey: newState.componentKey,
+                            _interface: this});
+                        //Get container Keys and add to static Workspace Container
+                        this._settingsInterface.getContainerKeys().then(lang.hitch(this, function(containerKeys){
+                            if(Array.isArray(containerKeys) && containerKeys.length === 0)
+                            {
+
+                                let workspaceContainerWidgetPath = "balek-client/session/workspace/container/widgets/movable/movableContainerWidget";
+                                let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
+                                this.workspaceManagerCommands.addToWorkspaceContainer(this._settingsInterface, workspaceContainerWidgetPath )
+                                    .then(lang.hitch(this, function(workspaceContainerKey){
+                                        console.log("gotWorkspaceContainerKey", workspaceContainerKey);
+
+                                        this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
+                                            .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
+                                                console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                                console.log("hidding container", addContainerToWorkspaceResponse);
+
+                                                this._interface.hideSettings()
                                             }))
                                             .catch(lang.hitch(this, function(error){
                                                 console.log("Error adding container to workspace", error);
@@ -224,6 +263,20 @@ define(['dojo/_base/declare',
             getCaptures: function(){
                     return this._Captures
             },
+            //##########################################################################################################
+            //Interface Functions UI API Section
+            //##########################################################################################################
+
+            setShowHelpfulHints: function(show, resultCallback)
+            {
+                if(typeof show === "boolean" && typeof resultCallback === "function"){
+                    this._instanceCommands.setShowHelpfulHints(show).then(lang.hitch(this, function(commandReturnResults){
+                        resultCallback(commandReturnResults)
+                    })).catch(function(commandErrorResults){
+                    });
+                }
+            },
+
 
             getCaptureSyncedMap : function(captureID , resultCallback){
                 this._instanceCommands.getCaptureSyncedMap(captureID).then(lang.hitch(this, function(commandReturnResults){
@@ -351,6 +404,15 @@ define(['dojo/_base/declare',
                 })).catch(function(commandErrorResults){
                     console.log("#SetACtive View", "Received Error Response" + commandErrorResults);
                 });
+            },
+            showSettings: function(){
+                this._settingsInterface.show()
+            },
+            hideSettings: function(){
+                this._settingsInterface.hide()
+            },
+            toggleSettings: function(){
+                this._settingsInterface.toggleShowView()
             },
             unload: function () {
                 this.uiStateWatchHandle.unwatch()

@@ -3,6 +3,7 @@ define(['dojo/_base/declare',
         'dojo/topic',
         //Digiscan Instance sub modules
         'balek-modules/digivigil/digiscan/Instance/main',
+        'balek-modules/digivigil/digiscan/Instance/settings',
         //Balek Components
         'balek-modules/components/syncedCommander/Instance',
         'balek-modules/components/syncedMap/Instance',
@@ -10,6 +11,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, topic,
               MainInstance,
+              SettingsInstance,
               _SyncedCommanderInstance, SyncedMapInstance, SessionsControllerInstanceCommands) {
 
         return declare("moduleDigivigilDigiscanInstance", _SyncedCommanderInstance, {
@@ -17,6 +19,9 @@ define(['dojo/_base/declare',
 
             _module: null,
             _moduleController: null,
+
+            mainInstance: null,
+            settingsInstance: null,
 
             userCaptures: null,                 //if session has user key then this is dojo Stateful
             availableCaptures: null,             //SyncedMapInstance relays userCaptures
@@ -36,6 +41,7 @@ define(['dojo/_base/declare',
                 //set setRemoteCommander commands
                 this._commands={
                     //uiState Update Commands
+                    "setShowHelpfulHints" : lang.hitch(this, this.setShowHelpfulHints),
                     "setUIActiveView" : lang.hitch(this, this.setUIActiveView),
                     "showHiddenCaptures": lang.hitch(this, this.showHiddenCaptures),
                     //captures
@@ -90,12 +96,30 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("mainInstanceKeys", {instanceKey: this.mainInstance._instanceKey,
                      sessionKey: this.mainInstance._sessionKey,
                      componentKey: this.mainInstance._componentKey});
+
+                //Create the Settings Instance
+                this.settingsInstance = new SettingsInstance({_instanceKey: this._instanceKey, _sessionKey: this._sessionKey, _userKey: this._userKey,
+                    _Controller: this});
+                //Set Main Instance keys for interface
+                this._interfaceState.set("settingsInstanceKeys", {instanceKey: this.mainInstance._instanceKey,
+                    sessionKey: this.settingsInstance._sessionKey,
+                    componentKey: this.settingsInstance._componentKey});
+
+
                 this._interfaceState.set("Status", "Ready");
 
             },
             //##########################################################################################################
             //Interface Commands - UI
             //##########################################################################################################
+            setShowHelpfulHints: function(show, resultCallback){
+                if(typeof show === "boolean"){
+                    this.uiState.add("showHelpfulHints", show)
+                    resultCallback({SUCCESS: "set"})
+                }else{
+                    resultCallback({ERROR : "instance -> setShowHelpfulHints: activeView is not a string"})
+                }
+            },
             setUIActiveView: function(activeView, resultCallback){
 
                 if(typeof activeView === "string"){
