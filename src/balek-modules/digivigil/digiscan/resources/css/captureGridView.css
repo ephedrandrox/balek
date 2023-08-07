@@ -25,7 +25,38 @@
 .digivigilDigiscanCaptureViewInterfaceCaptureNotInSet{
     filter:grayscale(1)
 }
+.digivigilDigiscanCaptureViewInterfaceImageDiv{
+   padding: 10px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+}
 
+.digivigilDigiscanCaptureViewInterfaceImage{
+    max-width: 200px;
+    max-height: 200px;
+
+    min-width: 40px;
+    min-height: 40px;
+
+    border-radius: 5px;
+    border: solid rgba(38, 38, 38, 0.8) 2px;
+    cursor: pointer;
+
+
+}
+.digivigilDigiscanCaptureViewInterfaceImage:hover{
+    filter: invert();
+}
+
+
+.digivigilDigiscanCaptureViewInterfaceNoImage{
+    width: 40px;
+   height: 40px;
+
+
+}
 
 .digivigilDigiscanCaptureViewInterfaceNoteText {
     color: black;

@@ -51,6 +51,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             removeAllCaptures: function(){
                 return this.Captures.removeAll()
             },
+            updateCaptureImage: function(updateEntry){
+                return this.Captures.updateCaptureImage(updateEntry)
+            },
+            retrieveCaptureImage:  function(captureID){
+            return this.Captures.retrieveCaptureImage(captureID)
+            },
+            retrieveCaptureImagePreview: function(captureID){
+                return this.Captures.retrieveCaptureImagePreview(captureID)
+            },
             //Capture Sets Relays
             //Get All Capture Sets
             getCaptureSets: function() {

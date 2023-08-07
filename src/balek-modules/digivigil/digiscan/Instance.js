@@ -47,6 +47,12 @@ define(['dojo/_base/declare',
                     //captures
                     "addCapture" : lang.hitch(this, this.addCapture),
                     "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures),
+                    "updateCaptureImage" : lang.hitch(this, this.updateCaptureImage),
+                    "retrieveCaptureImage" : lang.hitch(this, this.retrieveCaptureImage),
+
+                    "retrieveCaptureImagePreview" : lang.hitch(this, this.retrieveCaptureImagePreview),
+
+
                     //CaptureSets
                     "newAllSet" : lang.hitch(this, this.newAllSet),
                     "newClearSet" : lang.hitch(this, this.newClearSet),
@@ -139,7 +145,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             addCapture: function(Entry, resultCallback){
                 this._moduleController.addCapture(Entry).then(lang.hitch(this, function(Result){
-                    resultCallback({SUCCESS: Result})
+                    resultCallback({SUCCESS: "Capture added Successfully"})
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
                 }))
@@ -153,6 +159,27 @@ define(['dojo/_base/declare',
                         this.availableCaptures.add(id, undefined)
                     }))
                     console.log("resultCallbacked after ",Result)
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            updateCaptureImage : function(updateEntry, resultCallback){
+                this._moduleController.updateCaptureImage(updateEntry).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            retrieveCaptureImage : function(captureID, resultCallback){
+                this._moduleController.retrieveCaptureImage(captureID).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            retrieveCaptureImagePreview : function(captureID, resultCallback){
+                this._moduleController.retrieveCaptureImagePreview(captureID).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
                 }))

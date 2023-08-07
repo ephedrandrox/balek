@@ -46,6 +46,29 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         this.captureSyncedMapWatchHandles[captureID] = this.captureSyncedMaps[captureID].setStateWatcher(lang.hitch(this, function(name, oldValue, newValue)
                         {
                             this.captures[captureID].set(name, newValue)
+
+                            let id  = this.captures[captureID].get("id");
+                            let imageInfo  = this.captures[captureID].get("imageInfo");
+
+                            if(id && imageInfo)
+                            {
+
+
+                                console.log("imageInfo👹👹", newValue)
+                                this._interface.getCaptureImagePreview(id, lang.hitch(this,function(imageFetchResult){
+                                    console.log("image👹👹", imageFetchResult)
+                                    if(imageFetchResult && imageFetchResult.SUCCESS){
+                                        let CaptureImage = imageFetchResult.SUCCESS
+                                        if(CaptureImage.preview ){
+                                            let dataBase64String = CaptureImage.preview
+
+                                            //todo check this against the hash, public key and proof
+                                            this.captures[captureID].set("image", dataBase64String)
+
+                                        }
+                                    }
+                                }))
+                            }
                         }))
 
                     }))

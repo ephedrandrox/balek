@@ -133,6 +133,9 @@ define(['dojo/_base/declare',
                     }
                 }));
             },
+            updateCaptureImage: function(captureID, imageBase64String){
+
+            },
             removeAllCaptures: function()
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){

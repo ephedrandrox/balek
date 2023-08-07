@@ -38,6 +38,7 @@ define(['dojo/_base/declare',
             _barcodeText: null,             //domNode
             _recognizedText: null,          //domNode
             _noteText: null,                //domNode
+            _imageNode: null,
 
             interestedButton: null,         //domNode
             uninterestedButton: null,       //domNode
@@ -152,6 +153,21 @@ define(['dojo/_base/declare',
                     }else{
                         domStyle.set(this._noteDiv, "display", "none")
                     }
+
+
+                    const imageBase64String = this.captureState.get("image");
+
+
+                    if(imageBase64String )
+                    {
+                        domClass.remove(this._imageNode,`${this.baseClass}NoImage`)
+                        domClass.add(this._imageNode,`${this.baseClass}Image`)
+
+                        this._imageNode.src = "data:image/png;base64," + imageBase64String
+
+
+                    }
+
 
                     //get the selected Capture Set
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")

@@ -11,7 +11,6 @@
     "buildCertificates": "sh builds/certificates/build.sh",
     "getCertificates": "sh ",
     "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode"
-
   },
   "scriptsComments": {
     "start": "Starts Balek",
@@ -23,6 +22,7 @@
     "showAdminDeviceInvitation": "Shows the Owner Device information or QRcode to claim ownership. Include hostname as first argument"
   },
   "dependencies": {
+    "canvas": "^2.11.2",
     "mongodb": "^4.4.1",
     "mysql2": "^2.3.3",
     "qrcode": "^1.5.1",

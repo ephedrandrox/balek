@@ -2,21 +2,27 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
         'balek-modules/digivigil/digiscan/Database/captures',
+
+        'balek-modules/digivigil/digiscan/Database/capturesImages',
         'balek-modules/balekute/connect/Controller/instanceCommands',
         'balek-modules/components/syncedMap/Instance',
+        'balek-modules/base/image/utility',
 
         "dojo/node!sanitize-html",
     ],
     function (declare, lang, topic,
               Stateful,
               capturesDatabase,
+              capturesImagesDatabase,
               ConnectControllerInstanceCommands,
               SyncedMapInstance,
+              ImageUtility,
               nodeSanitizeHtml) {
         return declare("digivigilDigiscanCapturesController", null, {
             _module: null,              //Module instance
 
 
+            ImageUtility: null,
 
             captures: null,              //Dojo State Object
 
@@ -28,7 +34,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             StatefulCapture: null,
 
             _capturesDatabase: null,     //Captures Database controller
-
+            _capturesImagesDatabase: null,     //Captures Images Database controller
 
             connectControllerCommands: null,
 
@@ -39,6 +45,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 declare.safeMixin(this, args);
                 //mixin and declare state Object
 
+
+                this.ImageUtility = new ImageUtility();
                 let connectControllerInstanceCommands = new ConnectControllerInstanceCommands
 
                 let CapturesState = declare([Stateful], {});
@@ -58,6 +66,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
 
                     this._capturesDatabase = new capturesDatabase({_instanceKey: this._instanceKey});
+
+                    this._capturesImagesDatabase = new capturesImagesDatabase({_instanceKey: this._instanceKey});
+
                     console.log("Loading Captures(Captures)...");
                     this.load().then(lang.hitch(this, function(Result){
                         console.log("Captures Loaded Result", Result);
@@ -101,8 +112,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 this.updateStatefulCapture(Capture)
                                 this.appendToUserList(id, Capture)
                                // this.addCaptureToCaptureSets(id, Capture)
+                                if(Capture.capture && Capture.capture.id
+                                    && typeof Capture.capture.id.toString === "function" )
+                                {
+                                    this._capturesImagesDatabase.getCaptureImageInfo(Capture.capture.id ).then(lang.hitch(this, function(CaptureImageInfo) {
+                                        if(CaptureImageInfo && CaptureImageInfo.CaptureImage && CaptureImageInfo.CaptureImage.signature){
+                                            this.addImageInfoToCaptureStateful(CaptureImageInfo.CaptureImage.signature, id )
+
+                                        }else{
+                                            console.log("No inmageinfo", CaptureImageInfo)
+                                        }
+                                    })).catch(lang.hitch(this, function(Error){
+                                        console.log("Error Getting Capture Image", Error)
+                                    }));
+                                }else {
+                                    console.log("No Capture ID!", Capture)
+                                }
+
                             }))
-                            Resolve({SUCCESS: "getCaptures database result"})
+                            Resolve({SUCCESS: "getCaptures database"})
                         }else{
                             Reject({Error: "Captures are not an array! loadCaptures"})
                         }
@@ -111,6 +139,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         console.log("getCaptures  Error:", Error)
                     }))
                 }));
+            },
+            addImageInfoToCaptureStateful: function(imageInfo, CaptureID)
+            {
+                let statefulCapture = this.getStatefulCapture(CaptureID)
+                //console.log("got statefulCapture", statefulCapture, CaptureID)
+                //Set the statefulCapture imageInfo to the signature so interface can retrieve and check image
+                statefulCapture.set("imageInfo", imageInfo)
             },
             addCaptureToCaptureSets: function(id, Capture){
                 //todo: move this to CaptureSets
@@ -149,6 +184,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             updateStatefulCapture: function(Capture){
                 let statefulCapture = this.getStatefulCapture(Capture._id)
+                statefulCapture.set("id", Capture.capture.id);
                 statefulCapture.set("created", Capture.capture.created);
                 statefulCapture.set("barcode", Capture.capture.barcode);
                 statefulCapture.set("recognizedText", Capture.capture.recognizedText);
@@ -258,7 +294,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                     this._capturesDatabase.removeAllCaptures().then(lang.hitch(this, function(Result){
                         console.log("All Captures Removed Request Result", Result);
-                        this.resetCaptureMemory();
+
                         Resolve({SUCCESS: Result})
 
                     })).catch(lang.hitch(this, function(Error){
@@ -267,6 +303,121 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         Reject({Error})
                     }))
 
+                }));
+            },
+            updateCaptureImage: function(captureImage){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+
+                        this.checkAndReturnValidCaptureImage(captureImage).then(lang.hitch(this, function(Capture){
+
+
+                                        if (typeof captureImage === "object" && typeof captureImage.id === "string"
+                                    && typeof captureImage.image === "object"  && typeof captureImage.signature === "object" )
+                                {
+
+                                    this._capturesImagesDatabase.addCaptureImage(captureImage).then(lang.hitch(this, function(Result){
+                                      //  console.log("Image Update Result", Result);
+
+                                        Resolve({SUCCESS: "working"})
+                                        this.addImageInfoToCaptureStateful(captureImage.signature, captureImage.id)
+
+
+
+                                    })).catch(lang.hitch(this, function(Error){
+                                        console.log("Controller could not add Capture to Database", Error);
+
+                                        Reject({Error: Error, reason: "Controller could not add Capture to Database"})
+                                    }))
+
+                                }else {
+                                    debugger;
+                                    Reject({Error: "updateEntry was not as expected in updateCaptureImage", captureImage: captureImage})
+                                }
+
+                        })).catch(lang.hitch(this, function(Error){
+                            Reject({Error: "Captures Controller Add function could not validate Capture", info: Error})
+
+                        }))
+
+
+                }));
+            },
+            retrieveCaptureImage: function(captureID){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    console.log("🖖", captureID)
+
+                    if(captureID)
+                    {
+                        this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(Result) {
+                            if(Result){
+                                console.log("🖖", Result)
+                                Resolve(Result)
+                            }else{
+                                Reject({Error : "Result not complete"})
+
+                            }
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Error Getting Capture Image", Error)
+                        }));
+                    }else {
+                        console.log("No Capture ID!", captureID)
+                    }
+                }));
+            },
+            retrieveCaptureImagePreview:function(captureID){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    console.log("🖖", captureID)
+
+                    if(captureID)
+                    {
+                        this._capturesImagesDatabase.getCaptureImagePreview(captureID).then(lang.hitch(this, function(Result) {
+                            if(Result){
+                                console.log("🖖We got a preview image", Result)
+                                Resolve(Result)
+                            }else{
+                                this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(Result) {
+                                    if(Result){
+                                        console.log("🖖We got an image to make a preview with", Result)
+                                        this.ImageUtility.resizeImageBase64(Result.CaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
+                                            console.log("🖖We ResizedImage")
+
+                                            Result.CaptureImage.image = null
+                                            Result.CaptureImage.preview = resizedImage
+
+                                            Resolve(Result.CaptureImage)
+                                            console.log("🖖🥶🥶We Trying to persist", Result)
+
+                                            this._capturesImagesDatabase.updateCaptureImagePreview(resizedImage, captureID).then(lang.hitch(this, function(Result) {
+                                                console.log("🖖🥶🥶 persist returned", Result)
+
+                                            })).catch(lang.hitch(this, function(Error){
+
+                                                console.log("🖖🥶🥶 persist rerror🫀👀")
+
+                                            }))
+
+
+                                            //lets save this to the database for the next go around
+
+
+                                        })).catch(lang.hitch(this, function(Error){
+
+                                            console.log("🖖We Error Resizing", Error)
+                                            Reject(Error)
+                                        }))
+                                    }else{
+                                        Reject({Error : "No Image or Preview found"})
+                                    }
+                                })).catch(lang.hitch(this, function(Error){
+                                    console.log("Error Getting Capture Image", Error)
+                                }));
+                            }
+                        })).catch(lang.hitch(this, function(Error){
+                            console.log("Error Getting Capture Image", Error)
+                        }));
+                    }else {
+                        console.log("No Capture ID!", captureID)
+                    }
                 }));
             },
             getStatefulCapture: function(id){
@@ -400,6 +551,99 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             {
                                 validCapture.signature.ownerUserKey = validation
                                 Resolve(validCapture)
+                            }else {
+                                Reject({Error: "Signature Could not be verified: validation false"})
+                            }
+
+                        })).catch(lang.hitch(this, function(Error){
+                            Reject({Error: "Signature Could not be verified", checkError: Error})
+                        }))
+
+                    } else {
+                        Reject({Error: "Unexpected Data"})
+                    }
+                }));
+            },
+            checkCaptureImageSignature: function(CaptureImage) {
+                //Returns device owner user key if Capture is signed correctly
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    if (CaptureImage.id &&
+                        typeof CaptureImage.image !== "undefined" &&
+                        typeof CaptureImage.image.data !== "undefined" &&
+                        typeof CaptureImage.signature === "object" &&
+                        CaptureImage.signature["Public Key"] &&
+                        CaptureImage.signature["Proof"] &&
+                        CaptureImage.signature["Hash"]) {
+
+
+                        let id = CaptureImage.id
+                       let imageString = CaptureImage.image.data
+
+                        let publicKey = CaptureImage.signature["Public Key"]
+                        let proof = CaptureImage.signature["Proof"]
+                        let hash = CaptureImage.signature["Hash"]
+
+                        let signStringCombination = id + imageString
+
+                        let device = this.connectControllerCommands.getDeviceByPublicSigningKey(publicKey)
+
+                        let checkHash = this.connectControllerCommands.getStringHash(signStringCombination)
+
+
+                        if(checkHash === hash)
+                        {
+                            this.connectControllerCommands.verifySignedString(signStringCombination, proof, publicKey ).then(lang.hitch(this, function(result){
+                                if (result){
+                                    Resolve(device.getOwnerUserKey())
+
+                                }else{
+                                    Reject({Error: "Signature Could not be verified: Bad signature"})
+
+                                }
+                            })).catch(lang.hitch(this, function(Error){
+                                Reject({Error: "Signature Could not be verified: Error Caught", caughtError: Error})
+
+                            }))
+                        }else {
+                            Reject({Error: "Capture Hash Dose Not Match"})
+
+                        }
+
+
+
+                    }else {
+                        Reject({Error: "Signature Could not be verified: Capture data unexpected format", CaptureImage: CaptureImage})
+                    }
+
+                }));
+
+
+
+            },
+            checkAndReturnValidCaptureImage(CaptureImage) {
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    //Validate the Capture Image
+                    //Returns False otherwise
+                    let validCaptureImage = {};
+
+                    if ( CaptureImage.id &&
+                        typeof CaptureImage.image !== "undefined" &&
+                        typeof CaptureImage.image.data !== "undefined" &&
+                        typeof CaptureImage.signature === "object") {
+
+                        validCaptureImage.id = CaptureImage.id
+                        validCaptureImage.signature = CaptureImage.signature
+                        validCaptureImage.image = CaptureImage.image
+
+
+                        //todo check that sanitization didn't change signed data
+                        //  let validation = this.checkCaptureSignature(Capture)
+
+                        this.checkCaptureImageSignature(CaptureImage).then(lang.hitch(this, function(validation){
+                            if(validation)
+                            {
+                                validCaptureImage.signature.ownerUserKey = validation
+                                Resolve(validCaptureImage)
                             }else {
                                 Reject({Error: "Signature Could not be verified: validation false"})
                             }

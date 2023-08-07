@@ -394,7 +394,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
 
             getDeviceByPublicSigningKey: function(publicSigningKey){
-                console.log("_devicesBySigningKey", publicSigningKey, this._devicesBySigningKey, this._devicesBySigningKey[publicSigningKey.toString()])
                 if(this._devicesBySigningKey[publicSigningKey.toString()]
                     && typeof this._devicesBySigningKey[publicSigningKey.toString()].getDeviceIdentifier === 'function' )
                 {
@@ -483,7 +482,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             {
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
 
-                    console.log("🤖🤖",stringToVerify, signature, publicKey )
+
                     if (typeof stringToVerify === 'string' &&
                         typeof signature === 'string' &&
                         typeof publicKey === 'string' ) {

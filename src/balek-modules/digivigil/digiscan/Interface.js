@@ -277,7 +277,28 @@ define(['dojo/_base/declare',
                 }
             },
 
+            getCaptureImage: function(captureID , resultCallback){
 
+                this._instanceCommands.retrieveCaptureImage(captureID).then(lang.hitch(this, function(commandReturnResults){
+
+                    //  console.log("#getCaptureSetSyncedMap", commandReturnResults)
+                    resultCallback(commandReturnResults)
+
+                })).catch(function(commandErrorResults){
+                    //   console.log("#getCaptureSetSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                });
+            },
+            getCaptureImagePreview: function(captureID , resultCallback){
+
+                this._instanceCommands.retrieveCaptureImagePreview(captureID).then(lang.hitch(this, function(commandReturnResults){
+
+                    //  console.log("#getCaptureSetSyncedMap", commandReturnResults)
+                    resultCallback(commandReturnResults)
+
+                })).catch(function(commandErrorResults){
+                    //   console.log("#getCaptureSetSyncedMap", "newAllSet Received Error Response" + commandErrorResults);
+                });
+            },
             getCaptureSyncedMap : function(captureID , resultCallback){
                 this._instanceCommands.getCaptureSyncedMap(captureID).then(lang.hitch(this, function(commandReturnResults){
 
