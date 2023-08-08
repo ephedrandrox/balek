@@ -18,18 +18,15 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil/digiscan/Interface/captureDetailView",
-
-
-        'dojo/text!balek-modules/digivigil/digiscan/resources/html/captureGridView.html',
-        'dojo/text!balek-modules/digivigil/digiscan/resources/css/captureGridView.css'
+        'dojo/text!balek-modules/digivigil/digiscan/resources/html/captureDetailView.html',
+        'dojo/text!balek-modules/digivigil/digiscan/resources/css/captureDetailView.css'
     ],
     function (declare, lang, topic, domClass, domConstruct, win, on, domAttr, domStyle, dojoKeys,
-              dijitFocus, dojoReady, fx, InlineEditBox, TextBox,  _WidgetBase, _TemplatedMixin, CaptureDetailView, template,
+              dijitFocus, dojoReady, fx, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin, template,
               mainCss) {
 
-        return declare("digivigilDigiscanCaptureViewInterface", [_WidgetBase, _TemplatedMixin], {
-            baseClass: "digivigilDigiscanCaptureViewInterface",
+        return declare("digivigilDigiscanCaptureDetailViewInterface", [_WidgetBase, _TemplatedMixin], {
+            baseClass: "digivigilDigiscanCaptureDetailViewInterface",
             _instanceKey: null,
 
             templateString: template,
@@ -112,6 +109,10 @@ define(['dojo/_base/declare',
                 })).catch(lang.hitch(this, function(Error){
                     console.warn("Error interfaceCommands getUIState() from captureGridView", Error)
                 }))
+
+
+                topic.publish("displayAsDialog", this);
+
             },
             onUIStateChange: function(name, oldValue, newValue){
                 if("selectedCaptureSet")
@@ -158,7 +159,11 @@ define(['dojo/_base/declare',
                     }
 
 
-                    const imageBase64String = this.captureState.get("imagePreview");
+                    const imageBase64String = this.captureState.get("image");
+
+
+
+
 
 
                     if(imageBase64String )
@@ -168,7 +173,11 @@ define(['dojo/_base/declare',
 
                         this._imageNode.src = "data:image/png;base64," + imageBase64String
 
-
+                    }else{
+                        const CaptureID = this.captureState.get("id");
+                        if(CaptureID){
+                            this.interfaceCommands.getCaptureDetailedImage(this.captureID)
+                        }
                     }
 
 
@@ -195,13 +204,6 @@ define(['dojo/_base/declare',
                 }
 
             },
-            onImageClick: function (clickEvent){
-              new CaptureDetailView({
-                    _interfaceKey: this._interfaceKey,
-                    interfaceCommands: this.interfaceCommands,
-                    captureID: this.captureID
-                });
-            },
             onInterestedClick: function(clickEvent){
                 //Called from HTML Click to unset capture from set
                 if(this.uiState !== null) {
@@ -219,20 +221,9 @@ define(['dojo/_base/declare',
                 }
             },
             onUninterestedClick: function(clickEvent){
-                //Called from HTML Click to set capture to set
-                if(this.uiState !== null) {
-                    let selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    if(selectedCaptureSetID){
-                        //Send Command to remove capture from capture set
-                        this.interfaceCommands.removeCaptureFromSet(selectedCaptureSetID, this.captureID, lang.hitch(this, function(commandResult){
-                        }))
-                        //Update State before it is updated from Instance
-                        const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-                        if(captureSet){
-                            captureSet.set(this.captureID, false)
-                        }
-                    }
-                }
+                this.interfaceCommands.getCaptureDetailedImage(this.captureID)
+
+                this.unload();
             },
             _onFocus: function () {
                 //todo make it do something

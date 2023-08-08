@@ -10,14 +10,16 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             _interface: null,              //Module instance
             captures: null,
 
+            imageRequests: null,
+
             captureSyncedMaps: null,
 
             captureSyncedMapWatchHandles: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 //mixin and declare state Object
-
                 this.captures = {}
+                this.imageRequests = {}
 
                 this.captureSyncedMaps = {}
                 this.captureSyncedMapWatchHandles = {}
@@ -25,6 +27,26 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("Scaptura Captures Interface Controller Cannot Start!...");
                 } else {
                     console.log("Scaptura Captures Interface Controller Started!...");
+                }
+            },
+            loadDetailedImageFor: function (captureID)
+            {
+                let captureState = this.getCaptureByID(captureID);
+                let id  = captureState.get("id");
+                const hasBeenRequested = this.imageRequests[id]
+                if (id && !hasBeenRequested){
+                    this.imageRequests[id] = true
+                    this._interface.getCaptureImage(id, lang.hitch(this,function(imageFetchResult){
+                        console.log("image👹👹", imageFetchResult)
+                        if(imageFetchResult && imageFetchResult.SUCCESS){
+                            let CaptureImage = imageFetchResult.SUCCESS
+                            if(CaptureImage.image && CaptureImage.image.data ){
+                                let dataBase64String = CaptureImage.image.data
+                                //todo check this against the hash, public key and proof
+                                captureState.set("image", dataBase64String)
+                            }
+                        }
+                    }))
                 }
             },
             getCaptureByID: function(captureID) {
@@ -51,19 +73,16 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             let imageInfo  = this.captures[captureID].get("imageInfo");
 
                             if(id && imageInfo)
-                            {
-
-
-                                console.log("imageInfo👹👹", newValue)
+                            { //load Preview image
                                 this._interface.getCaptureImagePreview(id, lang.hitch(this,function(imageFetchResult){
-                                    console.log("image👹👹", imageFetchResult)
                                     if(imageFetchResult && imageFetchResult.SUCCESS){
                                         let CaptureImage = imageFetchResult.SUCCESS
                                         if(CaptureImage.preview ){
                                             let dataBase64String = CaptureImage.preview
 
                                             //todo check this against the hash, public key and proof
-                                            this.captures[captureID].set("image", dataBase64String)
+                                            //set received image to local state
+                                            this.captures[captureID].set("imagePreview", dataBase64String)
 
                                         }
                                     }

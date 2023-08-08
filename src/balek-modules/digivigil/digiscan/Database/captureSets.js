@@ -32,7 +32,7 @@ define(['dojo/_base/declare',
                                         console.log("Error Creating Collection", error);
 
                                     }else {
-                                        console.log("Created Collection", collection);
+                                        console.log("⭐️Created Collection", this._Collection);
                                         collection.createIndex({_userKey: 1}, {background: true});
                                     }
                                 }));

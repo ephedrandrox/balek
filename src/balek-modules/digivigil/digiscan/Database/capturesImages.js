@@ -31,7 +31,7 @@ define(['dojo/_base/declare',
                                         console.log("Error Creating Collection", error);
 
                                     }else {
-                                        console.log("Created Collection", collection);
+                                        console.log("⭐️Created Collection", this._Collection);
                                         //todo create compound key with userKey
                                         collection.createIndex({"CaptureImage.id": 1}, {background: true, unique: true});
                                     }
@@ -89,8 +89,8 @@ define(['dojo/_base/declare',
                                         if(error){
                                             Reject(error);
                                         }
-                                        else if(response){
-                                            Resolve(response);
+                                        else if(response && response.CaptureImage){
+                                            Resolve(response.CaptureImage);
                                         }else{
                                             Resolve([]); //return empty array
                                         }

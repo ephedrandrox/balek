@@ -31,7 +31,7 @@ define(['dojo/_base/declare',
                                         console.log("Error Creating Collection", error);
 
                                     }else {
-                                        console.log("Created Collection", collection);
+                                        console.log("⭐️Created Collection", this._Collection);
                                         //todo create compound key with userKey
                                         collection.createIndex({"capture.id": 1}, {background: true, unique: true});
                                     }

@@ -277,6 +277,9 @@ define(['dojo/_base/declare',
                 }
             },
 
+            getCaptureDetailedImage: function(captureID){
+                this.getCaptures().loadDetailedImageFor(captureID)
+            },
             getCaptureImage: function(captureID , resultCallback){
 
                 this._instanceCommands.retrieveCaptureImage(captureID).then(lang.hitch(this, function(commandReturnResults){

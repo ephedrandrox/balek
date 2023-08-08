@@ -344,13 +344,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             retrieveCaptureImage: function(captureID){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    console.log("🖖", captureID)
-
                     if(captureID)
                     {
                         this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(Result) {
                             if(Result){
-                                console.log("🖖", Result)
                                 Resolve(Result)
                             }else{
                                 Reject({Error : "Result not complete"})
@@ -366,43 +363,23 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             retrieveCaptureImagePreview:function(captureID){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    console.log("🖖", captureID)
-
                     if(captureID)
                     {
                         this._capturesImagesDatabase.getCaptureImagePreview(captureID).then(lang.hitch(this, function(Result) {
                             if(Result){
-                                console.log("🖖We got a preview image", Result)
                                 Resolve(Result)
                             }else{
                                 this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(Result) {
                                     if(Result){
-                                        console.log("🖖We got an image to make a preview with", Result)
                                         this.ImageUtility.resizeImageBase64(Result.CaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
-                                            console.log("🖖We ResizedImage")
-
                                             Result.CaptureImage.image = null
                                             Result.CaptureImage.preview = resizedImage
-
                                             Resolve(Result.CaptureImage)
-                                            console.log("🖖🥶🥶We Trying to persist", Result)
-
+                                            //save resized image as preview for capture in database
                                             this._capturesImagesDatabase.updateCaptureImagePreview(resizedImage, captureID).then(lang.hitch(this, function(Result) {
-                                                console.log("🖖🥶🥶 persist returned", Result)
-
                                             })).catch(lang.hitch(this, function(Error){
-
-                                                console.log("🖖🥶🥶 persist rerror🫀👀")
-
                                             }))
-
-
-                                            //lets save this to the database for the next go around
-
-
                                         })).catch(lang.hitch(this, function(Error){
-
-                                            console.log("🖖We Error Resizing", Error)
                                             Reject(Error)
                                         }))
                                     }else{
