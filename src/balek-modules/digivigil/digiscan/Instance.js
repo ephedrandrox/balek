@@ -52,6 +52,11 @@ define(['dojo/_base/declare',
 
                     "retrieveCaptureImagePreview" : lang.hitch(this, this.retrieveCaptureImagePreview),
 
+                    "selectCapture" : lang.hitch(this, this.selectCapture),
+                    "clearSelectedCaptures" : lang.hitch(this, this.clearSelectedCaptures),
+
+
+
 
                     //CaptureSets
                     "newAllSet" : lang.hitch(this, this.newAllSet),
@@ -151,17 +156,28 @@ define(['dojo/_base/declare',
                 }))
             },
             removeAllCaptures: function( resultCallback){
-                this._moduleController.removeAllCaptures().then(lang.hitch(this, function(Result){
-                    resultCallback({SUCCESS: Result})
-                    console.log("resultCallbacked ",Result)
-                    this.availableCaptures.forEach(lang.hitch(this, function(id, capture){
-                        console.log("availableCaptures", id, capture,  this.availableCaptures)
-                        this.availableCaptures.add(id, undefined)
+                let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
+                if (userKey != null ) {
+
+                    this._moduleController.removeAllCapturesFor(userKey).then(lang.hitch(this, function(Result){
+                        resultCallback({SUCCESS: Result})
+                        console.log("removeAllCapturesFor ",Result)
+                        // this.availableCaptures.forEach(lang.hitch(this, function(id, capture){
+                        //     console.log("availableCaptures", id, capture,  this.availableCaptures)
+                        //     this.availableCaptures.add(id, undefined)
+                        // }))
+                        console.log("resultCallbacked after ",Result)
+                    })).catch(lang.hitch(this, function(Error){
+                        resultCallback({Error: Error})
                     }))
-                    console.log("resultCallbacked after ",Result)
-                })).catch(lang.hitch(this, function(Error){
-                    resultCallback({Error: Error})
-                }))
+
+                }else{
+                    resultCallback({Error: "Could Not get user Key"})
+
+                }
+
+
+
             },
             updateCaptureImage : function(updateEntry, resultCallback){
                 this._moduleController.updateCaptureImage(updateEntry).then(lang.hitch(this, function(Result){
@@ -234,6 +250,22 @@ define(['dojo/_base/declare',
                     resultCallback({SUCCESS: "selectCaptureSet selected" + id})
                 }else{
                     resultCallback({ERROR : "instance -> selectCaptureSet: id is not a string"})
+                }
+            },
+            selectCapture: function(id, resultCallback){
+                if(typeof id === "string" && typeof resultCallback === "function"){
+                    this.uiState.add("selectedCaptures", [id])
+                    resultCallback({SUCCESS: "selectCapture selected" + id})
+                }else{
+                    resultCallback({ERROR : "instance -> selectCapture: id is not a string"})
+                }
+            },
+            clearSelectedCaptures: function(resultCallback){
+                if(typeof resultCallback === "function"){
+                    this.uiState.add("selectedCaptures", [])
+                    resultCallback({SUCCESS: "Cleared Selected Captures"})
+                }else{
+                    resultCallback({ERROR : "instance -> clearSelectedCaptures: not expected"})
                 }
             },
             removeCaptureFromSet: function(captureSetID, captureID, resultCallback){

@@ -109,12 +109,12 @@ define(['dojo/_base/declare',
             getCaptureImageInfo: function(id) {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                                 this.connectToDatabase().then(lang.hitch(this, function(CaptureImagesDatabase){
-                                    console.log("Got Connection");
+                                   // console.log("Got Connection");
                                     try{
                                         let collection = CaptureImagesDatabase.collection(this._Collection)
                                         if(collection && collection.find){
                                             //const captureId = this.shared._DBConnection._objectIdConstructor(id)
-                                            console.log("Looking for id", id);
+                                          //  console.log("Looking for id", id);
 
                                             collection.findOne({"CaptureImage.id": id},
                                                 { "CaptureImage.image": 0 }, //todo fix this so it works
@@ -264,6 +264,34 @@ define(['dojo/_base/declare',
             },
             updateCaptureImage: function(captureID, imageBase64String){
 
+            },
+            removeAllImagesWithUserKey: function(userKey)
+            {
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if(collection){
+
+                        let query = { "CaptureImage.signature.ownerUserKey": userKey }
+
+                        collection.deleteMany(query, lang.hitch(this, function (error, response) {
+                            console.log(response, error);
+
+                            if(error){
+                                Reject({error: "Could not remove all captures, might need to reload", deleteManyError: error});
+                            }
+                            else if(response){
+                                Resolve(response);
+                            }else{
+                                Reject({error: "Could not remove all captures, might need to reload"});
+                            }
+                        }));
+                    }else
+                    {
+                        Reject({error: "Could not get Capture Collection while trying to remove all captures"});
+                    }
+
+                }));
             },
             // removeAllCaptures: function()
             // {

@@ -1,13 +1,13 @@
 .digivigilDigiscanCaptureDetailViewInterface {
     color: #ffffff;
-    background: rgba(20, 75, 115, 0.9);
+    background: none;
     display: inline-block;
     text-align: left;
     padding: 0;
     border: none;
     border-radius: 15px;
     min-width: 200px;
-    margin: 10px;
+    margin: 0px;
     outline: none;
     font-size: 10pt;
 
@@ -15,12 +15,20 @@
 /*border: solid white 2px;*/
 
     /*filter: drop-shadow(5px 5px 10px #000);*/
-    -webkit-box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
-    box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
+
 
     vertical-align: middle;
 
+    max-width: calc(50vw - 20px);
+    max-height: calc(100vw - 26px);
+
+
+    position: relative;
+
+    top: 50%;
+
+
+    transform: translateY(-50%);
 }
 .digivigilDigiscanCaptureDetailViewInterfaceCaptureNotInSet{
     filter:grayscale(1)
@@ -40,6 +48,8 @@
     border: solid rgba(38, 38, 38, 0.8) 4px;
     cursor: pointer;
 
+    max-width: 80vw;
+    max-height: 80vh;
 
 }
 
@@ -57,7 +67,8 @@
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceText {
-color: pink;
+color: white;
+    font-weight: bold;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedText {
@@ -74,6 +85,12 @@ color: pink;
     font-family: monospace;
 
     padding-right: 20px;
+
+    overflow: scroll;
+    bottom: 0;
+
+    max-height: calc(80vh - 30px);
+    max-width: 80vw;
 
 }
 
@@ -96,6 +113,12 @@ color: pink;
     width: 20px;
     height: 20px;
 
+    cursor: pointer;
+
+}
+.digivigilDigiscanCaptureDetailViewInterfaceIconImg:hover {
+    filter: invert();
+
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceCreatedDiv {
@@ -117,16 +140,26 @@ color: pink;
 
 
 
-.digivigilDigiscanCaptureDetailViewInterfaceHeaderDiv {
+.digivigilDigiscanCaptureDetailViewInterfaceInfoDiv {
+
     display: block;
     background: none;
-
-
+    max-width: 80vw;
+    max-height: 80vh;
 }
 
-.digivigilDigiscanCaptureDetailViewInterfaceListDiv {
+.digivigilDigiscanCaptureDetailViewInterfaceMainGrid {
     display: block;
     background: none;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    gap: 0px 0px;
+    grid-template-areas:
+    "DetailInfo"
+    "DetailImage";
+
+    vertical-align: middle;
 
 
 }

@@ -48,8 +48,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             addCapture: function(Capture){
                 return this.Captures.add(Capture)
             },
-            removeAllCaptures: function(){
-                return this.Captures.removeAll()
+            removeAllCapturesFor: function(userKey){
+                return this.Captures.removeAllCapturesFor(userKey)
             },
             updateCaptureImage: function(updateEntry){
                 return this.Captures.updateCaptureImage(updateEntry)

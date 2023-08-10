@@ -31,6 +31,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             loadDetailedImageFor: function (captureID)
             {
+                console.log("======================Asking for image", captureID)
+
                 let captureState = this.getCaptureByID(captureID);
                 let id  = captureState.get("id");
                 const hasBeenRequested = this.imageRequests[id]
@@ -50,6 +52,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }
             },
             getCaptureByID: function(captureID) {
+
                 if(!this.captures[captureID]){
                     let CapturesState = declare([Stateful], {});
                     this.captures[captureID] = new CapturesState({})
@@ -71,8 +74,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                             let id  = this.captures[captureID].get("id");
                             let imageInfo  = this.captures[captureID].get("imageInfo");
-
-                            if(id && imageInfo)
+                            let imagePreview = this.captures[captureID].get("imagePreview");
+                            if(id && imageInfo && !imagePreview)
                             { //load Preview image
                                 this._interface.getCaptureImagePreview(id, lang.hitch(this,function(imageFetchResult){
                                     if(imageFetchResult && imageFetchResult.SUCCESS){

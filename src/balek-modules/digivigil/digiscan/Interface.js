@@ -276,7 +276,21 @@ define(['dojo/_base/declare',
                     });
                 }
             },
-
+            selectCapture: function(captureID, resultCallback){
+                            console.log(captureID)
+                this._instanceCommands.selectCapture(captureID).then(lang.hitch(this, function(commandReturnResults){
+                    resultCallback(commandReturnResults)
+                })).catch(function(commandErrorResults){
+                  console.log("error in selectCapture", commandErrorResults);
+                });
+            },
+            clearSelectedCaptures: function(resultCallback){
+                this._instanceCommands.clearSelectedCaptures().then(lang.hitch(this, function(commandReturnResults){
+                    resultCallback(commandReturnResults)
+                })).catch(function(commandErrorResults){
+                    console.log("error in clearSelectedCaptures", commandErrorResults);
+                });
+            },
             getCaptureDetailedImage: function(captureID){
                 this.getCaptures().loadDetailedImageFor(captureID)
             },

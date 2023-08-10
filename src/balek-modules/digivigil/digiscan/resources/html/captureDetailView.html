@@ -1,61 +1,29 @@
 <div class="${baseClass}" tabindex="0">
-    <div class="${baseClass}ListDiv" data-dojo-attach-point='_listDiv'>
-        <div class="${baseClass}HeaderDiv">
+    <div class="${baseClass}MainGrid">
+        <div style="grid-area: DetailInfo" class="${baseClass}InfoDiv">
             <div class="${baseClass}CreatedDiv">
 
-                <img class="${baseClass}IconImg"
-                     data-dojo-attach-event="onclick:onUninterestedClick"
-                     data-dojo-attach-point="uninterestedButton"
-                     style="position: absolute; left: 0; top: 0; padding-left: 5px; display: none; "
-                     src="balek-modules/digivigil/digiscan/resources/images/erase.svg"
-                     alt="Remove Capture from current set"/>
-                <img class="${baseClass}IconImg"
-                     data-dojo-attach-point="interestedButton"
-                     data-dojo-attach-event="onclick:onInterestedClick"
-                     style="position: absolute; left: 0; top: 0; padding-left: 5px; display: none;"
-                     src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"
-                     alt="Remove Capture from current set"/>
                <div class="${baseClass}Text"
                     style="display: inline;"
+                    data-dojo-attach-point="_createdText">
+                   Hide Image
+               </div>
 
-                    data-dojo-attach-point="_createdText"></div>
-
-<!--                <img class="${baseClass}IconImg"-->
-<!--                     style="position: relative;"-->
-<!--                     src="balek-modules/digivigil/digiscan/resources/images/Calendar.svg"-->
-<!--                     alt="Calendar icon" />-->
-            </div>
-            <div class="${baseClass}BarcodeDiv" data-dojo-attach-point="_barcodeDiv" >
                 <img class="${baseClass}IconImg"
-                     style="position: absolute; left: 5px; top: 0; padding-left: 5px; padding-top: 3px"
-                     src="balek-modules/digivigil/digiscan/resources/images/barcode.svg"
-                     alt="barcode icon"/>
-                <div class="${baseClass}Text"
-                     style=" padding-left: 45px; padding-top: 3px"
+                     data-dojo-attach-event="onclick:onExpandClick"
+                     style="position: relative; left: 0; top: 0; padding-left: 25px; display: inline-block; "
+                     src="balek-modules/digivigil/digiscan/resources/images/arrowtriangle.right.fill.svg"
+                     alt="Close Detailed View"/>
 
-                     data-dojo-attach-point="_barcodeText"></div></div>
-            <div class="${baseClass}RecognizedTextDiv">
+            </div>
 
+           </div>
 
-<!--                <img class="${baseClass}IconImg"-->
-<!--                     style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px"-->
-<!--                     src="balek-modules/digivigil/digiscan/resources/images/RecognizedText.svg"-->
-<!--                     alt="barcode icon"/>-->
-
-                <div class="${baseClass}RecognizedText"
-                                              data-dojo-attach-point="_recognizedText"></div> </div>
-
-        <div class="${baseClass}ImageDiv" >
+        <div style="grid-area: DetailImage">
+    <div class="${baseClass}ImageDiv" >
             <img data-dojo-attach-point="_imageNode" class="${baseClass}NoImage"   src="balek-modules/digivigil/digiscan/resources/images/noImage.svg" />
         </div>
+</div>
 
-
-        <div class="${baseClass}NoteDiv" data-dojo-attach-point="_noteDiv">
-            <img class="${baseClass}IconImg"
-                 style="position: absolute; right: 5px; top: 5px; padding-left: 5px; padding-top: 3px; filter: invert();"
-                 src="balek-modules/digivigil/digiscan/resources/images/Note.svg"
-                 alt="barcode icon"/><div class="${baseClass}NoteText"
-                                          data-dojo-attach-point="_noteText"></div></div>
-        </div>
     </div>
 </div>

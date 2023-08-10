@@ -19,8 +19,17 @@
     -moz-box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
     box-shadow: 3px 6px 5px 0px rgba(0,0,0,0.75);
 
-    vertical-align: middle;
+    vertical-align: top;
 
+}
+
+.digivigilDigiscanCaptureViewInterfaceImageAndTextGrid{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    gap: 0px 0px;
+    grid-template-areas:
+    "PreviewImage PreviewInfo";
 }
 .digivigilDigiscanCaptureViewInterfaceCaptureNotInSet{
     filter:grayscale(1)

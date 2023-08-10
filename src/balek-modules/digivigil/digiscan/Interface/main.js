@@ -14,6 +14,9 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
+        "balek-modules/digivigil/digiscan/Interface/captureDetailView",
+
+
         "balek-modules/digivigil/digiscan/Interface/captureGridView",
         'balek-modules/digivigil/digiscan/Interface/listControl',
         "balek-modules/digivigil/digiscan/Interface/tabular",
@@ -30,6 +33,7 @@ define(['dojo/_base/declare',
     ],
     function (declare, lang, domStyle, domConstruct, win, fx,
               on, domAttr, dojoKeys, dijitFocus, dojoReady, InlineEditBox, TextBox, _WidgetBase, _TemplatedMixin,
+              CaptureDetailView,
               captureGridView, listControl, TableView, Tabular, TableModel, AboutUI,
               template,
               mainCss,
@@ -42,8 +46,12 @@ define(['dojo/_base/declare',
             templateString: template,
             _mainCssString: mainCss,
 
+            Detail: null,
+
             _previewDiv: null,                     //DomNode
             _tabularDiv: null, //DomNode
+            _detailDiv: null, //DomNode
+
             _noSelectionDiv: null,
            // _tabularContainer: null, //DomNode
            // _tabularStatus: null,
@@ -83,6 +91,13 @@ define(['dojo/_base/declare',
             },
             postCreate: function () {
                 this.initializeContainable();
+
+
+
+                this.Detail =    new CaptureDetailView({
+                    _interfaceKey: this._interfaceKey,
+                    interfaceCommands: this._interface
+                });
 
                 //Create the Main Table Widget
                 if(this.MainTable == null)
@@ -145,7 +160,7 @@ define(['dojo/_base/declare',
             },
             onUIStateChange: function (name, oldState, newState) {
                 //if active view, selected capture set or show hidden captures changed
-                if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures")
+                if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures" || name === "selectedCaptures")
                 {
                     this.refreshViews()
                     this.setCurrentCaptureSetWatcher()
@@ -280,6 +295,7 @@ define(['dojo/_base/declare',
             refreshViews: function(){
                 if(this.uiState != null) {
                     const activeView = this.uiState.get("ActiveView")
+                    const selectedCaptures = this.uiState.get("selectedCaptures")
 
 
                     this.tableModel.setDataString(this.getTabSeperatedEntries())
@@ -313,6 +329,20 @@ define(['dojo/_base/declare',
                         domStyle.set(previewDiv, "visibility", "hidden")
                         domStyle.set(tabularDiv, "visibility", "hidden")
                         domStyle.set(noSelectionDiv, "display", "inline-block")
+
+                    }
+
+
+                    if (Array.isArray(selectedCaptures) && selectedCaptures.length > 0 && activeView === "previewDiv" ) {
+                        console.log("selectedCaptures")
+
+                        domConstruct.place(this.Detail.domNode, this._detailDiv)
+                        domStyle.set(this._detailDiv, "width", "inherit")
+
+                    }else {
+                        console.log("selectedCaptures")
+                        domConstruct.empty(this._detailDiv)
+                        domStyle.set(this._detailDiv, "width", "0")
 
                     }
 

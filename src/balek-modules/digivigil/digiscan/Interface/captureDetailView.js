@@ -45,28 +45,21 @@ define(['dojo/_base/declare',
 
             interfaceCommands: null,        //passed argument
 
-            captureID: null,                //passed argument
-            captureState: null,             //loaded Stateful
-            captureStateWatchHandle: null,  //set
+
 
 
             uiState: null,                  //loaded Stateful
             uiStateWatchHandle: null,       //set
 
-
-            currentCaptureSetWatchHandle: null, //multiple sets
+            currentCaptureID: null,
+            currentCaptureState: null,       //dojo stateful
+            currentCaptureStateWatchHandle: null, //Single Selected Capture Watch Handle
 
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
 
-                if(this.captureID && this.interfaceCommands){
-                    this.captureState =   this.interfaceCommands.getCaptures().getCaptureByID(this.captureID)
-                    this.captureStateWatchHandle = this.captureState.watch(lang.hitch(this, this.onCaptureStateChange))
 
-                    //this.captureSets = this.interfaceCommands.getCaptureSets()
-                    this.reloadViewFromState()
-                }
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 dojoReady(lang.hitch(this, function () {
@@ -74,156 +67,116 @@ define(['dojo/_base/declare',
                 }));
 
             },
-            onCaptureStateChange: function(name, oldValue, newValue){
-                this.reloadViewFromState()
-            },
-            setCurrentCaptureListWatcher: function(){
-                //if a handle has been set, shut it down
-                if(this.currentCaptureSetWatchHandle !== null){
-                    this.currentCaptureSetWatchHandle.unwatch()
-                    this.currentCaptureSetWatchHandle.remove()
-                }
-                //Check that we can get the current selected capture Set ID
-                if(this.uiState!==null ) {
-                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    if(selectedCaptureSetID)
-                    {
-                        const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-                        if(captureSet)
-                        {
-                            this.currentCaptureSetWatchHandle = captureSet.watch(
-                                lang.hitch(this, function(name, oldValue, newValue){
-                                this.reloadViewFromState()
-                            }))
-                        }
-                    }
-                }
 
-            },
             postCreate: function () {
-                this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
-                    this.uiState = uiState
-                    this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
-                    this.setCurrentCaptureListWatcher()
-                    this.reloadViewFromState()
-                })).catch(lang.hitch(this, function(Error){
-                    console.warn("Error interfaceCommands getUIState() from captureGridView", Error)
-                }))
 
+                if(this.interfaceCommands){
 
-                topic.publish("displayAsDialog", this);
+                    this.interfaceCommands.getUIState().then(lang.hitch(this, function(uiState){
+                        this.uiState = uiState
+                        this.uiStateWatchHandle = this.uiState.watch(lang.hitch(this, this.onUIStateChange));
+                        this.updateSelectedCaptures();
+                    })).catch(lang.hitch(this, function(Error){
+                        console.warn("Error interfaceCommands getUIState() from captureGridView", Error)
+                    }))
 
-            },
-            onUIStateChange: function(name, oldValue, newValue){
-                if("selectedCaptureSet")
-                {
-                    this.setCurrentCaptureListWatcher()
                 }
-                this.reloadViewFromState()
+
+
+
+
+
+
             },
-            onCaptureSetsChange: function(name, oldValue, newValue){
-                this.reloadViewFromState()
-            },
-            reloadViewFromState: function()
-            {
+
+            onUIStateChange: function(name, oldValue, newValue){
                 //Needs Capture State and UI State
-                if(this.captureState !== null
-                    && this.uiState !== null) {
-                    const dateString = this.captureState.get("created");
-                    const date = new Date(dateString);
+                if(name === "selectedCaptures")
+                {
+                    this.updateSelectedCaptures();
+                }
+            },
+            updateSelectedCaptures: function(){
+                if( this.uiState !== null) {
+                    const selectedCaptures = this.uiState.get("selectedCaptures")
 
-                    //Set data by node handles
-                    this._createdText.innerHTML = date.toLocaleDateString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric'
-                    });
+                    if (Array.isArray(selectedCaptures) && selectedCaptures.length === 1)
+                    {
+                        this.currentCaptureID = selectedCaptures[0];
+                        this.setCurrentCaptureWatch();
 
-                    let barcode = this.captureState.get("barcode");
-                    if(barcode && barcode !== ""){
-                        domStyle.set(this._barcodeDiv, "display", "block")
-                        this._barcodeText.innerHTML = barcode
-                    }else{
-                        domStyle.set(this._barcodeDiv, "display", "none")
+                    }else
+                    {
+                        this.clearCurrentCapture();
                     }
-                    this._recognizedText.innerHTML = this.captureState.get("recognizedText");
+                    this.reloadView()
+                }
+            },
+            clearCurrentCapture: function() {
+                this.currentCaptureID = null;
+                this.currentCaptureState = null
+                this.currentCaptureStateWatchHandle.unwatch();
+                this.currentCaptureStateWatchHandle.remove();
+                this.currentCaptureWatchHandle = null
+            },
+            currentCaptureStateChange: function(name, oldValue, newValue) {
+                if(name === "image" || name === "id"){
+                    this.reloadView();
+                }
+            },
+            setCurrentCaptureWatch: function()
+            {
+                if (this.currentCaptureStateWatchHandle !== null)
+                {
+                  this.currentCaptureStateWatchHandle.unwatch();
+                  this.currentCaptureStateWatchHandle.remove();
+                    this.currentCaptureStateWatchHandle = null;
+                }
 
-                    let note = this.captureState.get("note");
-                    if(note && note !== ""){
-                        domStyle.set(this._noteDiv, "display", "block")
-                        this._noteText.innerHTML = note
-                    }else{
-                        domStyle.set(this._noteDiv, "display", "none")
+                if (this.currentCaptureID)
+                {
+                    this.currentCaptureState =  this.interfaceCommands.getCaptures().getCaptureByID(this.currentCaptureID )
+                    if (this.currentCaptureState) {
+                        this.currentCaptureStateWatchHandle = this.currentCaptureState.watch(lang.hitch(this, this.currentCaptureStateChange))
+                        this.reloadView()
                     }
 
 
-                    const imageBase64String = this.captureState.get("image");
+                }
 
 
+            },
 
+            reloadView: function()
+            {
 
-
+                if (this.currentCaptureState !== null
+                && typeof this.currentCaptureState.get === "function")
+                {
+                    const imageBase64String = this.currentCaptureState.get("image");
 
                     if(imageBase64String )
                     {
                         domClass.remove(this._imageNode,`${this.baseClass}NoImage`)
                         domClass.add(this._imageNode,`${this.baseClass}Image`)
-
                         this._imageNode.src = "data:image/png;base64," + imageBase64String
-
                     }else{
-                        const CaptureID = this.captureState.get("id");
+                        const CaptureID = this.currentCaptureState.get("id");
                         if(CaptureID){
-                            this.interfaceCommands.getCaptureDetailedImage(this.captureID)
-                        }
-                    }
-
-
-                    //get the selected Capture Set
-                    const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-
-                    if (captureSet) {
-                        let captureInSet  = captureSet.get(this.captureID)
-                        //if capture is in set
-                        if (captureInSet === true) {
-                            //Set Class and show correct set/unset toggle button
-                            domClass.remove(this.domNode, `${this.baseClass}CaptureNotInSet`)
-                            domStyle.set(this.interestedButton, "display", "none")
-                            domStyle.set(this.uninterestedButton, "display", "inline-block")
-                        } else {
-                            //Set Class and show correct set/unset toggle button
-                            domClass.add(this.domNode, `${this.baseClass}CaptureNotInSet`)
-                            domStyle.set(this.interestedButton, "display", "inline-block")
-                            domStyle.set(this.uninterestedButton, "display", "none")
-                        }
-                    }
-
-                }
-
-            },
-            onInterestedClick: function(clickEvent){
-                //Called from HTML Click to unset capture from set
-                if(this.uiState !== null) {
-                    let selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    if(selectedCaptureSetID){
-                        //Send Command to add capture from capture set
-                        this.interfaceCommands.addCaptureToSet(selectedCaptureSetID, this.captureID, lang.hitch(this, function(commandResult){
-                        }))
-                        //Update State before it is updated from Instance
-                        const captureSet = this.interfaceCommands.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
-                        if(captureSet){
-                            captureSet.set(this.captureID, true)
+                            this.interfaceCommands.getCaptureDetailedImage(this.currentCaptureID)
+                        }else {
                         }
                     }
                 }
-            },
-            onUninterestedClick: function(clickEvent){
-                this.interfaceCommands.getCaptureDetailedImage(this.captureID)
 
-                this.unload();
+
+            },
+
+            onExpandClick: function(clickEvent){
+
+                this.interfaceCommands.clearSelectedCaptures(function(returned){
+
+                })
             },
             _onFocus: function () {
                 //todo make it do something

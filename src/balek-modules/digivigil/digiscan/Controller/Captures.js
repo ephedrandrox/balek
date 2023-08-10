@@ -38,13 +38,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             connectControllerCommands: null,
 
-
+            CaptureIDList: null,
             syncedMaps: [],
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 //mixin and declare state Object
 
+
+                this.CaptureIDList = {}
 
                 this.ImageUtility = new ImageUtility();
                 let connectControllerInstanceCommands = new ConnectControllerInstanceCommands
@@ -109,22 +111,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             Captures.forEach(lang.hitch(this, function(Capture){
                                 let id = Capture._id.toString()
                                 this.captures.set(id, Capture)
+                                this.addToCaptureIDList(Capture)
+
                                 this.updateStatefulCapture(Capture)
                                 this.appendToUserList(id, Capture)
-                               // this.addCaptureToCaptureSets(id, Capture)
+
+                                // this.addCaptureToCaptureSets(id, Capture)
                                 if(Capture.capture && Capture.capture.id
                                     && typeof Capture.capture.id.toString === "function" )
                                 {
-                                    this._capturesImagesDatabase.getCaptureImageInfo(Capture.capture.id ).then(lang.hitch(this, function(CaptureImageInfo) {
-                                        if(CaptureImageInfo && CaptureImageInfo.CaptureImage && CaptureImageInfo.CaptureImage.signature){
-                                            this.addImageInfoToCaptureStateful(CaptureImageInfo.CaptureImage.signature, id )
+                                    this.loadCaptureImageInfo(Capture.capture.id, id)
 
-                                        }else{
-                                            console.log("No inmageinfo", CaptureImageInfo)
-                                        }
-                                    })).catch(lang.hitch(this, function(Error){
-                                        console.log("Error Getting Capture Image", Error)
-                                    }));
                                 }else {
                                     console.log("No Capture ID!", Capture)
                                 }
@@ -138,6 +135,34 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         Reject({Error: Error})
                         console.log("getCaptures  Error:", Error)
                     }))
+                }));
+            },
+            getCaptureObjectID(CaptureID)
+            {
+
+                return  this.CaptureIDList[CaptureID]
+            },
+            addToCaptureIDList(Capture)
+            {
+
+                this.CaptureIDList[Capture.capture.id] = Capture._id
+            },
+
+            loadCaptureImageInfo: function(CaptureID, CaptureObjectID = null)
+            {
+                if( CaptureObjectID === null){
+                    CaptureObjectID = this.getCaptureObjectID(CaptureID)
+                }
+
+                this._capturesImagesDatabase.getCaptureImageInfo(CaptureID).then(lang.hitch(this, function(CaptureImageInfo) {
+                    if(CaptureImageInfo && CaptureImageInfo.CaptureImage && CaptureImageInfo.CaptureImage.signature){
+                        this.addImageInfoToCaptureStateful(CaptureImageInfo.CaptureImage.signature, CaptureObjectID )
+
+                    }else{
+                        console.log("No inmageinfo", CaptureImageInfo)
+                    }
+                })).catch(lang.hitch(this, function(Error){
+                    console.log("Error Getting Capture Image", Error)
                 }));
             },
             addImageInfoToCaptureStateful: function(imageInfo, CaptureID)
@@ -253,9 +278,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                         console.log("Capture Retreived", Capture);
                                         let id = Capture._id.toString()
                                         this.captures.set(id, Capture)
+                                        this.addToCaptureIDList(Capture)
+
                                         this.updateStatefulCapture(Capture)
                                         this.appendToUserList(id, Capture)
-
                                         this.addCaptureToCaptureSets(id, Capture)
                                         Resolve({SUCCESS: Capture})
                                     })).catch(lang.hitch(this, function(Error){
@@ -289,13 +315,30 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
 
 
-            removeAll: function(){
+            removeAllCapturesFor: function(userKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
 
-                    this._capturesDatabase.removeAllCaptures().then(lang.hitch(this, function(Result){
-                        console.log("All Captures Removed Request Result", Result);
+                    this._capturesDatabase.removeAllCapturesWithUserKey(userKey).then(lang.hitch(this, function(CapturesResult){
+                        console.log("All Captures Removed Request Result", CapturesResult);
+                        this._capturesImagesDatabase.removeAllImagesWithUserKey(userKey).then(lang.hitch(this, function(ImagesResult){
+                            console.log("All Images Removed Request Result", ImagesResult);
 
-                        Resolve({SUCCESS: Result})
+                            Resolve({SUCCESS: "Data removed from bases", Results: {ImagesResult: ImagesResult, CapturesResult: CapturesResult}})
+
+                        }))
+                       let userCaptures =  this.getCapturesForUser(userKey)
+
+                            for(objectIndex in userCaptures)
+                            {
+                                if(typeof userCaptures[objectIndex] !== "function"
+                                    && userCaptures[objectIndex] !== null
+                                    && objectIndex !== '_attrPairNames'
+                                    && objectIndex !== 'declaredClass'){
+                                   userCaptures.set(objectIndex, undefined)
+                                }
+                            }
+
+//foreach getCapturesForUserKey
 
                     })).catch(lang.hitch(this, function(Error){
                         console.log("Controller could not add Capture to Database", Error);
@@ -319,14 +362,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                       //  console.log("Image Update Result", Result);
 
                                         Resolve({SUCCESS: "working"})
-                                        this.addImageInfoToCaptureStateful(captureImage.signature, captureImage.id)
 
+
+
+                                        this.addImageInfoToCaptureStateful(captureImage.signature,  this.getCaptureObjectID(captureImage.id))
+                                      //
 
 
                                     })).catch(lang.hitch(this, function(Error){
                                         console.log("Controller could not add Capture to Database", Error);
-
-                                        Reject({Error: Error, reason: "Controller could not add Capture to Database"})
+                                        this.loadCaptureImageInfo(captureImage.id)
+                                        Reject({Error: Error, reason: "Controller could not add Capture Image to Database"})
                                     }))
 
                                 }else {
@@ -369,12 +415,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             if(Result){
                                 Resolve(Result)
                             }else{
-                                this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(Result) {
-                                    if(Result){
-                                        this.ImageUtility.resizeImageBase64(Result.CaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
-                                            Result.CaptureImage.image = null
-                                            Result.CaptureImage.preview = resizedImage
-                                            Resolve(Result.CaptureImage)
+                                this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(CaptureImage) {
+                                    console.log("Capture Image😰😰😰", Result)
+                                    if(CaptureImage && CaptureImage.image && CaptureImage.image.data){
+                                        this.ImageUtility.resizeImageBase64(CaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
+                                            CaptureImage.image = null
+                                            CaptureImage.preview = resizedImage
+                                            Resolve(CaptureImage)
                                             //save resized image as preview for capture in database
                                             this._capturesImagesDatabase.updateCaptureImagePreview(resizedImage, captureID).then(lang.hitch(this, function(Result) {
                                             })).catch(lang.hitch(this, function(Error){

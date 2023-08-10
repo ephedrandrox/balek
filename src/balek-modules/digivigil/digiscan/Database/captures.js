@@ -136,13 +136,16 @@ define(['dojo/_base/declare',
             updateCaptureImage: function(captureID, imageBase64String){
 
             },
-            removeAllCaptures: function()
+            removeAllCapturesWithUserKey: function(userKey)
             {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
 
                         let collection = this.shared._DBConnection._db.collection(this._Collection)
                         if(collection){
-                            collection.deleteMany({}, lang.hitch(this, function (error, response) {
+
+                            let query = { "capture.signature.ownerUserKey": userKey }
+
+                            collection.deleteMany(query, lang.hitch(this, function (error, response) {
                                 console.log(response, error);
 
                                 if(error){
@@ -160,9 +163,35 @@ define(['dojo/_base/declare',
                         }
 
                 }));
+            },
+            removeAllCaptures: function() {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+
+                    let collection = this.shared._DBConnection._db.collection(this._Collection)
+                    if (collection) {
+                        collection.deleteMany({}, lang.hitch(this, function (error, response) {
+                            console.log(response, error);
+
+                            if (error) {
+                                Reject({
+                                    error: "Could not remove all captures, might need to reload",
+                                    deleteManyError: error
+                                });
+                            } else if (response) {
+                                Resolve(response);
+                            } else {
+                                Reject({error: "Could not remove all captures, might need to reload"});
+                            }
+                        }));
+                    } else {
+                        Reject({error: "Could not get Capture Collection while trying to remove all captures"});
+                    }
+
+                }));
             }
         });
     }
+
 );
 
 

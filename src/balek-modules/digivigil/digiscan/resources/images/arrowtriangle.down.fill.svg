@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 78 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g>
+        <rect x="0" y="0" width="77.686" height="79.736" style="fill-opacity:0;"/>
+        <path d="M77.686,5.957C77.686,2.344 74.902,0.098 70.654,0.098L6.982,0.049C2.734,0.049 0,2.295 0,5.908C0,7.861 0.879,9.473 1.855,11.523L32.324,74.268C34.375,78.418 36.231,79.736 38.818,79.736C41.406,79.736 43.311,78.418 45.361,74.268L75.781,11.523C76.807,9.521 77.686,7.91 77.686,5.957Z" style="fill:white;fill-opacity:0.85;fill-rule:nonzero;"/>
+    </g>
+</svg>

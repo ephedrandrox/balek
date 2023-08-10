@@ -5,10 +5,24 @@
     </div>
     <div class="${baseClass}MainDiv">
         <div class="${baseClass}MainContentDiv">
+
+
+
             <div class="${baseClass}TabularDiv" data-dojo-attach-point='_tabularDiv'  >
 
             </div>
-            <div class="${baseClass}PreviewDiv" data-dojo-attach-point='_previewDiv'></div>
+            <div class="${baseClass}PreviewGrid" >
+                <div class="${baseClass}PreviewDiv" style="grid-area: CapturePreviews" data-dojo-attach-point='_previewDiv'>
+
+                </div>
+
+                <div class="${baseClass}DetailDiv"  style="grid-area: CaptureDetail" data-dojo-attach-point='_detailDiv'  >
+
+                </div>
+
+            </div>
+
+
             <div data-dojo-attach-point="_statusDiv" class="${baseClass}StatusDiv">
             </div>
             <div data-dojo-attach-point="_noSelectionDiv" class="${baseClass}NoSelectionDiv">

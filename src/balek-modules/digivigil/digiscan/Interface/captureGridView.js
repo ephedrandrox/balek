@@ -196,11 +196,27 @@ define(['dojo/_base/declare',
 
             },
             onImageClick: function (clickEvent){
-              new CaptureDetailView({
-                    _interfaceKey: this._interfaceKey,
-                    interfaceCommands: this.interfaceCommands,
-                    captureID: this.captureID
-                });
+
+                if(clickEvent.shiftKey)
+                {
+
+                    this.interfaceCommands.clearSelectedCaptures(lang.hitch(this, function(commandResult){
+                        console.log("returned", commandResult)
+                    }))
+
+
+                }else if(clickEvent.altKey){
+                    new CaptureDetailView({
+                        _interfaceKey: this._interfaceKey,
+                        interfaceCommands: this.interfaceCommands,
+                        captureID: this.captureID
+                    });
+                }else {
+                    this.interfaceCommands.selectCapture(this.captureID, lang.hitch(this, function(commandResult){
+                            console.log("returned", commandResult)
+                    }))
+                }
+
             },
             onInterestedClick: function(clickEvent){
                 //Called from HTML Click to unset capture from set

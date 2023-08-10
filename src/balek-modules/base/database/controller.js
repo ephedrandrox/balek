@@ -23,16 +23,16 @@ define(['dojo/_base/declare',
             connectToDatabase: function(){
                 //This function could be overwritten in superclass to use
                 //something other then the balek configured database
-                console.log("🟥🟧🟨🟩🟦🟪connection to database!");
+             //   console.log("🟥🟧🟨🟩🟦🟪connection to database!");
 
 
 
             return new Promise(lang.hitch(this, function(Resolve, Reject){
                 if(this.shared._DBConnection._db){
-                    console.log("🟥🟧🟨🟩🟦🟪already connected");
+              //     console.log("🟥🟧🟨🟩🟦🟪already connected");
                     Resolve(this.shared._DBConnection._db);
                 } else if (this._connectingResolves.length !== 0 ){
-                    console.log("🟥🟧🟨🟩🟦🟪already connecting")
+               //     console.log("🟥🟧🟨🟩🟦🟪already connecting")
                     this._connectingResolves.push(Resolve)
                     this._connectingRejects.push(Reject)
                 }
@@ -40,7 +40,7 @@ define(['dojo/_base/declare',
                     this._connectingResolves.push(Resolve)
                     this._connectingRejects.push(Reject)
 
-                    console.log("🟥🟧🟨🟩🟦🟪Atempting connecting")
+                 //   console.log("🟥🟧🟨🟩🟦🟪Atempting connecting")
                     topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
                     console.log("connectToDatabase Promise", mongoDBConfig, this._Database)
 
@@ -90,14 +90,13 @@ define(['dojo/_base/declare',
             },
             checkConnection: function(){
                //todo return promise that resolves once connection is established or fail if cannot connect
-                //use connecToDatabase
+                // use connecToDatabase
             },
             getCollection: function(collectionName){
                 //todo make function that returns promise to return collection or error
             },
             checkCollection: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-
                     if(this._Collection != null)
                     {
                         this.shared._DBConnection._db.collection(this._Collection, lang.hitch(this, function (err, collection) {
