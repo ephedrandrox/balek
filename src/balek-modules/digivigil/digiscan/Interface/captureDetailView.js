@@ -32,6 +32,8 @@ define(['dojo/_base/declare',
             templateString: template,
             _mainCssString: mainCss,
 
+            domNodeToPlaceIn: null,
+
             _barcodeDiv: null,
             _noteDiv: null,                 //domNode
             _createdText: null,             //domNode
@@ -69,6 +71,14 @@ define(['dojo/_base/declare',
             },
 
             postCreate: function () {
+                dojoReady(lang.hitch(this, function () {
+                    if(this.domNodeToPlaceIn) {
+                        domConstruct.place(this.domNode, this.domNodeToPlaceIn)
+
+                    }
+                }));
+
+
 
                 if(this.interfaceCommands){
 
@@ -81,6 +91,8 @@ define(['dojo/_base/declare',
                     }))
 
                 }
+
+
 
 
 
@@ -115,9 +127,15 @@ define(['dojo/_base/declare',
             clearCurrentCapture: function() {
                 this.currentCaptureID = null;
                 this.currentCaptureState = null
-                this.currentCaptureStateWatchHandle.unwatch();
-                this.currentCaptureStateWatchHandle.remove();
-                this.currentCaptureWatchHandle = null
+                if(this.currentCaptureStateWatchHandle !== null
+                    && typeof this.currentCaptureStateWatchHandle.unwatch === "function"
+                    && typeof this.currentCaptureStateWatchHandle.remove === "function")
+                {
+                    this.currentCaptureStateWatchHandle.unwatch();
+                    this.currentCaptureStateWatchHandle.remove();
+                    this.currentCaptureWatchHandle = null
+                }
+
             },
             currentCaptureStateChange: function(name, oldValue, newValue) {
                 if(name === "image" || name === "id"){

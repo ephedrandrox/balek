@@ -87,21 +87,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 this.loadOrCreateOwnerDeviceInvitation().then(lang.hitch(this, function(Result) {
                     if(Result.ownerClaimKey){
-                        let hostname = os.hostname();
 
-                        const configFilePath = './src/balek-server/etc/config.json';
-                        const configJSONData = JSON.parse(fsNodeObject.readFileSync(configFilePath, 'utf8'));
 
-                        if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
-                        {
-                            hostname = configJSONData["Network Settings"].Hostname
-                        }
+                        this.statusAsState.set("hasOwnerDevice", false)
 
-                        qrcode.generate("Digiscan://"+ hostname +"/ownerClaim/"+
-                            Result.ownerClaimKey, {small: true}, lang.hitch(this, function(invitationCode){
-                            console.log(invitationCode)
-                            this.statusAsState.set("hasOwnerDevice", false)
-                        }))
+                        //todo: ifdebug this
+                        // let hostname = os.hostname();
+                        //
+                        // const configFilePath = './src/balek-server/etc/config.json';
+                        // const configJSONData = JSON.parse(fsNodeObject.readFileSync(configFilePath, 'utf8'));
+                        //
+                        // if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
+                        // {
+                        //     hostname = configJSONData["Network Settings"].Hostname
+                        // }
+                        // qrcode.generate("Digiscan://"+ hostname +"/ownerClaim/"+
+                        //     Result.ownerClaimKey, {small: true}, lang.hitch(this, function(invitationCode){
+                        //     console.log(invitationCode)
+                        //     this.statusAsState.set("hasOwnerDevice", false)
+                        // }))
                     }else {
                         this.statusAsState.set("hasOwnerDevice", true)
                     }

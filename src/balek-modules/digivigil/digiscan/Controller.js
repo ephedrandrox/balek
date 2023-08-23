@@ -35,7 +35,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return this.Captures.getCaptureSyncedMap(captureID, instanceKey)
             },
             getCaptureSetSyncedMap: function(captureSetID, instanceKey){
-                console.log("getCaptureSetSyncedMap2:", captureSetID)
+             //   console.log("getCaptureSetSyncedMap2:", captureSetID)
 
                 return this.CaptureSets.getCaptureSetSyncedMap(captureSetID, instanceKey)
             },

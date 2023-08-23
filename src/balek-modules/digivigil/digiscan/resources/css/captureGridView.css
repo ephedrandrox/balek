@@ -7,6 +7,7 @@
     border: none;
     border-radius: 15px;
     min-width: 200px;
+
     margin: 10px;
     outline: none;
     font-size: 10pt;
@@ -24,12 +25,16 @@
 }
 
 .digivigilDigiscanCaptureViewInterfaceImageAndTextGrid{
+    position: relative;
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto;
     gap: 0px 0px;
     grid-template-areas:
     "PreviewImage PreviewInfo";
+
+    max-height: 400px;
+    max-width: 100%;
 }
 .digivigilDigiscanCaptureViewInterfaceCaptureNotInSet{
     filter:grayscale(1)
@@ -90,6 +95,9 @@ color: pink;
 
     padding-right: 20px;
 
+    overflow: scroll;
+    max-height: 300px;
+    max-width: 300px;
 }
 
 
@@ -103,6 +111,8 @@ color: pink;
     line-height: 20px;
     min-height: 20px;
     padding: 3px;
+
+    max-width: 500px;
 
 }
 

@@ -63,7 +63,7 @@ define(['dojo/_base/declare',
                 if(this.captureID && this.interfaceCommands){
                     this.captureState =   this.interfaceCommands.getCaptures().getCaptureByID(this.captureID)
                     this.captureStateWatchHandle = this.captureState.watch(lang.hitch(this, this.onCaptureStateChange))
-console.log("here is capture", this.captureState)
+//console.log("here is capture", this.captureState)
                     //this.captureSets = this.interfaceCommands.getCaptureSets()
                     this.reloadViewFromState()
                 }

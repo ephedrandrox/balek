@@ -71,6 +71,7 @@ define(['dojo/_base/declare',
             captureSets: null,
             captureSetsWatchHandle: null,
             currentCaptureSetWatchHandle: null,
+            lastCaptureSetIDWatched: null,
 
             CaptureViews: null,
             //##########################################################################################################
@@ -96,8 +97,10 @@ define(['dojo/_base/declare',
 
                 this.Detail =    new CaptureDetailView({
                     _interfaceKey: this._interfaceKey,
-                    interfaceCommands: this._interface
+                    interfaceCommands: this._interface,
+                    domNodeToPlaceIn: this._detailDiv
                 });
+
 
                 //Create the Main Table Widget
                 if(this.MainTable == null)
@@ -156,9 +159,12 @@ define(['dojo/_base/declare',
             //Event Functions Section
             //##########################################################################################################
             onAvailableCapturesStateChange: function (name, oldState, newState) {
-                this.refreshViews()
+                console.log("onAvailableCapturesStateChange",name, oldState, newState)
+                //his.refreshViews()
             },
             onUIStateChange: function (name, oldState, newState) {
+                console.log("onUIStateChange",name, oldState, newState)
+
                 //if active view, selected capture set or show hidden captures changed
                 if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures" || name === "selectedCaptures")
                 {
@@ -174,22 +180,49 @@ define(['dojo/_base/declare',
             },
 
             onCaptureSetsChange: function (captureSetID, oldName, newName) {
-                   //if the users capture sets list changes
+                console.log("onCaptureSetsChange",captureSetID, oldName, newName)
+
+                //if the users capture sets list changes
                     this.refreshViews()
             },
             setCurrentCaptureSetWatcher: function(){
                 //refresh the view when the selected capture set changes
                 //but first remove the previous watch event
-                if(this.currentCaptureSetWatchHandle !== null){
-                    this.currentCaptureSetWatchHandle.unwatch()
-                    this.currentCaptureSetWatchHandle.remove()
-                }
+
                 if(this.uiState!==null ) {
                     const selectedCaptureSetID = this.uiState.get("selectedCaptureSet")
-                    if(selectedCaptureSetID){
+                    if(selectedCaptureSetID && this.lastCaptureSetIDWatched !== selectedCaptureSetID){
+                        this.lastCaptureSetIDWatched = selectedCaptureSetID
+                        if(this.currentCaptureSetWatchHandle !== null){
+                            this.currentCaptureSetWatchHandle.unwatch()
+                            this.currentCaptureSetWatchHandle.remove()
+                        }
+
                         const captureSet = this._interface.getCaptureSetsController().getCaptureSetByID(selectedCaptureSetID);
                         this.currentCaptureSetWatchHandle = captureSet.watch(lang.hitch(this, function(name, oldValue, newValue){
-                            this.refreshViews()
+                            if(newValue === true)
+                            {
+
+                                let captureView = this.getCaptureView(name)
+                                dojoReady(lang.hitch(this, function () {
+                                    if(!this._previewDiv.contains(captureView.domNode))
+                                    domConstruct.place(captureView.domNode, this._previewDiv);
+                                }));
+
+                            } else if(newValue === false) {
+
+
+
+                            }else if (name === "filter")
+                            {
+                                console.log("currentCaptureSetWatchHandle filter settings",name, oldValue, newValue)
+                            }
+                            else{
+                                console.warn("main captureSet.watch unexpected value",name, oldValue, newValue)
+
+                            }
+
+                           // this.refreshViews()
                         }))
                     }
                 }
@@ -293,7 +326,10 @@ define(['dojo/_base/declare',
             //UI Update Functions Section
             //##########################################################################################################
             refreshViews: function(){
+
                 if(this.uiState != null) {
+                    console.log("refreshing view")
+
                     const activeView = this.uiState.get("ActiveView")
                     const selectedCaptures = this.uiState.get("selectedCaptures")
 
@@ -333,17 +369,13 @@ define(['dojo/_base/declare',
                     }
 
 
-                    if (Array.isArray(selectedCaptures) && selectedCaptures.length > 0 && activeView === "previewDiv" ) {
-                        console.log("selectedCaptures")
-
-                        domConstruct.place(this.Detail.domNode, this._detailDiv)
+                    if (Array.isArray(selectedCaptures)
+                        && selectedCaptures.length > 0
+                        && activeView === "previewDiv" ) {
+                        //then
                         domStyle.set(this._detailDiv, "width", "inherit")
-
                     }else {
-                        console.log("selectedCaptures")
-                        domConstruct.empty(this._detailDiv)
                         domStyle.set(this._detailDiv, "width", "0")
-
                     }
 
                 }
@@ -540,6 +572,11 @@ define(['dojo/_base/declare',
                 {
                     this.captureSetsWatchHandle.unwatch()
 
+                }
+
+                if(this.currentCaptureSetWatchHandle !== null){
+                    this.currentCaptureSetWatchHandle.unwatch()
+                    this.currentCaptureSetWatchHandle.remove()
                 }
 
                 for (const captureView in this.CaptureViews) {

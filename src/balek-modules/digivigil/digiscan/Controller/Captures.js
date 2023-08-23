@@ -159,7 +159,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         this.addImageInfoToCaptureStateful(CaptureImageInfo.CaptureImage.signature, CaptureObjectID )
 
                     }else{
-                        console.log("No inmageinfo", CaptureImageInfo)
+                       // console.log("No inmageinfo", CaptureImageInfo)
                     }
                 })).catch(lang.hitch(this, function(Error){
                     console.log("Error Getting Capture Image", Error)
@@ -204,7 +204,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     let userCaptures = this.getCapturesForUser(Capture.capture.signature.ownerUserKey)
                     let checksum = this.getCaptureCheckHash(Capture.capture)
                     userCaptures.set(id, checksum)
-                    console.log(this.capturesByUserKey)
                 }
             },
             updateStatefulCapture: function(Capture){

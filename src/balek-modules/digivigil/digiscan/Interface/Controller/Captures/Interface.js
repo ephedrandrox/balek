@@ -82,7 +82,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                         let CaptureImage = imageFetchResult.SUCCESS
                                         if(CaptureImage.preview ){
                                             let dataBase64String = CaptureImage.preview
-
                                             //todo check this against the hash, public key and proof
                                             //set received image to local state
                                             this.captures[captureID].set("imagePreview", dataBase64String)
