@@ -455,7 +455,9 @@ define(['dojo/_base/declare',
             //Export and Data Functions Section
             //##########################################################################################################
             getTabSeperatedEntries: function(){
-                let tabbedString = "barcode\tnote\tdateString\trecognizedText\t\n" ;
+                //let tabbedString = "barcode\tnote\tdateString\trecognizedText\t\n" ;
+                let csvContent = "Barcode,Note,Date,RecognizedText\n";
+
                 this.forEachSelectedCapture(lang.hitch(this, function(captureID){
                     if(captureID){
                         let capture  =  this._interface.getCaptures().getCaptureByID(captureID)
@@ -469,19 +471,28 @@ define(['dojo/_base/declare',
                                 // const encodedString = recognizedText.replace(/\n/g, '\\n')
                                 // //  tabbedString += barcode + "\t" + recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
                                 // tabbedString += barcode + "\t" + note + "\t" +  dateString + "\t" +encodedString+ "\n";
-                                const encodedRecognizedText = recognizedText.replace(/\n/g, '\n');
-                                tabbedString +=
-                                    barcode + "\t" +
-                                    '"' + note.replace(/"/g, '""') + '"' + "\t" +
-                                    dateString + "\t" +
-                                    '"' + encodedRecognizedText.replace(/"/g, '""') + '"' + "\t\n";
+                                // const encodedRecognizedText = recognizedText.replace(/\n/g, '\n');
+                                // tabbedString +=
+                                //     barcode + "\t" +
+                                //     '"' + note.replace(/"/g, '""') + '"' + "\t" +
+                                //     dateString + "\t" +
+                                //     '"' + encodedRecognizedText.replace(/"/g, '""') + '"' + "\t\n";
 
+
+                                const encodedNote = note.replace(/"/g, '""').replace(/\r?\n/g, '\n');
+                                const encodedRecognizedText = recognizedText.replace(/"/g, '""').replace(/\r?\n/g, '\n');
+                                csvContent +=
+                                    barcode + ',"' +
+                                    encodedNote + '",' +
+                                    dateString + ',"' +
+                                    encodedRecognizedText + '"\n';
                             }
                         }
                     }
 
                 }))
-                return tabbedString
+                //return tabbedString
+                return csvContent
             },
             forEachSelectedCapture: function(doThis)
             {
@@ -508,11 +519,11 @@ define(['dojo/_base/declare',
             createTabbedDataDownload: function (tabbedData){
                 let element = document.createElement('a');
                 element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(tabbedData));
-                element.setAttribute('download', "Digivigil Data.tsv");
+                element.setAttribute('download', "Digivigil Data.csv");
                 element.style.display = 'none';
                 document.body.appendChild(element);
                 element.click();
-                document.body.removeChild(element); 
+                document.body.removeChild(element);
             },
             copyToClipboard: function (textToCopy){
                 let node = domConstruct.create("div");
