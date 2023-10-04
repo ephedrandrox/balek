@@ -480,7 +480,7 @@ define(['dojo/_base/declare',
 
 
                                 const encodedNote = note.replace(/"/g, '""').replace(/\r?\n/g, '\n');
-                                const encodedRecognizedText = recognizedText.replace(/"/g, '""').replace(/\r?\n/g, '\n');
+                                const encodedRecognizedText = recognizedText.replace(/"/g, '""').replace(/\r?\n/g, '|');
                                 csvContent +=
                                     barcode + ',"' +
                                     encodedNote + '",' +
