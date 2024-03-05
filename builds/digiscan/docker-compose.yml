@@ -9,6 +9,7 @@ services:
       - "443:8080"
     volumes:
       - ./config/balek:/balek/src/balek-server/etc
+    restart: unless-stopped
   mysqld:
     image: "digiscan-mysql:release"
     build: "../docker/mysql"
@@ -33,6 +34,7 @@ services:
     volumes:
       - ./config/dbInit:/docker-entrypoint-initdb.d/
       - ./data/mongoDB:/data/db
+    restart: unless-stopped
   nginx:
     image: nginx
     volumes:
@@ -41,3 +43,4 @@ services:
       - digiscan
     ports:
       - 80:80
+    restart: unless-stopped
