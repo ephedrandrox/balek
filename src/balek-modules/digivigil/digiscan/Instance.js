@@ -94,7 +94,7 @@ define(['dojo/_base/declare',
                 this._interfaceState.set("uiStateComponentKey", this.uiState._componentKey);
 
 
-                this._interfaceState.set("Component Name","Digivigil Digiscan - Change to Scaptura!");
+                this._interfaceState.set("Component Name","Scaptura");
                 this._interfaceState.set("Status", "Starting");
                 //creates component Key that can be used to connect to state
                 this.setInterfaceCommands();

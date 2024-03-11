@@ -63,11 +63,21 @@ define(['dojo/_base/declare',
                    userKey: this.mainInstance._userKey,
                     componentKey: this.mainInstance._componentKey});
 
+
+                this.moduleController.loadOrCreateOwnerDeviceInvitation()
+                    .then(lang.hitch(this, function (Result) {
+                        console.log("🎃🎃🎃", Result);
+                    })).catch(function(rejectError){
+                    console.log("🎃🎃🎃", rejectError);
+
+                })
                // this.setInterfaceCommands();
 
             },
             acceptDeviceInfo: function(invitationKey, remoteCallback)
             {
+                //Remote command to be called from a user signed in session
+                //
                 console.log("acceptDeviceInfo", invitationKey);
 
                 let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)

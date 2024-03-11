@@ -87,39 +87,21 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 this.loadOrCreateOwnerDeviceInvitation().then(lang.hitch(this, function(Result) {
                     if(Result.ownerClaimKey){
-
-
+                    //If there is an owner Claim key then waiting to be claimed
                         this.statusAsState.set("hasOwnerDevice", false)
-
-                        //todo: ifdebug this
-                        // let hostname = os.hostname();
-                        //
-                        // const configFilePath = './src/balek-server/etc/config.json';
-                        // const configJSONData = JSON.parse(fsNodeObject.readFileSync(configFilePath, 'utf8'));
-                        //
-                        // if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
-                        // {
-                        //     hostname = configJSONData["Network Settings"].Hostname
-                        // }
-                        // qrcode.generate("Digiscan://"+ hostname +"/ownerClaim/"+
-                        //     Result.ownerClaimKey, {small: true}, lang.hitch(this, function(invitationCode){
-                        //     console.log(invitationCode)
-                        //     this.statusAsState.set("hasOwnerDevice", false)
-                        // }))
                     }else {
                         this.statusAsState.set("hasOwnerDevice", true)
                     }
                 }))
 
             },
-           readJSONFromFile: function(fileLocation) {
+            readJSONFromFile: function(fileLocation) {
             return new Promise((resolve, reject) => {
                 fsNodeObject.readFile(fileLocation, 'utf8', (err, data) => {
                     if (err) {
                         reject(err);
                         return;
                     }
-
                     try {
                         const json = JSON.parse(data);
                         resolve(json);
@@ -146,9 +128,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                        const ownerClaimFile = this._ownerClaimFileLocation
 
                        this.readJSONFromFile(ownerClaimFile).then(lang.hitch(this, function (parsedJSON){
+                           // If there is an owner claim key then waiting to be claimed
                            if (parsedJSON.ownerClaimKey){
                               Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
-                           }
+                           }// If there is an owner public key then it has been claimed
                            else if (parsedJSON.ownerPublicKey){
                                this._ownerPublicKey = parsedJSON.ownerPublicKey
                                Resolve({ownerPublicKey: parsedJSON.ownerPublicKey})
@@ -241,10 +224,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     if (typeof owner === 'undefined' || typeof invitationKey === 'undefined' ) {
                         Reject({error: "owner or invitationKey === undefined"});
                     } else {
-
+                        //if the invitation exists
                         if(this._invitations[invitationKey]){
                             let invitation = this._invitations[invitationKey]
-
+                            //get the invitation and call the
                             if ( typeof invitation.userAcceptsDevice === 'function') {
                                 let invitationStatus = invitation.userAcceptsDevice(owner, invitationKey);
                                 if( invitationStatus == "accepted" )
@@ -277,8 +260,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     } else {
                         let hasOwnerDevice = this.statusAsState.get("hasOwnerDevice")
                         if(!hasOwnerDevice ) {
-                            if (ownerClaimKey === this._ownerClaimKey ) {//isTheAdminKey){
-                             //If there is no owner Device and the claim key matches
+                            if (ownerClaimKey === this._ownerClaimKey && deviceInfo.publicSigningKey ) {
+                             //If there is no owner Device and the claim key matches and device has a public signing key
                                 this.usersControllerCommands.getOwnerUser().then(lang.hitch(this, function (ownerUser){
                                     //we got our user, if one is already made, we get the id, if one doesn't exist
                                     //it is made and we receive the id

@@ -63,18 +63,19 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return this.statusState.get("status")
             },
             userAcceptsDevice: function(owner, invitationKey)
-            {
+            {  //
                 console.log(owner, invitationKey)
                 if(owner.userKey == this.owner.userKey
                 && invitationKey == this.key){
-
+                    //get invitation status
                       const invitationStatus =   this.statusState.get("status")
-
+                    //if invitation status is used, create device
                     if(invitationStatus == 'used'){
                         this._connectController.createDevice({owner: {userKey: this.owner.userKey},
                             deviceInfo: this.deviceInfo }).then(lang.hitch(this, function(Result){
                             this.statusState.set("keychainIdentifier", Result.newKey)
                             this.statusState.set("status", "accepted")
+                            //set invitation status to accepted
                         })).catch(lang.hitch(this, function (error) {
                             console.log(error);
                             this.statusState.set("status", "error")

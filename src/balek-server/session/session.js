@@ -34,6 +34,7 @@ define([ 	'dojo/_base/declare',
 
                 topic.publish("sendBalekProtocolMessage", this._wssConnection, {sessionAction: {sessionKey: this._sessionKey, action: "New Session"}});
 
+                this.updateSessionStatus({name: "Unnamed Session"})
                 this._workspaceManager = new  balekWorkspaceManager();
                 },
             updateSessionStatus:function(args){
@@ -67,10 +68,16 @@ define([ 	'dojo/_base/declare',
                     }).catch(errorResult =>{
                         messageReplyCallback(errorResult);
                     });
+                }else if(request.updateSessionName &&
+                    typeof request.updateSessionName === "string"){
+
+                    this.updateSessionStatus({name: request.updateSessionName})
+
+                    console.log("Got Name change request", request.updateSessionName);
                 }
                 else
                 {
-                    console.log("session request uknown.");
+                    console.log("session request unknown.", request);
                 }
             },
             unloadAllInstancesOf(ModuleName){

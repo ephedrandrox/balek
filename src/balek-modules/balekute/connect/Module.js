@@ -1,3 +1,5 @@
+//The Connect Module is used for device verification
+//providing login and device verification functionality
 define(['dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/topic',
@@ -32,7 +34,7 @@ define(['dojo/_base/declare',
                 args.moduleController = this._Controller;
 
                 this._instances[args._instanceKey] = new moduleInstance(args);
-                return new moduleInstance(args);
+                return this._instances[args._instanceKey];
             }
         });
     }

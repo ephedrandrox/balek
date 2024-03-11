@@ -104,6 +104,19 @@ define(['dojo/_base/declare',
                             messageReplyCallback({Error: "No UserKey Provided"})
                         }
                     }
+                    else if(sessionMessage.sessionRequest && sessionMessage.sessionRequest.updateSessionCredentials
+                        && sessionMessage.sessionRequest.updateSessionCredentials){
+                        console.log("Update user Credits 🥶🥶🥶",sessionMessage.sessionRequest.updateSessionCredentials)
+                        if(sessionMessage.sessionKey && sessionMessage.sessionKey.toString() && this._sessions[sessionMessage.sessionKey]
+                        && this._sessions[sessionMessage.sessionKey]._wssConnection){
+                            console.log(this._sessions[sessionMessage.sessionKey]._wssConnection)
+                            this.sessionCredentialsUpdate(this._sessions[sessionMessage.sessionKey]._wssConnection,
+                                sessionMessage.sessionRequest.updateSessionCredentials,
+                                messageReplyCallback)
+                        }else{
+                            messageReplyCallback({Error: "Improper Credentials Provided"})
+                        }
+                    }
                     else if(this._sessions[sessionMessage.sessionKey]){
                         //Send request to session with matching session Key
                         this._sessions[sessionMessage.sessionKey].sessionRequest(sessionMessage.sessionRequest, messageReplyCallback);

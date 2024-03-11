@@ -33,7 +33,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
                         if (dataReceived.balekProtocolMessage != null) {
                             topic.publish("receiveBalekProtocolMessage", dataReceived.balekProtocolMessage, this);
                         } else {
-                            console.log("####Exception: Do not recognize message received from client");
+                            console.log("####Exception: Do not recognize message received from client", wsMessage);
                         }
                     }
                     catch(error)
