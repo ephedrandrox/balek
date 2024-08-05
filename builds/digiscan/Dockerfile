@@ -1,4 +1,4 @@
-FROM node
+FROM node:18
 
 WORKDIR /balek
 COPY ./ /balek
@@ -14,14 +14,6 @@ RUN apt-get install -y default-jre openssh-client neofetch
 #Next two lines for windows docker hosts, otherwise not needed
 RUN apt-get install -y dos2unix
 RUN find /balek -type f -print0 | xargs -0 -n 1 -P 4 dos2unix
-
-RUN apt-get update && apt-get install -y \
-    libcairo2-dev \
-    libpango1.0-dev \
-    libjpeg-dev \
-    libgif-dev \
-    librsvg2-dev \
-    && rm -rf /var/lib/apt/lists/*
 
 
 RUN npm run buildAll
