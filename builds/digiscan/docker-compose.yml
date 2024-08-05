@@ -4,7 +4,7 @@ services:
     image: "digiscan:release"
     build:
       context: "../.."
-      dockerfile: "builds/diaplode/Dockerfile"
+      dockerfile: "builds/digiscan/Dockerfile"
     ports:
       - "443:8080"
     volumes:
