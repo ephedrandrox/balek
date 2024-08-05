@@ -65,24 +65,57 @@ define(['dojo/_base/declare',
                 {
                     debugger;
                     let currentSessionKey = this._sessionKey
+
+
+
                     let sessionCommands = this.sessionControllerCommands
-                    let userKey = sessionCommands.getSessionUserKey(this._sessionKey);
+
+
+                    let userKey = sessionCommands.getSessionUserKey(currentSessionKey);
                     let allSessions = sessionCommands.getUserSessionList(userKey);
 
 
                     const allSessionKeys = Object.keys(allSessions);
+                    let looking = true
+                    console.log("allSessionKeys.length", allSessionKeys.length);
+                    //print allSessionKeys keys and values
+                    allSessionKeys.forEach(function(key) {
+                        console.log(key, allSessions[key]);
+                    });
 
                     if(allSessionKeys.length > 1)
                     {
-                        let looking = true
-                        allSessionKeys.forEach(function(avaliableSession){
-                            if(avaliableSession.toString() != currentSessionKey.toString()
-                            && looking == true){
-                                looking = false
-                                sessionCommands.switchToSessionAndUnloadOthers(currentSessionKey, avaliableSession)
+
+                        allSessionKeys.forEach(function(availableSession){
+                            if(availableSession.toString() != currentSessionKey.toString()
+                            && looking === true){
+
+                                console.log("session key", availableSession);
+
+                                let session = sessionCommands.getSessionByKey(availableSession)
+                                console.log("session", session);
+
+                                if (session && session._syncedState && session._syncedState.get("name") == "Main Web Session" ){
+                                    looking = false
+                                    sessionCommands.switchToSession(currentSessionKey, availableSession)
+                                    looking = false
+                                    sessionCommands.unloadSession(currentSessionKey).catch(lang.hitch(this, function(Error){
+                                        console.log("XCVB:Error Unloading Session From Target", Error)
+                                    }))
+                                    const allSessionKeys = Object.keys(allSessions);
+                                    looking = true
+                                    //print allSessionKeys keys and values
+                                    // allSessionKeys.forEach(function(key) {
+                                    //     console.log(key, allSessions[key]);
+                                    // });
+
+                                }
+
                             }
                         })
-                    }else{
+                    }
+                    if (looking === true){
+                        //No Other Sessions
                         let currentSession = sessionCommands.getSessionByKey(currentSessionKey)
 
                         // currentSession.loadModuleInstance("diaplode/elements/files")
@@ -96,7 +129,9 @@ define(['dojo/_base/declare',
 
                         currentSession.loadModuleInstance("digivigil/digiscan")
                         currentSession.unloadAllInstancesOf("balekute/connect")
-
+                        currentSession.unloadAllInstancesOf("diaplode/login")
+                        currentSession.unloadAllInstancesOf("admin/users")
+                        currentSession.updateSessionStatus({name: "Main Web Session"})
 
                     }
 

@@ -16,7 +16,7 @@ define(['dojo/_base/declare',
             {
                 console.log("Creating collection");
                 this.connectToDatabase().then(lang.hitch(this, function(digivigilDatabase){
-                    console.log("Got Connection");
+                   // console.log("Got Connection");
                     try{
                         digivigilDatabase.listCollections({name: this._Collection}).next(lang.hitch(this, function(error, collectionInfo){
                             if(collectionInfo){
@@ -48,11 +48,41 @@ define(['dojo/_base/declare',
             getCaptures: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
-                        console.log("Got Connection");
+                     //   console.log("Got Connection");
                         try{
                             let collection = devicesDatabase.collection(this._Collection)
                             if(collection && collection.find){
                                 collection.find({}).toArray(
+                                    lang.hitch(this, function (error, response) {
+                                        if(error){
+                                            Reject(error);
+                                        }
+                                        else if(response){
+                                            Resolve(response);
+                                        }else{
+                                            Resolve([]); //return empty array
+                                        }
+                                    }));
+                            }else{
+                                Reject({error: "Could not get Devices Collection"});
+                            }
+
+                        }catch(error){
+                            console.log("Error Getting Devices:", error);
+                        }
+                    }))
+
+                }));
+            },
+            getCaptureByDeviceID: function(id){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
+                        //console.log("Got Connection");
+                        try{
+                            let collection = devicesDatabase.collection(this._Collection)
+                            if(collection && collection.find){
+                                //const captureId = this.shared._DBConnection._objectIdConstructor(id)
+                                collection.findOne({"capture.id": id},
                                     lang.hitch(this, function (error, response) {
                                         if(error){
                                             Reject(error);
@@ -103,6 +133,27 @@ define(['dojo/_base/declare',
                     }))
 
                 }));
+            },
+            removeCapture: function(captureID){
+            return new Promise(lang.hitch(this, function(Resolve, Reject){
+                let collection = this.shared._DBConnection._db.collection(this._Collection)
+                if(collection){
+                    collection.deleteOne({_id: this.shared._DBConnection._objectIdConstructor(captureID)}, lang.hitch(this, function (error, response) {
+                        if(error){
+                            Reject(error);
+                        }
+                        else if(response){
+                            Resolve(response);
+                        }else{
+                            Reject({error: "Could not remove Capture"});
+                        }
+                    }));
+                }else
+                {
+                    Reject({error: "Could not get Capture Collection while trying to remove Capture from collection"});
+                }
+            }));
+
             },
             addCapture: function(Capture)
             {

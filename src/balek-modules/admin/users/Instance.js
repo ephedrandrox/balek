@@ -45,6 +45,7 @@ define(['dojo/_base/declare',
 
                 this._commands={
                     "addNewUser" : lang.hitch(this, this.addNewUser),
+                    "removeUser" : lang.hitch(this, this.removeUser),
 
 
                     "updateUsername" : lang.hitch(this, this.updateUsername),
@@ -98,6 +99,19 @@ define(['dojo/_base/declare',
                 })).catch(lang.hitch(this,function(Error){
                     remoteCommandCallback({Error: Error})
                 }))
+            },
+            removeUser: function(userKey, remoteCommandCallback){
+                if (userKey && typeof userKey === "string" && userKey.length > 0
+                && remoteCommandCallback && typeof remoteCommandCallback === "function") {
+                    let adminUserKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()
+                    this.usersControllerCommands.removeUser(userKey, adminUserKey).then(lang.hitch(this, function (Result) {
+                        remoteCommandCallback({SUCCESS: Result})
+                    })).catch(lang.hitch(this, function (Error) {
+                        remoteCommandCallback({Error: Error})
+                    }))
+                } else {
+                    console.log("Error: removeUser did not receive a valid userKey")
+                }
             },
             updateUsername: function(userKey, userName, remoteCommandCallback){
               //  let userKey = this.sessionsControllerCommands.getSessionByKey(this._sessionKey).getUserKey()

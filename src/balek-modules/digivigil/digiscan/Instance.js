@@ -52,6 +52,11 @@ define(['dojo/_base/declare',
 
                     "retrieveCaptureImagePreview" : lang.hitch(this, this.retrieveCaptureImagePreview),
 
+                    "retrieveCaptureImageCheckHash" : lang.hitch(this, this.retrieveCaptureImageCheckHash),
+                    "retrieveCaptureCheckHash" : lang.hitch(this, this.retrieveCaptureCheckHash),
+
+
+
                     "selectCapture" : lang.hitch(this, this.selectCapture),
                     "clearSelectedCaptures" : lang.hitch(this, this.clearSelectedCaptures),
 
@@ -119,6 +124,29 @@ define(['dojo/_base/declare',
 
                 this._interfaceState.set("Status", "Ready");
 
+
+
+                let session = this.sessionsControllerCommands.getSessionByKey(this._sessionKey)
+                let sessionState = session._syncedState
+                sessionState.watch(lang.hitch(this, function(name, oldState, newState){
+
+
+                    if(name.toString() === "sessionStatus" && newState.toString() === "2"){
+                        console.log("XCVB:Check", name, oldState, newState)
+                        if (sessionState.get("name").toString() === "Main Web Session" ){
+                            console.log("XCVB:Is Main Web Session, Keeping Session", sessionState.get("name").toString())
+                        }else {
+                            console.log("XCVB:Not Main Web Session, Removing Session", sessionState.get("name").toString())
+                            this.sessionsControllerCommands.unloadSession(this._sessionKey).catch(lang.hitch(this, function(Error){
+                                console.log("XCVB:Error Unloading Session", Error)
+                            }))
+                        }
+                    }else{
+                        console.log("XCVB:NO MATCH!",name, oldState, newState)
+
+                    }
+                }))
+
             },
             //##########################################################################################################
             //Interface Commands - UI
@@ -181,6 +209,20 @@ define(['dojo/_base/declare',
             },
             updateCaptureImage : function(updateEntry, resultCallback){
                 this._moduleController.updateCaptureImage(updateEntry).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            retrieveCaptureImageCheckHash : function(captureID, resultCallback){
+                this._moduleController.retrieveCaptureImageCheckHash(captureID).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            retrieveCaptureCheckHash : function(captureID, resultCallback){
+                this._moduleController.retrieveCaptureCheckHash(captureID).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})
@@ -312,7 +354,7 @@ define(['dojo/_base/declare',
                 }))
             },
             getCaptureSyncedMap: function(captureID, resultCallback){
-                console.log("getCaptureSyncedMap1:", captureID)
+               // console.log("getCaptureSyncedMap1:", captureID)
                 this._moduleController.getCaptureSyncedMap(captureID, this._instanceKey).then(lang.hitch(this, function(Result){
                     resultCallback(Result)
                 })).catch(lang.hitch(this, function(Error){

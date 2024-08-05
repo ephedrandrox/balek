@@ -45,11 +45,15 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._httpsAddress = httpsSettings.address;
                     this._httpsPort = httpsSettings.port;
 
-                    console.log("port:" + this._httpsPort + "address:" + this._httpsAddress);
-
-                    this._httpsServer.listen(this._httpsPort, this._httpsAddress);
+                    httpsReadyPromiseResolve(true);
 
                 }));
+
+            },
+            listenForConnections: function () {
+                console.log("Listening on port:" + this._httpsPort + "address:" + this._httpsAddress);
+
+                this._httpsServer.listen(this._httpsPort, this._httpsAddress);
 
             },
             onhttpServerRequest: function (request, response) {

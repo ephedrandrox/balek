@@ -133,7 +133,7 @@ define(['dojo/_base/declare',
                 }
             },
             loadModuleForClient: function (wssConnection, moduleName, returnCallback) {
-
+console.log("🥵🥵loadModuleForClient", moduleName);
                 if (this._modules[moduleName]) {
 
                     let allowedGroups = this._modules[moduleName].allowedGroups();
@@ -144,27 +144,39 @@ define(['dojo/_base/declare',
 
                             topic.publish("getSessionUserGroups", wssConnection._sessionKey, lang.hitch(this, function (sessionUserGroups) {
                                 if (allowedGroups == null || Array.isArray(sessionUserGroups) && Array.isArray(allowedGroups)) {
-                                    if (allowedGroups == null || allowedGroups.some(group => sessionUserGroups.includes(group))) {
+                                    if (allowedGroups == null || allowedGroups.some(group => sessionUserGroups.includes(group)) ) {
+                                    let alreadyLoaded =
+                                        Array.from(Object.values(this._instances)).some(test => {
+                                            console.log("🥵🥵loadModuleForClient moduleddd", moduleName, test._moduleName, test._sessionKey, test._sessionKey);
 
-                                        let instanceKey = this.getUniqueInstanceKey();
+                                            return (test._moduleName === moduleName && test._sessionKey === wssConnection._sessionKey)
+                                        })
 
-                                        this._instances[instanceKey] = this._modules[moduleName].newInstance({
-                                            _instanceKey: instanceKey,
-                                            _moduleName: moduleName,
-                                            _sessionKey: wssConnection._sessionKey
-                                        });
+                                        if(!alreadyLoaded) {
+                                            let instanceKey = this.getUniqueInstanceKey();
+                                            console.log("🥵🥵loadModuleForClient this._modules[moduleName].newInstance",alreadyLoaded, Array.from(Object.values(this._instances)), moduleName, this._instances);
 
-                                        topic.publish("addInstanceToSession", wssConnection._sessionKey, this._instances[instanceKey]);
+                                            this._instances[instanceKey] = this._modules[moduleName].newInstance({
+                                                _instanceKey: instanceKey,
+                                                _moduleName: moduleName,
+                                                _sessionKey: wssConnection._sessionKey
+                                            });
 
-                                        let clientMessage = {
-                                            moduleAction: {
-                                                action: "Module Loaded",
-                                                name: moduleName,
-                                                interfacePath: "balek-modules/" + moduleName + "/Interface",
-                                                instanceKey: instanceKey
-                                            }
-                                        };
-                                        returnCallback(clientMessage);
+                                            topic.publish("addInstanceToSession", wssConnection._sessionKey, this._instances[instanceKey]);
+
+                                            let clientMessage = {
+                                                moduleAction: {
+                                                    action: "Module Loaded",
+                                                    name: moduleName,
+                                                    interfacePath: "balek-modules/" + moduleName + "/Interface",
+                                                    instanceKey: instanceKey
+                                                }
+                                            };
+                                            returnCallback(clientMessage);
+                                        }else{
+                                            console.log("Module already Loaded", moduleName, wssConnection._sessionKey);
+                                        }
+
 
                                     } else {
                                         console.log("Module not available to user", moduleName, wssConnection._sessionKey);

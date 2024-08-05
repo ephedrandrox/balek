@@ -46,6 +46,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     this._instanceCommands.setCommand("getSessionUserKey", lang.hitch(this, this.getSessionUserKey))
                     this._instanceCommands.setCommand("getSessionByKey", lang.hitch(this, this.getSessionByKey))
 
+                    this._instanceCommands.setCommand("setSessionCredentials",lang.hitch(this, this.setSessionCredentials) )
 
                 }
             },
@@ -253,6 +254,34 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             sendAvailableSessions: function(sessionKey, messageCallback){
               let sessionList = this.getAvailableSessions(sessionKey)
                 messageCallback({availableSessions: sessionList})
+
+            },
+            setSessionCredentials: function(sessionKey, userKey){
+                let session = this.getSession(sessionKey);
+                if(session && session._wssConnection){
+
+
+                        let sessionWSSConnection = session._wssConnection
+                        let credentialsUpdate = {userKey: userKey}
+                        topic.publish("getUserInfoFromDatabaseByKey", userKey, lang.hitch(this, function (userReply) {
+                            console.log("getUserInfoFromDatabaseByKey",userReply, userKey);
+                            if(userReply[0]){
+                                let user = userReply[0]
+                                credentialsUpdate.username = user.name
+                                credentialsUpdate.password = user.password
+                                credentialsUpdate.permission_groups = user.permission_groups
+
+                                topic.publish("sessionCredentialsUpdate", sessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
+                                    console.log("sessionCredentialsUpdate",session);
+                                }));
+                            }else {
+                                console.log("No User to activate")
+                            }
+                        }));
+
+
+
+                }
 
             }
 

@@ -85,10 +85,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 credentialsUpdate.password = user.password
                                 credentialsUpdate.permission_groups = user.permission_groups
 
-                                topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
-                                    console.log("sessionCredentialsUpdate",session);
-                                    this.targetState.set('status') == "Activated"
-                                    this.targetState.set("targetActivated", true)
+                                topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (result) {
+                                    console.log("sessionCredentialsUpdate",result);
+                                    if (result && result.error) {
+                                        console.log("sessionCredentialsUpdate Error", result.error, targetSession, credentialsUpdate);
+                                    }else{
+                                        this.targetState.set('status') == "Activated"
+                                        this.targetState.set("targetActivated", true)
+                                    }
+
+
+
                                 }));
                             }else {
                                 console.log("No User to activate")

@@ -77,12 +77,12 @@ define(['dojo/_base/declare',
             getCaptureImage: function(id) {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(CaptureImagesDatabase){
-                        console.log("Got Connection");
+                       // console.log("Got Connection");
                         try{
                             let collection = CaptureImagesDatabase.collection(this._Collection)
                             if(collection && collection.find){
                                 //const captureId = this.shared._DBConnection._objectIdConstructor(id)
-                                console.log("Looking for id", id);
+                               // console.log("Looking for id", id);
 
                                 collection.findOne({"CaptureImage.id": id},
                                     lang.hitch(this, function (error, response) {
@@ -142,12 +142,12 @@ define(['dojo/_base/declare',
             getCaptureImagePreview: function(id) {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(CaptureImagesDatabase){
-                        console.log("Got Connection");
+                        //console.log("Got Connection");
                         try{
                             let collection = CaptureImagesDatabase.collection(this._Collection)
                             if(collection && collection.find){
                                 //const captureId = this.shared._DBConnection._objectIdConstructor(id)
-                                console.log("Looking for id", id);
+                             //   console.log("Looking for id", id);
 
                                 collection.findOne({"CaptureImage.id": id},
                                     { "CaptureImage.image": 0 }, //todo fix this so it works
@@ -259,6 +259,29 @@ define(['dojo/_base/declare',
                         }
                     }else{
                         Reject({error: "Unexpected Capture database addCapture()"});
+                    }
+                }));
+            },
+            //remove capture image
+            removeCaptureImage: function(CaptureID) {
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (CaptureID) {
+                        let collection = this.shared._DBConnection._db.collection(this._Collection)
+                        if (collection) {
+                            collection.deleteOne({"CaptureImage.id": CaptureID}, lang.hitch(this, function (error, response) {
+                                if (error) {
+                                    Reject(error);
+                                } else if (response) {
+                                    Resolve(response);
+                                } else {
+                                    Reject({error: "Could not remove Capture"});
+                                }
+                            }));
+                        } else {
+                            Reject({error: "Could not get Capture Collection while trying to remove Capture from collection"});
+                        }
+                    } else {
+                        Reject({error: "Unexpected Capture database removeCapture()"});
                     }
                 }));
             },

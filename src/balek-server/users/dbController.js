@@ -276,6 +276,29 @@ define(['dojo/_base/declare',
                 }));
 
             },
+            removeUser: function(userKey){
+              console.log("Removing User", userKey);
+              return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                  if (userKey) {
+                      query = this._dbConnection.query('DELETE FROM ' + this._mysqlSettings.database + '.users WHERE userKey = ? ;', userKey);
+                  } else {
+                      console.log("not enough user info", {ERROR: "Not Enough arguments to remove user", arguments:  { userKey : userKey} });
+                      Reject( {ERROR: "Not Enough arguments to remove user", arguments:  { userKey : userKey} })
+                  }
+
+                  let resultToReturn = [];
+
+                  query.on('error', function (err) {
+                      Reject(err.message);
+                  })
+                      .on('result', function (row) {
+                          resultToReturn.push(row);
+                      })
+                      .on('end', function () {
+                          Resolve(resultToReturn);
+                      });
+              }));
+            },
             updateUserInDatabase: function (userData) {
 
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {

@@ -60,6 +60,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             retrieveCaptureImagePreview: function(captureID){
                 return this.Captures.retrieveCaptureImagePreview(captureID)
             },
+            retrieveCaptureImageCheckHash: function(captureID){
+                return this.Captures.retrieveCaptureImageCheckHash(captureID)
+            },
+            retrieveCaptureCheckHash: function(captureID){
+                return this.Captures.retrieveCaptureCheckHash(captureID)
+            },
             //Capture Sets Relays
             //Get All Capture Sets
             getCaptureSets: function() {

@@ -52,6 +52,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("ERRRRRRRRRRRRROR");
                     ioManagerPromiseReject("https server had a problem starting up");
                 });
+            },
+            listenForConnections: function () {
+                this._httpsManager.listenForConnections();
             }
         });
     });

@@ -49,6 +49,7 @@ define(['dojo/_base/declare',
                     //Initialize Instance Commands
                     this._instanceCommands = new InstanceCommands();
                     this._instanceCommands.setCommand("addNewUser", lang.hitch(this, this.addNewUser))
+                    this._instanceCommands.setCommand("removeUser", lang.hitch(this, this.removeUser))
 
                     this._instanceCommands.setCommand("getOwnerUser", lang.hitch(this, this.getOwnerUser))
 
@@ -119,6 +120,8 @@ define(['dojo/_base/declare',
                     }
                 }
                 let watchHandle = userListState.watch(lang.hitch(this, function(name, oldState, newState){
+                    console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦relayUserListState relayUserListState Watch" ,{userListState: {name: name , newState: newState}})
+
                     messageReplyCallback({userListState: {name: name , newState: newState}})
                 }))
                 this.putUserListWatcher(userKey, sessionKey, watchHandle)
@@ -142,6 +145,29 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             //Instance Commands
             //##########################################################################################################
+            removeUser: function(userToRemoveKey, adminUserKey){
+
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+
+                    this.isUserAdmin(adminUserKey).then(lang.hitch(this, function (results) {
+                        //todo update User Store
+                        this._dbController.removeUser(userToRemoveKey).then(lang.hitch(this, function (results) {
+                            console.log("User Removed", results)
+                            if(results[0].affectedRows === 1)
+                            {
+                                this.removeUserFromState(userToRemoveKey)
+                                Resolve({Success: "User Removed", Results: results})
+                            }
+                        })).catch(function (Error) {
+                            Reject({Error: Error})
+                        });
+
+
+                    })).catch(function (error) {
+                        Reject(error);
+                    });
+                }));
+            },
             addNewUser: function(userData, adminUserKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userData && adminUserKey
@@ -426,6 +452,26 @@ define(['dojo/_base/declare',
                 }
                 return this._userInfoStates[userKey]
             },
+            removeUserFromState: function(userKey){
+                console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦removeUser removeUserFromState userKey" ,userKey )
+
+                this._userInfoStates[userKey].set("userName", null)
+                this._userInfoStates[userKey].set("icon", null)
+                this._userInfoStates[userKey].set("userKey", null)
+                this._userInfoStates[userKey].set("permissionGroups", null)
+
+                delete this._userInfoStates[userKey]
+                console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦removeUser deleted:" ,userKey )
+
+
+
+                for (var userListKey in this._userListStates) {
+                    if (this._userListStates.hasOwnProperty(userListKey)) {
+                        console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦removeUser _userListStates set to null:", userListKey);
+                        this._userListStates[userListKey].set(userKey.toString(), null)
+                    }
+                }
+            },
             isUserAdmin: function(userKey){
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if(userKey){
@@ -472,6 +518,7 @@ define(['dojo/_base/declare',
                 });
             },
             loadIconAndName: function(userKey){
+                console.log("sadfsadfasdfsadfasd####################################################################################################################################################################################")
                 this._dbController.getUserIconAndNameFromDatabaseByKey(userKey).then(lang.hitch(this, function (results) {
                     this.getUserInfoState(userKey).set("icon", results[0].icon)
                     this.getUserInfoState(userKey).set("userName", results[0].name)

@@ -12,6 +12,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'balek-modules/balekute/connect/Controller/instanceCommands',
 
         'balek-server/users/usersController/instanceCommands',
+        'balek-server/session/sessionsController/instanceCommands',
+
 
         'dojo/node!qrcode-terminal',
         "dojo/node!fs",
@@ -22,7 +24,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
     ],
     function (declare, lang, topic, Stateful, Invitation, Device, Target, devicesDatabase,
               InstanceCommands,
-              UsersControllerInstanceCommands,
+              UsersControllerInstanceCommands,SessionsControllerInstanceCommands,
               qrcode, fsNodeObject, crypto, os
  ) {
         return declare("balekuteConnectController", null, {
@@ -46,6 +48,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             statusAsState: null,
             usersControllerCommands: null,
+            sessionsControllerCommands: null,
+
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
@@ -59,6 +63,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this._instanceCommands.initialize();
 
 
+                let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
+                this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 let usersControllerInstanceCommands = new UsersControllerInstanceCommands();
                 this.usersControllerCommands = usersControllerInstanceCommands.getCommands();
@@ -180,6 +186,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return newTarget
             },
             createInvitation: function (input) {
+                let newInvitation = null;
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                     if (input === null) {
                         //Make sure that the Interface sent a conversationContent Object
@@ -189,22 +196,39 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         if(input && input.owner && input.owner.userKey)
                         {
                             //New Invitation Created!
-
+                            console.log("new Invitation being created", input, input.owner, input.owner.userKey)
                             if(input.invitationKey){
-                                let newInvitation = Invitation({key: input.invitationKey, owner: input.owner, host: input.host, _connectController: this, _module: this._module});
+                                console.log("Key Provided ", input.invitationKey)
+
+                                newInvitation = Invitation({key: input.invitationKey,
+                                    owner: input.owner,
+                                    host: input.host,
+                                    _connectController: this,
+                                    _module: this._module});
                             }else
                             {
-                                let newInvitation = Invitation({owner: input.owner, host: input.host, _connectController: this, _module: this._module});
+                                console.log("No Key Provided ")
+
+                                newInvitation = Invitation({owner: input.owner,
+                                    host: input.host,
+                                    _connectController: this,
+                                    _module: this._module});
                             }
+                            console.log("New Key Created ", newInvitation.getKey())
 
                             let newInvitationKey = newInvitation.getKey()
                             if(newInvitationKey !== null)
                             {
+                                console.log("adding to list ", newInvitation.getKey())
 
                                 //Add it to the invitations array
                                 this._invitations[newInvitationKey.toString()]  = newInvitation;
                                 //add to all users lists:
+                                console.log("resolving", newInvitation.getKey())
+
                                 Resolve({result: "success", newKey: newInvitationKey});
+                                console.log("resolved", newInvitation.getKey())
+
                             }else {
                                 //no key, no go
                                 Reject({error: "new invitation could not produce key."});
@@ -240,16 +264,45 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             }else{
                                 Reject({error: "Invitation can not use key!"});
                             }
-
-
-
                         }else{
                             Reject({error: "Invitation is not available"});
                         }
                     }
                 }));
             },
+            authenticateSessionForDeviceUser: function (timeSignProof, deviceInfo, sessionKey){
+                return new Promise(lang.hitch(this, function (Resolve, Reject) {
+                    if (deviceInfo && deviceInfo.publicSigningKey && timeSignProof)
+                    {
+                        let device = this.getDeviceByPublicSigningKey(deviceInfo.publicSigningKey)
+                        if (device && typeof device.getOwnerUserKey === 'function'){
+                            let userKey = device.getOwnerUserKey()
 
+                            if (userKey !== null) {
+                                //check that the signature matches the timestamp and device info
+                                //and get the user key from our stored device info for that public key
+                                this.sessionsControllerCommands.setSessionCredentials(sessionKey, userKey)
+                                Resolve({success: {timeSignProof: timeSignProof,
+                                        deviceInfo: deviceInfo,
+                                        userKey: userKey}})
+                            } else {
+                                Reject({error: "Connect Controller: No User assigned to Device",
+                                    arguments: {timeSignProof: timeSignProof,
+                                        deviceInfo: deviceInfo,
+                                    }});
+                            }
+                        }else {
+                            Reject({error: "Connect Controller: No Known Device",
+                                arguments: {timeSignProof: timeSignProof,
+                                    deviceInfo: deviceInfo}});
+                        }
+                    }else{
+                        Reject({error: "Connect Controller: authenticateSessionForDeviceUser bad arguments",
+                            arguments: {timeSignProof: timeSignProof,
+                                deviceInfo: deviceInfo}});
+                    }
+                    }));
+            },
             useOwnerClaimKey: function (ownerClaimKey, deviceInfo) {
                 //THis is called when a user wants to claim the server
                 //This is expected to be done once and the owner user
@@ -475,8 +528,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         typeof publicKey === 'string' ) {
 
                         const message = Uint8Array.from(Buffer.from(stringToVerify, 'utf8'))
-                        const publicKeyBuf = new Buffer(publicKey.toString('ascii'), 'ascii')
-                        const signatureBuf = new Buffer(atob(signature).toString('ascii'), 'ascii')
+                        const publicKeyBuf = new Buffer.from(publicKey.toString('ascii'), 'ascii')
+                        const signatureBuf = new Buffer.from(atob(signature), 'ascii')
                         const verifier = crypto.createVerify('sha256')
 
                         verifier.update(message, 'utf8')

@@ -116,6 +116,7 @@ define(['dojo/_base/declare',
                     cryptoPromise.then(lang.hitch(this, function (passwordHash) {
                        let passwordHashHex = Array.prototype.map.call(new Uint8Array(passwordHash), x => (('00' + x.toString(16)).slice(-2))).join('');
                        //Send the input and hashed password to the addNewUser Instance Command
+                        console.log("New User request", userName, newUserIcon, passwordHashHex)
                         this._interface._instanceCommands.addNewUser({userName: userName, icon: newUserIcon, password: passwordHashHex}).then(lang.hitch(this, function(Result){
                                 console.log("New User request", Result)
                             })).catch(function(Error){

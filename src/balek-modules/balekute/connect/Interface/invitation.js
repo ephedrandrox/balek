@@ -117,7 +117,9 @@ define(['dojo/_base/declare',
                     this.invitationHost = newState
                    // this._hostDiv.innerHTML = newState
 
-                    this.connectInterface._mainInterface._instanceCommands.getQRCode("balekute://newConnection/?host=" + this.invitationHost + "&invitationKey=" + this.invitationKey).then(lang.hitch(this, function(commandReturnResults){
+                    this.connectInterface._mainInterface._instanceCommands.getQRCode("balekute://newConnection/?host=" +
+                        this.invitationHost + "&invitationKey=" + this.invitationKey)
+                        .then(lang.hitch(this, function(commandReturnResults){
                         console.log("#QRCode", commandReturnResults)
                         //create new interface with callback
 

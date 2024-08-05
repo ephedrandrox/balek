@@ -20,7 +20,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     httpServer: httpsServer,
                     autoAcceptConnections: false,
                     maxReceivedFrameSize: this.maxReceivedFrameSize * 1024,
-                    maxReceivedMessageSize: this._maxReceivedMessageSize * 1024 * 1024
+                    maxReceivedMessageSize: this._maxReceivedMessageSize * 1024 * 1024,
+                    fragmentOutgoingMessages : true,
+                    // fragmentationThreshold : this.maxReceivedFrameSize * 1024
                 });
 
                 this._wssServer.on('request', lang.hitch(this, "onWebSocketRequest"));

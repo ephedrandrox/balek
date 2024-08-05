@@ -16,7 +16,7 @@ Clone the Balek repository and submodules
     git clone --recurse-submodules https://github.com/ephedrandrox/balek.git  
 
 > The [dojo toolkit](https://dojotoolkit.org) is included as a submodule. If the `--recurse-submodules`
-> flag is omitted durring cloning, you can run `git submodule update --init --recursive` in
+> flag is omitted during cloning, you can run `git submodule update --init --recursive` in
 > the root directory to download the dojo toolkit submodules.
 ### Step 2: Checkout the DigiScan branch
 

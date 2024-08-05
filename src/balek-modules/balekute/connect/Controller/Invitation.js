@@ -15,7 +15,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             invitationState: null,
 
             deviceInfo: null,
+
+            createdTimestamp: null,
             constructor: function (args) {
+                this.createdTimestamp = new Date();
                 declare.safeMixin(this, args);
                 if(this._module === null || this._connectController === null){
                     console.log("balekuteConnectControllerInvitation Cannot Start!...");
@@ -28,6 +31,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 console.log("balekuteConnectControllerInvitation starting...");
                 this.key = String(crypto.randomUUID());
+                console.log("balekuteConnectControllerInvitation started", this.key);
+
             },
             useKey: function (invitationKey, deviceInfo){
                 //If the Invitation Key Matches, check device info

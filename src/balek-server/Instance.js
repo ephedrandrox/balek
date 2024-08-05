@@ -35,6 +35,8 @@ define(['dojo/_base/declare',
                 this._ioManager = new ioManager();
                 this._moduleManager = new moduleManager();
                 this._sessionManager = new sessionManager();
+                console.log("Managers Created");
+
             },
             _start: function (serverPromiseResolve, serverPromiseReject) {
 
@@ -56,6 +58,8 @@ define(['dojo/_base/declare',
                     moduleManagerReady.then(lang.hitch(this, function (value) {
                         console.log("ModuleManager is ready" + value);
                         this._usersManager = new usersManager();
+
+                        this._ioManager.listenForConnections();
                         serverPromiseResolve("Instance is ready");
                     })).catch(lang.hitch(this, function (error) {
                         this._error(error);

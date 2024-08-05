@@ -5,7 +5,8 @@ const os = require('os');
 
 const providedHostname = process.argv[2];
 
-let hostname = providedHostname || os.hostname();
+let hostname = providedHostname !== undefined ? providedHostname : os.hostname();
+console.log(process.argv, providedHostname, hostname)
 
 const ownerDeviceFilePath = './src/balek-server/etc/ownerDevice.json';
 const configFilePath = './src/balek-server/etc/config.json';
@@ -16,7 +17,7 @@ if (fs.existsSync(ownerDeviceFilePath)) {
     const ownerDeviceJSONData = JSON.parse(fs.readFileSync(ownerDeviceFilePath, 'utf8'));
     const configJSONData = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
 
-    if (configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
+    if (providedHostname === undefined && configJSONData && configJSONData["Network Settings"] && configJSONData["Network Settings"].Hostname)
     {
         hostname = configJSONData["Network Settings"].Hostname
     }

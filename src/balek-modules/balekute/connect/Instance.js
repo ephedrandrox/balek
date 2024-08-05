@@ -39,6 +39,7 @@ define(['dojo/_base/declare',
                     "createInvitationKey" : lang.hitch(this, this.createInvitationKey),
                     "connectInvitationState" : lang.hitch(this,this.connectInvitationState),
                     "useOwnerClaimKey" : lang.hitch(this, this.useOwnerClaimKey),
+                    "authenticateSessionForDeviceUser" : lang.hitch(this, this.authenticateSessionForDeviceUser)
                 };
 
                 this.availableInvitations  = new SyncedMapInstance({_instanceKey: this._instanceKey});
@@ -177,7 +178,7 @@ define(['dojo/_base/declare',
 
 
                         })).catch(function(rejectError){
-                            remoteCallback({error: rejectError})
+                            remoteCallback({error: {caught:rejectError}})
                         })
                     }else{
                         remoteCallback({error: "Cannot create Invitation without user Key"})
@@ -235,6 +236,32 @@ define(['dojo/_base/declare',
                     })
                 }else {
                     console.log("❗️Unexpected Arguments! useAdminSetKey: function( ownerClaimKey, deviceInfo, remoteCallback)‼️",arguments)
+                }
+
+
+            },
+            authenticateSessionForDeviceUser: function( timeSignedProof, deviceInfo, remoteCallback){
+                console.log("authenticateSessionForDeviceUser", timeSignedProof, deviceInfo, arguments);
+
+                console.log("authenticateSessionForDeviceUser Public key", deviceInfo.publicSigningKey);
+                console.log("authenticateSessionForDeviceUser Signature",deviceInfo.signature);
+                console.log("authenticateSessionForDeviceUser keychainIdentifier", deviceInfo.keychainIdentifier);
+
+
+                if( typeof timeSignedProof === 'object' && typeof deviceInfo === 'object' &&
+                    typeof remoteCallback === 'function'  )
+                {
+                    this.moduleController.authenticateSessionForDeviceUser(timeSignedProof,deviceInfo,this._sessionKey).then(lang.hitch(this, function (Result) {
+                        console.log("Connect Instance: this.moduleController.authenticateSessionForDeviceUser",Result)
+                        remoteCallback({Result: Result})
+                    })).catch(function(rejectError){
+                        console.log("Connect Instance Error: this.moduleController.authenticateSessionForDeviceUser",rejectError)
+
+                        remoteCallback({Error: rejectError})
+                    })
+                }else {
+                    console.log("❗️Unexpected Arguments! authenticateSessionForDeviceUser: function( timeSignedProof, deviceInfo, remoteCallback)‼️",arguments)
+                    remoteCallback({Error: "Unexpected Arguments"})
                 }
 
 

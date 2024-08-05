@@ -27,7 +27,7 @@ define(['dojo/_base/declare',
                 wssConnection.sendDataToClient(dataToSend);
             },
             receiveBalekProtocolMessage: function (balekMessage, wssConnection) {
-           //     console.log("✉️✉️ Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
+              //  console.log("✉️✉️ Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
                 if (balekMessage.moduleMessage) {
                     topic.publish("receiveModuleMessage", balekMessage.moduleMessage, wssConnection, lang.hitch(this, function (messageReply) {
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
@@ -51,6 +51,8 @@ define(['dojo/_base/declare',
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
                     }));
                 } else if (balekMessage.userManagerMessage) {
+                    console.log("User Manager Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
+
                     topic.publish("receiveUserManagerMessage", balekMessage.userManagerMessage, wssConnection, lang.hitch(this, function (messageReply) {
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
                     }));

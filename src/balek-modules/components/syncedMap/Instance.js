@@ -11,7 +11,7 @@ define(['dojo/_base/declare',
             _relayStateWatchHandle: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleBaseSyncedMapInstance starting...");
+               // console.log("moduleBaseSyncedMapInstance starting...");
                 this.prepareSyncedState();
                 this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
 
@@ -30,7 +30,7 @@ define(['dojo/_base/declare',
                     let value = state[key]
                     if(typeof value !== 'function' && key != "_attrPairNames"
                         && key != "declaredClass"){
-                        console.log("adding objects from  State", key, value)
+                     //   console.log("adding objects from  State", key, value)
                         this.add(key, value );
                     }
                 }
