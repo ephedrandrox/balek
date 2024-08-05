@@ -31,3 +31,5 @@ src/balek-server/etc/ownerDevice.json
 builds/digiscan/config/balek/cert/
 
 builds/digiscan/config/balek/ownerDevice.json
+
+src/balek-server/etc/
