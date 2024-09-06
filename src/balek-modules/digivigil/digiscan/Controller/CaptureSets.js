@@ -344,6 +344,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             removeCaptureFromSet: function(captureSetId, captureID) {
                return this.setCaptureInSet(captureSetId, captureID, false);
             },
+            removeCaptureFromSets: function(captureID) {
+                console.log("removeCaptureFromSets Capture Set Updated", captureID);
+
+                this._captureSetsDatabase.getCaptureSets().then(lang.hitch(this, function(CaptureSets){
+                    if(Array.isArray(CaptureSets)) {
+                        CaptureSets.forEach(lang.hitch(this, function (CaptureSet) {
+                            let id = CaptureSet._id.toString()
+                            if (CaptureSet.CaptureSet.captures[captureID].inSet === true) {
+                                console.log("removeCaptureFromSets setting not true            Capture Set Updated", captureID);
+
+                                this.setCaptureInSet(id, captureID, false)
+                            }else{
+                                console.log("removeCaptureFromSets setting NOTNOTBNOTBTOnot true            Capture Set Updated", captureID);
+
+                            }
+                        }));
+                    }
+                    }))
+            },
             addCaptureToSet: function(captureSetId, captureID) {
                 return this.setCaptureInSet(captureSetId, captureID, true);
             },

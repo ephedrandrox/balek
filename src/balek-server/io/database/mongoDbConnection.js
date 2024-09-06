@@ -7,6 +7,7 @@ define(['dojo/_base/declare',
 
         return declare("mongoDbConnection", null, {
 
+            _client: null,
             _mongoClient: null,
             _url: null,
             _db: null,
@@ -36,6 +37,7 @@ define(['dojo/_base/declare',
                             console.error(err)
                             //return;
                         } else {
+                            this._client = client;
                             this._db = client.db(this._database);
                             this._adminDb = client.db('admin');
                                 this.onDatabaseConnected()

@@ -48,6 +48,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             addCapture: function(Capture){
                 return this.Captures.add(Capture)
             },
+            removeCapture: function(captureID){
+               return this.Captures.remove(captureID)
+            },
             removeAllCapturesFor: function(userKey){
                 return this.Captures.removeAllCapturesFor(userKey)
             },
@@ -66,6 +69,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             retrieveCaptureCheckHash: function(captureID){
                 return this.Captures.retrieveCaptureCheckHash(captureID)
             },
+            retrieveCaptureID: function(captureID){
+                return this.Captures.retrieveCaptureID(captureID)
+            },
             //Capture Sets Relays
             //Get All Capture Sets
             getCaptureSets: function() {
@@ -82,6 +88,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             removeCaptureFromSet: function(captureSetId, captureID) {
                 return this.CaptureSets.removeCaptureFromSet(captureSetId, captureID)
+            },
+            removeCaptureFromSets: function(captureID) {
+                return this.CaptureSets.removeCaptureFromSets(captureID)
             },
             addCaptureToSet: function(captureSetId, captureID) {
                 return this.CaptureSets.addCaptureToSet(captureSetId, captureID)

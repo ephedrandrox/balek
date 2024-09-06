@@ -204,9 +204,10 @@ define(['dojo/_base/declare',
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                   try{
                       let sessionToUnload = this._sessions[sessionKey];
-                      let sessionUserKey = sessionToUnload.getUserKey()
+
                       if(sessionToUnload)
                       {
+                          let sessionUserKey = sessionToUnload.getUserKey()
                           //if the session being unloaded is connected we need to do something
                           if(sessionToUnload._wssConnection != null && sessionToUnload._wssConnection._wssConnection != null &&
                               sessionToUnload._wssConnection.isConnected())

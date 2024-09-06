@@ -46,6 +46,7 @@ define(['dojo/_base/declare',
                     "showHiddenCaptures": lang.hitch(this, this.showHiddenCaptures),
                     //captures
                     "addCapture" : lang.hitch(this, this.addCapture),
+                    "removeCapture" : lang.hitch(this, this.removeCapture),
                     "removeAllCaptures" : lang.hitch(this, this.removeAllCaptures),
                     "updateCaptureImage" : lang.hitch(this, this.updateCaptureImage),
                     "retrieveCaptureImage" : lang.hitch(this, this.retrieveCaptureImage),
@@ -54,6 +55,8 @@ define(['dojo/_base/declare',
 
                     "retrieveCaptureImageCheckHash" : lang.hitch(this, this.retrieveCaptureImageCheckHash),
                     "retrieveCaptureCheckHash" : lang.hitch(this, this.retrieveCaptureCheckHash),
+                    "retrieveCaptureID" : lang.hitch(this, this.retrieveCaptureID),
+
 
 
 
@@ -183,6 +186,13 @@ define(['dojo/_base/declare',
                     resultCallback({Error: Error})
                 }))
             },
+            removeCapture: function(captureID, resultCallback){
+              this._moduleController.removeCapture(captureID).then(lang.hitch(this, function(Result){
+                  resultCallback({SUCCESS: Result})
+              })).catch(lang.hitch(this, function(Error){
+                  resultCallback({Error: Error})
+              }))
+            },
             removeAllCaptures: function( resultCallback){
                 let userKey = this.sessionsControllerCommands.getSessionUserKey(this._sessionKey)
                 if (userKey != null ) {
@@ -223,6 +233,13 @@ define(['dojo/_base/declare',
             },
             retrieveCaptureCheckHash : function(captureID, resultCallback){
                 this._moduleController.retrieveCaptureCheckHash(captureID).then(lang.hitch(this, function(Result){
+                    resultCallback({SUCCESS: Result})
+                })).catch(lang.hitch(this, function(Error){
+                    resultCallback({Error: Error})
+                }))
+            },
+            retrieveCaptureID: function(captureID, resultCallback){
+                this._moduleController.retrieveCaptureID(captureID).then(lang.hitch(this, function(Result){
                     resultCallback({SUCCESS: Result})
                 })).catch(lang.hitch(this, function(Error){
                     resultCallback({Error: Error})

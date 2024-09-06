@@ -104,6 +104,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 }));
             },
+            removeCaptureFromCaptureSets: function(captureID){
+                this._instanceController.removeCaptureFromSets(captureID);
+            },
+
             load: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this._capturesDatabase.getCaptures().then(lang.hitch(this, function(Captures){
@@ -231,12 +235,31 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     }));
                 }
             },
+
+
             appendToUserList: function(id, Capture){
                 if(Capture.capture && Capture.capture.signature && Capture.capture.signature.ownerUserKey && Capture.capture.signature.ownerUserKey)
                 {
                     let userCaptures = this.getCapturesForUser(Capture.capture.signature.ownerUserKey)
                     let checksum = this.getCaptureCheckHash(Capture.capture)
                     userCaptures.set(id, checksum)
+                    //get stateful capture and watch for removal
+                    let captureStateful = this.getStatefulCapture(id)
+
+                    console.log("Capture Added", id, Capture.capture.id, captureStateful)
+                    let watchSubscription = captureStateful.watch(lang.hitch(this, function(name, oldValue, newValue){
+                        console.log("Observed", name, oldValue, newValue)
+
+                        if(name == "id"
+                            && oldValue && oldValue != ""
+                            && (newValue == "" || typeof newValue === 'undefined'))
+                        {
+                            console.log("Capture Removed", id, oldValue, newValue)
+                            //Had a value but now doesn't remove from user list
+                            userCaptures.set(id, undefined)
+                            watchSubscription.unwatch()
+                        }
+                    }))
                 }
             },
             updateStatefulCapture: function(Capture){
@@ -246,6 +269,30 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 statefulCapture.set("barcode", Capture.capture.barcode);
                 statefulCapture.set("recognizedText", Capture.capture.recognizedText);
                 statefulCapture.set("note", Capture.capture.note);
+            },
+            removeStatefulCapture: function(CaptureID){
+
+                if (this.statefulCapturesByCaptureID[CaptureID]){
+                    let statefulCapture  = this.statefulCapturesByCaptureID[CaptureID]
+                    console.log("removeStatefulCapture", statefulCapture, CaptureID);
+
+                    statefulCapture.set("id", undefined);
+                    statefulCapture.set("created", undefined);
+                    statefulCapture.set("barcode", undefined);
+                    statefulCapture.set("recognizedText", undefined);
+                    statefulCapture.set("note", undefined);
+                    statefulCapture.set("imageInfo", undefined);
+                   // statefulCapture.set("imagePreview", undefined);
+
+
+                    statefulCapture.set("removed", true);
+
+
+
+                }
+
+
+
             },
 
             getCaptures: function() {
@@ -296,10 +343,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         return
                     }
 
-
+                    console.log("🤢🤢🤢Capture:", Capture)
+                    let updateRequest = Capture?.update ?? false
                     this.checkAndReturnValidCapture(Capture).then(lang.hitch(this, function(Capture){
 
-                        if(Capture)
+                        if(Capture && updateRequest === false)
                         {
                             console.log("Controller Adding Capture to Database", Capture)
                             this._capturesDatabase.addCapture(Capture).then(lang.hitch(this, function(Result){
@@ -315,6 +363,33 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                         this.updateStatefulCapture(Capture)
                                         this.appendToUserList(id, Capture)
                                         this.addCaptureToCaptureSets(id, Capture)
+                                        Resolve({SUCCESS: Capture})
+                                    })).catch(lang.hitch(this, function(Error){
+                                        Reject({Error: Error})
+                                    }))
+                                }catch(Error){
+                                    console.log("Error Getting Capture:", Error);
+                                    Reject(Error)
+                                }
+                            })).catch(lang.hitch(this, function(Error){
+                                console.log("Controller could not add Capture to Database", Error);
+
+                                Reject({Error})
+                            }))
+                        } else if (Capture && updateRequest === true)
+                        {
+                            console.log("🤢🤢🤢 Updating Capture:", Capture)
+
+                            console.log("Controller Updating Capture to Database", Capture)
+                            this._capturesDatabase.updateCapture(Capture).then(lang.hitch(this, function(Result){
+                                console.log("Capture Updated", Result);
+                                try{
+                                    const id = Result
+                                    this.getCapture(id).then(lang.hitch(this, function(Capture){
+                                        console.log("Capture Retreived", Capture);
+                                        let id = Capture._id.toString()
+                                        this.captures.set(id, Capture)
+                                        this.updateStatefulCapture(Capture)
                                         Resolve({SUCCESS: Capture})
                                     })).catch(lang.hitch(this, function(Error){
                                         Reject({Error: Error})
@@ -345,8 +420,43 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 }));
             },
+            remove: function(captureID){
+                console.log("Capture Removed Request Result", captureID)
+              return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                  this._capturesDatabase.removeCapture(captureID).then(lang.hitch(this, function(Result){
+                    console.log("Capture Removed Request Result", Result);
+
+                      console.log("Capture  captureID", this.captures, captureID);
+
+                      //find this.captures with capture.id = captureID
+
+                      Object.values(this.captures).forEach(lang.hitch(this, function(capture){
+
+                            if(capture  && capture._id && capture.capture && capture.capture.id.toString() === captureID.toString())
+                            {
+                                let captureObjectID = capture._id.toString()
+                               console.log("Matches Capture  captureID", capture, captureID,captureObjectID);
+                                this.captures.set(captureObjectID, undefined)
+                                console.log("removeStatefulCapture", capture, captureID,captureObjectID);
+                                this.removeCaptureFromCaptureSets(captureObjectID)
+
+                                this.removeStatefulCapture(captureObjectID)
+
+                            }else if (capture && capture._id){
+                                console.log("Not Matches Capture  captureID", capture.capture.id, captureID);
+
+                            }
+
+                      }))
 
 
+
+
+                  })).catch(lang.hitch(this, function(Error){
+                      Reject({Error: Error})
+                  }))  ;
+              }));
+            },
             removeAllCapturesFor: function(userKey){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
 
@@ -449,7 +559,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 Resolve(Result)
                             }else{
                                 this._capturesImagesDatabase.getCaptureImage(captureID).then(lang.hitch(this, function(CaptureImage) {
-                                    console.log("Capture Image😰😰😰", Result)
+                                   // console.log("Capture Image😰😰😰", Result)
                                     if(CaptureImage && CaptureImage.image && CaptureImage.image.data){
                                         this.ImageUtility.resizeImageBase64(CaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
                                             CaptureImage.image = null
@@ -524,6 +634,24 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         console.log("No Capture ID!", captureID)
                         Reject({Error : "No CaptureID"})
 
+                    }
+                }));
+            },
+            retrieveCaptureID: function(captureID){
+                return new Promise(lang.hitch(this, function(Resolve, Reject) {
+                    if(captureID ) {
+                        this.getCapture(captureID).then(lang.hitch(this, function (Capture) {
+                            if (Capture && Capture.capture && Capture.capture.id) {
+                                Resolve(Capture.capture.id)
+                            } else {
+                                Reject({Error: "No Capture ID"})
+                            }
+                        })).catch(lang.hitch(this, function (Error) {
+                            console.log("Error Getting Capture ID", Error)
+                        }));
+                    }else {
+                        console.log("No Capture ID!", captureID)
+                        Reject({Error : "No CaptureID"})
                     }
                 }));
             },
@@ -618,29 +746,42 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         let checkHash = this.connectControllerCommands.getStringHash(signStringCombination)
 
+                        //console.log("🤢🤢🤢Capture checkCaptureSignature:", Capture, checkHash, hash)
 
                         if(checkHash === hash)
                         {
+                            console.log("🤢🤢🤢Capture checkCaptureSignature hash match:", Capture, checkHash, hash)
+
                             this.connectControllerCommands.verifySignedString(signStringCombination, proof, publicKey ).then(lang.hitch(this, function(result){
                                 if (result){
                                     if (device && device.getOwnerUserKey && typeof device.getOwnerUserKey == 'function') {
+                                       // console.log("🤢Capture:", "Resolve")
+
                                         Resolve(device.getOwnerUserKey())
                                     }else{
                                         //instead of a user id send back "UnknownDevice" String
+                                       // console.log("🤢Capture:", "UKNOIWN DEVICE")
+
                                         Resolve("UnknownDevice")
 
                                         //Reject({Error: "Signature Could not be verified: Signing Device Unknown"})
                                     }
 
                                 }else{
+                                   // console.log("🤢Capture:", "Signature Could not be verified: Bad signature")
+
                                     Reject({Error: "Signature Could not be verified: Bad signature"})
 
                                 }
                             })).catch(lang.hitch(this, function(Error){
+                              //  console.log("🤢Capture:", "Signature Could not be verified:  Error Caught")
+
                                 Reject({Error: "Signature Could not be verified: Error Caught", caughtError: Error})
 
                             }))
                         }else {
+                           // console.log("🤢Capture:", "Capture Hash Dose Not Match", checkHash,hash)
+
                             Reject({Error: "Capture Hash Dose Not Match", checkHash,hash})
 
                         }
@@ -689,6 +830,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         //in the mean time, just dont sanitize
 
                       //  let validation = this.checkCaptureSignature(Capture)
+                        console.log("🤢🤢🤢Capture:", Capture)
 
                         this.checkCaptureSignature(Capture).then(lang.hitch(this, function(validation){
                             if(validation)
@@ -696,6 +838,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 validCapture.signature.ownerUserKey = validation
                                 Resolve(Capture)
                             }else {
+
                                 Reject({Error: "Signature Could not be verified: validation false"})
                             }
 

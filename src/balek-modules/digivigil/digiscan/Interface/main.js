@@ -208,11 +208,21 @@ define(['dojo/_base/declare',
                                     if(!this._previewDiv.contains(captureView.domNode))
                                     domConstruct.place(captureView.domNode, this._previewDiv);
                                 }));
-
+                                if(this.MainTable !== null)
+                                {
+                                    this.MainTable.refreshUI();
+                                }
                             } else if(newValue === false) {
+                                let captureView = this.getCaptureView(name)
+                                dojoReady(lang.hitch(this, function () {
+                                    if(this._previewDiv.contains(captureView.domNode))
+                                        domConstruct.destroy(captureView.domNode);
+                                }));
 
-
-
+                                if(this.MainTable !== null)
+                                {
+                                    this.MainTable.refreshUI();
+                                }
                             }else if (name === "filter")
                             {
                                 console.log("currentCaptureSetWatchHandle filter settings",name, oldValue, newValue)
@@ -358,7 +368,7 @@ define(['dojo/_base/declare',
                         && this.captureSets && this.captureSets[selectedCaptureSet]
                     ) {
                         domStyle.set(previewDiv, "visibility", "inherit")
-                       domStyle.set(tabularDiv, "visibility", "inherit")
+                        domStyle.set(tabularDiv, "visibility", "inherit")
                         domStyle.set(noSelectionDiv, "display", "none")
 
                     } else {
@@ -374,8 +384,12 @@ define(['dojo/_base/declare',
                         && activeView === "previewDiv" ) {
                         //then
                         domStyle.set(this._detailDiv, "width", "inherit")
+                        domStyle.set(this._detailDiv, "visibility", "inherit")
+
                     }else {
                         domStyle.set(this._detailDiv, "width", "0")
+                        domStyle.set(this._detailDiv, "visibility", "hidden")
+
                     }
 
                 }
@@ -408,11 +422,14 @@ define(['dojo/_base/declare',
                 domConstruct.empty(this._previewDiv)
                     this.forEachSelectedCapture(lang.hitch(this, function(captureID){
                        let captureView = this.getCaptureView(captureID)
+
                             dojoReady(lang.hitch(this, function () {
                                 domConstruct.place(captureView.domNode, this._previewDiv);
                             }));
                     }));
+
             },
+
             getCaptureView: function (id){
                 if (!(this.CaptureViews[id])) {
                     this.CaptureViews[id] = new captureGridView({

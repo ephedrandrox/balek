@@ -138,7 +138,7 @@ define(['dojo/_base/declare',
             return new Promise(lang.hitch(this, function(Resolve, Reject){
                 let collection = this.shared._DBConnection._db.collection(this._Collection)
                 if(collection){
-                    collection.deleteOne({_id: this.shared._DBConnection._objectIdConstructor(captureID)}, lang.hitch(this, function (error, response) {
+                    collection.deleteOne({"capture.id": captureID}, lang.hitch(this, function (error, response) {
                         if(error){
                             Reject(error);
                         }
@@ -182,6 +182,65 @@ define(['dojo/_base/declare',
                     }else{
                         Reject({error: "Unexpected Capture database addCapture()"});
                     }
+                }));
+            },
+            updateCapture: function(Capture){
+                return new Promise(lang.hitch(this, function(Resolve, Reject){
+                    //lookup Capture by Capture.id
+                    let captureID = this.getCaptureByDeviceID(Capture.id).then(lang.hitch(this, function(capture){
+                        if(capture && capture._id){
+                            captureID = this.shared._DBConnection._objectIdConstructor(capture._id)
+                            if(Capture && Capture.created && Capture.id  && Capture.signature
+                                && Capture.signature && Capture.signature.Hash
+                                && typeof Capture.recognizedText !== "undefined" &&
+                                typeof Capture.note !== "undefined")
+                            {
+                                let collection = this.shared._DBConnection._db.collection(this._Collection)
+                                if(collection){
+                                    //create transaction session
+                                    console.log("this.shared._DBConnectio", this.shared._DBConnection)
+
+                                   let session =  this.shared._DBConnection._client.startSession()
+                                        session.startTransaction();
+                                        collection.updateOne({_id: captureID}, {$set: {capture: Capture}}, lang.hitch(this, function (error, response) {
+                                            if(error){
+                                                session.abortTransaction();
+                                                Reject(error);
+                                            }
+                                            else if(response){
+                                                console.log("Update Capture response",response, Capture)
+
+                                                    if(response.modifiedCount === 1){
+                                                        session.commitTransaction()
+                                                        Resolve(captureID);
+                                                    }else{
+                                                        session.abortTransaction();
+                                                        Reject({error: "Could not update Capture"});
+                                                    }
+
+                                            }else{
+                                                session.abortTransaction();
+                                                Reject({error: "Could not update Capture"});
+                                            }
+                                        }));
+
+
+
+                                }else
+                                {
+                                    Reject({error: "Could not get Capture Collection while trying to update Capture in collection"});
+                                }
+                            }else{
+                                Reject({error: "Unexpected Capture database updateCapture()"});
+                            }
+
+                        }else{
+                            Reject({error: "Could not find Capture by Capture.id"});
+                        }
+                    })).catch(lang.hitch(this, function(error){
+                        Reject(error);
+                    }));
+
                 }));
             },
             updateCaptureImage: function(captureID, imageBase64String){
