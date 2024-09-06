@@ -228,10 +228,14 @@ define(['dojo/_base/declare',
                 if( typeof ownerClaimKey === 'string' && typeof deviceInfo === 'object' &&
                     typeof remoteCallback === 'function'  )
                 {
+                    console.log("this.moduleController.useOwnerClaimKey")
+
                     this.moduleController.useOwnerClaimKey(ownerClaimKey,deviceInfo).then(lang.hitch(this, function (Result) {
                         console.log("this.moduleController.useOwnerClaimKey",Result)
                         remoteCallback({Result: Result})
                     })).catch(function(rejectError){
+                        console.log("this.moduleController.useOwnerClaimKey ERROR", rejectError)
+
                         remoteCallback({error: rejectError})
                     })
                 }else {
