@@ -28,9 +28,8 @@ if (fs.existsSync(configFilePath)) {
         mysqlDatabase = configJSONData["Database Settings"]["MySQL Database Connection"].database
     }
 
-    if (hostname && mysqlHost && mysqlUser && mysqlPassword && mysqlDatabase) {
+    if ( mysqlHost && mysqlUser && mysqlPassword && mysqlDatabase) {
         console.log('Configuration Report:');
-        console.log('Hostname:', hostname);
         console.log('MySQL Host:', mysqlHost);
         console.log('MySQL User:', mysqlUser);
         console.log('MySQL Password:', mysqlPassword);
