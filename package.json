@@ -18,7 +18,7 @@
     "resetProduction" : "npm run removeOwnerFileFromProduction && npm run resetProductionContainers && docker compose -f builds/digiscan/docker-compose.yml exec -T digiscan npm run showAdminDeviceInvitation",
     "buildProduction" : "docker compose -f builds/digiscan/docker-compose.yml build",
     "startProduction" : "docker compose -f builds/digiscan/docker-compose.yml up -d",
-    "stopProduction" : "docker compose -f builds/digiscan/docker-compose.yml down"
+    "stopProduction" : "docker compose -f builds/digiscan/docker-compose.yml down",
     "databaseReport": "node util/mysqlReport.js && node util/mongoReport.js"
   },
   "scriptsComments": {
