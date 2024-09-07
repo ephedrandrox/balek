@@ -4,7 +4,7 @@
 		"Main Module": "balekute/connect"
 	},
 	"Network Settings":{
-		"Hostname" : "localhost",
+		"Hostname" : "blakes-macbook-pro.local",
 		"Server Address" : "0.0.0.0",
 		"Server Port" : "443"
 	},

@@ -8,9 +8,18 @@
     "preBuild": "npm run buildLibraries --prefix src/balek-modules/",
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
     "buildAll": "npm run preBuild && npm run build && npm run postBuild",
-    "buildCertificates": "sh builds/certificates/build.sh",
-    "getCertificates": "sh ",
-    "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode"
+    "getCertificates": "sh util/certificates/build.sh",
+    "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode",
+    "removeOwnerDevice": "node util/removeOwnerDevice",
+    "removeOwnerFileFromProduction": "sh util/removeOwnerFileFromProduction.sh",
+    "resetDevelopmentDatabase": "sh util/resetDevelopmentDatabaseContainers.sh",
+    "resetDevData" : "npm run removeOwnerDevice && npm run resetDevelopmentDatabase && npm run buildDevelopmentDatabases",
+    "resetProductionContainers": "sh util/resetProductionContainers.sh",
+    "resetProduction" : "npm run removeOwnerFileFromProduction && npm run resetProductionContainers && docker compose -f builds/digiscan/docker-compose.yml exec -T digiscan npm run showAdminDeviceInvitation",
+    "buildProduction" : "docker compose -f builds/digiscan/docker-compose.yml build",
+    "startProduction" : "docker compose -f builds/digiscan/docker-compose.yml up -d",
+    "stopProduction" : "docker compose -f builds/digiscan/docker-compose.yml down"
+    "databaseReport": "node util/mysqlReport.js && node util/mongoReport.js"
   },
   "scriptsComments": {
     "start": "Starts Balek",
