@@ -6,5 +6,5 @@ docker compose -f builds/digiscan/docker-compose.yml build
 
 
 #remove all files in build/digiscan/data
-rm -rf builds/digiscan/data/*
+sudo rm -rf builds/digiscan/data/*
 
