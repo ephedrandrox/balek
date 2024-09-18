@@ -401,8 +401,8 @@ define(['dojo/_base/declare',
                             const checkSum = this.userCaptures.get(captureID);
                             captures[captureID] = {inSet: true}
                             // Do something with the property
-                            console.log("Property captureID:", captureID);
-                            console.log("Property checkSum:", checkSum);
+                           // console.log("Property captureID:", captureID);
+                           // console.log("Property checkSum:", checkSum);
                         }
                     }
                 }
