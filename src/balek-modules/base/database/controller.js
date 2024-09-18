@@ -42,13 +42,13 @@ define(['dojo/_base/declare',
 
                  //   console.log("🟥🟧🟨🟩🟦🟪Atempting connecting")
                     topic.publish("getMongoSettingsWithCallback", lang.hitch(this, function (mongoDBConfig) {
-                    console.log("connectToDatabase Promise", mongoDBConfig, this._Database)
+                //    console.log("connectToDatabase Promise", mongoDBConfig, this._Database)
 
                         if (this._Database === null)
                         {
                             this._Database = mongoDBConfig.database;
                         }
-                        console.log("################################################################################################", mongoDBConfig, this._Database)
+                    //    console.log("################################################################################################", mongoDBConfig, this._Database)
 
                         topic.publish("getMongoDbConnection", mongoDBConfig.host,
                             mongoDBConfig.port,

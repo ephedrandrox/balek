@@ -13,7 +13,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("adminUsersModule  starting...");
+                console.log("⚙️ Users Info Module Starting...");
             },
             newInstance: function (args) {
                 //must be overridden from base

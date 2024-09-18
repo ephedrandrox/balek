@@ -29,7 +29,7 @@ define(['dojo/_base/declare',
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
 
                 this.stateWatchers = {}
-                console.log("moduleBalekuteConnectInstance starting...");
+                // console.log("moduleBalekuteConnectInstance starting...");
 
                 //set setRemoteCommander commands
                 this._commands={
@@ -67,9 +67,19 @@ define(['dojo/_base/declare',
 
                 this.moduleController.loadOrCreateOwnerDeviceInvitation()
                     .then(lang.hitch(this, function (Result) {
-                        console.log("🎃🎃🎃", Result);
+                        // console.log("🎃🎃🎃", Result);
+                        if(Result){
+                            if (Result.ownerClaimKey) {
+                                // console.log("📱 No Owner Device")
+                            }else if(Result.ownerPublicKey){
+                                // console.log("📱 Owner Device Public Key:", Result.ownerPublicKey)
+                            }else{
+                                // console.log("🎃🎃🎃")
+                            }
+                        }
+
                     })).catch(function(rejectError){
-                    console.log("🎃🎃🎃", rejectError);
+                    // console.log("🎃🎃🎃", rejectError);
 
                 })
                // this.setInterfaceCommands();
@@ -245,18 +255,18 @@ define(['dojo/_base/declare',
 
             },
             authenticateSessionForDeviceUser: function( timeSignedProof, deviceInfo, remoteCallback){
-                console.log("authenticateSessionForDeviceUser", timeSignedProof, deviceInfo, arguments);
-
-                console.log("authenticateSessionForDeviceUser Public key", deviceInfo.publicSigningKey);
-                console.log("authenticateSessionForDeviceUser Signature",deviceInfo.signature);
-                console.log("authenticateSessionForDeviceUser keychainIdentifier", deviceInfo.keychainIdentifier);
-
+                // console.log("authenticateSessionForDeviceUser", timeSignedProof, deviceInfo, arguments);
+                //
+                // console.log("authenticateSessionForDeviceUser Public key", deviceInfo.publicSigningKey);
+                // console.log("authenticateSessionForDeviceUser Signature",deviceInfo.signature);
+                // console.log("authenticateSessionForDeviceUser keychainIdentifier", deviceInfo.keychainIdentifier);
 
                 if( typeof timeSignedProof === 'object' && typeof deviceInfo === 'object' &&
                     typeof remoteCallback === 'function'  )
                 {
                     this.moduleController.authenticateSessionForDeviceUser(timeSignedProof,deviceInfo,this._sessionKey).then(lang.hitch(this, function (Result) {
-                        console.log("Connect Instance: this.moduleController.authenticateSessionForDeviceUser",Result)
+                        // console.log("Connect Instance: this.moduleController.authenticateSessionForDeviceUser",Result)
+                        console.log(`📱 ${deviceInfo.hostname} authenticated with public key: \n 🔑${deviceInfo.publicSigningKey}🔑`)
                         remoteCallback({Result: Result})
                     })).catch(function(rejectError){
                         console.log("Connect Instance Error: this.moduleController.authenticateSessionForDeviceUser",rejectError)

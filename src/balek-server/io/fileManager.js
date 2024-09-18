@@ -6,7 +6,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic',
 
             constructor: function (args) {
 
-                console.log("Initializing file Manager..#########################################.");
+                // console.log("Initializing file Manager..#########################################.");
 
                 topic.subscribe("returnAllDirectoriesInPath", lang.hitch(this, this.returnAllDirectoriesInPath));
                 topic.subscribe("returnAllFilesInPath", lang.hitch(this, this.returnAllFilesInPath));

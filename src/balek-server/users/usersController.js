@@ -40,7 +40,6 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
                 if(this._usersManager){
-                    console.log("balekUsersController  starting...");
                     //Create User Infos and User Lists Maps
                     this._userInfoStates = {};
                     this._userListStates = {};
@@ -120,7 +119,7 @@ define(['dojo/_base/declare',
                     }
                 }
                 let watchHandle = userListState.watch(lang.hitch(this, function(name, oldState, newState){
-                    console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦relayUserListState relayUserListState Watch" ,{userListState: {name: name , newState: newState}})
+                    // console.log("🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦🟦relayUserListState relayUserListState Watch" ,{userListState: {name: name , newState: newState}})
 
                     messageReplyCallback({userListState: {name: name , newState: newState}})
                 }))
@@ -518,7 +517,7 @@ define(['dojo/_base/declare',
                 });
             },
             loadIconAndName: function(userKey){
-                console.log("sadfsadfasdfsadfasd####################################################################################################################################################################################")
+                // console.log("sadfsadfasdfsadfasd####################################################################################################################################################################################")
                 this._dbController.getUserIconAndNameFromDatabaseByKey(userKey).then(lang.hitch(this, function (results) {
                     this.getUserInfoState(userKey).set("icon", results[0].icon)
                     this.getUserInfoState(userKey).set("userName", results[0].name)

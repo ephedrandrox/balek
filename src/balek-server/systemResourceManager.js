@@ -7,12 +7,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             constructor: function (args) {
 
-                console.log("Initializing System Resource Manager...");
+                // console.log("Initializing System Resource Manager...");
 
             },
             _start: function () {
 
-                console.log("Starting System Resource Manager...");
+                // console.log("Starting System Resource Manager...");
 
             },
             reloadData: function () {

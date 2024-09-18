@@ -13,7 +13,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("digivigilTabularModule  starting...");
+                console.log("⚙️ Digivigil Tabulator Module Starting...");
 
             },
             newInstance: function (args) {

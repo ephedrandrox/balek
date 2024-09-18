@@ -24,7 +24,7 @@ define([ 	'dojo/_base/declare',
                 });
 
                 this._syncedStateWatchHandle = this._syncedState.watch(lang.hitch(this, this.onSyncedStateChange));
-                console.log("Session synced States created");
+               // console.log("Session synced States created");
             },
             onSyncedStateChange: function(name, oldState, newState){
                 //overwrite in Interface

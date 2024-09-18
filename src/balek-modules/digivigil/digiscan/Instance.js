@@ -32,7 +32,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilDigiscanInstance starting...");
+                // console.log("moduleDigivigilDigiscanInstance starting...");
 
                 let sessionsControllerInstanceCommands = new SessionsControllerInstanceCommands();
                 this.sessionsControllerCommands = sessionsControllerInstanceCommands.getCommands();
@@ -145,7 +145,7 @@ define(['dojo/_base/declare',
                             }))
                         }
                     }else{
-                        console.log("XCVB:NO MATCH!",name, oldState, newState)
+                      // console.log("XCVB:NO MATCH!",name, oldState, newState)
 
                     }
                 }))

@@ -22,7 +22,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     && this.deviceInfo != null
                     && this.deviceInfo.keychainIdentifier
                     && this.deviceInfo.publicSigningKey ){
-                    console.log("balekuteConnectControllerDevice starting...");
+                    // console.log("balekuteConnectControllerDevice starting...");
                     this.key = String(crypto.randomUUID());
                     this.statusState = new StatusState({status: "awaiting" });
                 }else

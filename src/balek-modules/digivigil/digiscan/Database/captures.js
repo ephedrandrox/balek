@@ -9,18 +9,16 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilScapturaCapturesDatabaseController starting...");
                 this.checkAndCreateCollection();
             },
             checkAndCreateCollection: function()
             {
-                console.log("Creating collection");
                 this.connectToDatabase().then(lang.hitch(this, function(digivigilDatabase){
                    // console.log("Got Connection");
                     try{
                         digivigilDatabase.listCollections({name: this._Collection}).next(lang.hitch(this, function(error, collectionInfo){
                             if(collectionInfo){
-                                console.log("Got Collection Info "+ this._Collection);
+                                //console.log("Got Collection Info "+ this._Collection);
                             }else if(error){
                                 console.log("Error Checking Collection", error);
                             } else{
@@ -107,7 +105,7 @@ define(['dojo/_base/declare',
             getCapture: function(id){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
-                        console.log("Got Connection");
+                        // console.log("Got Connection");
                         try{
                             let collection = devicesDatabase.collection(this._Collection)
                             if(collection && collection.find){
@@ -198,7 +196,7 @@ define(['dojo/_base/declare',
                                 let collection = this.shared._DBConnection._db.collection(this._Collection)
                                 if(collection){
                                     //create transaction session
-                                    console.log("this.shared._DBConnectio", this.shared._DBConnection)
+                                    // console.log("this.shared._DBConnectio", this.shared._DBConnection)
 
                                    let session =  this.shared._DBConnection._client.startSession()
                                         session.startTransaction();
@@ -208,7 +206,7 @@ define(['dojo/_base/declare',
                                                 Reject(error);
                                             }
                                             else if(response){
-                                                console.log("Update Capture response",response, Capture)
+                                              //  console.log("Update Capture response",response, Capture)
 
                                                     if(response.modifiedCount === 1){
                                                         session.commitTransaction()

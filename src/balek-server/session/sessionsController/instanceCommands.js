@@ -14,7 +14,7 @@ define([ 	'dojo/_base/declare',
                 declare.safeMixin(this, args);
 
 
-                console.log("Initializing balekSessionsControllerInstanceCommands...");
+                // console.log("Initializing balekSessionsControllerInstanceCommands...");
 
 
             },

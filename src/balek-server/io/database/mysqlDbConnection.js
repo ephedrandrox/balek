@@ -12,8 +12,6 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing MySQL Db Connection");
-
                 if (this._host && this._port && this._user && this._password && this._database) {
                     this._dbConnection = mysqlNodeObject.createPool({
                         host: this._host,

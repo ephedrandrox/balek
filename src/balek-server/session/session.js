@@ -27,7 +27,6 @@ define([ 	'dojo/_base/declare',
 
                 declare.safeMixin(this, args);
                 this._instances = {};
-                console.log("Initializing Balek Session Manager session for server...");
 
                 let sessionInstanceCommands = new SessionInstanceCommands()
                 this._sessionInstanceCommands = sessionInstanceCommands.getCommands()

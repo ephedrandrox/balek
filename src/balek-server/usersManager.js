@@ -27,7 +27,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Users Manager");
+                // console.log("Initializing Users Manager");
 
                 //todo make User Store
                 //todo watch User Store changes in sessions
@@ -68,7 +68,7 @@ define(['dojo/_base/declare',
                 });
             },
             receiveUserManagerMessage(userManagerMessage, wssConnection, messageReplyCallback) {
-                console.log("User Manager Receive -- DEBUG: ################RECEIVE::::",userManagerMessage, "DEBUG: RECEIVE END:--------------------------")
+                // console.log("User Manager Receive -- DEBUG: ################RECEIVE::::",userManagerMessage, "DEBUG: RECEIVE END:--------------------------")
 
                 if (userManagerMessage.messageData.request && userManagerMessage.messageData.request.toString() ) {
                     //todo remove/change this to not get all users on load

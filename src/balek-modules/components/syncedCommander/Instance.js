@@ -10,7 +10,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                console.log("moduleBaseSyncedCommanderInstance starting...");
+                // console.log("moduleBaseSyncedCommanderInstance starting...");
 
                 this.prepareSyncedState();
             },

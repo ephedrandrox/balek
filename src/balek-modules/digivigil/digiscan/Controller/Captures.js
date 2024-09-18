@@ -71,10 +71,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                     this._capturesImagesDatabase = new capturesImagesDatabase({_instanceKey: this._instanceKey});
 
-                    console.log("Loading Captures(Captures)...");
                     this.load().then(lang.hitch(this, function(Result){
-                        console.log("Captures Loaded Result", Result);
-                        console.log("Captures Loaded captures", this.captures);
+                        // console.log("Captures Loaded Result", Result);
+                        // console.log("Captures Loaded captures", this.captures);
 
                     }))
 
@@ -246,9 +245,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     //get stateful capture and watch for removal
                     let captureStateful = this.getStatefulCapture(id)
 
-                    console.log("Capture Added", id, Capture.capture.id, captureStateful)
+                    // console.log("Capture Added", id, Capture.capture.id, captureStateful)
                     let watchSubscription = captureStateful.watch(lang.hitch(this, function(name, oldValue, newValue){
-                        console.log("Observed", name, oldValue, newValue)
+                        // console.log("Observed", name, oldValue, newValue)
 
                         if(name == "id"
                             && oldValue && oldValue != ""
@@ -342,20 +341,20 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         Reject({Error: "connectControllerCommands have not been loaded into Captures Controller"})
                         return
                     }
-
-                    console.log("🤢🤢🤢Capture:", Capture)
+            //Device is requesting to add a Capture
+                  //  console.log("🤢🤢🤢Capture:", Capture)
                     let updateRequest = Capture?.update ?? false
                     this.checkAndReturnValidCapture(Capture).then(lang.hitch(this, function(Capture){
 
                         if(Capture && updateRequest === false)
                         {
-                            console.log("Controller Adding Capture to Database", Capture)
+
                             this._capturesDatabase.addCapture(Capture).then(lang.hitch(this, function(Result){
-                                console.log("Capture Added", Result);
                                 try{
                                     const id = Result
                                     this.getCapture(id).then(lang.hitch(this, function(Capture){
-                                        console.log("Capture Retreived", Capture);
+                                        console.log(`📸 Capture Added`);
+
                                         let id = Capture._id.toString()
                                         this.captures.set(id, Capture)
                                         this.addToCaptureIDList(Capture)
@@ -377,19 +376,23 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 Reject({Error})
                             }))
                         } else if (Capture && updateRequest === true)
+                            //Device is requesting to update a Capture
                         {
-                            console.log("🤢🤢🤢 Updating Capture:", Capture)
+                        //    console.log("🤢🤢🤢 Updating Capture:", Capture)
 
-                            console.log("Controller Updating Capture to Database", Capture)
+
                             this._capturesDatabase.updateCapture(Capture).then(lang.hitch(this, function(Result){
-                                console.log("Capture Updated", Result);
+                              //  console.log("Capture Updated", Result);
                                 try{
                                     const id = Result
                                     this.getCapture(id).then(lang.hitch(this, function(Capture){
-                                        console.log("Capture Retreived", Capture);
+                                       // console.log("Capture Retreived", Capture);
                                         let id = Capture._id.toString()
                                         this.captures.set(id, Capture)
                                         this.updateStatefulCapture(Capture)
+                                        // console.log(`📸  Updated ${Capture.capture.id}`)
+                                        console.log(`📸  Updated`)
+
                                         Resolve({SUCCESS: Capture})
                                     })).catch(lang.hitch(this, function(Error){
                                         Reject({Error: Error})
@@ -443,7 +446,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 this.removeStatefulCapture(captureObjectID)
 
                             }else if (capture && capture._id){
-                                console.log("Not Matches Capture  captureID", capture.capture.id, captureID);
+                                // console.log("Not Matches Capture  captureID", capture.capture.id, captureID);
 
                             }
 
@@ -492,25 +495,47 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
             updateCaptureImage: function(captureImage){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    console.log("updateCaptureImage Promise");
+
 
                         this.checkAndReturnValidCaptureImage(captureImage).then(lang.hitch(this, function(validCaptureImage){
-                            console.log("checkAndReturnValidCaptureImage");
 
                                         if (typeof validCaptureImage === "object" && typeof validCaptureImage.id === "string"
                                     && typeof validCaptureImage.image === "object"  && typeof validCaptureImage.signature === "object" )
                                 {
 
                                     this._capturesImagesDatabase.addCaptureImage(validCaptureImage).then(lang.hitch(this, function(Result){
-                                       console.log("Image Update Result", Result);
+                                       console.log(`🌠 Added Image`);
 
-                                        Resolve({SUCCESS: "working"})
+
 
                                         this.addImageInfoToCaptureStateful(validCaptureImage.signature,  this.getCaptureObjectID(validCaptureImage.id))
                                         this.loadCaptureImageInfo(captureImage.id)
 
                                         //
 
+                                        if(validCaptureImage && validCaptureImage.image && validCaptureImage.image.data){
+                                            this.ImageUtility.resizeImageBase64(validCaptureImage.image.data, 200).then(lang.hitch(this, function(resizedImage) {
+                                                validCaptureImage.image = null
+                                                validCaptureImage.preview = resizedImage
+
+                                                //save resized image as preview for capture in database
+                                                this._capturesImagesDatabase.updateCaptureImagePreview(resizedImage, captureImage.id).then(lang.hitch(this, function(Result) {
+                                                    console.log(`🩻 Updated Preview`);
+                                                })).catch(lang.hitch(this, function(Error){
+                                                    console.log(`🌉  Error Updating Preview ${Error}`);
+
+                                                }))
+                                            })).catch(lang.hitch(this, function(Error){
+                                                console.log(`🎇  Error Resizing Image ${Error}`);
+
+                                            }))
+                                        }else{
+                                            console.log(`🎇 Not able to resize Image`);
+
+                                        }
+
+
+                                        Resolve({SUCCESS: "working"})
 
                                     })).catch(lang.hitch(this, function(Error){
                                         console.log("Controller could not add Capture to Database", Error);
@@ -621,7 +646,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                             }else{
                                 //return an empty for hash so client knows we know we don't have it.
-                                console.log("Look at this capture", Capture)
+                               // console.log("Look at this capture", Capture)
 
                                 Resolve({computedHash: "", signatureHash: ""})
                             }
@@ -682,10 +707,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 //Gets Capture from Database
                 //Returns a promise of an capture based on id
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
-                    console.log("ing Loaded", id);
+                    // console.log("ing Loaded", id);
 
                     this._capturesDatabase.getCapture(id).then(lang.hitch(this, function(Result){
-                        console.log("Capture Loaded", Result);
+                       // console.log("Capture Loaded", Result);
                         try{
                             Resolve(Result)
                         }catch(Error){
@@ -750,7 +775,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         if(checkHash === hash)
                         {
-                            console.log("🤢🤢🤢Capture checkCaptureSignature hash match:", Capture, checkHash, hash)
+                            // console.log("🤢🤢🤢Capture checkCaptureSignature hash match:", Capture, checkHash, hash)
 
                             this.connectControllerCommands.verifySignedString(signStringCombination, proof, publicKey ).then(lang.hitch(this, function(result){
                                 if (result){
@@ -830,7 +855,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         //in the mean time, just dont sanitize
 
                       //  let validation = this.checkCaptureSignature(Capture)
-                        console.log("🤢🤢🤢Capture:", Capture)
+                      //   console.log("🤢🤢🤢Capture:", Capture)
 
                         this.checkCaptureSignature(Capture).then(lang.hitch(this, function(validation){
                             if(validation)

@@ -8,8 +8,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
                 declare.safeMixin(this, args);
 
                 if (this._wssConnection != null) {
-                    console.log("Initializing webSocket Secure Connection...");
-
+                    // Set Delegate Functions and get a session
                     this._wssConnection.on('message', lang.hitch(this, "onWebSocketMessage"));
                     this._wssConnection.on('close', lang.hitch(this, "onWebSocketClose"));
                     this._wssConnection.on('error', lang.hitch(this, "onWebsocketError"));

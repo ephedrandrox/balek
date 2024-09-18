@@ -2,7 +2,7 @@ require(["balek-server/Instance",
     'dojo/_base/lang'
 ], function (serverInstance, lang) {
 
-    console.log("Starting Server");
+    console.log("🚀 Launching Balek Server Instance");
     let BalekServerInstance = serverInstance();
 
     let serverIsReady = new Promise(lang.hitch(this, function (serverPromiseResolve, serverPromiseReject) {
@@ -10,9 +10,10 @@ require(["balek-server/Instance",
     }));
 
     serverIsReady.then(lang.hitch(this, function (value) {
-        console.log("SERVER Is Started" + value)
+        console.log("🛰️ Server Is Started ")
     })).catch(lang.hitch(this, function (error) {
+        console.log("🚨 Server Started ERROR 🚨️" , error)
         console.log(error);
     }));
-    console.log("Began Startup");
+
 });

@@ -10,18 +10,15 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleDigivigilDigiscanCaptureSetsDatabaseController starting...");
                 this.checkAndCreateCollection();
             },
             checkAndCreateCollection: function()
             {
-                console.log("Creating collection");
                 this.connectToDatabase().then(lang.hitch(this, function(digivigilDatabase){
-                    console.log("Got Connection");
                     try{
                         digivigilDatabase.listCollections({name: this._Collection}).next(lang.hitch(this, function(error, collectionInfo){
                             if(collectionInfo){
-                                console.log("Got Collection Info "+ this._Collection);
+                                // console.log("Got Collection Info "+ this._Collection);
                             }else if(error){
                                 console.log("Error Checking Collection", error);
                             } else{
@@ -48,7 +45,6 @@ define(['dojo/_base/declare',
             getCaptureSets: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(captureSetsDatabase){
-                        console.log("Got Connection");
                         try{
                             let collection = captureSetsDatabase.collection(this._Collection)
                             if(collection && collection.find){
@@ -77,7 +73,7 @@ define(['dojo/_base/declare',
             getCaptureSet: function(id){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(captureSetsDatabase){
-                        console.log("Got Connection");
+                        // console.log("Got Connection");
                         try{
                             let collection = captureSetsDatabase.collection(this._Collection)
                             if(collection && collection.find){

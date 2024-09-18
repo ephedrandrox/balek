@@ -9,7 +9,7 @@ define([ 	'dojo/_base/declare',
 
 				declare.safeMixin(this, args);
 
-				console.log("Initializing DataBase Manager");
+				// console.log("Initializing DataBase Manager");
 
 				topic.subscribe("getMySQLDbConnection", lang.hitch(this, this.getMySQLDbConnection));
 				topic.subscribe("getMongoDbConnection", lang.hitch(this, this.getMongoDbConnection));

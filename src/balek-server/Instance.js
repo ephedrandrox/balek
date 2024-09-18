@@ -28,19 +28,19 @@ define(['dojo/_base/declare',
             _usersManager: null,
 
             constructor: function () {
-                console.log("creating server Instance");
+                // console.log("creating server Instance");
                 this._protocolManager = new protocolManager();
                 this._configManager = new configManager();
                 this._systemResourceManager = new systemResourceManager();
                 this._ioManager = new ioManager();
                 this._moduleManager = new moduleManager();
                 this._sessionManager = new sessionManager();
-                console.log("Managers Created");
+                // console.log("Managers Created");
 
             },
             _start: function (serverPromiseResolve, serverPromiseReject) {
 
-                console.log("Starting server Instance");
+                // console.log("Starting server Instance");
 
 
 
@@ -49,14 +49,15 @@ define(['dojo/_base/declare',
                 }));
 
                 ioManagerIsReady.then(lang.hitch(this, function (value) {
-                    console.log("IoManager is ready" + value);
 
                     let moduleManagerReady = new Promise(lang.hitch(this, function (moduleManagerPromiseResolve, moduleManagerPromiseReject) {
+                        console.log("🚦 Preparing Modules");
                         this._moduleManager._start(moduleManagerPromiseResolve, moduleManagerPromiseReject);
                     }));
 
                     moduleManagerReady.then(lang.hitch(this, function (value) {
-                        console.log("ModuleManager is ready" + value);
+                        console.log("✅ Modules Ready");
+
                         this._usersManager = new usersManager();
 
                         this._ioManager.listenForConnections();
@@ -71,14 +72,14 @@ define(['dojo/_base/declare',
                     serverPromiseReject(error);
                 }));
 
-                console.log("Done Starting");
+               // console.log("Done Starting");
             },
             _end: function () {
                 //close ioManager
                 //close databases
             },
             _error: function (error) {
-                console.log("error in INstance" + error);
+                console.log("error in Instance" + error);
             }
         });
     });

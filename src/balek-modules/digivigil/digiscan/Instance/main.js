@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
         return declare("moduleDigivigilDigiscanMainInstance", [_SyncedCommanderInstance], {
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("starting moduleDigivigilDigiscanMainInstance");
+                // console.log("starting moduleDigivigilDigiscanMainInstance");
                 //creates component Key that can be used to connect to state
                 this.prepareSyncedState();
                 this._interfaceState.set("Status", "Ready");

@@ -9,16 +9,11 @@
     "postBuild": "npm run buildRelease --prefix src/balek-modules/",
     "buildAll": "npm run preBuild && npm run build && npm run postBuild",
     "getCertificates": "sh util/certificates/build.sh",
-    "showAdminDeviceInvitation": "node showAdminDeviceRegistrationQRCode",
+    "showClaimKey": "node util/showAdminDeviceRegistrationQRCode",
     "removeOwnerDevice": "node util/removeOwnerDevice",
     "removeOwnerFileFromProduction": "sh util/removeOwnerFileFromProduction.sh",
     "resetDevelopmentDatabase": "sh util/resetDevelopmentDatabaseContainers.sh",
-    "resetDevData" : "npm run removeOwnerDevice && npm run resetDevelopmentDatabase && npm run buildDevelopmentDatabases",
-    "resetProductionContainers": "sh util/resetProductionContainers.sh",
-    "resetProduction" : "npm run removeOwnerFileFromProduction && npm run resetProductionContainers && docker compose -f builds/digiscan/docker-compose.yml exec -T digiscan npm run showAdminDeviceInvitation",
-    "buildProduction" : "docker compose -f builds/digiscan/docker-compose.yml build",
-    "startProduction" : "docker compose -f builds/digiscan/docker-compose.yml up -d",
-    "stopProduction" : "docker compose -f builds/digiscan/docker-compose.yml down",
+    "resetDevData": "npm run removeOwnerDevice && npm run resetDevelopmentDatabase && npm run buildDevelopmentDatabases",
     "databaseReport": "node util/mysqlReport.js && node util/mongoReport.js"
   },
   "scriptsComments": {
@@ -33,7 +28,7 @@
   "dependencies": {
     "canvas": "^2.11.2",
     "mongodb": "^4.4.1",
-    "mysql2": "^2.3.3",
+    "mysql2": "^3.11.3",
     "qrcode": "^1.5.1",
     "qrcode-terminal": "^0.12.0",
     "sanitize-html": "^2.7.0",

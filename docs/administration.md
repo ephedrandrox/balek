@@ -10,19 +10,20 @@ On a host with Git and Docker installed, clone the Balek Repository and submodul
     
     git clone --recurse-submodules https://github.com/ephedrandrox/balek.git
 
-### Checkout the diaplode-main branch  
+### Checkout the digiscan branch  
 
     cd balek
-    git checkout diaplode-main
+    git checkout digiscan
 
 ### Build the Docker containers
     
-    docker-compose -f ./builds/diaplode/docker-compose.yml build
-This will build containers for Diaplode, MariaDB, MongoDB, and OpenSSH.
+    ./util/production/build.sh
+This will build containers for Scaptura, MariaDB, MongoDB, and Nginx.
 
 ### Run the containers with:
 
-    docker-compose -f ./builds/diaplode/docker-compose.yml up -d
+    ./util/production/start.sh
+This will start the containers in the background but first builds containers if they do not exist.
 
 ## Configure
 

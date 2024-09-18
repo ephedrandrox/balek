@@ -17,7 +17,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("Initializing Balek Workspace Manager Container Manager Container for Server...");
+                // console.log("Initializing Balek Workspace Manager Container Manager Container for Server...");
 
 
                 if(this._containerWidgetPath === null){
@@ -39,7 +39,7 @@ define(['dojo/_base/declare',
                 this.containerStateWatchHandle = this._containerState.watch( lang.hitch(this, this.onContainerStateChange));
             },
             onContainerStateChange: function(name, oldState, newState){
-                console.log(name, oldState, newState);
+                // console.log(name, oldState, newState);
                 if(this._interfaceConnectionCallback != null)
                 {
                     let interfaceStateObject = {[String(name)]: newState};
@@ -60,7 +60,7 @@ define(['dojo/_base/declare',
             },
             connectWorkspaceContainerInterface(interfaceCallback){
 
-                console.log("Mousedown", {stateUpdate:{containerState: JSON.stringify(this._containerState)}});
+                // console.log("Mousedown", {stateUpdate:{containerState: JSON.stringify(this._containerState)}});
 
                 this._interfaceConnectionCallback = interfaceCallback;
 

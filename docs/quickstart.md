@@ -31,10 +31,10 @@ switch to the digiscan branch of the repository before **Building** and **Runnin
 _Enter commands in a terminal at the repository root:_
 
 ### Build
-Build the Docker Containers needed for the DigiScan Instance
-Will take a few minutes to complete
+Build the Docker Containers needed for the DigiScan Instance  
+This will take a few minutes to complete
 
-    docker-compose -f ./builds/digiscan/docker-compose.yml build
+    ./util/production/build.sh
 
 This will create 4 containers: 
  - nginx container for routing
@@ -42,15 +42,15 @@ This will create 4 containers:
  - mongodb container for Digiscan Captures
  - nodejs container to run Instance
 
-The nodejs container also builds the minified version of the web interface and can take some time/resources. Once complete, you are ready to configure.
+The nodejs container also builds the minified version of the web interface and can take some time/resources. Once complete, you are ready to configure. If you are on a cloud platform you may want to build the containers on a more powerful virtual machine and then set to something smaller when running.
 
 ### Configure
-In order for Digiscan to communicate over HTTPS and establish a connection using secure websockets, it is necessary for the host to provide SSL Certificates. Creating your own certificates and configuring your devices to trust them is an option, but the procedure is outside the scope of this document. Having an internet facing host with a fully qualified domain name, we can use certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
+In order for Digiscan to communicate over HTTPS and establish a connection using secure websockets, it is necessary for the host to provide SSL Certificates. Creating your own certificates and configuring your devices to trust them is an option, but the procedure is outside the scope of this document. With an internet facing host and fully qualified domain name, we can use certbot to request trusted certificates from [Let's Encrypt](https://www.letsencrypt.org/)  
 
 
 To set the configuration for *yourdomain.whatever.net* use the following command:
 
-    sh configureFor.sh yourdomain.whatever.net
+    ./util/certificates/get.sh yourdomain.whatever.net
 
 This will:
  - Run a certbot Docker container 
@@ -66,7 +66,7 @@ If all goes well you are ready to start the containers.
 ### Run
 Start up the containers and run a Digiscan Instance:
 
-    docker-compose -f ./builds/digiscan/docker-compose.yml up -d
+       ./util/production/start.sh
 
 This will bring up the containers in the background.
 
@@ -74,13 +74,13 @@ This will bring up the containers in the background.
 ### Status:
 To see the current status of the containers:
 
-    docker-compose -f builds/digiscan/docker-compose.yml ps
+       ./util/production/status.sh
 
 
 ### Stopping:
 Stop Digiscan and its containers:
 
-    docker-compose -f ./builds/digiscan/docker-compose.yml down
+       ./util/production/stop.sh
 
 
 ## Accessing Digiscan
@@ -93,13 +93,16 @@ The host must be claimed by a device to access the Digiscan Web Interface.
  **Get Owner Claim Key**  
 To present a QR code in the terminal that can be scanned from the iOS App.  
 
-    docker-compose -f builds/digiscan/docker-compose.yml exec -T digiscan npm run showAdminDeviceInvitation
+       ./util/production/showClaimKey.sh
 
-
+If the instance is already claimed, the command will show the current owner's public key.
 
 Once a device has taken ownership of the Digiscan Instance, it can be used to log in through a web browser and the above command will show an ECDSA P256 public signing key for the owning device.
 
 ### Load Interface  
 To load the interface in a web browser, navigate to your host using the https protocol. A QR code should appear that can be scanned by the owning device to log in.
 
+### Reset Ownership
+To reset the ownership of the host and generate a new claim key, run the following command:
 
+       ./util/production/resetClaimKey.sh

@@ -24,7 +24,7 @@ define(['dojo/_base/declare',
                 //todo audit/comment this file
 
                 declare.safeMixin(this, args);
-                console.log("Initializing Balek Workspace Manager Workspace for Server...");
+                // console.log("Initializing Balek Workspace Manager Workspace for Server...");
                 this.instances = {};
                 this.containers = {};
                 this._containers = {};

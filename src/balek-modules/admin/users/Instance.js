@@ -32,7 +32,7 @@ define(['dojo/_base/declare',
                 declare.safeMixin(this, args);
 
                 this._editUserInstances = {}
-                console.log("moduleAdminUsersInstance starting...");
+                // console.log("moduleAdminUsersInstance starting...");
 
                 this._interfaceState.set("Component Name","User Administration");
                 this._interfaceState.set("Status", "Starting");

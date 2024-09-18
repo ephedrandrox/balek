@@ -9,7 +9,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Balek Protocol Manager for server...");
+                // console.log("Initializing Balek Protocol Manager for server...");
 
                 topic.subscribe("sendBalekProtocolMessage", lang.hitch(this, this.sendBalekProtocolMessage));
                 topic.subscribe("receiveBalekProtocolMessage", lang.hitch(this, this.receiveBalekProtocolMessage));
@@ -51,7 +51,7 @@ define(['dojo/_base/declare',
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)
                     }));
                 } else if (balekMessage.userManagerMessage) {
-                    console.log("User Manager Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
+                    // console.log("User Manager Receive -- DEBUG: ################RECEIVE::::",balekMessage, "DEBUG: RECEIVE END:--------------------------")
 
                     topic.publish("receiveUserManagerMessage", balekMessage.userManagerMessage, wssConnection, lang.hitch(this, function (messageReply) {
                         this.sendBalekProtocolMessageReply(wssConnection, balekMessage, messageReply)

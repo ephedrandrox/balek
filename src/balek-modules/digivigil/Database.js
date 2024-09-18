@@ -8,7 +8,6 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("digivigilDatabaseController  starting...");
             }
         });
     }

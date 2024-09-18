@@ -11,18 +11,18 @@ define(['dojo/_base/declare',
             _userKey: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleBalekuteDevicesDatabaseController starting...");
+               // console.log("moduleBalekuteDevicesDatabaseController starting...");
                 this.createCollection();
             },
             createCollection: function()
             {
-                console.log("Creating collection");
+                //console.log("Creating collection");
                 this.connectToDatabase().then(lang.hitch(this, function(settingsDatabase){
-                    console.log("Got Connection");
+                  //  console.log("Got Connection");
                     try{
                         settingsDatabase.listCollections({name: this._Collection}).next(lang.hitch(this, function(error, collectionInfo){
                             if(collectionInfo){
-                                console.log("Got Collection Info "+ this._Collection);
+                  //              console.log("Got Collection Info "+ this._Collection);
                             }else if(error){
                                 console.log("Error Checking Collection", error);
                             } else{
@@ -49,7 +49,7 @@ define(['dojo/_base/declare',
             getDevices: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
                     this.connectToDatabase().then(lang.hitch(this, function(devicesDatabase){
-                            console.log("Got Connection");
+                //            console.log("Got Connection");
                             try{
                                 let collection = devicesDatabase.collection(this._Collection)
                                 if(collection && collection.find){

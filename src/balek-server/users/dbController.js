@@ -8,7 +8,6 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Users DB Controller");
 
                 topic.publish("getMySQLSettingsWithCallback", lang.hitch(this, function (mysqlSettings) {
 

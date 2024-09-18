@@ -44,10 +44,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }else{
 
                     this._captureSetsDatabase = new captureSetsDatabase({_instanceKey: this._instanceKey});
-                    console.log("Loading Captures Sets...");
 
                     this.load().then(lang.hitch(this, function(Result){
-                        console.log("Capture Sets Loaded", Result);
+                        // console.log("Capture Sets Loaded", Result);
                     }))
                 }
             },
@@ -108,14 +107,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             },
 
             updateToUserList: function(CaptureSet){
-                console.log("upda", CaptureSet)
 
                 if(CaptureSet.CaptureSet && CaptureSet.userKey && CaptureSet._id && typeof CaptureSet._id.toString === "function")
                 {
                     let userCaptureSets = this.getCaptureSetsForUser(CaptureSet.userKey)
                     let checksum = this.getCaptureSetCheckHash(CaptureSet)
                     userCaptureSets.set(CaptureSet._id.toString(), checksum)
-                    console.log(this.captureSetsByUserKey,CaptureSet.userKey , userCaptureSets)
                 }
             },
             getCaptureSetCheckHash: function(CaptureSet) {
@@ -132,7 +129,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             updateStatefulCaptureSet: function(CaptureSet){
                 if(CaptureSet && CaptureSet.CaptureSet && CaptureSet.CaptureSet.name && typeof CaptureSet.CaptureSet.appendAll === 'boolean'
                 && typeof CaptureSet.CaptureSet.captures === 'object'){
-                    console.log("ok,", CaptureSet)
                     let statefulCaptureSet = this.getStatefulCaptureSet(CaptureSet._id.toString())
                     //statefulCaptureSet.set("CaptureSet", CaptureSet.CaptureSet);
 
@@ -150,8 +146,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             },
             getStatefulCaptureSet: function(id){
-                console.log("ok,", id, this.statefulCaptureSetsByCaptureID )
-
                 if (!this.statefulCaptureSetsByCaptureID[id]){
                     this.statefulCaptureSetsByCaptureID[id] = new this.StatefulCaptureSetChecksumsSet({})
                 }

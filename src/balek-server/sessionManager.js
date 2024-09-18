@@ -26,7 +26,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Balek Session Manager for server...");
+                // console.log("Initializing Balek Session Manager for server...");
 
                 this._Controller = new SessionsController({_sessionsManager: this});
 
@@ -361,12 +361,12 @@ define(['dojo/_base/declare',
                                     //     permissionGroups);
 
                                     let userSessionList =  this.getUserSessionList(user.userKey)
-                                    console.log("sessions state:", userSessionList);
+                                    // console.log("sessions state:", userSessionList);
 
                                     if(userSessionList){
                                         userSessionList.set(String(wssConnection._sessionKey), String(wssConnection._sessionKey))
                                     }
-                                    console.log("sessions state:", userSessionList);
+                                    // console.log("sessions state:", userSessionList);
 
 
                                     sessionUpdateReply({messageData: {message: "worked"}});

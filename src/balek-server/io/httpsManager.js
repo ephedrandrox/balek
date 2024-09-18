@@ -16,7 +16,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("Initializing http Manager...");
+                // console.log("Initializing http Manager...");
 
                 //todo remove this from here and config communicate with topics
                 this._fileManager = new fileManager();
@@ -51,7 +51,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             },
             listenForConnections: function () {
-                console.log("Listening on port:" + this._httpsPort + "address:" + this._httpsAddress);
+                console.log("☎️ Listening on port:" + this._httpsPort + " address:" + this._httpsAddress);
 
                 this._httpsServer.listen(this._httpsPort, this._httpsAddress);
 

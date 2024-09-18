@@ -11,7 +11,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                console.log("moduleAdminUsersUserManagementInstance starting...");
+                // console.log("moduleAdminUsersUserManagementInstance starting...");
 
                 this._interfaceState.set("moduleName","moduleAdminUsersUserManagementInstance");
 

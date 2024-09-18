@@ -8,7 +8,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("balekuteDatabaseController  starting...");
+               // console.log("balekuteDatabaseController  starting...");
             }
         });
     }

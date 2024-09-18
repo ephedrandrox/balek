@@ -27,7 +27,6 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                     console.log("balekSessionsController NOT starting...");
 
                 }else {
-                    console.log("balekSessionsController  starting...");
 
                     this._SessionsList = declare([Stateful], {});
                     this._userSessionsLists = {};
@@ -264,7 +263,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         let sessionWSSConnection = session._wssConnection
                         let credentialsUpdate = {userKey: userKey}
                         topic.publish("getUserInfoFromDatabaseByKey", userKey, lang.hitch(this, function (userReply) {
-                            console.log("getUserInfoFromDatabaseByKey",userReply, userKey);
+                            // console.log("getUserInfoFromDatabaseByKey",userReply, userKey);
                             if(userReply[0]){
                                 let user = userReply[0]
                                 credentialsUpdate.username = user.name
@@ -272,7 +271,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 credentialsUpdate.permission_groups = user.permission_groups
 
                                 topic.publish("sessionCredentialsUpdate", sessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
-                                    console.log("sessionCredentialsUpdate",session);
+                                    // console.log("sessionCredentialsUpdate",session);
                                 }));
                             }else {
                                 console.log("No User to activate")

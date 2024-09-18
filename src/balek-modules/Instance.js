@@ -6,7 +6,7 @@ define(['dojo/_base/declare',
 
         return declare("BalekServerModuleInstance", null, {
             constructor: function () {
-                console.log("Creating server Module base Instance");
+                // console.log("Creating server Module base Instance");
 
             },
             receiveMessage: function (moduleMessage, wssConnection) {

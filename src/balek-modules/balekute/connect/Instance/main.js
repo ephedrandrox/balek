@@ -27,13 +27,13 @@ define(['dojo/_base/declare',
             targetStateWatchHandle: null,
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("starting moduleBalekuteConnectMainInstance");
+                // console.log("starting moduleBalekuteConnectMainInstance");
 
 
                 let sessionControllerInstanceCommands = new SessionControllerInstanceCommands();
                 this.sessionControllerCommands = sessionControllerInstanceCommands.getCommands();
 
-                console.log("SessionCommands created" )
+                // console.log("SessionCommands created" )
                 //set setRemoteCommander commands
                 if(this._connectController !== null)
                 {

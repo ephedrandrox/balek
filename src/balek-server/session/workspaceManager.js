@@ -35,7 +35,6 @@ define([ 	'dojo/_base/declare',
 
                 this.containerManager = new balekWorkspaceContainerManager({_sessionKey: this._sessionKey, workspaceManager: this});
 
-                console.log("Initializing Balek Workspace Manager server...");
                 this._activeWorkspace = null;
                 this._workspaces = {};
 

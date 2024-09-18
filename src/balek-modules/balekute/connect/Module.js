@@ -24,7 +24,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("balekuteConnectModule  starting...");
+                console.log("⚙️ Balekute Connect Module Starting...");
 
                 this._Controller = new moduleController({_module: this});
 

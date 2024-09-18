@@ -21,7 +21,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("Initializing Mongo DB Connection");
+                // console.log("Initializing Mongo DB Connection");
 
                 if (this._host && this._port && this._user && this._password && this._database) {
 
@@ -34,14 +34,12 @@ define(['dojo/_base/declare',
                         useUnifiedTopology: true
                     }, (err, client) => {
                         if (err) {
-                            console.error(err)
-                            //return;
+                            console.log("🤬 Error connecting to Mongo database: " + err);
                         } else {
                             this._client = client;
                             this._db = client.db(this._database);
                             this._adminDb = client.db('admin');
                                 this.onDatabaseConnected()
-
                         }
                     });
 
@@ -53,7 +51,6 @@ define(['dojo/_base/declare',
             onDatabaseConnected: function(){
                 //Gets called from database connect callback
                 //Any Promises from getDatabaseConnection get called after using aspect
-                console.log("Database Connected");
             },
             getDatabaseConnection: function(){
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {

@@ -2,13 +2,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
         'dojo/topic',
         'dojo/Stateful',
         //Controller Includes
-        'balek-modules/digivigil/digiscan/Controller/Captures',
-        'balek-modules/digivigil/digiscan/Controller/CaptureSets'
+         'balek-modules/digivigil/digiscan/Controller/Captures',
+       'balek-modules/digivigil/digiscan/Controller/CaptureSets'
     ],
     function (declare, lang, topic,
               Stateful,
-              Captures,
-              CaptureSets
+               Captures,
+             CaptureSets
     ) {
         return declare("digivigilDigiscanController", null, {
             _module: null,              //Module instance

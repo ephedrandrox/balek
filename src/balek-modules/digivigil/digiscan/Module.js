@@ -19,7 +19,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("digivigilDigiscanModule  starting...");
+                console.log("⚙️ Digivigil Scaptura Module Starting...");
                 this._Controller = new moduleController({_module: this});
             },
             newInstance: function (args) {
@@ -27,7 +27,7 @@ define(['dojo/_base/declare',
                 args._module = this;
                 args._moduleController = this._Controller;
                 this._instances[args._instanceKey] = new moduleInstance(args);
-                return new moduleInstance(args);
+                return this._instances[args._instanceKey];
             }
         });
     }

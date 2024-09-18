@@ -19,7 +19,7 @@ define([ 	'dojo/_base/declare',
                     this._shared.initialized = false;
                 }
 
-                console.log("Initializing balekuteConnectControllerInstanceCommands...");
+                // console.log("Initializing balekuteConnectControllerInstanceCommands...");
 
 
             },

@@ -25,7 +25,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 if( this._module !== null && this._connectController !== null
                 && this.sessionKey){
-                    console.log("balekuteConnectControllerTarget starting...");
+                    // console.log("balekuteConnectControllerTarget starting...");
                     this.key = String(crypto.randomUUID());
                 }else
                 {

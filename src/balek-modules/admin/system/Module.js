@@ -13,7 +13,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("adminSystemModule  starting...");
+                console.log("⚙️ System Admin Module Starting...");
 
             },
             newInstance: function (args) {

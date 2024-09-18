@@ -11,11 +11,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("Initializing webSocket Manager...");
+                // console.log("Initializing webSocket Manager...");
 
             },
             _start: function (httpsServer) {
-                console.log("starting wssManager");
+                // console.log("starting wssManager");
                 this._wssServer = new webSocket.server({
                     httpServer: httpsServer,
                     autoAcceptConnections: false,
@@ -29,12 +29,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             },
             onWebSocketRequest: function (request) {
-                console.log("***websocket request" + request.origin);
+                console.log("📡 Request for: " + request.origin);
                 //fix this to check if active
                 try {
                     //todo fix error that crashes server if no protocol is specified
                     var acceptedConnection = request.accept('balek-protocol', request.origin);
-                    console.log((new Date()) + ' Connection accepted.');
+                    console.log( '📡 Connection accepted ' +(new Date()) );
 
                     let newKey = this.getUniqueWssConnectionsKey();
                     this._wssConnections[newKey] = new wssConnection({

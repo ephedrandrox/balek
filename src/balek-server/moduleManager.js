@@ -15,7 +15,7 @@ define(['dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing######################### Balek Module Managers for server...");
+                // console.log("Initializing######################### Balek Module Managers for server...");
 
                 topic.subscribe("loadModuleForClient", lang.hitch(this, this.loadModuleForClient));
                 topic.subscribe("unloadModuleInstance", lang.hitch(this, this.unloadModuleInstance));
@@ -28,9 +28,9 @@ define(['dojo/_base/declare',
 
             },
             _start: function (moduleManagerPromiseResolve, moduleManagerPromiseReject) {
-
                 this.loadModules(lang.hitch(this, function (error) {
                     if (error) {
+                        console.log("👾Error loading modules", error);
                         moduleManagerPromiseReject(error);
                     } else {
                         moduleManagerPromiseResolve("Modules Loaded");
@@ -133,7 +133,7 @@ define(['dojo/_base/declare',
                 }
             },
             loadModuleForClient: function (wssConnection, moduleName, returnCallback) {
-console.log("🥵🥵loadModuleForClient", moduleName);
+                console.log("🛸 Loading Module For Client: ", moduleName);
                 if (this._modules[moduleName]) {
 
                     let allowedGroups = this._modules[moduleName].allowedGroups();
@@ -147,14 +147,14 @@ console.log("🥵🥵loadModuleForClient", moduleName);
                                     if (allowedGroups == null || allowedGroups.some(group => sessionUserGroups.includes(group)) ) {
                                     let alreadyLoaded =
                                         Array.from(Object.values(this._instances)).some(test => {
-                                            console.log("🥵🥵loadModuleForClient moduleddd", moduleName, test._moduleName, test._sessionKey, test._sessionKey);
+                                            // console.log("🥵🥵loadModuleForClient moduleddd", moduleName, test._moduleName, test._sessionKey, test._sessionKey);
 
                                             return (test._moduleName === moduleName && test._sessionKey === wssConnection._sessionKey)
                                         })
 
                                         if(!alreadyLoaded) {
                                             let instanceKey = this.getUniqueInstanceKey();
-                                            console.log("🥵🥵loadModuleForClient this._modules[moduleName].newInstance",alreadyLoaded, Array.from(Object.values(this._instances)), moduleName, this._instances);
+                                            // console.log("🥵🥵loadModuleForClient this._modules[moduleName].newInstance",alreadyLoaded, Array.from(Object.values(this._instances)), moduleName, this._instances);
 
                                             this._instances[instanceKey] = this._modules[moduleName].newInstance({
                                                 _instanceKey: instanceKey,
@@ -204,18 +204,16 @@ console.log("🥵🥵loadModuleForClient", moduleName);
                 } while (true);
             },
             loadModules: function (returnCallback) {
-
                 topic.publish("returnFileTree", this._modulesFilePath, lang.hitch(this, function (error, moduleFileTree) {
                     if (error) {
                         returnCallback(error);
                     } else {
                         this._modulesFileTree = moduleFileTree;
-
                         this.checkAndLoadModulesFromTree(this._modulesFileTree, lang.hitch(this, function (error) {
                             if (error) {
+                                console.log("loadModules moduleFileTree error" , error);
                                 returnCallback(error)
                             } else {
-                                //return null because no error;
                                 returnCallback(null);
                             }
                         }));
@@ -224,35 +222,43 @@ console.log("🥵🥵loadModuleForClient", moduleName);
 
             },
             checkAndLoadModulesFromTree: function (modulesFileTree, returnCallback) {
-                function handleError(error){
-                    console.log("######################ERRROR",error.src, error.id);
+                function handleError(error) {
+                    console.log("checkAndLoadModulesFromTree ERROR", error.src, error.id);
                 }
-                for (const file in modulesFileTree) {
-                    if (!(file == "__fileStats__" || file == "__filePath__")) {
-                        if (modulesFileTree[file].__fileStats__.isDirectory()) {
-
-                            let modulePath = modulesFileTree[file].__filePath__.substr(this._modulesFilePath.length);
-                            if (modulesFileTree[file]['Instance.js'] && modulesFileTree[file]['Interface.js'] && modulesFileTree[file]['Module.js']) {
-                                console.log(modulePath);
 
 
-                                require.on("error", handleError);
-
-                                    require(["balek-modules/" + modulePath + "/Module"], lang.hitch(this, function (newModule) {
-                                        this._modules[modulePath] = new newModule();
+                const traverseAndLoadModules = (modulesFileTree) => {
+                    let promises = [];
+                    for (const file in modulesFileTree) {
+                        if (!(file === "__fileStats__" || file === "__filePath__")) {
+                            if (modulesFileTree[file].__fileStats__.isDirectory()) {
+                                let modulePath = modulesFileTree[file].__filePath__.substr(this._modulesFilePath.length);
+                                if (modulesFileTree[file]['Instance.js'] && modulesFileTree[file]['Interface.js'] && modulesFileTree[file]['Module.js']) {
+                                    promises.push(new Promise((resolve, reject) => {
+                                        require.on("error", function (error) {
+                                            console.log("checkAndLoadModulesFromTree ERROR", error.src, error.id);
+                                            reject({src: "require", id: error});
+                                        });
+                                        require(["balek-modules/" + modulePath + "/Module"], lang.hitch(this, function (newModule) {
+                                            this._modules[modulePath] = new newModule();
+                                            resolve();
+                                        }));
                                     }));
-
-
+                                }
+                                promises = promises.concat(traverseAndLoadModules.call(this, modulesFileTree[file]));
                             }
-
-                            this.checkAndLoadModulesFromTree(modulesFileTree[file], returnCallback);
-
                         }
-
                     }
+                    return promises;
+                };
 
-                }
-                returnCallback(null);
+                const allPromises = traverseAndLoadModules.call(this, modulesFileTree);
+                Promise.all(allPromises).then(() => {
+                    returnCallback(null);
+                }).catch(error => {
+                    returnCallback(error);
+                });
             }
+
         });
     });

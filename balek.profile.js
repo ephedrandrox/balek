@@ -92,7 +92,7 @@ var profile = (function () {
                         BalekuteTargetFile = /balekute\/connect\/Controller/,
                         DigiscanControllerTargetFile = /digivigil\/digiscan\/Controller/,
                         DigiscanDatabaseTargetFile = /digivigil\/digiscan\/Database/,
-
+                        CanvasUtility = /balek-modules\/base\/image\/utility/,
                         Workers = /.*Worker.js/,
                         TabularTable = /digivigil\/tabularNAN/;
 
@@ -102,6 +102,7 @@ var profile = (function () {
                         || ModuleFile.test(mid) || ModuleFile.test(filename) || BalekuteTargetFile.test(mid) || BalekuteTargetFile.test(filename)
                         || Workers.test(mid) || Workers.test(filename) || TabularTable.test(mid) || TabularTable.test(filename)
                         || DigiscanControllerTargetFile.test(mid) || DigiscanControllerTargetFile.test(filename)|| DigiscanDatabaseTargetFile.test(mid) || DigiscanDatabaseTargetFile.test(filename)
+                        || CanvasUtility.test(mid) || CanvasUtility.test(filename);
 
                 }
 

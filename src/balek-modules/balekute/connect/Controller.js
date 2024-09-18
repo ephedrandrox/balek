@@ -89,14 +89,19 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 this._devicesDatabase = new devicesDatabase({_instanceKey: this._instanceKey});
 
                 this.loadDevices()
-                console.log("balekuteConnectController  starting...");
 
                 this.loadOrCreateOwnerDeviceInvitation().then(lang.hitch(this, function(Result) {
                     if(Result.ownerClaimKey){
                     //If there is an owner Claim key then waiting to be claimed
+                        console.log("📱 No Owner Device")
                         this.statusAsState.set("hasOwnerDevice", false)
-                    }else {
+                    }else if(Result.ownerPublicKey){
+                        console.log(`📱 Owner Device Public Key: \n 🔑${Result.ownerPublicKey}🔑`)
+
                         this.statusAsState.set("hasOwnerDevice", true)
+                    } else {
+                        console.log("📱 No Owner Device")
+                        this.statusAsState.set("hasOwnerDevice", false)
                     }
                 }))
 
@@ -120,6 +125,10 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
             //Interface Commands:
 
             resetOwnerClaimKey: function(){
+                //Reset the owner claim key
+                //Overwrite the ownerClaimKey file with a new key
+                //Set to class member and return the new key
+
                 const ownerClaimFile = this._ownerClaimFileLocation
                 const newData = { ownerClaimKey: String(crypto.randomUUID()) };
                 fsNodeObject.writeFileSync(ownerClaimFile, JSON.stringify(newData));
@@ -129,21 +138,25 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return this._ownerClaimKey
             },
             loadOrCreateOwnerDeviceInvitation: function(){
+                //Attempt to read the ownerClaimKey file
+                //If it exists, check if the ownerClaimKey exists
+                //If it does, reset the ownerClaimKey and return it
+                //If it does not, check if the ownerPublicKey exists
+                //If it does, set the ownerPublicKey and return it
                 return new Promise(lang.hitch(this, function (Resolve, Reject) {
                    {
-                       const ownerClaimFile = this._ownerClaimFileLocation
-
-                       this.readJSONFromFile(ownerClaimFile).then(lang.hitch(this, function (parsedJSON){
+                       this.readJSONFromFile(this._ownerClaimFileLocation).then(lang.hitch(this, function (parsedJSON){
                            // If there is an owner claim key then waiting to be claimed
                            if (parsedJSON.ownerClaimKey){
-                              Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
+                               Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
                            }// If there is an owner public key then it has been claimed
                            else if (parsedJSON.ownerPublicKey){
                                this._ownerPublicKey = parsedJSON.ownerPublicKey
                                Resolve({ownerPublicKey: parsedJSON.ownerPublicKey})
                            }
                        })).catch(lang.hitch(this, function (error){
-                           console.log('Error Occured:', error);
+                           // console.log('Error Occurred:', error);
+                           // This will occur if the file does not exist
                            Resolve({ownerClaimKey: this.resetOwnerClaimKey()})
                        }))
 
@@ -445,7 +458,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
             loadDevices: function(){
                 this._devicesDatabase.getDevices().then(lang.hitch(this, function(Result){
-                    console.log("Balekute Connect Loading Devices", Result)
+                    // console.log("Balekute Connect Loading Devices", Result)
                     if(Array.isArray(Result)){
                         Result.forEach(lang.hitch(this, function(deviceEntry){
                             if(deviceEntry.deviceContent && deviceEntry.deviceContent.owner && deviceEntry.deviceContent.owner.userKey

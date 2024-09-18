@@ -8,34 +8,33 @@ define(['dojo/_base/declare', 'dojo/_base/lang', "dojo/topic", "dojo/node!fs"],
             constructor: function (args) {
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Config Manager...");
+                // console.log("Initializing Config Manager...");
 
                 this._configFile = fsNodeObject.readFileSync("./src/balek-server/etc/config.json", "utf8");
 
                 this._configObject = JSON.parse(this._configFile);
 
-                console.log("Config File Loaded, Server Port set to:" + this._configObject["Network Settings"]["Server Port"]);
+                // console.log("Config File Loaded, Server Port set to:" + this._configObject["Network Settings"]["Server Port"]);
 
 
                 topic.subscribe("getMainModuleSettingsWithCallback", lang.hitch(this, this.getMainModuleSettingsWithCallback));
-
                 topic.subscribe("getHttpsSettingsWithCallback", lang.hitch(this, this.getHttpsSettingsWithCallback));
                 topic.subscribe("getMySQLSettingsWithCallback", lang.hitch(this, this.getMySQLSettingsWithCallback));
                 topic.subscribe("getMongoSettingsWithCallback", lang.hitch(this, this.getMongoSettingsWithCallback));
 
             },
             _start: function () {
-                console.log("Starting Config Manager...\n");
+                // console.log("Starting Config Manager...\n");
             },
             getMainModuleSettingsWithCallback: function (mainModuleCallback) {
                 mainModuleCallback(this._configObject["Session Settings"]["Main Module"]);
             },
             getMySQLSettingsWithCallback: function (mysqlCallback) {
-                console.log("configmysqlSettings");
+                // console.log("configmysqlSettings");
                 mysqlCallback(this._configObject["Database Settings"]["MySQL Database Connection"]);
             },
             getMongoSettingsWithCallback: function (mongoCallback) {
-                console.log("configMongoSettings");
+                // console.log("configMongoSettings");
                 mongoCallback(this._configObject["Database Settings"]["Mongo Database Connection"]);
             },
             getHttpsSettingsWithCallback: function (httpsCallback) {
