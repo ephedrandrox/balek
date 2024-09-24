@@ -1,4 +1,4 @@
-.digivigilDigiscanCaptureViewInterface {
+.digivigilDigiscanCaptureGridViewInterface {
     color: #ffffff;
     background: rgba(20, 75, 115, 0.9);
     display: inline-block;
@@ -24,7 +24,7 @@
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceImageAndTextGrid{
+.digivigilDigiscanCaptureGridViewInterfaceImageAndTextGrid{
     position: relative;
     display: grid;
     grid-template-columns: auto auto;
@@ -36,10 +36,10 @@
     max-height: 400px;
     max-width: 100%;
 }
-.digivigilDigiscanCaptureViewInterfaceCaptureNotInSet{
+.digivigilDigiscanCaptureGridViewInterfaceCaptureNotInSet{
     filter:grayscale(1)
 }
-.digivigilDigiscanCaptureViewInterfaceImageDiv{
+.digivigilDigiscanCaptureGridViewInterfaceImageDiv{
    padding: 10px;
     position: relative;
     left: 50%;
@@ -47,7 +47,7 @@
     display: inline-block;
 }
 
-.digivigilDigiscanCaptureViewInterfaceImage{
+.digivigilDigiscanCaptureGridViewInterfaceImage{
     max-width: 200px;
     max-height: 200px;
 
@@ -60,32 +60,32 @@
 
 
 }
-.digivigilDigiscanCaptureViewInterfaceImage:hover{
+.digivigilDigiscanCaptureGridViewInterfaceImage:hover{
     filter: invert();
 }
 
 
-.digivigilDigiscanCaptureViewInterfaceNoImage{
+.digivigilDigiscanCaptureGridViewInterfaceNoImage{
     width: 40px;
    height: 40px;
 
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceNoteText {
+.digivigilDigiscanCaptureGridViewInterfaceNoteText {
     color: black;
 }
 
-.digivigilDigiscanCaptureViewInterfaceText {
+.digivigilDigiscanCaptureGridViewInterfaceText {
 color: pink;
 }
 
-.digivigilDigiscanCaptureViewInterfaceRecognizedText {
+.digivigilDigiscanCaptureGridViewInterfaceRecognizedText {
     color: white;
     white-space: pre-wrap;
 }
 
-.digivigilDigiscanCaptureViewInterfaceRecognizedTextDiv {
+.digivigilDigiscanCaptureGridViewInterfaceRecognizedTextDiv {
     position: relative;
     display: block;
     background: none;
@@ -101,7 +101,7 @@ color: pink;
 }
 
 
-.digivigilDigiscanCaptureViewInterfaceBarcodeDiv {
+.digivigilDigiscanCaptureGridViewInterfaceBarcodeDiv {
     position: relative;
     display: block;
     color: black;
@@ -116,14 +116,14 @@ color: pink;
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceIconImg {
+.digivigilDigiscanCaptureGridViewInterfaceIconImg {
     display: inline;
     width: 20px;
     height: 20px;
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceCreatedDiv {
+.digivigilDigiscanCaptureGridViewInterfaceCreatedDiv {
     position: relative;
     display: block;
     /*float: left;*/
@@ -142,28 +142,28 @@ color: pink;
 
 
 
-.digivigilDigiscanCaptureViewInterfaceHeaderDiv {
+.digivigilDigiscanCaptureGridViewInterfaceHeaderDiv {
     display: block;
     background: none;
 
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceListDiv {
+.digivigilDigiscanCaptureGridViewInterfaceListDiv {
     display: block;
     background: none;
 
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceContentDiv {
+.digivigilDigiscanCaptureGridViewInterfaceContentDiv {
     display: flex;
     background: none;
 
 
 }
 
-.digivigilDigiscanCaptureViewInterfaceNoteDiv {
+.digivigilDigiscanCaptureGridViewInterfaceNoteDiv {
     position: relative;
     display: block;
     /*background: #ffffff;*/

@@ -1,5 +1,8 @@
 /*
-   Capture Detail View Widget
+   Scaptura Interface: Capture Detail View Widget
+
+   Provides a detailed view to the selected Capture using a full scan image and capture state.
+
    Expects creator to provide a _interfaceKey, interfaceCommands, and domNodeToPlaceIn
    Example when creating a Capture Detail View Widget from a parent Widget:
     let  detail =    new CaptureDetailView({
@@ -9,6 +12,7 @@
                });
     */
 define([
+  //base
   "dojo/_base/declare",
   "dojo/_base/lang",
   "dojo/topic",
@@ -18,20 +22,21 @@ define([
   "dojo/on",
   "dojo/dom-attr",
   "dojo/dom-style",
-
+  //UI
   "dojo/keys",
   "dijit/focus",
   "dojo/ready",
   "dojo/_base/fx",
-
+  //Widgets
   "dijit/InlineEditBox",
   "dijit/form/TextBox",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
-
+  //HTML and CSS
   "dojo/text!balek-modules/digivigil/digiscan/resources/html/captureDetailView.html",
   "dojo/text!balek-modules/digivigil/digiscan/resources/css/captureDetailView.css",
 ], function (
+  //base
   declare,
   lang,
   topic,
@@ -41,17 +46,17 @@ define([
   on,
   domAttr,
   domStyle,
-
+  //UI
   dojoKeys,
   dijitFocus,
   dojoReady,
   fx,
-
+  //Widgets
   InlineEditBox,
   TextBox,
   _WidgetBase,
   _TemplatedMixin,
-
+  //HTML and CSS
   template,
   mainCss
 ) {
