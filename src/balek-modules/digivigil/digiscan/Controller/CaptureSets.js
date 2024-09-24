@@ -155,12 +155,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 return this.captureSets
             },
             getCaptureSetSyncedMap: function(captureSetID, instanceKey){
-                console.log("getCaptureSetSyncedMap3:", captureSetID)
+                // console.log("getCaptureSetSyncedMap3:", captureSetID)
 
                 return new Promise(lang.hitch(this, function(Resolve, Reject) {
 
                     let CaptureSet =  this.captureSets.get(captureSetID)
-                    console.log("getCaptureSetSyncedMap4:", captureSetID,CaptureSet)
+                    // console.log("getCaptureSetSyncedMap4:", captureSetID,CaptureSet)
 
                     if(typeof CaptureSet === "object")
                     {
@@ -169,17 +169,17 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         let statefulCaptureSet = this.getStatefulCaptureSet(captureSetID)
                         Resolve({Success:"Capture Map Created", CaptureID: captureSetID, componentKey: newMap._componentKey, instanceKey: instanceKey})
-                        console.log("getCaptureSetSyncedMap5:", captureSetID,statefulCaptureSet)
+                        // console.log("getCaptureSetSyncedMap5:", captureSetID,statefulCaptureSet)
 
                         //todo relay a capture state that gets updated with database return
                       //  newMap.relayState(statefulCaptureSet) //todo - be able to calcle this
 
                         newMap.relayState(statefulCaptureSet)
-                        console.log("look at name match",newMap, CaptureSet)
+                        // console.log("look at name match",newMap, CaptureSet)
 
                         this.syncedMaps.push(newMap);
                     }else {
-                        Reject({Error:"Capture Not found", CaptureID: captureID})
+                        Reject({Error:"Capture Set Not found", CaptureID: captureSetID})
 
                     }
                 }));
@@ -291,7 +291,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
 
                         this._captureSetsDatabase.updateCaptureSet(captureSetId, CaptureSet).then(lang.hitch(this, function(Result){
-                                                console.log("Capture Set Updated", Result);
+                                                // console.log("Capture Set Updated", Result);
                                                 // try{
                                                 //
                                                 //     this.getCaptureSet(Result).then(lang.hitch(this, function(DBCaptureSet){
@@ -339,18 +339,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                return this.setCaptureInSet(captureSetId, captureID, false);
             },
             removeCaptureFromSets: function(captureID) {
-                console.log("removeCaptureFromSets Capture Set Updated", captureID);
+                // console.log("removeCaptureFromSets Capture Set Updated", captureID);
 
                 this._captureSetsDatabase.getCaptureSets().then(lang.hitch(this, function(CaptureSets){
                     if(Array.isArray(CaptureSets)) {
                         CaptureSets.forEach(lang.hitch(this, function (CaptureSet) {
                             let id = CaptureSet._id.toString()
-                            if (CaptureSet.CaptureSet.captures[captureID].inSet === true) {
-                                console.log("removeCaptureFromSets setting not true            Capture Set Updated", captureID);
+                            if (CaptureSet.CaptureSet.captures[captureID] && CaptureSet.CaptureSet.captures[captureID].inSet === true) {
+                                // console.log("removeCaptureFromSets setting not true            Capture Set Updated", captureID);
 
                                 this.setCaptureInSet(id, captureID, false)
                             }else{
-                                console.log("removeCaptureFromSets setting NOTNOTBNOTBTOnot true            Capture Set Updated", captureID);
+                                // console.log("removeCaptureFromSets setting NOTNOTBNOTBTOnot true            Capture Set Updated", captureID);
 
                             }
                         }));

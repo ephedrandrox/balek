@@ -43,7 +43,7 @@ define(['dojo/_base/declare',
             //Startup Functions Section
             //##########################################################################################################
             constructor: function (args) {
-                console.log("Construct😈😈😈")
+                // console.log("Construct😈😈😈")
 
 
                 declare.safeMixin(this, args);

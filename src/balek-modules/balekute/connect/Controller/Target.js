@@ -78,7 +78,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                         var credentialsUpdate = {userKey: deviceOwnerUserKey}
                         topic.publish("getUserInfoFromDatabaseByKey", deviceOwnerUserKey, lang.hitch(this, function (userReply) {
-                            console.log("getUserInfoFromDatabaseByKey",userReply, deviceOwnerUserKey);
+                            // console.log("getUserInfoFromDatabaseByKey",userReply, deviceOwnerUserKey);
                             if(userReply[0]){
                                 let user = userReply[0]
                                 credentialsUpdate.username = user.name
@@ -86,7 +86,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 credentialsUpdate.permission_groups = user.permission_groups
 
                                 topic.publish("sessionCredentialsUpdate", targetSessionWSSConnection, credentialsUpdate, lang.hitch(this,function (result) {
-                                    console.log("sessionCredentialsUpdate",result);
+                                     // console.log("sessionCredentialsUpdate" , credentialsUpdate,result);
                                     if (result && result.error) {
                                         console.log("sessionCredentialsUpdate Error", result.error, targetSession, credentialsUpdate);
                                     }else{

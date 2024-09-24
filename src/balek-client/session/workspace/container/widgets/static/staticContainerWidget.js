@@ -55,7 +55,7 @@ define(['dojo/_base/declare',
             //##########################################################################################################
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("Initializing Balek Workspace Manager Container Manager Static Widget...");
+                //console.log("InitializingBalek Workspace Manager Container Manager Static Widget...");
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
 
             },

@@ -404,14 +404,14 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             let target = this._targets[targetKey]
 
                             if ( typeof target.useKey === 'function') {
-                                console.log("Controller useTargetKey" )
+                                // console.log("Controller useTargetKey" )
 
                                 target.useKey(targetKey, signature, deviceInfo)
                                     .then(lang.hitch(this, function (targetStatus){
-                                        console.log("targetStatus Success" )
+                                        // console.log("targetStatus Success" )
                                         if( targetStatus == "Success" )
                                         {
-                                            console.log("target Key Used", deviceInfo)
+                                            // console.log("target Key Used", deviceInfo)
                                             delete this._targets[targetKey]
                                             Resolve({targetKey: targetKey, status: targetStatus});
                                         }else{

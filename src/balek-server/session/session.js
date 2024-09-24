@@ -92,7 +92,7 @@ define([ 	'dojo/_base/declare',
                 let moduleKeys  = []
                 allSessionInstances.forEach(lang.hitch(this, function(ModuleKey){
                    let moduleInstance = this._instances[ModuleKey]
-                    console.log(moduleInstance)
+                    // console.log(moduleInstance)
                     if(moduleInstance && moduleInstance._moduleName == ModuleName)
                     {
                         moduleKeys.push(ModuleKey)
@@ -188,7 +188,7 @@ define([ 	'dojo/_base/declare',
                 for(const instanceKey in this._instances) {
                     this.unloadModuleInstance(instanceKey).then(function(value){
                     //todo make sure that the connection is removed
-                        console.log(value);
+                    //     console.log(`unloaded Module ${instanceKey}`,value);
                 }).catch(function(error){
 
                         console.log(error);

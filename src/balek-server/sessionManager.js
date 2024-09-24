@@ -241,7 +241,7 @@ define(['dojo/_base/declare',
             },
             changeSessionConnection: function (wssConnection, changeSessionKey) {
                 //if sessions have same user allow change
-                console.log("changeSessionConnection wssConnection, changeSessionKey",wssConnection, changeSessionKey, this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()],this._sessions)
+                // console.log("changeSessionConnection wssConnection, changeSessionKey",wssConnection, changeSessionKey, this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()],this._sessions)
                 if (wssConnection && wssConnection._sessionKey && this._sessions[wssConnection._sessionKey.toString()] && this._sessions[changeSessionKey.toString()]) {
                     let oldSessionKey = wssConnection._sessionKey.toString();
                     let oldSession = this._sessions[oldSessionKey];
@@ -336,8 +336,16 @@ define(['dojo/_base/declare',
             //Move To Controller:
             //##########################################################################################################
             sessionCredentialsUpdate: function (wssConnection, credentialData, sessionUpdateReply) {
+                // console.log("🟥🟧🟨🟩🟦🟪sessionCredentialsUpdate getUserFromDatabase!", wssConnection, credentialData, sessionUpdateReply)
+
                 if (wssConnection._sessionKey && credentialData.username && credentialData.password) {
                     topic.publish("getUserFromDatabase", credentialData.username, lang.hitch(this, function (userInfo) {
+                        // console.log("🟥🟧🟨🟩🟦🟪sessionCredentialsUpdate getUserFromDatabase!", userInfo)
+                        //if userInfo is an object with password permission groups and userKey then turn it into an array
+                        // if (userInfo && userInfo.password && userInfo.permission_groups && userInfo.userKey) {
+                        //     userInfo = [userInfo];
+                        // }
+
                         if (Array.isArray(userInfo) && userInfo.length >= 1) {
                             let matched = false;
                             for (const user of userInfo) {
@@ -377,7 +385,7 @@ define(['dojo/_base/declare',
 
                             }
                         } else {
-                            sessionUpdateReply({error: {error: "No User with that namex", credentialData: credentialData, data: userInfo}});
+                            sessionUpdateReply({error: {error: "No User with that name there", credentialData: credentialData, data: userInfo}});
 
                         }
                     }));

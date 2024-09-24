@@ -135,11 +135,11 @@ define(['dojo/_base/declare',
 
 
                     if(name.toString() === "sessionStatus" && newState.toString() === "2"){
-                        console.log("XCVB:Check", name, oldState, newState)
+                        // console.log("XCVB:Check", name, oldState, newState)
                         if (sessionState.get("name").toString() === "Main Web Session" ){
-                            console.log("XCVB:Is Main Web Session, Keeping Session", sessionState.get("name").toString())
+                            // console.log("XCVB:Is Main Web Session, Keeping Session", sessionState.get("name").toString())
                         }else {
-                            console.log("XCVB:Not Main Web Session, Removing Session", sessionState.get("name").toString())
+                            // console.log("XCVB:Not Main Web Session, Removing Session", sessionState.get("name").toString())
                             this.sessionsControllerCommands.unloadSession(this._sessionKey).catch(lang.hitch(this, function(Error){
                                 console.log("XCVB:Error Unloading Session", Error)
                             }))
@@ -363,7 +363,7 @@ define(['dojo/_base/declare',
             //Interface Commands - Controller Interface
             //##########################################################################################################
             getCaptureSetSyncedMap: function(captureSetID, resultCallback){
-                console.log("getCaptureSetSyncedMap:", captureSetID)
+                // console.log("getCaptureSetSyncedMap:", captureSetID)
                 this._moduleController.getCaptureSetSyncedMap(captureSetID, this._instanceKey).then(lang.hitch(this, function(Result){
                     resultCallback(Result)
                 })).catch(lang.hitch(this, function(Error){
@@ -415,7 +415,7 @@ define(['dojo/_base/declare',
                 //calls inherited _end functions like stateSynced Object
                 this.inherited(arguments);
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying Scaptura Module Instance ");
+                    // console.log("destroying Scaptura Module Instance ");
                     Resolve({success: "Unloaded Instance"});
                 }));
             }

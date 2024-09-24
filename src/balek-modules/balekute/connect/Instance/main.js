@@ -77,10 +77,10 @@ define(['dojo/_base/declare',
 
                     const allSessionKeys = Object.keys(allSessions);
                     let looking = true
-                    console.log("allSessionKeys.length", allSessionKeys.length);
+                    // console.log("allSessionKeys.length", allSessionKeys.length);
                     //print allSessionKeys keys and values
                     allSessionKeys.forEach(function(key) {
-                        console.log(key, allSessions[key]);
+                        // console.log(key, allSessions[key]);
                     });
 
                     if(allSessionKeys.length > 1)
@@ -90,10 +90,10 @@ define(['dojo/_base/declare',
                             if(availableSession.toString() != currentSessionKey.toString()
                             && looking === true){
 
-                                console.log("session key", availableSession);
+                                // console.log("session key", availableSession);
 
                                 let session = sessionCommands.getSessionByKey(availableSession)
-                                console.log("session", session);
+                                // console.log("session", session);
 
                                 if (session && session._syncedState && session._syncedState.get("name") == "Main Web Session" ){
                                     looking = false
@@ -126,12 +126,14 @@ define(['dojo/_base/declare',
                         // currentSession.loadModuleInstance("diaplode/commander")
                         //
                         // currentSession.unloadAllInstancesOf("diaplode/login")
+                        if (currentSession && currentSession.loadModuleInstance && currentSession.unloadAllInstancesOf && currentSession.updateSessionStatus){
+                            currentSession.loadModuleInstance("digivigil/digiscan")
+                            currentSession.unloadAllInstancesOf("balekute/connect")
+                            currentSession.unloadAllInstancesOf("diaplode/login")
+                            currentSession.unloadAllInstancesOf("admin/users")
+                            currentSession.updateSessionStatus({name: "Main Web Session"})
+                        }
 
-                        currentSession.loadModuleInstance("digivigil/digiscan")
-                        currentSession.unloadAllInstancesOf("balekute/connect")
-                        currentSession.unloadAllInstancesOf("diaplode/login")
-                        currentSession.unloadAllInstancesOf("admin/users")
-                        currentSession.updateSessionStatus({name: "Main Web Session"})
 
                     }
 

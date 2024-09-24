@@ -37,7 +37,7 @@ define(['dojo/_base/declare',
                 this.invitationInterfaces = {}
                 this.invitations = {}
                 declare.safeMixin(this, args);
-                console.log("BKConnect: starting up")
+                // console.log("BKConnect: starting up")
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
 
@@ -117,11 +117,11 @@ define(['dojo/_base/declare',
 
             },
             getWorkspaceDomNode: function () {
-                console.log("BKConnect: getWorkspaceDomNode called")
+                // console.log("BKConnect: getWorkspaceDomNode called")
                 return undefined
             },
             toggleShowView: function () {
-                console.log("BKConnect: toggleShowView called")
+                // console.log("BKConnect: toggleShowView called")
             },
             unload: function () {
 

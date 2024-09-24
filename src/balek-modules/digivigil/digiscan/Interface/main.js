@@ -14,7 +14,7 @@ define(['dojo/_base/declare',
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
 
-        "balek-modules/digivigil/digiscan/Interface/captureDetailView",
+        /*CaptureDetailView*/ "balek-modules/digivigil/digiscan/Interface/captureDetailView",
 
 
         "balek-modules/digivigil/digiscan/Interface/captureGridView",
@@ -48,7 +48,7 @@ define(['dojo/_base/declare',
 
             Detail: null,
 
-            _previewDiv: null,                     //DomNode
+            _previewDiv: null,  //DomNode
             _tabularDiv: null, //DomNode
             _detailDiv: null, //DomNode
 
@@ -163,7 +163,7 @@ define(['dojo/_base/declare',
                 //his.refreshViews()
             },
             onUIStateChange: function (name, oldState, newState) {
-                console.log("onUIStateChange",name, oldState, newState)
+                // console.log("onUIStateChange",name, oldState, newState)
 
                 //if active view, selected capture set or show hidden captures changed
                 if(name === "ActiveView" || name === "selectedCaptureSet" || name === "showHiddenCaptures" || name === "selectedCaptures")
@@ -180,7 +180,7 @@ define(['dojo/_base/declare',
             },
 
             onCaptureSetsChange: function (captureSetID, oldName, newName) {
-                console.log("onCaptureSetsChange",captureSetID, oldName, newName)
+                // console.log("onCaptureSetsChange",captureSetID, oldName, newName)
 
                 //if the users capture sets list changes
                     this.refreshViews()
@@ -223,13 +223,12 @@ define(['dojo/_base/declare',
                                 {
                                     this.MainTable.refreshUI();
                                 }
-                            }else if (name === "filter")
+                            }else if (name === "filterSettings")
                             {
-                                console.log("currentCaptureSetWatchHandle filter settings",name, oldValue, newValue)
+                                console.log("👽currentCaptureSetWatchHandle filter settings",name, oldValue, newValue)
                             }
                             else{
                                 console.warn("main captureSet.watch unexpected value",name, oldValue, newValue)
-
                             }
 
                            // this.refreshViews()
@@ -338,7 +337,7 @@ define(['dojo/_base/declare',
             refreshViews: function(){
 
                 if(this.uiState != null) {
-                    console.log("refreshing view")
+                    // console.log("refreshing view")
 
                     const activeView = this.uiState.get("ActiveView")
                     const selectedCaptures = this.uiState.get("selectedCaptures")
@@ -360,7 +359,7 @@ define(['dojo/_base/declare',
                             this.MainTable.refreshUI();
                         }
                     } else {
-                        console.log("switchViews unexpected", activeView)
+                        // console.log("switchViews unexpected", activeView)
                     }
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
 

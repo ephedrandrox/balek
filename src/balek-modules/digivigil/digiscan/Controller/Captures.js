@@ -253,7 +253,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             && oldValue && oldValue != ""
                             && (newValue == "" || typeof newValue === 'undefined'))
                         {
-                            console.log("Capture Removed", id, oldValue, newValue)
+                            // console.log("Capture Removed", id, oldValue, newValue)
                             //Had a value but now doesn't remove from user list
                             userCaptures.set(id, undefined)
                             watchSubscription.unwatch()
@@ -273,7 +273,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
 
                 if (this.statefulCapturesByCaptureID[CaptureID]){
                     let statefulCapture  = this.statefulCapturesByCaptureID[CaptureID]
-                    console.log("removeStatefulCapture", statefulCapture, CaptureID);
+                    // console.log("removeStatefulCapture", statefulCapture, CaptureID);
 
                     statefulCapture.set("id", undefined);
                     statefulCapture.set("created", undefined);
@@ -367,12 +367,13 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                         Reject({Error: Error})
                                     }))
                                 }catch(Error){
-                                    console.log("Error Getting Capture:", Error);
+                                    console.log(`🚨 Error Getting Capture: ${Error}`);
                                     Reject(Error)
                                 }
                             })).catch(lang.hitch(this, function(Error){
-                                console.log("Controller could not add Capture to Database", Error);
-
+                                // console.log("Controller could not add Capture to Database", Error);
+                                //todo: find out why addCapture is getting called twice
+                                console.log(`🚨 Error Adding Capture: ${Error}🚨`);
                                 Reject({Error})
                             }))
                         } else if (Capture && updateRequest === true)
@@ -424,12 +425,12 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 }));
             },
             remove: function(captureID){
-                console.log("Capture Removed Request Result", captureID)
+                // console.log("Capture Removed Request Result", captureID)
               return new Promise(lang.hitch(this, function(Resolve, Reject) {
                   this._capturesDatabase.removeCapture(captureID).then(lang.hitch(this, function(Result){
-                    console.log("Capture Removed Request Result", Result);
+                    // console.log("Capture Removed Request Result", Result);
 
-                      console.log("Capture  captureID", this.captures, captureID);
+                      console.log("🗑 Capture Removed");
 
                       //find this.captures with capture.id = captureID
 
@@ -438,9 +439,9 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                             if(capture  && capture._id && capture.capture && capture.capture.id.toString() === captureID.toString())
                             {
                                 let captureObjectID = capture._id.toString()
-                               console.log("Matches Capture  captureID", capture, captureID,captureObjectID);
+                               // console.log("Matches Capture  captureID", capture, captureID,captureObjectID);
                                 this.captures.set(captureObjectID, undefined)
-                                console.log("removeStatefulCapture", capture, captureID,captureObjectID);
+                                // console.log("removeStatefulCapture", capture, captureID,captureObjectID);
                                 this.removeCaptureFromCaptureSets(captureObjectID)
 
                                 this.removeStatefulCapture(captureObjectID)

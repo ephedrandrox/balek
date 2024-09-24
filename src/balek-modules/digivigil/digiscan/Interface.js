@@ -151,10 +151,10 @@ define(['dojo/_base/declare',
                                 let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
                                 this.workspaceManagerCommands.addToWorkspaceContainer(this._mainInterface, workspaceContainerWidgetPath )
                                     .then(lang.hitch(this, function(workspaceContainerKey){
-                                        console.log("gotWorkspaceContainerKey", workspaceContainerKey);
+                                        // console.log("gotWorkspaceContainerKey", workspaceContainerKey);
                                         this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
                                             .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
-                                                console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                                // console.log("Container added to workspace", addContainerToWorkspaceResponse);
 
                                             }))
                                             .catch(lang.hitch(this, function(error){
@@ -183,14 +183,21 @@ define(['dojo/_base/declare',
                                 let activeWorkspaceKey = this.workspaceManagerCommands.getActiveWorkspace().getWorkspaceKey();
                                 this.workspaceManagerCommands.addToWorkspaceContainer(this._settingsInterface, workspaceContainerWidgetPath )
                                     .then(lang.hitch(this, function(workspaceContainerKey){
-                                        console.log("gotWorkspaceContainerKey", workspaceContainerKey);
+                                        // console.log("gotWorkspaceContainerKey", workspaceContainerKey);
 
                                         this.workspaceManagerCommands.addContainerToWorkspace(workspaceContainerKey, activeWorkspaceKey)
                                             .then(lang.hitch(this, function(addContainerToWorkspaceResponse){
-                                                console.log("Container added to workspace", addContainerToWorkspaceResponse);
-                                                console.log("hidding container", addContainerToWorkspaceResponse);
+                                                // console.log("Container added to workspace", addContainerToWorkspaceResponse);
+                                                // console.log("hidding container", addContainerToWorkspaceResponse);
 
-                                                this._interface.hideSettings()
+                                                //make sure _interface is defined
+                                                if(this._interface)
+                                                {
+                                                    this._interface.hideSettings()
+                                                }else
+                                                {
+                                                    console.log("no _interface!")
+                                                }
                                             }))
                                             .catch(lang.hitch(this, function(error){
                                                 console.log("Error adding container to workspace", error);

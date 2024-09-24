@@ -271,7 +271,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                 credentialsUpdate.permission_groups = user.permission_groups
 
                                 topic.publish("sessionCredentialsUpdate", sessionWSSConnection, credentialsUpdate, lang.hitch(this,function (session) {
-                                    // console.log("sessionCredentialsUpdate",session);
+                                     // console.log("sessionCredentialsUpdate",session);
                                 }));
                             }else {
                                 console.log("No User to activate")

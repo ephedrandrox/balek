@@ -229,7 +229,7 @@ define(['dojo/_base/declare',
             },
             refreshViews: function()
             {
-                console.log("Refresh Set Control view")
+                // console.log("Refresh Set Control view")
                 if(this.uiState != null) {
                     let selectedCaptureSet = this.uiState.get("selectedCaptureSet")
                     const activeView = this.uiState.get("ActiveView")

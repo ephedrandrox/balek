@@ -26,7 +26,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 if (this._interface === null) {
                     console.log("Scaptura Captures Interface Controller Cannot Start!...");
                 } else {
-                    console.log("Scaptura Captures Interface Controller Started!...");
+                    // console.log("Scaptura Captures Interface Controller Started!...");
                 }
             },
             loadDetailedImageFor: function (captureID)
@@ -70,8 +70,11 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         //set state watcher to update local capture state object
                         this.captureSyncedMapWatchHandles[captureID] = this.captureSyncedMaps[captureID].setStateWatcher(lang.hitch(this, function(name, oldValue, newValue)
                         {
-                            this.captures[captureID].set(name, newValue)
 
+                            this.captures[captureID].set(name, newValue)
+                            //todo make sure this is getting sent only the data that is changed
+                            // console.log(`📸:(${captureID}): ${name} recieved as ${newValue}`)
+                            // console.log(`📸 Update Received`)
                             let id  = this.captures[captureID].get("id");
                             let imageInfo  = this.captures[captureID].get("imageInfo");
                             let imagePreview = this.captures[captureID].get("imagePreview");
@@ -81,6 +84,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                                     if(imageFetchResult && imageFetchResult.SUCCESS){
                                         let CaptureImage = imageFetchResult.SUCCESS
                                         if(CaptureImage.preview ){
+                                            console.log(`🌠 Preview Received`)
+
                                             let dataBase64String = CaptureImage.preview
                                             //todo check this against the hash, public key and proof
                                             //set received image to local state

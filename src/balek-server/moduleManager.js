@@ -119,7 +119,7 @@ define(['dojo/_base/declare',
                 this._modules[this._instances[instanceKey]._moduleName]._displayName
             },
             unloadModuleInstance: function(instanceKey, returnCallback){
-                console.log("unloading instance " + instanceKey);
+                // console.log("unloading instance " + instanceKey);
 
                 if(this._instances[instanceKey] !== undefined){
                     this._instances[instanceKey]._end().then( lang.hitch(this, instanceEndResult =>{

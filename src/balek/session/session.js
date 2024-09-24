@@ -52,7 +52,7 @@ define([ 	'dojo/_base/declare',
                 this._syncedStateChangeInterfaceCallback({syncedState: JSON.stringify(this._syncedState)});
             },
             unload: function(){
-                console.log("Destroying Session Synced State Watch Handle");
+                // console.log("Destroying Session Synced State Watch Handle");
                 this._syncedStateWatchHandle.unwatch();
                 this._syncedStateWatchHandle.remove();
 

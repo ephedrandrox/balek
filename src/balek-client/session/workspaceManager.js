@@ -203,7 +203,7 @@ define(['dojo/_base/declare',
                 if(this._workspaces[workspaceKey] === undefined &&
                     workspaceKey ===  newState.workspaceKey )
                 {
-                    console.log("no workspace interface - creating one ");
+                    // console.log("no workspace interface - creating one ");
                     this.createWorkspaceInterface(workspaceKey,  newState.workspaceName);
                 }
                 else if(this._workspaces[String(name)] )
@@ -221,7 +221,7 @@ define(['dojo/_base/declare',
                 if(String(name) === "activeOverlayWorkspace")
                 {
                     if(this._workspaces[newState.toString()] === undefined){
-                        console.log("workspaceUpdate", "Creating workspace overlay");
+              //          console.log("workspaceUpdate", "Creating workspace overlay");
                         this.createWorkspaceInterface(newState.toString(),  "Active Overlay");
                         topic.publish("addToMainContentLayerAlwaysOnTop", this._workspaces[newState.toString()].domNode );
                         this._workspaces[newState.toString()].onActivated();

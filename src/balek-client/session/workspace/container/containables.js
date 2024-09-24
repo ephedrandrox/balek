@@ -38,7 +38,7 @@ define([ 	'dojo/_base/declare',
 
 
 
-                console.log("Initializing Balek Workspace Manager Container Manager Containables Client...");
+                //console.log("InitializingBalek Workspace Manager Container Manager Containables Client...");
 
 
 

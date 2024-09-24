@@ -14,7 +14,7 @@ define(['dojo/_base/declare',
             constructor: function (args) {
 
                 declare.safeMixin(this, args);
-                console.log("moduleBaseSyncedMapInterface started");
+                // console.log("moduleBaseSyncedMapInterface started");
                 this._objects = {};
                 if(!this._componentKey){
                     this.sendInstanceCallbackMessage({

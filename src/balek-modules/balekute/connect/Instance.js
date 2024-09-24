@@ -122,14 +122,14 @@ define(['dojo/_base/declare',
                     }
             },
             useTargetKey: function( targetKey, signature, deviceInfo, remoteCallback){
-                console.log("useTargetKey", targetKey, deviceInfo, arguments);
+                // console.log("useTargetKey", targetKey, deviceInfo, arguments);
 
 
                 if( typeof targetKey === 'string' && typeof signature === 'string' && typeof deviceInfo === 'object' &&
                     typeof remoteCallback === 'function'  )
                 {
                     this.moduleController.useTargetKey(targetKey,signature,deviceInfo).then(lang.hitch(this, function (Result) {
-                        console.log("this.moduleController.useTargetKey",Result)
+                        console.log("🎯Target Key Authorized")
                         remoteCallback({Result: Result})
                     })).catch(function(rejectError){
                         remoteCallback({error: rejectError})
@@ -282,7 +282,7 @@ define(['dojo/_base/declare',
             },
             _end: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying balekute connect Module Interface ");
+                    // console.log("destroying balekute connect Module Interface ");
 
                     Resolve({success: "Unloaded Instance"});
                 }));

@@ -23,7 +23,7 @@ define([ 	'dojo/_base/declare',
 
                 declare.safeMixin(this, args);
 
-                console.log("Initializing Balek Workspace Manager Container Manager Client...");
+                //console.log("InitializingBalek Workspace Manager Container Manager Client...");
 
 
                 let containerManagerState = declare([Stateful], {

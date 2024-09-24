@@ -9,7 +9,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("moduleBaseSyncedCommanderInterface started");
+                // console.log("moduleBaseSyncedCommanderInterface started");
 
                 if(!this._componentKey){
                     this.sendInstanceCallbackMessage({

@@ -25,7 +25,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 if (this._interface === null) {
                     console.log("Scaptura Captures Sets Interface Controller Cannot Start!...");
                 } else {
-                    console.log("Scaptura Captures Sets Interface Controller Started!...");
+                    // console.log("Scaptura Captures Sets Interface Controller Started!...");
                 }
             },
             getCaptureSetByID: function(captureSetID) {
@@ -43,7 +43,8 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                         //set state watcher to update local capture state object
                         this.captureSetSyncedMapWatchHandles[captureSetID] = this.captureSetSyncedMaps[captureSetID].setStateWatcher(lang.hitch(this, function(name, oldValue, newValue)
                         {
-                           // console.log("CaptureSet SyncedMap Watcher:", name, oldValue, newValue)
+                           console.log("👾CaptureSet SyncedMap Watcher:", name, oldValue, newValue ,  this.captureSets)
+
                             this.captureSets[captureSetID].set(name, newValue)
                         }))
                     }))

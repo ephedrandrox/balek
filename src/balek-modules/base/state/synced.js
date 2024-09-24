@@ -248,7 +248,7 @@ define(['dojo/_base/declare',
             },
             _end: function () {
                 return new Promise(lang.hitch(this, function(Resolve, Reject){
-                    console.log("destroying Interface State Watch handles");
+                    // console.log("destroying Interface State Watch handles");
                     //todo _componentStateWatchHandles get rid of all of these
                  /*   for (const [key, value] of Object.entries(this._componentStateWatchHandles)) {
                         this._componentStateWatchHandles[key].unwatch();

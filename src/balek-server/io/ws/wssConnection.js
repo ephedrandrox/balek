@@ -46,15 +46,18 @@ define(['dojo/_base/declare', 'dojo/_base/lang', 'dojo/topic'],
                 }
             },
             onWebSocketClose: function (reasonCode, description) {
-                console.log((new Date()) + ' Peer ' + this._wssConnection.remoteAddress + ' disconnected.');
+                console.log(`🎬 ${ this._wssConnection.remoteAddress}  disconnected at ${(new Date())}`);
                 topic.publish("setSessionDisconnected", this._sessionKey);
                 //todo make this tell the session is contains to disassociate and remove the publish event
-                console.log(reasonCode, description);
+
+                // console.log(`${reasonCode}, ${description}`);
 
             },
             onWebsocketError: function (reasonCode, description) {
-                console.log((new Date()) + ' Peer ' + this._wssConnection.remoteAddress + ' threw error.');
-                console.log(reasonCode, description);
+                topic.publish("setSessionDisconnected", this._sessionKey);
+
+                // console.log((new Date()) + ' Peer ' + this._wssConnection.remoteAddress + ' threw error.');
+                // console.log(`${reasonCode}, ${description}`);
             },
             close: function(reasonForClose, timeout){
                 topic.publish("sendBalekProtocolMessage", this, {systemMessage: {message: "Connection closing in " + Math.floor(timeout/1000) + " seconds" , reasonForClose: reasonForClose}});

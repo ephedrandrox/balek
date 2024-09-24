@@ -18,7 +18,7 @@ define([ 	'dojo/_base/declare',
                 declare.safeMixin(this, args);
 
 
-                console.log("Initializing Balek Workspace Manager Interface Commands...");
+                //console.log("InitializingBalek Workspace Manager Interface Commands...");
 
 
             },

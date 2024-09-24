@@ -155,11 +155,11 @@ define(['dojo/_base/declare',
                 let workspaceContainers = this._workspaceContainers;
 
                 this._activeContainerKey = null;
-                console.log("workspaceUpdate", workspaceContainers );
+                // console.log("workspaceUpdate", workspaceContainers );
 
                 for(const containerKey in workspaceContainers)
                 {
-                    console.log("workspaceUpdate", containerKey );
+                    // console.log("workspaceUpdate", containerKey );
 
                     this.activateContainer(containerKey);
                 }

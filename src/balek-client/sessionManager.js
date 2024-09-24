@@ -76,7 +76,7 @@ define(['dojo/_base/declare',
             receiveSessionManagerMessage: function (sessionManagerMessage) {
                 if (sessionManagerMessage.changeSessionKey) {
                     topic.publish("unloadAllInterfaces", lang.hitch(this, function () {
-                        console.log("interaces down");
+                        // console.log("interaces down");
                         let permissionGroups = this._session.getPermissionGroups();
                         let userName = this._session.getUserName();
                         //copy these to session Change, maybe we should use the session info
@@ -85,9 +85,9 @@ define(['dojo/_base/declare',
 
                         this._session.unload();
                         delete this._session;
-                        console.log("Session Unloaded");
+                        // console.log("Session Unloaded");
                         topic.publish("resetUI", lang.hitch(this, function () {
-                            console.log("UI reset reset");
+                            // console.log("UI reset reset");
                             //make a new session here by using the function in this object that I am going to make
                             this._session = new sessionManagerSession({
                                 _sessionKey: sessionManagerMessage.changeSessionKey //,

@@ -30,7 +30,7 @@ define([ 	'dojo/_base/declare',
                 this._containables = new balekWorkspaceContainables();
                 let workspaceManagerInterfaceCommands = new balekWorkspaceManagerInterfaceCommands();
                 this.workspaceManagerCommands = workspaceManagerInterfaceCommands.getCommands();
-                console.log("Initializing Balek Workspace Manager Container Manager Containable Client...");
+                //console.log("InitializingBalek Workspace Manager Container Manager Containable Client...");
 
                 this._componentDefaultStateSet("workspaceContainable", "containerKeys", []);
 

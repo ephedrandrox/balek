@@ -39,7 +39,7 @@ define(['dojo/_base/declare',
             onRelayStateChange: function(name, oldState, newState){
                  if (newState === undefined){
                     this.remove(name)
-                    console.log("remove",name, oldState, newState)
+                    // console.log("remove",name, oldState, newState)
 
                 }else{
                     this.add(name, newState)

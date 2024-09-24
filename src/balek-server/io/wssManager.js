@@ -34,7 +34,7 @@ define(['dojo/_base/declare', 'dojo/_base/lang',
                 try {
                     //todo fix error that crashes server if no protocol is specified
                     var acceptedConnection = request.accept('balek-protocol', request.origin);
-                    console.log( '📡 Connection accepted ' +(new Date()) );
+                    console.log( '📞 Connection accepted ' +(new Date()) );
 
                     let newKey = this.getUniqueWssConnectionsKey();
                     this._wssConnections[newKey] = new wssConnection({

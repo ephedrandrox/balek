@@ -91,7 +91,7 @@ define(['dojo/_base/declare',
 
 
                 declare.safeMixin(this, args);
-                console.log("BKConnect: staring up main interface")
+                // console.log("BKConnect: staring up main interface")
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._invitationCssString + "</style>"), win.body());
                 this.setContainerName(" 📱 - Balekute Connect - ");
@@ -141,7 +141,7 @@ define(['dojo/_base/declare',
             },
             startupContainable: function(){
                 //called after containable is started
-                console.log("startupContainable main connect containable");
+                // console.log("startupContainable main connect containable");
 
 
             },

@@ -80,7 +80,7 @@ define(['dojo/_base/declare',
 
             constructor: function (args) {
                 declare.safeMixin(this, args);
-                console.log("Initializing Balek Workspace Manager Container Manager Movable Widget...");
+                //console.log("InitializingBalek Workspace Manager Container Manager Movable Widget...");
 
                 domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
                 domConstruct.place(domConstruct.toDom("<style>" + this._resizeHandleCssString + "</style>"), win.body());
@@ -127,7 +127,7 @@ define(['dojo/_base/declare',
                     this.updateWidgetWithElementBox(elementBox);
                 }else
                 {
-                console.log("no element Box");
+                // console.log("no element Box");
                 }
                // topic.publish("addToMainContentLayerAlwaysOnTop", this.domNode);
 
