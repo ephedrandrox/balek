@@ -34,8 +34,6 @@ define([
   "dijit/form/TextBox",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
-  //Scaptura Widget
-  "balek-modules/digivigil/digiscan/Interface/captureDetailView",
   //HTML and CSS
   "dojo/text!balek-modules/digivigil/digiscan/resources/html/captureGridView.html",
   "dojo/text!balek-modules/digivigil/digiscan/resources/css/captureGridView.css",
@@ -60,8 +58,6 @@ define([
   TextBox,
   _WidgetBase,
   _TemplatedMixin,
-  //Scaptura Widget
-  CaptureDetailView,
   //HTML and CSS
   template,
   mainCss
@@ -72,30 +68,30 @@ define([
     {
       //Passed Arguments
       _instanceKey: null,
-      interfaceCommands: null, //passed argument
-      captureID: null, //passed argument
+      interfaceCommands: null,
+      captureID: null,
       //Widget Variables
       baseClass: "digivigilDigiscanCaptureGridViewInterface",
       templateString: template,
       _mainCssString: mainCss,
       //Dom Node Handles
       _barcodeDiv: null,
-      _noteDiv: null, //domNode
-      _createdText: null, //domNode
-      _barcodeText: null, //domNode
-      _recognizedText: null, //domNode
-      _noteText: null, //domNode
+      _noteDiv: null,
+      _createdText: null,
+      _barcodeText: null,
+      _recognizedText: null,
+      _noteText: null,
       _imageNode: null,
-      interestedButton: null, //domNode
-      uninterestedButton: null, //domNode
+      interestedButton: null,
+      uninterestedButton: null,
       //Capture State
-      captureState: null, //loaded Stateful
-      captureStateWatchHandle: null, //set
+      captureState: null,
+      captureStateWatchHandle: null,
       //UI State
-      uiState: null, //loaded Stateful
-      uiStateWatchHandle: null, //set
+      uiState: null,
+      uiStateWatchHandle: null,
       //State of current selected Capture Set
-      currentCaptureSetWatchHandle: null, //multiple sets
+      currentCaptureSetWatchHandle: null,
       /* Mixes in and checks for Passed Arguments
         Uses passed capture ID to retrieve and watch capture state
         Reloads View From State on initialization and on each state change
@@ -178,8 +174,8 @@ define([
       onCaptureStateChange: function (name, oldValue, newValue) {
         this.reloadViewFromState();
       },
-      //Called when UIState changes - if selectedCaptureSet changes then update and always
-      //reload the view From State
+      /*Called when UIState changes - if selectedCaptureSet changes then update and always
+      reload the view From State*/
       onUIStateChange: function (name, oldValue, newValue) {
         if ("selectedCaptureSet") {
           this.setCurrentCaptureListWatcher();
@@ -192,7 +188,7 @@ define([
       },
       /*Reloads the view data from state, uses the UIstate to check current selected capture
        list and capture status on that list. loads capture state and preview image.
-       Toggles add/remove from capture set based on capture set state  */
+       Toggles add/remove from capture set button based on capture set state  */
       reloadViewFromState: function () {
         //Needs Capture State and UI State
         if (this.captureState !== null && this.uiState !== null) {
@@ -268,12 +264,6 @@ define([
               console.log("returned", commandResult);
             })
           );
-        } else if (clickEvent.altKey) {
-          new CaptureDetailView({
-            _interfaceKey: this._interfaceKey,
-            interfaceCommands: this.interfaceCommands,
-            captureID: this.captureID,
-          });
         } else {
           this.interfaceCommands.selectCapture(
             this.captureID,
