@@ -186,25 +186,19 @@ define([
       onCaptureSetsChange: function (name, oldValue, newValue) {
         this.reloadViewFromState();
       },
+
       /*Reloads the view data from state, uses the UIstate to check current selected capture
        list and capture status on that list. loads capture state and preview image.
        Toggles add/remove from capture set button based on capture set state  */
       reloadViewFromState: function () {
         //Needs Capture State and UI State
         if (this.captureState !== null && this.uiState !== null) {
+          // console.log("DATE:", this.dateUtility);
+          const dateUtility = this.interfaceCommands.dateUtility;
           const dateString = this.captureState.get("created");
-          const date = new Date(dateString);
-          let localizedDate = date.toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          });
-          if (localizedDate.toString() == "Invalid Date")
-            localizedDate += ":" + dateString;
-          //todo fix this Invalid date sometimes occuring
-          console.log("DATE:", localizedDate, dateString);
+
+          let localizedDate = dateUtility.getLocalizedDate(dateString);
+
           this._createdText.innerHTML = localizedDate;
           //Get and set Barcode
           let barcode = this.captureState.get("barcode");
