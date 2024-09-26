@@ -234,15 +234,16 @@ define([
           }
 
           const created = this.currentCaptureState.get("created");
+
+          const dateUtility = this.interfaceCommands.dateUtility;
+          const dateString = this.currentCaptureState.get("created");
+          let localizedDate = dateUtility.getLocalizedDate(dateString);
+
           const barcode = this.currentCaptureState.get("barcode");
           const recognizedText = this.currentCaptureState.get("recognizedText");
           const note = this.currentCaptureState.get("note");
-          console.log("created", created);
-          console.log("barcode", barcode);
-          console.log("recognizedText", recognizedText);
-          console.log("note", note);
 
-          this._createdText.innerHTML = created;
+          this._createdText.innerHTML = localizedDate;
           this._barcodeText.innerHTML = barcode;
           this._recognizedText.innerHTML = recognizedText;
           this._noteText.innerHTML = note;

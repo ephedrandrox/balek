@@ -193,16 +193,12 @@ define([
       reloadViewFromState: function () {
         //Needs Capture State and UI State
         if (this.captureState !== null && this.uiState !== null) {
+          const dateUtility = this.interfaceCommands.dateUtility;
           const dateString = this.captureState.get("created");
-          const date = new Date(dateString);
+          let localizedDate = dateUtility.getLocalizedDate(dateString);
 
           //Set data by node handles
-          this._createdText.innerHTML = date.toLocaleDateString(undefined, {
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          });
+          this._createdText.innerHTML = localizedDate;
 
           let barcode = this.captureState.get("barcode");
           this._barcodeText.innerHTML = barcode;
