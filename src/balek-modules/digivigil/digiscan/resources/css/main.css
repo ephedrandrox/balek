@@ -1,213 +1,187 @@
 body {
-text-align:center
+  text-align: center;
 }
 
+.digivigilDigiscanMainInterfaceButton {
+  background: transparent;
+  cursor: pointer;
+  color: white;
+  border: solid transparent 2px;
+  display: inline-block;
+  border-radius: 5px;
+  position: relative;
+  margin: 5px;
+  padding: 5px;
 
-
-.digivigilDigiscanMainInterfaceButton{
-    background: transparent;
-    cursor: pointer;
-    color: white;
-    border: solid transparent 2px;
-    display: inline-block;
-    border-radius: 5px;
-    position: relative;
-    margin: 5px;
-    padding: 5px;
-
-    height: 22px;
-    width: 22px;
-
-
+  height: 22px;
+  width: 22px;
 }
 .digivigilDigiscanMainInterfaceButton:hover {
-    cursor: pointer;
-    filter: invert(100%);
-    background: black;
+  cursor: pointer;
+  filter: invert(100%);
+  background: black;
 }
 
+.digivigilDigiscanMainInterfaceButtonImage {
+  height: 18px;
+  width: 18px;
 
-.digivigilDigiscanMainInterfaceButtonImage{
-    height: 18px;
-    width: 18px;
-
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
+.digivigilDigiscanMainInterfacePreviewDiv {
+  /*visibility: hidden;*/
+  /*visibility: inherit;*/
+  visibility: hidden;
 
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 
-
-.digivigilDigiscanMainInterfacePreviewDiv{
-    /*visibility: hidden;*/
-    /*visibility: inherit;*/
-    visibility: hidden;
-
-
-    position: relative;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    overflow: scroll;
-
-
+  overflow: scroll;
 }
 
-
-
-
-.digivigilDigiscanMainInterfaceExportControl{
-    /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    border-radius:5px;
-    background: rgba(54, 56, 58, 0.3)
+.digivigilDigiscanMainInterfaceExportControl {
+  /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
+  border-radius: 5px;
+  background: rgba(54, 56, 58, 0.3);
 }
-.digivigilDigiscanMainInterfaceExportControl:hover{
-    /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    border-radius:5px;
-    background: rgba(54, 56, 58, 0.8);
-    color: white;
+.digivigilDigiscanMainInterfaceExportControl:hover {
+  /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
+  border-radius: 5px;
+  background: rgba(54, 56, 58, 0.8);
+  color: white;
 }
 
+.digivigilDigiscanMainInterfaceSetViewControl {
+  /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
+  /*border-radius: 0 0 5px 5px;*/
+  background: rgba(54, 56, 58, 0.6);
 
-.digivigilDigiscanMainInterfaceSetViewControl{
-    /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    /*border-radius: 0 0 5px 5px;*/
-    background: rgba(54, 56, 58, 0.6);
-
-    -webkit-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.5);
-    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.5);
 }
 
-.digivigilDigiscanMainInterfaceSetViewControl:hover{
-    /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
-    background: rgba(54, 56, 58, 0.8);
-    /*color: white;*/
+.digivigilDigiscanMainInterfaceSetViewControl:hover {
+  /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
+  background: rgba(54, 56, 58, 0.8);
+  /*color: white;*/
 
-    -webkit-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
 }
 
-.digivigilDigiscanMainInterfaceActiveViewControl{
-    border: solid rgba(123, 131, 134, 0.8) 1px;
-    border-radius:5px;
-    background: rgba(185, 217, 232, 0.2)
+.digivigilDigiscanMainInterfaceActiveViewControl {
+  border: solid rgba(123, 131, 134, 0.8) 1px;
+  border-radius: 5px;
+  background: rgba(185, 217, 232, 0.2);
 }
 
-.digivigilDigiscanMainInterfaceActiveViewControl:hover{
-    border: solid rgba(123, 131, 134, 0.8) 1px;
-    border-radius:5px;
-    background: rgba(54, 56, 58, 0.8);
+.digivigilDigiscanMainInterfaceActiveViewControl:hover {
+  border: solid rgba(123, 131, 134, 0.8) 1px;
+  border-radius: 5px;
+  background: rgba(54, 56, 58, 0.8);
 }
 
+.digivigilDigiscanMainInterfaceActiveViewControlButton {
+  background: transparent;
+  cursor: pointer;
+  color: white;
+  border: solid white 2px;
+  display: inline-block;
+  border-radius: 5px;
+  position: relative;
+  margin: 5px;
+  padding: 5px;
 
-
-.digivigilDigiscanMainInterfaceActiveViewControlButton{
-
-    background: transparent;
-    cursor: pointer;
-    color: white;
-    border: solid white 2px;
-    display: inline-block;
-    border-radius: 5px;
-    position: relative;
-    margin: 5px;
-    padding: 5px;
-
-    height: 18px;
-    width: 18px;
-
+  height: 18px;
+  width: 18px;
 }
 
-.digivigilDigiscanMainInterfaceActiveViewControlButton:Hover{
-    color: black;
-    border: solid black 2px;
+.digivigilDigiscanMainInterfaceActiveViewControlButton:hover {
+  color: black;
+  border: solid black 2px;
 }
 
-.digivigilDigiscanMainInterfaceActiveViewControlButtonImage{
-    height: 12px;
-    width: 12px;
+.digivigilDigiscanMainInterfaceActiveViewControlButtonImage {
+  height: 12px;
+  width: 12px;
 
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
+.digivigilDigiscanMainInterfacePreviewGrid {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+  gap: 0px 0px;
+  grid-template-areas: "CapturePreviews CaptureDetail";
 
-.digivigilDigiscanMainInterfacePreviewGrid{
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto;
-    gap: 0px 0px;
-    grid-template-areas: "CapturePreviews CaptureDetail";
-
-
-    position: absolute;
-    top: 26px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-.digivigilDigiscanMainInterfaceTabularDiv{
-    position: absolute;
-    top: 26px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /*visibility: inherit;*/
-    visibility: hidden;
+.digivigilDigiscanMainInterfaceTabularDiv {
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /*visibility: inherit;*/
+  visibility: hidden;
 
-    background: rgba(20, 27, 47, 0.7);
-
+  background: rgba(20, 27, 47, 0.7);
 }
 
-.digivigilDigiscanMainInterfaceDetailDiv{
-    position: relative;
-    top:2px;
-    bottom: 0;
+.digivigilDigiscanMainInterfaceDetailDiv {
+  position: relative;
+  top: 2px;
+  bottom: 0;
 
-    right: 0;
-    display: inline-block;
-    background: rgba(20, 27, 47, 0.3);
+  right: 0;
+  display: inline-block;
+  background: rgba(20, 27, 47, 0.3);
 
-    max-width: 50vw;
-    vertical-align: middle;
-
+  max-width: 50vw;
+  vertical-align: middle;
 }
 
+.digivigilDigiscanMainInterface {
+  background: rgba(28, 110, 164, 0.2);
+  display: inline;
+  display: inline-block;
+  text-align: center;
+  padding: 0;
+  margin: 0x;
+  border: solid transparent 3px;
+  border-radius: 8px;
+  visibility: visible;
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 0;
 
-
-.digivigilDigiscanMainInterface{
-    background: rgba(28, 110, 164, 0.2);
-    display: inline;
-    display: inline-block;
-    text-align: center;
-    padding: 0;
-    margin: 0x;
-    border: solid transparent 3px;
-    border-radius:8px;
-    visibility: visible;
-    z-index: 5;
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    right: 0;
-    bottom: 0;
-    -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    outline: none;
+  right: 0;
+  bottom: 0;
+  -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  outline: none;
 }
 
 /*@font-face {*/
@@ -215,170 +189,160 @@ text-align:center
 /*    src: url('balek-modules/digivigil/digiscan/resources/fonts/Righteous/Righteous-Regular.ttf') format('truetype');*/
 /*}*/
 
-
 /* latin-ext */
 @font-face {
-    font-family: 'Righteous';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WhnGFq8Kk1doH.woff2) format('woff2');
-    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  font-family: "Righteous";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WhnGFq8Kk1doH.woff2)
+    format("woff2");
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 /* latin */
 @font-face {
-    font-family: 'Righteous';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WiHGFq8Kk1Q.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  font-family: "Righteous";
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/righteous/v14/1cXxaUPXBpj2rGoU7C9WiHGFq8Kk1Q.woff2)
+    format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-.digivigilDigiscanMainInterfaceMainHeaderDiv{
-    /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
-    background: rgba(20, 75, 115, 0.1);
-    border-top-left-radius: 8px;
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    overflow: hidden;
-    height: 40px;
+.digivigilDigiscanMainInterfaceMainHeaderDiv {
+  /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
+  background: rgba(20, 75, 115, 0.1);
+  border-top-left-radius: 8px;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  overflow: hidden;
+  height: 40px;
 
-    -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
-    color: white;
-    z-index: 100;
-    display: flex;
-    align-items: center;
+  -webkit-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  color: white;
+  z-index: 100;
+  display: flex;
+  align-items: center;
 
-    padding: 0;
-    padding-left: 10px;
-
-
+  padding: 0;
+  padding-left: 10px;
 }
-.digivigilDigiscanMainInterfaceMainContentDiv{
-    position: absolute;
-    top: 0;
-    min-top: 0;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    z-index: 50;
+.digivigilDigiscanMainInterfaceMainContentDiv {
+  position: absolute;
+  top: 0;
+  min-top: 0;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 50;
 }
 
-
-.digivigilDigiscanMainInterfaceMainDiv{
-    /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
-    border-radius: 8px;
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    overflow: hidden;
+.digivigilDigiscanMainInterfaceMainDiv {
+  /*border: solid rgba(20, 75, 115, 0.8) 6px;*/
+  border-radius: 8px;
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  overflow: hidden;
 }
-.digivigilDigiscanMainInterfaceStatusDiv{
-    min-height: 20px;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+.digivigilDigiscanMainInterfaceStatusDiv {
+  min-height: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 
-    z-index: 1111999999;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+  z-index: 1111999999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
+  background: #0a0e14;
 
-    background: #0a0e14;
+  color: white;
 
-    color: white;
+  border-radius: 10px;
+  border: solid black 3px;
+  -webkit-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
 
-    border-radius: 10px;
-    border: solid black 3px;
-    -webkit-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-
-    display: none;
+  display: none;
 }
-
-
-
-
 
 .digivigilDigiscanMainInterfaceNoSelectionDiv {
+  min-height: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 
+  z-index: 1111999999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 100px));
 
-    min-height: 20px;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+  background: rgba(97, 63, 98, 0.93);
 
-    z-index: 1111999999;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,calc(-50% - 100px));
+  color: white;
 
-    background: rgba(97, 63, 98, 0.93);
+  border-radius: 10px;
+  border: solid black 3px;
+  -webkit-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
 
-    color: white;
+  display: none;
 
-    border-radius: 10px;
-    border: solid black 3px;
-    -webkit-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.75);
-
-    display: none;
-
-    padding: 20px;
-
+  padding: 20px;
 }
 
+.digivigilDigiscanMainInterfaceBackgroundDiv {
+  border-radius: 8px;
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  overflow: hidden;
 
-.digivigilDigiscanMainInterfaceBackgroundDiv{
-
-    border-radius: 8px;
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    overflow: hidden;
-
-    background-color: rgba(79, 96, 128, 0.6);
+  background-color: rgba(79, 96, 128, 0.6);
 }
 
-.digivigilDigiscanMainInterfaceBackgroundDivImage{
-    opacity: .2;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 80%;
-    height: 80%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.1);
+.digivigilDigiscanMainInterfaceBackgroundDivImage {
+  opacity: 0.2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 80%;
+  height: 80%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
 }
-
 
 @keyframes scaleAnimation {
-    from {
-        transform: translate(-50%, -50%) scale(0.1);
-    }
-    to {
-        transform: translate(-50%, -50%) scale(4);
-    }
+  from {
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(4);
+  }
 }
 
 /* Apply the animation to the element */
 .digivigilDigiscanMainInterfaceBackgroundDivImage {
-    animation: scaleAnimation 1.5s ease-in-out forwards;
+  animation: scaleAnimation 1.5s ease-in-out forwards;
 }

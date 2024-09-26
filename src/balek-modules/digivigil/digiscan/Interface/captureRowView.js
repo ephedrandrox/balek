@@ -217,14 +217,13 @@ define([
 
           if (captureSet) {
             let captureInSet = captureSet.get(this.captureID);
-            //if capture is in set
+            //Set Class and show correct set/unset toggle button
+            //Based on if capture is in set
             if (captureInSet === true) {
-              //Set Class and show correct set/unset toggle button
               domClass.remove(this.domNode, `${this.baseClass}CaptureNotInSet`);
               domStyle.set(this.interestedButton, "display", "none");
               domStyle.set(this.uninterestedButton, "display", "inline-block");
             } else {
-              //Set Class and show correct set/unset toggle button
               domClass.add(this.domNode, `${this.baseClass}CaptureNotInSet`);
               domStyle.set(this.interestedButton, "display", "inline-block");
               domStyle.set(this.uninterestedButton, "display", "none");

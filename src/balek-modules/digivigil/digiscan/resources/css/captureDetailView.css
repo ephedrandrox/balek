@@ -1,192 +1,162 @@
-
 .digivigilDigiscanCaptureDetailViewInterfaceMainGrid {
-    display: block;
-    background: none;
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto auto;
-    gap: 0px 0px;
-    grid-template-areas:
+  display: block;
+  background: none;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  gap: 0px 0px;
+  grid-template-areas:
     "DetailInfo"
     "DetailImage";
 
-    vertical-align: middle;
-
-
+  vertical-align: middle;
 }
 
 .digivigilDigiscanCaptureDetailViewInterface {
-    color: #ffffff;
-    background: none;
-    display: inline-block;
-    text-align: left;
-    padding: 0;
-    border: none;
-    border-radius: 15px;
-    min-width: 200px;
-    margin: 0px;
-    outline: none;
-    font-size: 10pt;
+  color: #ffffff;
+  background: none;
+  display: inline-block;
+  text-align: left;
+  padding: 0;
+  border: none;
+  border-radius: 15px;
+  min-width: 200px;
+  margin: 0px;
+  outline: none;
+  font-size: 10pt;
 
-    /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
-/*border: solid white 2px;*/
+  /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
+  /*border: solid white 2px;*/
 
-    /*filter: drop-shadow(5px 5px 10px #000);*/
+  /*filter: drop-shadow(5px 5px 10px #000);*/
 
+  vertical-align: middle;
 
-    vertical-align: middle;
+  max-width: calc(50vw - 20px);
+  max-height: calc(100vw - 26px);
 
-    max-width: calc(50vw - 20px);
-    max-height: calc(100vw - 26px);
+  position: relative;
 
+  top: 50%;
 
-    position: relative;
-
-    top: 50%;
-
-
-    transform: translateY(-50%);
-}
-.digivigilDigiscanCaptureDetailViewInterfaceCaptureNotInSet{
-    filter:grayscale(1)
-}
-.digivigilDigiscanCaptureDetailViewInterfaceImageDiv{
-   padding: 10px;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    display: inline-block;
+  transform: translateY(-50%);
 }
 
-.digivigilDigiscanCaptureDetailViewInterfaceImage{
-
-
-    border-radius: 5px;
-    border: solid rgba(38, 38, 38, 0.8) 4px;
-    cursor: pointer;
-
-    max-width: 80vw;
-    max-height: 80vh;
-
+.digivigilDigiscanCaptureDetailViewInterfaceCaptureNotInSet {
+  filter: grayscale(1);
 }
 
+.digivigilDigiscanCaptureDetailViewInterfaceImageDiv {
+  padding: 10px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+}
 
+.digivigilDigiscanCaptureDetailViewInterfaceImage {
+  border-radius: 5px;
+  border: solid rgba(38, 38, 38, 0.8) 4px;
+  cursor: pointer;
 
-.digivigilDigiscanCaptureDetailViewInterfaceNoImage{
-    width: 40px;
-   height: 40px;
+  max-width: 80vw;
+  max-height: 80vh;
+}
 
-
+.digivigilDigiscanCaptureDetailViewInterfaceNoImage {
+  width: 40px;
+  height: 40px;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceNoteText {
-    color: black;
+  color: black;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceText {
-color: white;
-    font-weight: bold;
+  color: white;
+  font-weight: bold;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedText {
-    color: white;
-    white-space: pre-wrap;
-
+  color: white;
+  white-space: pre-wrap;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
-    position: relative;
-    display: block;
-    background: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-family: monospace;
+  position: relative;
+  display: block;
+  background: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: monospace;
 
-    padding-right: 20px;
+  padding-right: 20px;
 
-    overflow: scroll;
-    bottom: 0;
-    width: 100%;
+  overflow: scroll;
+  bottom: 0;
+  width: 100%;
 
-    max-height: calc(80vh - 30px);
-    max-width: 80vw;
-    border: solid rgba(38, 38, 38, 0.8) 2px;
-    background: rgba(38, 38, 38, 0.1);
+  max-height: calc(80vh - 30px);
+  max-width: 80vw;
+  border: solid rgba(38, 38, 38, 0.8) 2px;
+  background: rgba(38, 38, 38, 0.1);
 }
 
-
 .digivigilDigiscanCaptureDetailViewInterfaceBarcodeDiv {
-    position: relative;
-    display: block;
-    color: black;
+  position: relative;
+  display: block;
+  color: black;
 
-    align-items: right;
-    text-align: right;
-    line-height: 20px;
-    min-height: 20px;
-    padding: 3px;
-
+  align-items: right;
+  text-align: right;
+  line-height: 20px;
+  min-height: 20px;
+  padding: 3px;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceIconImg {
-    display: inline;
-    width: 20px;
-    height: 20px;
+  display: inline;
+  width: 20px;
+  height: 20px;
 
-    cursor: pointer;
-
+  cursor: pointer;
 }
-.digivigilDigiscanCaptureDetailViewInterfaceIconImg:hover {
-    filter: invert();
 
+.digivigilDigiscanCaptureDetailViewInterfaceIconImg:hover {
+  filter: invert();
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceCreatedDiv {
-    position: relative;
-    display: block;
-    /*float: left;*/
-    /*background: rgba(106, 178, 238, 0.86);*/
-
-    /*border: solid #c2c2c2 2px;*/    justify-content: right;
-    align-items: right;
-    text-align: right;
-
-    padding: 5px;
-    color: black;
-    margin: 5px;
-    margin-bottom: 0;
+  position: relative;
+  display: block;
+  justify-content: right;
+  align-items: right;
+  text-align: right;
+  padding: 5px;
+  color: black;
+  margin: 5px;
+  margin-bottom: 0;
 }
-
-
-
 
 .digivigilDigiscanCaptureDetailViewInterfaceInfoDiv {
-
-    display: block;
-    background: none;
-    max-width: 80vw;
-    max-height: 80vh;
+  display: block;
+  background: none;
+  max-width: 80vw;
+  max-height: 80vh;
 }
 
-
-
 .digivigilDigiscanCaptureDetailViewInterfaceContentDiv {
-    display: flex;
-    background: none;
-
-
+  display: flex;
+  background: none;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceNoteDiv {
-    position: relative;
-    display: block;
-    /*background: #ffffff;*/
-    /*border: solid #c2c2c2 2px;*/
-    color: black;
-    background: rgba(249, 255, 172, 0.95);
-    padding: 10px;
-    min-height: 20px;
-
-     margin: 10px;
-    border-radius: 15px;
+  position: relative;
+  display: block;
+  color: black;
+  background: rgba(249, 255, 172, 0.95);
+  padding: 10px;
+  min-height: 20px;
+  margin: 10px;
+  border-radius: 15px;
 }

@@ -1,144 +1,121 @@
 .digivigilDigiscanSetControl {
-    z-index: 100;
-    text-align: center;
+  z-index: 100;
+  text-align: center;
 }
 .digivigilDigiscanSetControlMain {
 }
 .digivigilDigiscanSetControlGridContainer {
-    position: relative;
-    z-index: 100;
-height: 28px;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
-    gap: 0px 0px;
-    grid-template-areas:
-    "SetButtonsDiv SetSelectionDiv ViewButtonsDiv"
-    ;
-
-
+  position: relative;
+  z-index: 100;
+  height: 28px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto;
+  gap: 0px 0px;
+  grid-template-areas: "SetButtonsDiv SetSelectionDiv ViewButtonsDiv";
 }
 
-.digivigilDigiscanSetControlSetButtonsDiv{
-    grid-area: SetButtonsDiv;
-    cursor: pointer;
+.digivigilDigiscanSetControlSetButtonsDiv {
+  grid-area: SetButtonsDiv;
+  cursor: pointer;
 }
 
-.digivigilDigiscanSetControlStatusTextDiv{
-    grid-area: StatusTextDiv;
-    text-align: center;
-    height: 20px;
-    min-width:300px;
+.digivigilDigiscanSetControlStatusTextDiv {
+  grid-area: StatusTextDiv;
+  text-align: center;
+  height: 20px;
+  min-width: 300px;
 }
-.digivigilDigiscanSetControlViewButtonsDiv{
-    grid-area: ViewButtonsDiv;
-    cursor: pointer;
-}
-
-
-.digivigilDigiscanSetControlViewButtonDiv{
-    display: inline-block;
-}
-
-
-.digivigilDigiscanSetControlSetButtonImage {
-
-    height: 18px;
-    padding: 5px;
-
-}
-
-.digivigilDigiscanSetControlNewSetButtonDiv{
-    display: inline-block;
-
-}
-
-
-.digivigilDigiscanSetControlDeleteButtonDiv{
-    display: inline-block;
-
-}
-.digivigilDigiscanSetControlSetButtonImage:hover {
-
-    filter: invert();
-}
-
-
-.digivigilDigiscanSetControlSetButtonsGrid {
-    display: grid;
-    grid-template-columns: 20px 20px;
-    grid-template-rows: auto ;
-    gap: 3px 10px;
-    grid-template-areas:
-    "NewSetButton DeleteSetButton";
-    margin-left: 10px;
-}
-
-
-
-.digivigilDigiscanSetControlViewButtonsGrid {
-
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto ;
-    gap: 0px 0px;
-    grid-template-areas:
-    "GridViewButton ListViewButton";
-
+.digivigilDigiscanSetControlViewButtonsDiv {
+  grid-area: ViewButtonsDiv;
+  cursor: pointer;
 }
 
 .digivigilDigiscanSetControlViewButtonDiv {
-    padding: 5px;
-    border: 1px solid transparent;
-    border-radius: 5px;
+  display: inline-block;
+}
+
+.digivigilDigiscanSetControlSetButtonImage {
+  height: 18px;
+  padding: 5px;
+}
+
+.digivigilDigiscanSetControlNewSetButtonDiv {
+  display: inline-block;
+}
+
+.digivigilDigiscanSetControlDeleteButtonDiv {
+  display: inline-block;
+}
+.digivigilDigiscanSetControlSetButtonImage:hover {
+  filter: invert();
+}
+
+.digivigilDigiscanSetControlSetButtonsGrid {
+  display: grid;
+  grid-template-columns: 20px 20px;
+  grid-template-rows: auto;
+  gap: 3px 10px;
+  grid-template-areas: "NewSetButton DeleteSetButton";
+  margin-left: 10px;
+}
+
+.digivigilDigiscanSetControlViewButtonsGrid {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+  gap: 0px 0px;
+  grid-template-areas: "GridViewButton ListViewButton";
+}
+
+.digivigilDigiscanSetControlViewButtonDiv {
+  padding: 5px;
+  border: 1px solid transparent;
+  border-radius: 5px;
 }
 
 .digivigilDigiscanSetControlViewButtonDiv:hover {
-    border-radius: 5px;
-    filter: invert();
+  border-radius: 5px;
+  filter: invert();
 }
 
 .digivigilDigiscanSetControlViewButtonImage {
-    height: 15px;
-    padding: 0;
-    padding-bottom: 0;
+  height: 15px;
+  padding: 0;
+  padding-bottom: 0;
 }
 
-.digivigilDigiscanSetControlSelectButton{
-    display: inline-block;
+.digivigilDigiscanSetControlSelectButton {
+  display: inline-block;
 
-    cursor: pointer;
-    padding-left: 10px;
-    padding-right: 10px;
-    background: transparent;
+  cursor: pointer;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: transparent;
 
-    z-index:100;
-    position: relative;
-
+  z-index: 100;
+  position: relative;
 }
-.digivigilDigiscanSetControlSetSelectionDiv{
-    grid-area: SetSelectionDiv;
-    cursor: pointer;
+.digivigilDigiscanSetControlSetSelectionDiv {
+  grid-area: SetSelectionDiv;
+  cursor: pointer;
 
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 6px;
-    /*border: solid white 1px;*/
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 6px;
+  /*border: solid white 1px;*/
 
-    vertical-align: center;
+  vertical-align: center;
 }
 
 .digivigilDigiscanSetControlSelectButton:hover {
-    display: inline-block;
-    background: RGBA(1,1,1,0.4);
-    color: black;
+  display: inline-block;
+  background: RGBA(1, 1, 1, 0.4);
+  color: black;
 }
 
-
-.digivigilDigiscanSetControlSelectedSet{
-    background: RGBA(1,1,1,0.8);
-    border-right: solid white 1px;
-    border-left: solid white 1px;
+.digivigilDigiscanSetControlSelectedSet {
+  background: RGBA(1, 1, 1, 0.8);
+  border-right: solid white 1px;
+  border-left: solid white 1px;
 }
-
-
