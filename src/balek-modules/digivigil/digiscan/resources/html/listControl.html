@@ -1,76 +1,85 @@
-<div class="${baseClass}" style="z-index: 100;" tabindex="0">
-
-
-    <div class="${baseClass}GridContainer">
-<!--Set Buttons-->
-        <div class="${baseClass}SetButtonsDiv">
-            <div class="${baseClass}SetButtonsGrid">
-                <div class="${baseClass}NewSetButtonDiv"
-                     style="grid-area: NewSetButton">
-
-                    <img class="${baseClass}SetButtonImage"
-                         data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText"
-                         src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg">
-                </div>
-                <div class="${baseClass}DeleteButtonDiv"
-                     data-dojo-attach-point="deleteSetButtonDiv"
-                     style="grid-area: DeleteSetButton">
-                    <img class="${baseClass}SetButtonImage"
-                         data-dojo-attach-event="onclick:onClickDeleteSet,onmouseover:_onDeleteOver,onmouseout:_onMouseOutResetStatusText"
-                         src="balek-modules/digivigil/digiscan/resources/images/minusCircle.svg">
-                </div>
-            </div>
+<div class="${baseClass}" style="z-index: 100" tabindex="0">
+  <div class="${baseClass}GridContainer">
+    <!--Set Buttons-->
+    <div class="${baseClass}SetButtonsDiv">
+      <div class="${baseClass}SetButtonsGrid">
+        <div
+          class="${baseClass}NewSetButtonDiv"
+          style="grid-area: NewSetButton"
+        >
+          <img
+            class="${baseClass}SetButtonImage"
+            data-dojo-attach-event="onclick:onClickNewSet,onmouseover:_onNewOver,onmouseout:_onMouseOutResetStatusText"
+            src="balek-modules/digivigil/digiscan/resources/images/addCircle.svg"
+          />
         </div>
-
-<!--Set Name Selection Buttons-->
-        <div class="${baseClass}SetSelectionDiv" data-dojo-attach-point="listNameOptions"></div>
-<!--View Control Buttons-->
-        <div class="${baseClass}ViewButtonsDiv"  >
-            <div class="${baseClass}ViewButtonsGrid">
-<!--                <div data-dojo-attach-event="onclick:_onClearCapturesFromSet,onmouseover:_onClearOver,onmouseout:_onMouseOutResetStatusText"-->
-<!--                     class="${baseClass}ViewButtonDiv"-->
-<!--                     style="grid-area: ClearSetButton"-->
-<!--                     data-dojo-attach-point="clearSetButtonDiv"-->
-<!--                     title="Clear Set Button">-->
-<!--                    <img class="${baseClass}ViewButtonImage"-->
-<!--                         src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"-->
-<!--                    >-->
-<!--                </div>-->
-<!--                <div data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:_onHiddenOver,onmouseout:_onMouseOutResetStatusText"-->
-<!--                     class="${baseClass}ViewButtonDiv"-->
-<!--                     style="grid-area: ShowHiddenButton"-->
-<!--                     title="Toggle Grid View">-->
-<!--                    <img class="${baseClass}ViewButtonImage"-->
-<!--                         data-dojo-attach-point="eraseButtonImage"-->
-<!--                         src="balek-modules/digivigil/digiscan/resources/images/circlegrid.svg">-->
-<!--                </div>-->
-                <div
-                     style="grid-area: GridViewButton"
-                   >
-
-                </div>
-                <div
-                        style="grid-area: ListViewButton"
-                >
-                    <div data-dojo-attach-event="onclick:_onActivateTabularView,onmouseover:_onActivateTabularOver,onmouseout:_onMouseOutResetStatusText"
-                         data-dojo-attach-point="_ToggleListViewDiv"
-                         class="${baseClass}ViewButtonDiv"
-                         style="display: none"
-                         title="Toggle List View">
-                        <img class="${baseClass}ViewButtonImage"
-                             src="balek-modules/digivigil/digiscan/resources/images/list.svg">
-                    </div>
-                    <div data-dojo-attach-event="onclick:_onActivatePreviewView,onmouseover:_onActivatePreviewOver,onmouseout:_onMouseOutResetStatusText"
-                         data-dojo-attach-point="_ToggleGridViewDiv"
-                         class="${baseClass}ViewButtonDiv"
-                         style="display: none"
-                         title="Toggle Grid View">
-                        <img class="${baseClass}ViewButtonImage"
-                             src="balek-modules/digivigil/digiscan/resources/images/grid.svg">
-                    </div>
-                </div>
-
-            </div>
+        <div
+          class="${baseClass}DeleteButtonDiv"
+          data-dojo-attach-point="deleteSetButtonDiv"
+          style="grid-area: DeleteSetButton"
+        >
+          <img
+            class="${baseClass}SetButtonImage"
+            data-dojo-attach-event="onclick:onClickDeleteSet,onmouseover:_onDeleteOver,onmouseout:_onMouseOutResetStatusText"
+            src="balek-modules/digivigil/digiscan/resources/images/minusCircle.svg"
+          />
         </div>
+      </div>
     </div>
+
+    <!--Set Name Selection Buttons-->
+    <div
+      class="${baseClass}SetSelectionDiv"
+      data-dojo-attach-point="listNameOptions"
+    ></div>
+    <!--View Control Buttons-->
+    <div class="${baseClass}ViewButtonsDiv">
+      <div class="${baseClass}ViewButtonsGrid">
+        <!--                <div data-dojo-attach-event="onclick:_onClearCapturesFromSet,onmouseover:_onClearOver,onmouseout:_onMouseOutResetStatusText"-->
+        <!--                     class="${baseClass}ViewButtonDiv"-->
+        <!--                     style="grid-area: ClearSetButton"-->
+        <!--                     data-dojo-attach-point="clearSetButtonDiv"-->
+        <!--                     title="Clear Set Button">-->
+        <!--                    <img class="${baseClass}ViewButtonImage"-->
+        <!--                         src="balek-modules/digivigil/digiscan/resources/images/eraseFill.svg"-->
+        <!--                    >-->
+        <!--                </div>-->
+        <!--                <div data-dojo-attach-event="onclick:onShowHiddenCaptures,onmouseover:_onHiddenOver,onmouseout:_onMouseOutResetStatusText"-->
+        <!--                     class="${baseClass}ViewButtonDiv"-->
+        <!--                     style="grid-area: ShowHiddenButton"-->
+        <!--                     title="Toggle Grid View">-->
+        <!--                    <img class="${baseClass}ViewButtonImage"-->
+        <!--                         data-dojo-attach-point="eraseButtonImage"-->
+        <!--                         src="balek-modules/digivigil/digiscan/resources/images/circlegrid.svg">-->
+        <!--                </div>-->
+        <div style="grid-area: GridViewButton"></div>
+        <div style="grid-area: ListViewButton">
+          <div
+            data-dojo-attach-event="onclick:_onActivateTabularView,onmouseover:_onActivateTabularOver,onmouseout:_onMouseOutResetStatusText"
+            data-dojo-attach-point="_ToggleListViewDiv"
+            class="${baseClass}ViewButtonDiv"
+            style="display: none"
+            title="Toggle List View"
+          >
+            <img
+              class="${baseClass}ViewButtonImage"
+              src="balek-modules/digivigil/digiscan/resources/images/list.svg"
+            />
+          </div>
+          <div
+            data-dojo-attach-event="onclick:_onActivatePreviewView,onmouseover:_onActivatePreviewOver,onmouseout:_onMouseOutResetStatusText"
+            data-dojo-attach-point="_ToggleGridViewDiv"
+            class="${baseClass}ViewButtonDiv"
+            style="display: none"
+            title="Toggle Grid View"
+          >
+            <img
+              class="${baseClass}ViewButtonImage"
+              src="balek-modules/digivigil/digiscan/resources/images/grid.svg"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
