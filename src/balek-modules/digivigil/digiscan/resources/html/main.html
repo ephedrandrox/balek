@@ -1,79 +1,102 @@
-<div class="${baseClass}" data-dojo-attach-event="onkeyup:_onKeyUp" tabindex="0">
-    <div class="${baseClass}BackgroundDiv">
-        <img class="${baseClass}BackgroundDivImage"
-             src="balek-modules/digivigil/digiscan/resources/images/ScapturaTrans.svg">
-    </div>
-    <div class="${baseClass}MainDiv">
-        <div class="${baseClass}MainContentDiv">
+<div
+  class="${baseClass}"
+  data-dojo-attach-event="onkeyup:_onKeyUp"
+  tabindex="0"
+>
+  <div class="${baseClass}BackgroundDiv">
+    <img
+      class="${baseClass}BackgroundDivImage"
+      src="balek-modules/digivigil/digiscan/resources/images/ScapturaTrans.svg"
+    />
+  </div>
+  <div class="${baseClass}MainDiv">
+    <div class="${baseClass}MainContentDiv">
+      <div
+        class="${baseClass}TabularDiv"
+        data-dojo-attach-point="_tabularDiv"
+      ></div>
+      <div class="${baseClass}PreviewGrid">
+        <div
+          class="${baseClass}PreviewDiv"
+          style="grid-area: CapturePreviews"
+          data-dojo-attach-point="_previewDiv"
+        ></div>
 
+        <div
+          class="${baseClass}DetailDiv"
+          style="grid-area: CaptureDetail"
+          data-dojo-attach-point="_detailDiv"
+        ></div>
+      </div>
 
+      <div
+        data-dojo-attach-point="_statusDiv"
+        class="${baseClass}StatusDiv"
+      ></div>
+      <div
+        data-dojo-attach-point="_noSelectionDiv"
+        class="${baseClass}NoSelectionDiv"
+      >
+        No Set Selected
+      </div>
 
-            <div class="${baseClass}TabularDiv" data-dojo-attach-point='_tabularDiv'  >
-
-            </div>
-            <div class="${baseClass}PreviewGrid" >
-                <div class="${baseClass}PreviewDiv" style="grid-area: CapturePreviews" data-dojo-attach-point='_previewDiv'>
-
-                </div>
-
-                <div class="${baseClass}DetailDiv"  style="grid-area: CaptureDetail" data-dojo-attach-point='_detailDiv'  >
-
-                </div>
-
-            </div>
-
-
-            <div data-dojo-attach-point="_statusDiv" class="${baseClass}StatusDiv">
-            </div>
-            <div data-dojo-attach-point="_noSelectionDiv" class="${baseClass}NoSelectionDiv">
-                No Set Selected
-            </div>
-
-            <div class="${baseClass}ExportControl" style="position: fixed; bottom: 0; left: 50%;   transform: translate(-50%, 0); z-index: 100;">
-
-                <div data-dojo-attach-event="onclick:_onSaveClicked,onmouseover:_onSaveOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}Button" style=" padding-left: 5px; padding-right: 5px;" title="Download Tab Deliminated Text File">
-                    <img class="${baseClass}ButtonImage"
-                         src="balek-modules/digivigil/digiscan/resources/images/download.svg">
-                </div>
-                <div data-dojo-attach-event="onclick:_onCopyClicked,onmouseover:_onCopyOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}Button"  title="Copy Tab Deliminated Text To Clipboard">
-                    <img class="${baseClass}ButtonImage"
-                         src="balek-modules/digivigil/digiscan/resources/images/copy.svg">
-                </div>
-
-                <div data-dojo-attach-event="onclick:_onAboutClicked,onmouseover:_onAboutOver,onmouseout:_onMouseOutResetStatusText"
-                     class="${baseClass}Button" style="float: right;"
-                     title="Control Panel">
-                    <img class="${baseClass}ButtonImage"
-                         src="balek-modules/digivigil/digiscan/resources/images/gear.svg">
-                </div>
-<!--                <div data-dojo-attach-event="onclick:_onRemoveClicked,onmouseover:_onRemoveOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}Button" style="float: right;" title="Delete All Captures">-->
-<!--                    <img class="${baseClass}ButtonImage"-->
-<!--                         src="balek-modules/digivigil/digiscan/resources/images/circlegrid.svg">-->
-<!--                </div>-->
-            </div>
-<!--            <div class="${baseClass}ActiveViewControl" style="position: fixed; top: 0; right: 0;">-->
-<!--                <div data-dojo-attach-event="onclick:_onActivatePreviewView,onmouseover:_onActivatePreviewOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">-->
-<!--                    <img class="${baseClass}ActiveViewControlButtonImage"-->
-<!--                         src="balek-modules/digivigil/digiscan/resources/images/grid.svg">-->
-<!--                </div>-->
-<!--                <div data-dojo-attach-event="onclick:_onActivateTabularView,onmouseover:_onActivateTabularOver,onmouseout:_onMouseOutResetStatusText" class="${baseClass}ActiveViewControlButton" style="float: right; " title="Toggle List View">-->
-<!--                    <img class="${baseClass}ActiveViewControlButtonImage"-->
-<!--                         src="balek-modules/digivigil/digiscan/resources/images/list.svg">-->
-<!--                </div>-->
-<!--            </div>-->
-
-
-            <div  class="${baseClass}SetViewControl"
-                  style="position: fixed;
-                  top: 0;
-                  left: 50%;
-                  transform: translate(-50%, 0);
-                  z-index: 100;
-                  width: 100%;"
-                  data-dojo-attach-point="_listControlContainer">
-
-            </div>
+      <div
+        class="${baseClass}ExportControl"
+        style="
+          position: fixed;
+          bottom: 0;
+          left: 50%;
+          transform: translate(-50%, 0);
+          z-index: 100;
+        "
+      >
+        <div
+          data-dojo-attach-event="onclick:_onSaveClicked,onmouseover:_onSaveOver,onmouseout:_onMouseOutResetStatusText"
+          class="${baseClass}Button"
+          style="padding-left: 5px; padding-right: 5px"
+          title="Download Tab Deliminated Text File"
+        >
+          <img
+            class="${baseClass}ButtonImage"
+            src="balek-modules/digivigil/digiscan/resources/images/download.svg"
+          />
+        </div>
+        <div
+          data-dojo-attach-event="onclick:_onCopyClicked,onmouseover:_onCopyOver,onmouseout:_onMouseOutResetStatusText"
+          class="${baseClass}Button"
+          title="Copy Tab Deliminated Text To Clipboard"
+        >
+          <img
+            class="${baseClass}ButtonImage"
+            src="balek-modules/digivigil/digiscan/resources/images/copy.svg"
+          />
         </div>
 
+        <div
+          data-dojo-attach-event="onclick:_onAboutClicked,onmouseover:_onAboutOver,onmouseout:_onMouseOutResetStatusText"
+          class="${baseClass}Button"
+          style="float: right"
+          title="Control Panel"
+        >
+          <img
+            class="${baseClass}ButtonImage"
+            src="balek-modules/digivigil/digiscan/resources/images/gear.svg"
+          />
+        </div>
+      </div>
+
+      <div
+        class="${baseClass}SetViewControl"
+        style="
+          position: fixed;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, 0);
+          z-index: 100;
+          width: 100%;
+        "
+        data-dojo-attach-point="_listControlContainer"
+      ></div>
     </div>
+  </div>
 </div>

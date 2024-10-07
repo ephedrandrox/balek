@@ -1,14 +1,14 @@
 .digivigilDigiscanCaptureGridViewInterface {
   color: #ffffff;
-  background: rgba(20, 75, 115, 0.9);
+  background: rgba(110, 154, 185, 0.9);
   display: inline-block;
   text-align: left;
   padding: 0;
   border: none;
   border-radius: 15px;
   min-width: 200px;
-
-  margin: 10px;
+  max-height: 400px;
+  margin: 1px;
   outline: none;
   font-size: 10pt;
 
@@ -17,7 +17,8 @@
   box-shadow: 3px 6px 5px 0px rgba(0, 0, 0, 0.75);
 
   vertical-align: top;
-}
+  flex-grow: 1;
+  }
 
 .digivigilDigiscanCaptureGridViewInterfaceImageAndTextGrid {
   position: relative;
@@ -27,7 +28,7 @@
   gap: 0px 0px;
   grid-template-areas: "PreviewImage PreviewInfo";
 
-  max-height: 400px;
+  height: 300px;
   max-width: 100%;
 }
 .digivigilDigiscanCaptureGridViewInterfaceCaptureNotInSet {
@@ -127,13 +128,17 @@
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceHeaderDiv {
+  position: relative;
   display: block;
   background: none;
+  height: 100%;
+
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceListDiv {
   display: block;
   background: none;
+  height: 100%;
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceContentDiv {
@@ -142,7 +147,7 @@
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceNoteDiv {
-  position: relative;
+  position: absolute;
   display: block;
   /*background: #ffffff;*/
   /*border: solid #c2c2c2 2px;*/
@@ -152,4 +157,7 @@
   min-height: 20px;
 
   border-radius: 0 0 15px 15px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

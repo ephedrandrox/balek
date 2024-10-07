@@ -4,6 +4,8 @@
 
     Provides the main Interface widget for Scaptura
 
+    The main widget is also a _SyncedCommanderInterface and _BalekWorkspaceContainerContainable
+
     Expects creator to provide a _interfaceKey, _sessionKey, _componentKey, and _interface
 
 
@@ -17,6 +19,7 @@ Example of creating a main interface widget from the Interface
  */
 
 define([
+  //base
   "dojo/_base/declare",
   "dojo/_base/lang",
   "dojo/dom-style",
@@ -25,27 +28,24 @@ define([
   "dojo/_base/fx",
   "dojo/on",
   "dojo/dom-attr",
+  //UI
   "dojo/keys",
   "dijit/focus",
   "dojo/ready",
+  //Dojo Widgets
   "dijit/InlineEditBox",
   "dijit/form/TextBox",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
-
-  /*CaptureDetailView*/ "balek-modules/digivigil/digiscan/Interface/captureDetailView",
-
+  //Scaptura Widgets
+  "balek-modules/digivigil/digiscan/Interface/captureDetailView",
   "balek-modules/digivigil/digiscan/Interface/captureGridView",
   "balek-modules/digivigil/digiscan/Interface/listControl",
-  "balek-modules/digivigil/digiscan/Interface/tabular",
-
-  "balek-modules/digivigil/tabular/Interface/mainTable",
-  "balek-modules/digivigil/tabular/Model/table",
-  "balek-modules/digivigil/ui/about",
-
+  "balek-modules/digivigil/digiscan/Interface/capturesTableView",
+  //Widget Template
   "dojo/text!balek-modules/digivigil/digiscan/resources/html/main.html",
   "dojo/text!balek-modules/digivigil/digiscan/resources/css/main.css",
-
+  //Balek Modules
   "balek-modules/components/syncedCommander/Interface",
   "balek-client/session/workspace/container/containable",
 ], function (
@@ -57,22 +57,24 @@ define([
   fx,
   on,
   domAttr,
+  //UI
   dojoKeys,
   dijitFocus,
   dojoReady,
+  //Dojo Widgets
   InlineEditBox,
   TextBox,
   _WidgetBase,
   _TemplatedMixin,
+  //Scaptura Widgets
   CaptureDetailView,
   captureGridView,
   listControl,
   TableView,
-  Tabular,
-  TableModel,
-  AboutUI,
+  //Widget Template
   template,
   mainCss,
+  //Balek Modules
   _SyncedCommanderInterface,
   _BalekWorkspaceContainerContainable
 ) {
@@ -85,53 +87,54 @@ define([
       _BalekWorkspaceContainerContainable,
     ],
     {
+      //##########################################################################################################
+      //Widget Variables Section
+      //##########################################################################################################
+      //Passed arguments
       _instanceKey: null,
       _interface: null,
+      _sessionKey: null,
+      _componentKey: null,
+      //widget template
       baseClass: "digivigilDigiscanMainInterface",
-
       templateString: template,
       _mainCssString: mainCss,
-
-      Detail: null,
-
-      _previewDiv: null, //DomNode
-      _tabularDiv: null, //DomNode
-      _detailDiv: null, //DomNode
-
+      //DomNode Handles
+      _previewDiv: null,
+      _tabularDiv: null,
+      _detailDiv: null,
       _noSelectionDiv: null,
-      // _tabularContainer: null, //DomNode
-      // _tabularStatus: null,
-      // _tabularOutput: null,
-
       _statusDiv: null,
-
-      _listControlContainer: null, //DomNode
+      _listControlContainer: null,
+      //Child Widgets
       listControl: null,
-
-      tableModel: null,
       MainTable: null,
-
-      uiState: null, //SyncedMap
+      Detail: null,
+      //UI State
+      uiState: null,
       uiStateWatchHandle: null,
-
+      //Capture Sets State
       captureSets: null,
       captureSetsWatchHandle: null,
       currentCaptureSetWatchHandle: null,
       lastCaptureSetIDWatched: null,
-
+      //Array of Capture Grid Views
       CaptureViews: null,
       //##########################################################################################################
       //Startup Functions Section
       //##########################################################################################################
       constructor: function (args) {
+        /*
+         * Constructor
+         * @param {Object} args
+         * @param {string} args._instanceKey
+         * @param {string} args._sessionKey
+         * @param {string} args._componentKey
+         * @param {Object} args._interface
+         * Mixes in the passed arguments, creates storage objects and places the widget css into the body
+         */
         this._interface = {};
-        this._digiscanData = {};
         this.CaptureViews = {};
-        this.tableModel = new TableModel({
-          mostValuesInAnyLine: 0,
-          headerStart: 0,
-          footerStart: 0,
-        });
 
         declare.safeMixin(this, args);
         domConstruct.place(
@@ -140,33 +143,32 @@ define([
         );
       },
       postCreate: function () {
+        /*
+         * Post Create
+         * Initializes the containable, creates the detail view, main table view, and list control widgets
+         * Gets the UI State and Capture Sets from the interface
+         * Watches the UI State and Capture Sets for changes
+         * Refreshes the views
+         */
+        // Creates the workspace container for the widget
         this.initializeContainable();
-
+        //Create the Capture Detail View Widget
         this.Detail = new CaptureDetailView({
           _interfaceKey: this._interfaceKey,
           interfaceCommands: this._interface,
           domNodeToPlaceIn: this._detailDiv,
         });
-
         //Create the Main Table Widget
         if (this.MainTable == null) {
-          // this.MainTable = Tabular({tableModel: this.tableModel,
-          //     domStatusDiv: this._tabularStatus,
-          //     outputPreviewPane: this._tabularOutput
-          // })
           this.MainTable = TableView({
             _interfaceKey: this._interfaceKey,
             interfaceCommands: this._interface,
             mainInterface: this,
           });
-          // console.log("MainTable was created", this.MainTable)
           domConstruct.place(this.MainTable.domNode, this._tabularDiv, "only");
-        } else {
-          // console.log("MainTable already exists", this.MainTable)
         }
 
         //Create List Control Widget
-        //Should be null but check anyway
         if (this.listControl == null) {
           //Create list control Widget
           this.listControl = listControl({
@@ -195,7 +197,10 @@ define([
           )
           .catch(
             lang.hitch(this, function (Error) {
-              console.log("Error this._interface.getAvailableEntries()", Error);
+              console.error(
+                "Error this._interface.getAvailableEntries()",
+                Error
+              );
             })
           );
 
@@ -213,7 +218,7 @@ define([
           )
           .catch(
             lang.hitch(this, function (Error) {
-              console.log("Error this._interface.getCaptureSets()", Error);
+              console.error("Error this._interface.getCaptureSets()", Error);
             })
           );
       },
@@ -224,13 +229,7 @@ define([
       //##########################################################################################################
       //Event Functions Section
       //##########################################################################################################
-      onAvailableCapturesStateChange: function (name, oldState, newState) {
-        console.log("onAvailableCapturesStateChange", name, oldState, newState);
-        //his.refreshViews()
-      },
       onUIStateChange: function (name, oldState, newState) {
-        // console.log("onUIStateChange",name, oldState, newState)
-
         //if active view, selected capture set or show hidden captures changed
         if (
           name === "ActiveView" ||
@@ -246,17 +245,17 @@ define([
           this.updateStatusTextView();
         }
       },
-
       onCaptureSetsChange: function (captureSetID, oldName, newName) {
-        // console.log("onCaptureSetsChange",captureSetID, oldName, newName)
-
-        //if the users capture sets list changes
+        //When the selected capture sets capture list changes
         this.refreshViews();
       },
       setCurrentCaptureSetWatcher: function () {
         //refresh the view when the selected capture set changes
         //but first remove the previous watch event
 
+        //if the uiState is not null and the selected capture set is not null
+        //and the last capture set watched is not the same as the selected capture set
+        //then remove the previous watch event and create a new one
         if (this.uiState !== null) {
           const selectedCaptureSetID = this.uiState.get("selectedCaptureSet");
           if (
@@ -268,13 +267,16 @@ define([
               this.currentCaptureSetWatchHandle.unwatch();
               this.currentCaptureSetWatchHandle.remove();
             }
-
+            //if the selected capture set is not null
+            //
             const captureSet = this._interface
               .getCaptureSetsController()
               .getCaptureSetByID(selectedCaptureSetID);
             this.currentCaptureSetWatchHandle = captureSet.watch(
               lang.hitch(this, function (name, oldValue, newValue) {
                 if (newValue === true) {
+                  // if the received value is true then place the capture view in the preview div
+                  // and refresh the main table
                   let captureView = this.getCaptureView(name);
                   dojoReady(
                     lang.hitch(this, function () {
@@ -289,6 +291,8 @@ define([
                     this.MainTable.refreshUI();
                   }
                 } else if (newValue === false) {
+                  //if the received value is false then remove the capture view from the preview div
+                  //and refresh the main table
                   let captureView = this.getCaptureView(name);
                   dojoReady(
                     lang.hitch(this, function () {
@@ -296,11 +300,12 @@ define([
                         domConstruct.destroy(captureView.domNode);
                     })
                   );
-
                   if (this.MainTable !== null) {
                     this.MainTable.refreshUI();
                   }
                 } else if (name === "filterSettings") {
+                  //if the received value is not a boolean and it's name is filterSettings
+                  // then we want to use them to filter the captures
                   console.log(
                     "👽currentCaptureSetWatchHandle filter settings",
                     name,
@@ -308,6 +313,8 @@ define([
                     newValue
                   );
                 } else {
+                  //if the received value is not a boolean and it's name is not filterSettings
+                  //then we should issue a warning cause that is unexpected
                   console.warn(
                     "main captureSet.watch unexpected value",
                     name,
@@ -315,35 +322,22 @@ define([
                     newValue
                   );
                 }
-
-                // this.refreshViews()
               })
             );
           }
         }
       },
-
       //##########################################################################################################
-      //Widget Event Functions Section
+      //Widget UI Event Functions Section
       //##########################################################################################################
-
       _onKeyUp: function (keyUpEvent) {
+        //stops escape key from propagating
+        //Can be used to add more key commands
         switch (keyUpEvent.keyCode) {
           case dojoKeys.ESCAPE:
-            this._interface.toggleShowView();
             keyUpEvent.preventDefault();
             break;
         }
-      },
-      // _onActivatePreviewView: function(){
-      //     this.makePreviewDivActive()
-      // },
-      // _onActivateTabularView: function(){
-      //     this.makeTabularDivActive()
-      //     this._interface.setUIActiveView("tabularDiv");
-      // },
-      _onRemoveClicked: function (eventObject) {
-        this._interface.removeAllCaptures();
       },
       _onSaveOver: function (eventObject) {
         this.updateStatusText("🔆 Click to Save Captures");
@@ -351,13 +345,8 @@ define([
       _onCopyOver: function (eventObject) {
         this.updateStatusText("🔆 Click to Copy Captures to Clipboard 📋");
       },
-      _onRemoveOver: function (eventObject) {
-        this.updateStatusText("🔆 Click to Remove All Captures From Server");
-      },
-      _onAboutClicked: function (eventObject) {
-        // new AboutUI({interfaceCommands: this._interface,
-        // mainInterface: this});
 
+      _onAboutClicked: function (eventObject) {
         if (eventObject.altKey) {
           this._interface.hideSettings();
         } else {
@@ -370,28 +359,6 @@ define([
       _onMouseOutResetStatusText: function () {
         this.updateStatusText("");
       },
-      updateStatusText: function (newText) {
-        if (this.uiState !== null && typeof newText === "string") {
-        }
-        {
-          this.uiState.set("UIStatusText", newText);
-        }
-      },
-      updateAllStatusText: function (newStatusText) {
-        if (this.uiState !== null && typeof newStatusText === "string") {
-        }
-        {
-          this.uiState.set("UIStatusText", newStatusText);
-          //this.uiState.set("UIListControlStatusText", newStatusText)
-        }
-      },
-      updateListControlStatusText: function (newText) {
-        if (this.uiState !== null && typeof newText === "string") {
-        }
-        {
-          this.uiState.set("UIListControlStatusText", newText);
-        }
-      },
       _onSaveClicked: function (eventObject) {
         let tabbedString = this.getTabSeperatedEntries();
         this.createTabbedDataDownload(tabbedString);
@@ -399,6 +366,11 @@ define([
       _onCopyClicked: function (eventObject) {
         let tabbedString = this.getTabSeperatedEntries();
         this.copyToClipboard(tabbedString);
+      },
+      updateStatusText: function (newText) {
+        if (this.uiState !== null && typeof newText === "string") {
+          this.uiState.set("UIStatusText", newText);
+        }
       },
       //##########################################################################################################
       //Interface Commands Functions Section
@@ -419,31 +391,21 @@ define([
       //UI Update Functions Section
       //##########################################################################################################
       refreshViews: function () {
+        /*
+         * Refreshes the views based on the UI State
+         */
         if (this.uiState != null) {
-          // console.log("refreshing view")
-
-          const activeView = this.uiState.get("ActiveView");
-          const selectedCaptures = this.uiState.get("selectedCaptures");
-
-          this.tableModel.setDataString(this.getTabSeperatedEntries());
-
+          //Create references to the divs
           const previewDiv = this._previewDiv;
           const tabularDiv = this._tabularDiv;
           const noSelectionDiv = this._noSelectionDiv;
-
-          if (activeView === "previewDiv") {
-            this.switchViews(tabularDiv, previewDiv);
-            this.updatePreviewViews();
-          } else if (activeView === "tabularDiv") {
-            this.switchViews(previewDiv, tabularDiv);
-            if (this.MainTable !== null) {
-              this.MainTable.refreshUI();
-            }
-          } else {
-            // console.log("switchViews unexpected", activeView)
-          }
+          //get the active view, selected captures, and selected capture set from the UI State
+          const activeView = this.uiState.get("ActiveView");
+          const selectedCaptures = this.uiState.get("selectedCaptures");
           let selectedCaptureSet = this.uiState.get("selectedCaptureSet");
-
+          //If there is a selected capture set and it is in the capture sets list
+          //Then show the preview and tabular divs
+          //Otherwise hide them and show the no selection div
           if (
             selectedCaptureSet &&
             this.captureSets &&
@@ -458,17 +420,29 @@ define([
             domStyle.set(noSelectionDiv, "display", "inline-block");
           }
 
+          //if there are selected captures and the active view is the preview div
+          //then show the detail div otherwise hide it
           if (
             Array.isArray(selectedCaptures) &&
             selectedCaptures.length > 0 &&
             activeView === "previewDiv"
           ) {
-            //then
             domStyle.set(this._detailDiv, "width", "inherit");
             domStyle.set(this._detailDiv, "visibility", "inherit");
           } else {
             domStyle.set(this._detailDiv, "width", "0");
             domStyle.set(this._detailDiv, "visibility", "hidden");
+          }
+
+          //Show and refresh the active View
+          if (activeView === "previewDiv") {
+            this.switchViews(tabularDiv, previewDiv);
+            this.updatePreviewViews();
+          } else if (activeView === "tabularDiv") {
+            this.switchViews(previewDiv, tabularDiv);
+            if (this.MainTable !== null) {
+              this.MainTable.refreshUI();
+            }
           }
         }
       },
@@ -476,7 +450,6 @@ define([
         if (this.uiState != null) {
           const showHelpfulHints = this.uiState.get("showHelpfulHints");
           const UIStatusText = this.uiState.get("UIStatusText");
-
           if (
             UIStatusText === "" ||
             UIStatusText === undefined ||
@@ -491,9 +464,11 @@ define([
         }
       },
       updatePreviewViews: function () {
+        console.log("👽updatePreviewViews");
         domConstruct.empty(this._previewDiv);
         this.forEachSelectedCapture(
           lang.hitch(this, function (captureID) {
+            console.log("👽updatePreviewViews captureID", captureID);
             let captureView = this.getCaptureView(captureID);
 
             dojoReady(
@@ -544,9 +519,8 @@ define([
       //Export and Data Functions Section
       //##########################################################################################################
       getTabSeperatedEntries: function () {
-        //let tabbedString = "barcode\tnote\tdateString\trecognizedText\t\n" ;
+        //todo move this to interface controller
         let csvContent = "Barcode,Note,Date,RecognizedText\n";
-
         this.forEachSelectedCapture(
           lang.hitch(this, function (captureID) {
             if (captureID) {
@@ -559,16 +533,7 @@ define([
                 const dateString = capture.get("created");
                 const recognizedText = capture.get("recognizedText");
                 if (typeof recognizedText === "string") {
-                  // const encodedString = recognizedText.replace(/\n/g, '\\n')
-                  // //  tabbedString += barcode + "\t" + recognizedText.replace(/(?:\r\n|\r|\n)/g, "\t") + "\n";
-                  // tabbedString += barcode + "\t" + note + "\t" +  dateString + "\t" +encodedString+ "\n";
-                  // const encodedRecognizedText = recognizedText.replace(/\n/g, '\n');
-                  // tabbedString +=
-                  //     barcode + "\t" +
-                  //     '"' + note.replace(/"/g, '""') + '"' + "\t" +
-                  //     dateString + "\t" +
-                  //     '"' + encodedRecognizedText.replace(/"/g, '""') + '"' + "\t\n";
-
+                  //todo allow for user to choose delimiter and newline replacement
                   const encodedNote = note
                     .replace(/"/g, '""')
                     .replace(/\r?\n/g, "\n");
@@ -608,6 +573,7 @@ define([
           const showHiddenCaptures = this.uiState.get("showHiddenCaptures");
           if (captureSet) {
             let availableCaptures = this._interface.availableCaptures;
+
             availableCaptures.forEach(
               lang.hitch(this, function (key) {
                 let keyInCaptureSet = captureSet.get(key);

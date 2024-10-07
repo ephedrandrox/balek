@@ -253,12 +253,14 @@ define([
       If shift key is pressed, unselect Capture*/
       onImageClick: function (clickEvent) {
         if (clickEvent.shiftKey) {
+          console.log("Clearing Selected Captures");
           this.interfaceCommands.clearSelectedCaptures(
             lang.hitch(this, function (commandResult) {
               console.log("returned", commandResult);
             })
           );
         } else {
+          console.log(`Selecting Capture ${this.captureID}`);
           this.interfaceCommands.selectCapture(
             this.captureID,
             lang.hitch(this, function (commandResult) {

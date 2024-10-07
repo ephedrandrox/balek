@@ -45,6 +45,11 @@ body {
   right: 0;
 
   overflow: scroll;
+
+  display: flex;
+  flex-wrap: wrap; /* Allows the items to wrap into multiple rows */
+  gap: 10px; /* Adds space between items (optional) */
+  align-items: flex-start;
 }
 
 .digivigilDigiscanMainInterfaceExportControl {
@@ -316,7 +321,7 @@ body {
   bottom: -3px;
   overflow: hidden;
 
-  background-color: rgba(79, 96, 128, 0.6);
+  background-color: rgba(160, 189, 246, 0.6);
 }
 
 .digivigilDigiscanMainInterfaceBackgroundDivImage {

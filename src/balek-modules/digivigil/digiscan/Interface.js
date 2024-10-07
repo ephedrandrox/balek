@@ -1,23 +1,27 @@
+/*
+Scaptura Module Interface
+
+Created by the Balek Module Manager
+
+ */
+
 define([
+  //base
   "dojo/_base/declare",
   "dojo/_base/lang",
   "dojo/topic",
   "dojo/Stateful",
-
-  "dojo/dom-construct",
-  "dojo/dom-style",
-  "dojo/_base/window",
-
+  //Balek Interface Commands
   "balek-client/session/workspace/workspaceManagerInterfaceCommands",
-
+  // Scaptura Widgets
   "balek-modules/digivigil/digiscan/Interface/main",
   "balek-modules/digivigil/digiscan/Interface/settings",
-
+  //Scaptura Controllers
   "balek-modules/digivigil/digiscan/Interface/Controller/Captures/Interface",
   "balek-modules/digivigil/digiscan/Interface/Controller/CaptureSets/Interface",
-
+  //Scaptura Utilities
   "balek-modules/digivigil/util/dates",
-
+  //Balek Components
   "balek-modules/components/syncedCommander/Interface",
   "balek-modules/components/syncedMap/Interface",
 ], function (
@@ -25,19 +29,17 @@ define([
   lang,
   topic,
   Stateful,
-  domConstruct,
-  domStyle,
-  win,
+  //Balek Interface Commands
   balekWorkspaceManagerInterfaceCommands,
-
+  // Scaptura Widgets
   MainInterface,
   SettingsInterface,
-
+  //Scaptura Controllers
   Captures,
   CaptureSets,
-
+  //Scaptura Utilities
   DateUtility,
-
+  //Balek Components
   _SyncedCommanderInterface,
   SyncedMapInterface
 ) {
@@ -46,22 +48,25 @@ define([
     _SyncedCommanderInterface,
     {
       _instanceKey: null,
+      //Interface Widgets
       _mainInterface: null,
       _settingsInterface: null,
-
+      //Interface Controllers
       _Captures: null,
       _CaptureSets: null,
-
+      //Balek Commander
       workspaceManagerCommands: null,
-
+      //Synced Maps
       availableCaptures: null,
       interestedCaptures: null,
-      captureSets: null,
       captureSetsSyncedMap: null,
-      captureSetsWatchHandle: null,
 
-      captureSyncedMaps: null,
-      captureSyncedMapWatchHandles: null,
+      // captureSyncedMaps: null,
+      // captureSyncedMapWatchHandles: null,
+
+      //Local State Objects
+      captureSets: null,
+      captureSetsWatchHandle: null,
 
       uiState: null,
       uiStateSyncedMap: null,
@@ -82,8 +87,8 @@ define([
         this._Captures = new Captures({ _interface: this });
         this._CaptureSets = new CaptureSets({ _interface: this });
 
-        this.captureSyncedMaps = {};
-        this.captureSyncedMapWatchHandles = {};
+        //  this.captureSyncedMaps = {};
+        // this.captureSyncedMapWatchHandles = {};
 
         let workspaceManagerInterfaceCommands =
           new balekWorkspaceManagerInterfaceCommands();
@@ -114,8 +119,23 @@ define([
               _instanceKey: this._instanceKey,
               _componentKey: newState.toString(),
             });
+
+            // const availableCapturesWatchHandle =
+            //   this.availableCaptures.setStateWatcher(
+            //     lang.hitch(this, function (name, oldValue, newValue) {
+            //       console.log(
+            //         "🤡🤡availableCaptures",
+            //         name,
+            //         oldValue,
+            //         newValue
+            //       );
+            //     })
+            //   );
+
             for (const ResolveKey in this.availableCapturesResolveRequests) {
-              this.availableCaptures[ResolveKey](this.availableCaptures);
+              this.availableCapturesResolveRequests[ResolveKey](
+                this.availableCaptures
+              );
             }
           }
         } else if (name === "interestedCapturesComponentKey") {

@@ -1,4 +1,4 @@
-# Deployment, Reporting, and Testing Utilities
+#  Utilities for Deployment, Reporting, and Testing
 
 A collection of bash and javascript utilities to help with the deployment, reporting, and testing. All examples meant to be initiated from the root of the repository.  
 
@@ -35,3 +35,4 @@ Resets the Production Environment Owner device, reintializes the database, and r
 ```bash
 ./util/production/reset.sh
 ```
+

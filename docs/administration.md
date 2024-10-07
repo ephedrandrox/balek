@@ -1,7 +1,7 @@
-# Diaplode Administration Guide
+# Scaptura Administration Guide
 
 ## Installation
-Installation is done on a local or remote host through a terminal. Docker is the prefered method of deployment. On hosts that require more configuration or are unable to utilize Docker, Diaplode can be run directly through Node or Npm. This method requires installation and configuration of database and ssh services. You will also need Java if you use the Dojo build utility to combine, optimize and minify the client code.
+Installation is done on a local or remote host through a terminal. Docker is the prefered method of deployment. On hosts that require more configuration or are unable to utilize Docker, Scaptura can be run directly through Node or Npm. This method requires installation and configuration of database and ssh services. You will also need Java if you use the Dojo build utility to combine, optimize and minify the client code.
 
 A custom installation is out of the scope of this guide at this time.
 
@@ -18,6 +18,7 @@ On a host with Git and Docker installed, clone the Balek Repository and submodul
 ### Build the Docker containers
     
     ./util/production/build.sh
+
 This will build containers for Scaptura, MariaDB, MongoDB, and Nginx.
 
 ### Run the containers with:
