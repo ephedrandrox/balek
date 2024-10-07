@@ -187,7 +187,7 @@ define([
       _onActivatePreviewOver: function () {
         this.updateStatusText("🔆 Click and Switch To Grid View ");
       },
-      _onActivateTabularOver: function () {
+      _onActivateTableViewOver: function () {
         this.updateStatusText("🔆 Click and Switch To List View");
       },
       _onClearOver: function (overEvent) {
@@ -238,9 +238,9 @@ define([
         this.updateStatusText("");
         this.mainInterface.makePreviewDivActive();
       },
-      _onActivateTabularView: function () {
+      _onActivateTableView: function () {
         this.updateStatusText("");
-        this.mainInterface.makeTabularDivActive();
+        this.mainInterface.makeTableViewDivActive();
       },
       _onClearCapturesFromSet: function () {
         if (this.uiState != null) {
@@ -288,7 +288,7 @@ define([
           if (activeView === "previewDiv") {
             domStyle.set(this._ToggleListViewDiv, "display", "block");
             domStyle.set(this._ToggleGridViewDiv, "display", "none");
-          } else if (activeView === "tabularDiv") {
+          } else if (activeView === "tableDiv") {
             domStyle.set(this._ToggleListViewDiv, "display", "none");
             domStyle.set(this._ToggleGridViewDiv, "display", "block");
           }

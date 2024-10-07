@@ -19,8 +19,8 @@ define([
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
 
-  "dojo/text!balek-modules/digivigil/digiscan/resources/html/tabular.html",
-  "dojo/text!balek-modules/digivigil/digiscan/resources/css/tabular.css",
+  "dojo/text!balek-modules/digivigil/digiscan/resources/html/tableView.html",
+  "dojo/text!balek-modules/digivigil/digiscan/resources/css/tableView.css",
 
   "balek-modules/digivigil/digiscan/Interface/captureRowView",
 ], function (
@@ -46,12 +46,12 @@ define([
   CaptureRowView
 ) {
   return declare(
-    "digivigilDigiscanCapturesTabularViewInterface",
+    "digivigilDigiscanCapturesTableViewInterface",
     [_WidgetBase, _TemplatedMixin],
     {
       _instanceKey: null,
       templateString: template,
-      baseClass: "digivigilDigiscanCapturesTabularViewInterface",
+      baseClass: "digivigilDigiscanCapturesTableViewInterface",
 
       _mainCssString: mainCss,
 

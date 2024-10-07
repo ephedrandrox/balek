@@ -101,7 +101,7 @@ define([
       _mainCssString: mainCss,
       //DomNode Handles
       _previewDiv: null,
-      _tabularDiv: null,
+      _tableDiv: null,
       _detailDiv: null,
       _noSelectionDiv: null,
       _statusDiv: null,
@@ -165,7 +165,7 @@ define([
             interfaceCommands: this._interface,
             mainInterface: this,
           });
-          domConstruct.place(this.MainTable.domNode, this._tabularDiv, "only");
+          domConstruct.place(this.MainTable.domNode, this._tableDiv, "only");
         }
 
         //Create List Control Widget
@@ -375,16 +375,16 @@ define([
       //##########################################################################################################
       //Interface Commands Functions Section
       //##########################################################################################################
-      makeTabularDivActive: function () {
+      makeTableViewDivActive: function () {
         const previewDiv = this._previewDiv;
-        const tabularDiv = this._tabularDiv;
-        this.switchViews(previewDiv, tabularDiv);
-        this._interface.setUIActiveView("tabularDiv");
+        const tableDiv = this._tableDiv;
+        this.switchViews(previewDiv, tableDiv);
+        this._interface.setUIActiveView("tableDiv");
       },
       makePreviewDivActive: function () {
         const previewDiv = this._previewDiv;
-        const tabularDiv = this._tabularDiv;
-        this.switchViews(tabularDiv, previewDiv);
+        const tableDiv = this._tableDiv;
+        this.switchViews(tableDiv, previewDiv);
         this._interface.setUIActiveView("previewDiv");
       },
       //##########################################################################################################
@@ -397,14 +397,14 @@ define([
         if (this.uiState != null) {
           //Create references to the divs
           const previewDiv = this._previewDiv;
-          const tabularDiv = this._tabularDiv;
+          const tableDiv = this._tableDiv;
           const noSelectionDiv = this._noSelectionDiv;
           //get the active view, selected captures, and selected capture set from the UI State
           const activeView = this.uiState.get("ActiveView");
           const selectedCaptures = this.uiState.get("selectedCaptures");
           let selectedCaptureSet = this.uiState.get("selectedCaptureSet");
           //If there is a selected capture set and it is in the capture sets list
-          //Then show the preview and tabular divs
+          //Then show the preview and table div
           //Otherwise hide them and show the no selection div
           if (
             selectedCaptureSet &&
@@ -412,11 +412,11 @@ define([
             this.captureSets[selectedCaptureSet]
           ) {
             domStyle.set(previewDiv, "visibility", "inherit");
-            domStyle.set(tabularDiv, "visibility", "inherit");
+            domStyle.set(tableDiv, "visibility", "inherit");
             domStyle.set(noSelectionDiv, "display", "none");
           } else {
             domStyle.set(previewDiv, "visibility", "hidden");
-            domStyle.set(tabularDiv, "visibility", "hidden");
+            domStyle.set(tableDiv, "visibility", "hidden");
             domStyle.set(noSelectionDiv, "display", "inline-block");
           }
 
@@ -436,10 +436,10 @@ define([
 
           //Show and refresh the active View
           if (activeView === "previewDiv") {
-            this.switchViews(tabularDiv, previewDiv);
+            this.switchViews(tableDiv, previewDiv);
             this.updatePreviewViews();
-          } else if (activeView === "tabularDiv") {
-            this.switchViews(previewDiv, tabularDiv);
+          } else if (activeView === "tableDiv") {
+            this.switchViews(previewDiv, tableDiv);
             if (this.MainTable !== null) {
               this.MainTable.refreshUI();
             }

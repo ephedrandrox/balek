@@ -4,7 +4,7 @@ A collection of bash and javascript utilities to help with the deployment, repor
 
 ## 📁 Certificates
 Contains bash scripts to create and manage SSL certificates for the Docker Containers
-### 📄 get.sh
+### 📄 Fetch Certificates
 Uses Certbot to request certificates from Let's Encrypt and places them in the `./certs` directory for the Docker Containers. 
 ```bash
 ./util/certificates/get.sh
@@ -13,26 +13,39 @@ Uses Certbot to request certificates from Let's Encrypt and places them in the `
 ## 📁 Production
 Contains bash scripts to build, run, and reset the production environment docker containers.
 
-### 📄 build.sh
+### Building and Running  
+  
+#### 📄 Build
 Builds the Docker Containers needed for the Production Environment.
 ```bash
 ./util/production/build.sh
 ```
-### 📄 start.sh
+#### 📄 Start
 Starts the Production Environment Docker Containers. Checks and builds images if necessary.
 ```bash
 ./util/production/start.sh
 ```
-### 📄 stop.sh
+#### 📄 Stop
 Stops the Production Environment Docker Containers.
 ```bash
 ./util/production/stop.sh
 ```
 
-### 📄 reset.sh
+#### 📄 Reset
 Resets the Production Environment Owner device, reintializes the database, and rebuilds the Docker Containers. Leaves the config.json and ssl certificates in container configuration directory.
 
 ```bash
 ./util/production/reset.sh
 ```
+### Status and Reporting
+#### 📄 Container Status
+Shows the status of the Production Environment Docker Containers.
+```bash
+./util/production/status.sh
+```
 
+#### 📄 Database Contents Status
+Shows the status of the MySQL and MongoDB databases in the Production Environment.
+```bash
+./util/production/showDatabaseStatus.sh
+``` 
