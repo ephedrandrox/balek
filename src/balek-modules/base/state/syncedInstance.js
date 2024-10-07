@@ -45,6 +45,81 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         });
       }
     },
+    //called by baseInstance components
+    receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
+      if (moduleMessage.instanceKey == this._instanceKey) {
+        if (moduleMessage.messageData) {
+          if (moduleMessage.messageData.request) {
+            if (moduleMessage.messageData.request === "Component Key") {
+              messageCallback({ componentKey: this._componentKey });
+            }
+            if (
+              moduleMessage.messageData.request === "Remote Command" &&
+              moduleMessage.messageData.remoteCommanderKey &&
+              moduleMessage.messageData.remoteCommand !== undefined
+            ) {
+              this.routeCommand(
+                this._instanceKey,
+                moduleMessage.messageData.remoteCommanderKey,
+                moduleMessage.messageData.remoteCommand,
+                messageCallback,
+                moduleMessage.messageData.remoteCommandArguments
+              );
+            }
+            if (
+              moduleMessage.messageData.request === "State Connect" &&
+              moduleMessage.messageData.componentKey
+            ) {
+              this.connectInterface(
+                this._instanceKey,
+                moduleMessage.messageData.componentKey,
+                messageCallback
+              );
+            }
+            if (
+              moduleMessage.messageData.request === "Component State Connect" &&
+              moduleMessage.messageData.componentKey
+            ) {
+              this.connectComponentInterface(
+                this._instanceKey,
+                moduleMessage.messageData.componentKey,
+                moduleMessage.messageData.stateName,
+                messageCallback
+              );
+            }
+            if (
+              moduleMessage.messageData.request === "Component State Update" &&
+              moduleMessage.messageData.componentKey
+            ) {
+              this.updateComponentInterface(
+                this._instanceKey,
+                moduleMessage.messageData.componentKey,
+                moduleMessage.messageData.stateName,
+                moduleMessage.messageData.update
+              );
+            }
+            if (
+              moduleMessage.messageData.request === "Component State Default" &&
+              moduleMessage.messageData.componentKey
+            ) {
+              this.updateComponentStateDefaultValue(
+                this._instanceKey,
+                moduleMessage.messageData.componentKey,
+                moduleMessage.messageData.stateName,
+                moduleMessage.messageData.default
+              );
+            }
+          }
+        }
+      } else {
+        console.log(
+          "received Module message with incorrect instanceKey",
+          moduleMessage.instanceKey,
+          this._instanceKey
+        );
+      }
+    },
+
     // askToConnectInterface: function () {
     //   this.sendInstanceCallbackMessage(
     //     {
@@ -204,29 +279,29 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
     //   }
     // },
 
-    _componentStateSet: function (stateName, objectName, object) {
-      this.sendInstanceMessage({
-        request: "Component State Update",
-        stateName: stateName,
-        componentKey: this._componentKey,
-        update: { name: objectName, state: object },
-      });
-    },
-    _componentDefaultStateSet: function (stateName, objectName, object) {
-      this.sendInstanceMessage({
-        request: "Component State Default",
-        stateName: stateName,
-        componentKey: this._componentKey,
-        default: { name: objectName, state: object },
-      });
-    },
+    // _componentStateSet: function (stateName, objectName, object) {
+    //   this.sendInstanceMessage({
+    //     request: "Component State Update",
+    //     stateName: stateName,
+    //     componentKey: this._componentKey,
+    //     update: { name: objectName, state: object },
+    //   });
+    // },
+    // _componentDefaultStateSet: function (stateName, objectName, object) {
+    //   this.sendInstanceMessage({
+    //     request: "Component State Default",
+    //     stateName: stateName,
+    //     componentKey: this._componentKey,
+    //     default: { name: objectName, state: object },
+    //   });
+    // },
     updateComponentInterface: function (
       instanceKey,
       componentKey,
       stateName,
       stateUpdate
     ) {
-      //this is hwere I should be starting
+      //This is called when sent a component state update from the interface
       if (this._components[componentKey]) {
         let component = this._components[componentKey];
         if (component._componentStates[stateName] !== undefined) {

@@ -181,6 +181,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         });
       }
     },
+    //🤮used to update the state of the interface by sending a message to the instance
     _componentStateSet: function (stateName, objectName, object) {
       this.sendInstanceMessage({
         request: "Component State Update",
@@ -189,6 +190,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         update: { name: objectName, state: object },
       });
     },
+    //🤮used to update the default state of the interface by sending a message to the instance
     _componentDefaultStateSet: function (stateName, objectName, object) {
       this.sendInstanceMessage({
         request: "Component State Default",
