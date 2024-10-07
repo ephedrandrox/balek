@@ -20,7 +20,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
 
     constructor: function (args) {
       declare.safeMixin(this, args);
-
+      console.log("🙀🙀moduleBaseStateTransmitter constructor");
       this._componentStates = {};
       this._componentStateInterfaceCallbacks = {};
       this._componentStateWatchHandles = {};

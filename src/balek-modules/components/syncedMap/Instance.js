@@ -12,10 +12,14 @@ define([
       _instanceKey: null,
       _sessionKey: null,
 
+      _commonName: "SyncedMap",
+
       _relayStateWatchHandle: null,
       constructor: function (args) {
         declare.safeMixin(this, args);
-        // console.log("moduleBaseSyncedMapInstance starting...");
+        console.log(
+          `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting...`
+        );
         this.prepareSyncedState();
         this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
       },

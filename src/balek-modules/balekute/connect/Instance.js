@@ -53,6 +53,7 @@ define([
 
       this.availableInvitations = new SyncedMapInstance({
         _instanceKey: this._instanceKey,
+        _commonName: "Available Invitations",
       });
 
       this._interfaceState.set(
