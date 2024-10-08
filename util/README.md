@@ -49,3 +49,14 @@ Shows the status of the MySQL and MongoDB databases in the Production Environmen
 ```bash
 ./util/production/showDatabaseStatus.sh
 ``` 
+#### 📄 Add Device
+Adds a new device to the Production Environment. 
+```bash
+./util/production/addDevice.sh UserName=Owner \
+    PublicKey="-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzjqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7Vd6T/tgZw2vWVQ3NpZX\nE5yFgdDKF9K5Q09jFZDv0SBYQGmxfBCLHSczN+weAvOSkhU71EPUOQK5I8OYpt==\n-----END PUBLIC KEY-----" \
+    KeychainIdentifier=com.digivigil.balekute.device.devicehost.local \
+    Signature=OISEOI2345W98785B2RHESSSWUQNJDKJS \
+    Name=iPhone \
+    OSName=iOS \
+    Hostname=devicehost.local
+```
