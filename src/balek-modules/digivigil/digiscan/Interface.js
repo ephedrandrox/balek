@@ -114,7 +114,11 @@ define([
 
         if (name === "availableCapturesComponentKey") {
           //Create availableCaptures SyncedMap
-          if (this.availableCaptures === null) {
+          if (
+            this.availableCaptures === null &&
+            newState &&
+            typeof newState.toString === "function"
+          ) {
             this.availableCaptures = new SyncedMapInterface({
               _instanceKey: this._instanceKey,
               _componentKey: newState.toString(),
@@ -140,7 +144,11 @@ define([
           }
         } else if (name === "interestedCapturesComponentKey") {
           //Create availableCaptures SyncedMap
-          if (this.interestedCaptures === null) {
+          if (
+            this.interestedCaptures === null &&
+            newState &&
+            typeof newState.toString === "function"
+          ) {
             this.interestedCaptures = new SyncedMapInterface({
               _instanceKey: this._instanceKey,
               _componentKey: newState.toString(),
@@ -153,7 +161,11 @@ define([
           }
         } else if (name === "captureSetsComponentKey") {
           //Create availableCaptures SyncedMap
-          if (this.captureSetsSyncedMap === null) {
+          if (
+            this.captureSetsSyncedMap === null &&
+            newState &&
+            typeof newState.toString === "function"
+          ) {
             this.captureSetsSyncedMap = new SyncedMapInterface({
               _instanceKey: this._instanceKey,
               _componentKey: newState.toString(),
@@ -169,7 +181,11 @@ define([
           }
         } else if (name === "uiStateComponentKey") {
           //Create availableCaptures SyncedMap
-          if (this.uiStateSyncedMap === null) {
+          if (
+            this.uiStateSyncedMap === null &&
+            newState &&
+            typeof newState.toString === "function"
+          ) {
             this.uiStateSyncedMap = new SyncedMapInterface({
               _instanceKey: this._instanceKey,
               _componentKey: newState.toString(),
@@ -185,7 +201,11 @@ define([
           }
         } else if (name === "mainInstanceKeys") {
           //Create Main Interface
-          if (this._mainInterface === null) {
+          if (
+            this._mainInterface === null &&
+            newState &&
+            typeof newState.toString === "object"
+          ) {
             this._mainInterface = new MainInterface({
               _instanceKey: newState.instanceKey,
               _sessionKey: newState.sessionKey,
