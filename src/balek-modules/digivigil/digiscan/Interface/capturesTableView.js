@@ -138,9 +138,7 @@ define([
           this.mainInterface !== null &&
           typeof this.mainInterface.updateStatusText === "function"
         ) {
-          this.mainInterface.updateAllStatusText(
-            "🔆 Clear all captures from set"
-          );
+          this.mainInterface.updateStatusText("🔆 Clear all captures from set");
         } else {
           console.log(this.mainInterface);
         }
@@ -166,11 +164,11 @@ define([
               "showingHiddenCaptures"
             );
             if (showingHiddenCaptures) {
-              this.mainInterface.updateAllStatusText(
+              this.mainInterface.updateStatusText(
                 "🔆 Hide Captures not in Set"
               );
             } else {
-              this.mainInterface.updateAllStatusText(
+              this.mainInterface.updateStatusText(
                 "🔆 Show Captures not in Set"
               );
             }
@@ -188,18 +186,14 @@ define([
               false,
               lang.hitch(this, function (commandResult) {})
             );
-            this.mainInterface.updateAllStatusText(
-              "🔆 Show Captures not in Set"
-            );
+            this.mainInterface.updateStatusText("🔆 Show Captures not in Set");
           } else {
             this.uiState.set("showingHiddenCaptures", true);
             this.interfaceCommands.showHiddenCaptures(
               true,
               lang.hitch(this, function (commandResult) {})
             );
-            this.mainInterface.updateAllStatusText(
-              "🔆 Hide Captures not in Set"
-            );
+            this.mainInterface.updateStatusText("🔆 Hide Captures not in Set");
           }
         }
       },
@@ -208,7 +202,7 @@ define([
           this.mainInterface !== null &&
           typeof this.mainInterface.updateStatusText === "function"
         ) {
-          this.mainInterface.updateAllStatusText(
+          this.mainInterface.updateStatusText(
             "🔆 Copy Comma Seperated List Of Codes to Clipboard  📋"
           );
         } else {
@@ -220,7 +214,7 @@ define([
           this.mainInterface !== null &&
           typeof this.mainInterface.updateStatusText === "function"
         ) {
-          this.mainInterface.updateAllStatusText("");
+          this.mainInterface.updateStatusText("");
         } else {
           console.log(this.mainInterface);
         }

@@ -91,7 +91,7 @@ define([
 
       this.availableCaptures = new SyncedMapInstance({
         _instanceKey: this._instanceKey,
-        _commonName: "AvailableCaptures",
+        _commonName: "Available Captures",
       });
       this._interfaceState.set(
         "availableCapturesComponentKey",
@@ -100,7 +100,7 @@ define([
 
       this.captureSets = new SyncedMapInstance({
         _instanceKey: this._instanceKey,
-        _commonName: "CaptureSets",
+        _commonName: "Capture Sets",
       });
       this._interfaceState.set(
         "captureSetsComponentKey",

@@ -11,12 +11,13 @@
   margin: 1px;
   outline: none;
   font-size: 10pt;
-
   -webkit-box-shadow: 3px 6px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 3px 6px 5px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 3px 6px 5px 0px rgba(0, 0, 0, 0.75);
 
-  vertical-align: top;
+  vertical-align: center;
+  align-items: stretch;
+
   flex-grow: 1;
   }
 
@@ -68,6 +69,7 @@
 
 .digivigilDigiscanCaptureGridViewInterfaceText {
   color: pink;
+margin-right:5px;
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceRecognizedText {
@@ -101,7 +103,8 @@
   min-height: 20px;
   padding: 3px;
 
-  max-width: 500px;
+  /*max-width: 500px;*/
+
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceIconImg {
@@ -117,8 +120,8 @@
   /*background: rgba(106, 178, 238, 0.86);*/
 
   /*border: solid #c2c2c2 2px;*/
-  justify-content: right;
-  align-items: right;
+  justify-content: flex-end;
+  align-items: flex-start;
   text-align: right;
 
   padding: 5px;

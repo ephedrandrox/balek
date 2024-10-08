@@ -2,6 +2,9 @@
 Synced Instance:
 This is a base class that is used to create a synced state object between an instance and an interface.
 
+It can be extended by a module instance to create a synced state object that can be shared with an interface.
+
+The synced state object can be used to share state between the instance and the interface.
 
 */
 
@@ -17,10 +20,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
     _componentStateWatchHandles: {},
     _components: {},
     _componentKey: null,
-
+    /*############################################################################################################
+    ############################################################################################################
+    Object Construction, Deconstruction and Utility Functions
+   */
     constructor: function (args) {
       declare.safeMixin(this, args);
-      console.log("🙀🙀moduleBaseStateTransmitter constructor");
+      // console.log("🙀🙀moduleBaseStateTransmitter constructor");
       this._componentStates = {};
       this._componentStateInterfaceCallbacks = {};
       this._componentStateWatchHandles = {};
@@ -33,6 +39,30 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         lang.hitch(this, this.onInterfaceStateChange)
       );
     },
+
+    _end: function () {
+      return new Promise(
+        lang.hitch(this, function (Resolve, Reject) {
+          for (const key in this._componentStateWatchHandles) {
+            this._componentStateWatchHandles[key].unwatch();
+            this._componentStateWatchHandles[key].remove();
+          }
+          this._interfaceStateWatchHandle.unwatch();
+          this._interfaceStateWatchHandle.remove();
+          Resolve({ success: "Unloaded Instance" });
+        })
+      );
+    },
+    getUniqueComponentKey: function () {
+      let crypto = require("dojo/node!crypto");
+      do {
+        let id = "CK" + crypto.randomBytes(20).toString("hex");
+        if (typeof this._components[id] == "undefined")
+          this._components[id] = "Waiting for Object";
+        return id;
+      } while (true);
+    },
+
     onInterfaceStateChange: function (name, oldState, newState) {
       //overwrite in Interface
       if (this._stateChangeInterfaceCallback) {
@@ -45,7 +75,23 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         });
       }
     },
-    //called by baseInstance components
+    /*############################################################################################################
+   ############################################################################################################
+   Extending Module Functions
+    */
+    //called by extended module instance to initialize the component key and place it in the interface state
+    prepareSyncedState: function () {
+      if (!this._componentKey) {
+        this._componentKey = this.getUniqueComponentKey();
+      }
+      this._components[this._componentKey] = this;
+      this._interfaceState.set("componentKey", this._componentKey);
+    },
+    /*############################################################################################################
+    ############################################################################################################
+    Receiving From Interface
+     */
+    //called by base module instance which can be extended with this module
     receiveMessage: function (moduleMessage, wssConnection, messageCallback) {
       if (moduleMessage.instanceKey == this._instanceKey) {
         if (moduleMessage.messageData) {
@@ -56,7 +102,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
             if (
               moduleMessage.messageData.request === "Remote Command" &&
               moduleMessage.messageData.remoteCommanderKey &&
-              moduleMessage.messageData.remoteCommand !== undefined
+              moduleMessage.messageData.remoteCommand !== undefined &&
+              this.routeCommand &&
+              typeof this.routeCommand === "function"
             ) {
               this.routeCommand(
                 this._instanceKey,
@@ -119,65 +167,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         );
       }
     },
-
-    // askToConnectInterface: function () {
-    //   this.sendInstanceCallbackMessage(
-    //     {
-    //       request: "State Connect",
-    //       componentKey: this._componentKey,
-    //     },
-    //     lang.hitch(this, this._InstanceStateChangeCallback)
-    //   );
-    // },
-    // askToConnectComponent: function (stateName) {
-    //   this.sendInstanceCallbackMessage(
-    //     {
-    //       request: "Component State Connect",
-    //       stateName: stateName,
-    //       componentKey: this._componentKey,
-    //     },
-    //     lang.hitch(this, this._ComponentStateChangeCallback, stateName)
-    //   );
-    // },
-    // _ComponentStateChangeCallback: function (stateName, stateChangeUpdate) {
-    //   let componentState = JSON.parse(stateChangeUpdate.componentState);
-    //
-    //   /* for (const [key, value] of Object.entries(componentState)) {
-    //                 this._componentStates[stateName].set(key, value);
-    //             }
-    //             */
-    //   for (const key in componentState) {
-    //     this._componentStates[stateName].set(key, componentState[key]);
-    //   }
-    // },
-    getComponentKey: function () {
-      return this._componentKey;
-    },
-    // getComponentState: function (stateName) {
-    //   return new Promise(
-    //     lang.hitch(this, function (Resolve, Reject) {
-    //       if (stateName) {
-    //         if (this._componentStates[stateName] !== undefined) {
-    //           Resolve(this._componentStates[stateName]);
-    //         } else {
-    //           let componentState = declare([Stateful], {});
-    //           this._componentStates[stateName] = new componentState({});
-    //           Resolve(this._componentStates[stateName]);
-    //           this.askToConnectComponent(stateName);
-    //         }
-    //       } else {
-    //         Resolve(this._interfaceState);
-    //       }
-    //     })
-    //   );
-    // },
-    prepareSyncedState: function () {
-      if (!this._componentKey) {
-        this._componentKey = this.getUniqueComponentKey();
-      }
-      this._components[this._componentKey] = this;
-      this._interfaceState.set("componentKey", this._componentKey);
-    },
+    //called by receiveMessage when sent a state connect from the interface
     connectInterface: function (instanceKey, componentKey, interfaceCallback) {
       //Called By the instance Component when main state connect is received from Interface
       //Checks that the componentKey and interfaceKey matches the component
@@ -198,12 +188,14 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         );
       }
     },
+    //used in connectInterface to set the main interface callback
     setNewInterfaceCallback: function (newInterfaceCallback) {
       this._stateChangeInterfaceCallback = newInterfaceCallback;
       this._stateChangeInterfaceCallback({
         interfaceState: JSON.stringify(this._interfaceState),
       });
     },
+    //used in receiveMessage when sent a component state connect from the interface
     connectComponentInterface: function (
       instanceKey,
       componentKey,
@@ -225,6 +217,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         console.log("THe component does not match");
       }
     },
+    //used in connectComponentInterface to set the named component interface callback
     setNewComponentInterfaceCallback: function (
       stateName,
       newInterfaceCallback
@@ -252,6 +245,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         componentState: JSON.stringify(this._componentStates[stateName]),
       });
     },
+    //used in setNewComponentInterfaceCallback to send the new state to the interface
     _componentStateChangeInterfaceCallback: function (
       stateName,
       name,
@@ -269,39 +263,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         });
       }
     },
-    // _InstanceStateChangeCallback(stateChangeUpdate) {
-    //   if (stateChangeUpdate.interfaceState) {
-    //     let interfaceState = JSON.parse(stateChangeUpdate.interfaceState);
-    //
-    //     for (const name in interfaceState) {
-    //       this._interfaceState.set(name, interfaceState[name]);
-    //     }
-    //   }
-    // },
-
-    // _componentStateSet: function (stateName, objectName, object) {
-    //   this.sendInstanceMessage({
-    //     request: "Component State Update",
-    //     stateName: stateName,
-    //     componentKey: this._componentKey,
-    //     update: { name: objectName, state: object },
-    //   });
-    // },
-    // _componentDefaultStateSet: function (stateName, objectName, object) {
-    //   this.sendInstanceMessage({
-    //     request: "Component State Default",
-    //     stateName: stateName,
-    //     componentKey: this._componentKey,
-    //     default: { name: objectName, state: object },
-    //   });
-    // },
+    //used in receiveMessage when sent a component state update from the interface
     updateComponentInterface: function (
       instanceKey,
       componentKey,
       stateName,
       stateUpdate
     ) {
-      //This is called when sent a component state update from the interface
       if (this._components[componentKey]) {
         let component = this._components[componentKey];
         if (component._componentStates[stateName] !== undefined) {
@@ -312,15 +280,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
         }
       }
     },
+    //used in receiveMessage when sent a component state default value from the interface
     updateComponentStateDefaultValue: function (
       instanceKey,
       componentKey,
       stateName,
       stateUpdate
     ) {
-      //this is hwere I should be starting
-      // console.log(stateUpdate.name, stateUpdate.state);
-
       if (this._components[componentKey]) {
         let component = this._components[componentKey];
         if (component._componentStates[stateName] !== undefined) {
@@ -328,7 +294,6 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
             component._componentStates[stateName].get(stateUpdate.name) ===
             undefined
           ) {
-            //console.log(stateUpdate.name, stateUpdate.state);
             component._componentStates[stateName].set(
               stateUpdate.name,
               stateUpdate.state
@@ -343,51 +308,6 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], function (
           );
         }
       }
-    },
-
-    _end: function () {
-      return new Promise(
-        lang.hitch(this, function (Resolve, Reject) {
-          // console.log("destroying Interface State Watch handles");
-          //todo _componentStateWatchHandles get rid of all of these
-          /*   for (const [key, value] of Object.entries(this._componentStateWatchHandles)) {
-                        this._componentStateWatchHandles[key].unwatch();
-                        this._componentStateWatchHandles[key].remove();
-                    }
-*/
-          for (const key in this._componentStateWatchHandles) {
-            this._componentStateWatchHandles[key].unwatch();
-            this._componentStateWatchHandles[key].remove();
-          }
-
-          this._interfaceStateWatchHandle.unwatch();
-          this._interfaceStateWatchHandle.remove();
-          Resolve({ success: "Unloaded Instance" });
-        })
-      );
-    },
-    unload: function () {
-      console.log("destroying Interface State Watch handles");
-      //_componentStateWatchHandles get rid of all of these
-      for (const key in this._componentStateWatchHandles) {
-        this._componentStateWatchHandles[key].unwatch();
-        this._componentStateWatchHandles[key].remove();
-      }
-
-      this._interfaceStateWatchHandle.unwatch();
-      this._interfaceStateWatchHandle.remove();
-    },
-    getUniqueComponentKey: function () {
-      let crypto = require("dojo/node!crypto");
-      do {
-        let id = "CK" + crypto.randomBytes(20).toString("hex");
-        if (typeof this._components[id] == "undefined")
-          this._components[id] = "Waiting for Object";
-        return id;
-      } while (true);
-    },
-    getComponentInterface(componentKey) {
-      return this._components[componentKey];
     },
   });
 });

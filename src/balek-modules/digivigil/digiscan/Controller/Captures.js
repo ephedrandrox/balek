@@ -391,7 +391,7 @@ define([
           if (typeof Capture === "object") {
             let newMap = new SyncedMapInstance({
               _instanceKey: instanceKey,
-              _commonKey: `Capture ${captureID}`,
+              _commonName: `Capture ${captureID}`,
             });
 
             let statefulCapture = this.getStatefulCapture(captureID);

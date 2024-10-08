@@ -1,3 +1,12 @@
+/* Balek Module Component Synced Commander
+This extends the Base Module Instance with the Synced State and Remote Command Base Modules
+
+When a module is created with this instance, it will have the ability to sync its state with the interface
+and allow the interface to use remote commands.
+
+See the Base Module Instance, Synced State, and Remote Command Base Modules for more information.
+*/
+
 define([
   "dojo/_base/declare",
   "balek-modules/Instance",
@@ -13,9 +22,6 @@ define([
 
       constructor: function (args) {
         declare.safeMixin(this, args);
-
-        // console.log("moduleBaseSyncedCommanderInstance starting...");
-
         this.prepareSyncedState();
       },
     }

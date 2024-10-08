@@ -10,6 +10,8 @@ define([
     [baseInstance, stateSyncer, remoteCommander],
     {
       _instanceKey: null,
+      _interfaceState: null,
+      _instanceState: null,
       _sessionKey: null,
 
       _commonName: "SyncedMap",
@@ -18,10 +20,16 @@ define([
       constructor: function (args) {
         declare.safeMixin(this, args);
         console.log(
-          `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting...`
+          `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting... with ${this.instanceKey} and ${this._interfaceState}`
         );
-        this.prepareSyncedState();
-        this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
+        if (this._instanceState === undefined || this._instanceState === null) {
+          console.error(
+            `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance instanceState is undefined`
+          );
+        } else {
+          this.prepareSyncedState();
+          this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
+        }
       },
       add: function (key, value) {
         this._interfaceState.set(key.toString(), value);

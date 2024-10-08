@@ -240,7 +240,7 @@ define([
           this.mainInterface !== null &&
           typeof this.mainInterface.updateStatusText === "function"
         ) {
-          this.mainInterface.updateAllStatusText(newStatusText);
+          this.mainInterface.updateStatusText(newStatusText);
         }
       },
       /*When the user clicks the copy code button*/
