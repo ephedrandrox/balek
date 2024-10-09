@@ -114,14 +114,10 @@ define([
 
         if (name === "availableCapturesComponentKey") {
           //Create availableCaptures SyncedMap
-          if (
-            this.availableCaptures === null &&
-            newState &&
-            typeof newState.toString === "function"
-          ) {
+          if (this.availableCaptures === null) {
             this.availableCaptures = new SyncedMapInterface({
               _instanceKey: this._instanceKey,
-              _componentKey: newState.toString(),
+              _componentKey: newState,
             });
 
             // const availableCapturesWatchHandle =
@@ -201,11 +197,7 @@ define([
           }
         } else if (name === "mainInstanceKeys") {
           //Create Main Interface
-          if (
-            this._mainInterface === null &&
-            newState &&
-            typeof newState.toString === "object"
-          ) {
+          if (this._mainInterface === null && newState) {
             this._mainInterface = new MainInterface({
               _instanceKey: newState.instanceKey,
               _sessionKey: newState.sessionKey,
