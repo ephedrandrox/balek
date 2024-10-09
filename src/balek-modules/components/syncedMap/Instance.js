@@ -22,14 +22,14 @@ define([
         console.log(
           `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting... with ${this.instanceKey} and ${this._interfaceState}`
         );
-        if (this._instanceState === undefined || this._instanceState === null) {
-          console.error(
-            `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance instanceState is undefined`
-          );
-        } else {
-          this.prepareSyncedState();
-          this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
-        }
+        // if (this._instanceState === undefined || this._instanceState === null) {
+        //   console.error(
+        //     `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance instanceState is undefined`
+        //   );
+        // }
+
+        this.prepareSyncedState();
+        this._interfaceState.set("Module", "moduleBaseSyncedMapInstance");
       },
       add: function (key, value) {
         this._interfaceState.set(key.toString(), value);
