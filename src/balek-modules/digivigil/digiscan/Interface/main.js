@@ -560,6 +560,7 @@ define([
       forEachSelectedCapture: function (doThis) {
         //todo move this to interface controller
         //and change entries to captures
+
         if (
           typeof doThis === "function" &&
           this.uiState !== null &&
@@ -567,25 +568,27 @@ define([
           this._interface.availableCaptures !== null
         ) {
           const selectedCaptureSetID = this.uiState.get("selectedCaptureSet");
+
           const captureSet = this._interface
             .getCaptureSetsController()
             .getCaptureSetByID(selectedCaptureSetID);
           const showHiddenCaptures = this.uiState.get("showHiddenCaptures");
+
           if (captureSet) {
-            let availableCaptures = this._interface.availableCaptures;
-
-            availableCaptures.forEach(
-              lang.hitch(this, function (key) {
-                let keyInCaptureSet = captureSet.get(key);
-
-                if (
-                  showHiddenCaptures ||
-                  (keyInCaptureSet && keyInCaptureSet === true)
-                ) {
-                  doThis(key);
-                }
-              })
+            let capturesArray = Object.keys(captureSet).filter(
+              (key) =>
+                !(
+                  key.includes("_watchCallbacks") ||
+                  key.includes("filterSettings")
+                )
             );
+
+            capturesArray.forEach((key) => {
+              let keyInCaptureSet = captureSet.get(key);
+              if (keyInCaptureSet && keyInCaptureSet === true) {
+                doThis(key);
+              }
+            });
           }
         }
       },

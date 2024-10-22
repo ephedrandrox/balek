@@ -301,7 +301,7 @@ define([
                                 this,
                                 function (addContainerToWorkspaceResponse) {
                                   // console.log("Container added to workspace", addContainerToWorkspaceResponse);
-                                  // console.log("hidding container", addContainerToWorkspaceResponse);
+                                  // console.log("hiding container", addContainerToWorkspaceResponse);
 
                                   //make sure _interface is defined
                                   if (this._interface) {

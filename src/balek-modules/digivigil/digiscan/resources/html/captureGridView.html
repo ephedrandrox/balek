@@ -30,14 +30,15 @@
                      data-dojo-attach-point="_barcodeText"></div></div>
             <div class="${baseClass}ImageAndTextGrid">
 
+
+
+                <div class="${baseClass}ImageDiv"  style="grid-area: PreviewImage">
+                    <img data-dojo-attach-point="_imageNode" class="${baseClass}NoImage"  data-dojo-attach-event="onclick:onImageClick"  src="balek-modules/digivigil/digiscan/resources/images/noImage.svg" />
+                </div>
                 <div class="${baseClass}RecognizedTextDiv"  style="grid-area: PreviewInfo">
 
                     <div class="${baseClass}RecognizedText"
                          data-dojo-attach-point="_recognizedText"></div>
-                </div>
-
-                <div class="${baseClass}ImageDiv"  style="grid-area: PreviewImage">
-                    <img data-dojo-attach-point="_imageNode" class="${baseClass}NoImage"  data-dojo-attach-event="onclick:onImageClick"  src="balek-modules/digivigil/digiscan/resources/images/noImage.svg" />
                 </div>
             </div>
 

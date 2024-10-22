@@ -1,6 +1,6 @@
 .digivigilDigiscanCaptureRowViewInterface {
   color: #ffffff;
-  background: rgba(135, 168, 190, 0.77);
+  background: rgba(16, 42, 59, 0.78);
   display: block;
   text-align: left;
   padding: 0;
@@ -34,7 +34,7 @@
   position: relative;
   display: inline;
   color: black;
-  background: rgba(248, 177, 236, 0.82);
+  background: rgba(209, 203, 210, 0.82);
   border-right: 2px solid #676767;
 }
 
@@ -54,7 +54,7 @@
   background: rgba(205, 233, 248, 0.95);
   align-items: right;
   text-align: right;
-  background: rgba(206, 178, 248, 0.95);
+  background: rgba(245, 245, 246, 0.95);
   border-right: 2px solid #676767;
 }
 

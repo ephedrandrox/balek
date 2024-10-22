@@ -160,14 +160,14 @@ body {
 
   right: 0;
   display: inline-block;
-  background: rgba(20, 27, 47, 0.3);
+  background: rgba(171, 183, 215, 0.84);
 
   max-width: 50vw;
   vertical-align: middle;
 }
 
 .digivigilDigiscanMainInterface {
-  background: rgba(28, 110, 164, 0.2);
+  background: rgba(78, 118, 145, 0.2);
   display: inline;
   display: inline-block;
   text-align: center;
@@ -321,7 +321,7 @@ body {
   bottom: -3px;
   overflow: hidden;
 
-  background-color: rgba(160, 189, 246, 0.6);
+  background-color: rgba(187, 208, 253, 0.8);
 }
 
 .digivigilDigiscanMainInterfaceBackgroundDivImage {

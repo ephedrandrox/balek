@@ -19,9 +19,10 @@ define([
       _relayStateWatchHandle: null,
       constructor: function (args) {
         declare.safeMixin(this, args);
-        console.log(
-          `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting... with ${this.instanceKey} and ${this._interfaceState}`
-        );
+        // console.log(
+        //   `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance starting... with ${this._instanceKey} and ${this._interfaceState}`,
+        //   this._interfaceState
+        // );
         // if (this._instanceState === undefined || this._instanceState === null) {
         //   console.error(
         //     `🧑‍🎤 - ${this._commonName} moduleBaseSyncedMapInstance instanceState is undefined`
