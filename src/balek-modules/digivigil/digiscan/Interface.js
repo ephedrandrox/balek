@@ -120,17 +120,17 @@ define([
               _componentKey: newState,
             });
 
-            // const availableCapturesWatchHandle =
-            //   this.availableCaptures.setStateWatcher(
-            //     lang.hitch(this, function (name, oldValue, newValue) {
-            //       console.log(
-            //         "🤡🤡availableCaptures",
-            //         name,
-            //         oldValue,
-            //         newValue
-            //       );
-            //     })
-            //   );
+            const availableCapturesWatchHandle =
+              this.availableCaptures.setStateWatcher(
+                lang.hitch(this, function (name, oldValue, newValue) {
+                  console.log(
+                    "🤡🤡availableCaptures",
+                    name,
+                    oldValue,
+                    newValue
+                  );
+                })
+              );
 
             for (const ResolveKey in this.availableCapturesResolveRequests) {
               this.availableCapturesResolveRequests[ResolveKey](

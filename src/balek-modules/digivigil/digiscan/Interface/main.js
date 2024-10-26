@@ -306,12 +306,12 @@ define([
                 } else if (name === "filterSettings") {
                   //if the received value is not a boolean and it's name is filterSettings
                   // then we want to use them to filter the captures
-                  console.log(
-                    "👽currentCaptureSetWatchHandle filter settings",
-                    name,
-                    oldValue,
-                    newValue
-                  );
+                  // console.log(
+                  //   "👽currentCaptureSetWatchHandle filter settings",
+                  //   name,
+                  //   oldValue,
+                  //   newValue
+                  // );
                 } else {
                   //if the received value is not a boolean and it's name is not filterSettings
                   //then we should issue a warning cause that is unexpected
@@ -427,10 +427,10 @@ define([
             selectedCaptures.length > 0 &&
             activeView === "previewDiv"
           ) {
-            domStyle.set(this._detailDiv, "width", "inherit");
+            domStyle.set(this._detailDiv, "max-height", "50vh");
             domStyle.set(this._detailDiv, "visibility", "inherit");
           } else {
-            domStyle.set(this._detailDiv, "width", "0");
+            domStyle.set(this._detailDiv, "max-height", "0");
             domStyle.set(this._detailDiv, "visibility", "hidden");
           }
 
@@ -464,11 +464,11 @@ define([
         }
       },
       updatePreviewViews: function () {
-        console.log("👽updatePreviewViews");
+        // console.log("👽updatePreviewViews");
         domConstruct.empty(this._previewDiv);
         this.forEachSelectedCapture(
           lang.hitch(this, function (captureID) {
-            console.log("👽updatePreviewViews captureID", captureID);
+            // console.log("👽updatePreviewViews captureID", captureID);
             let captureView = this.getCaptureView(captureID);
 
             dojoReady(
@@ -565,8 +565,10 @@ define([
           typeof doThis === "function" &&
           this.uiState !== null &&
           this.captureSets !== null &&
-          this._interface.availableCaptures !== null
+          this._interface.availableCaptures !== null &&
+          this._interface._Captures !== null
         ) {
+          const Captures = this._interface._Captures;
           const selectedCaptureSetID = this.uiState.get("selectedCaptureSet");
 
           const captureSet = this._interface
@@ -585,8 +587,14 @@ define([
 
             capturesArray.forEach((key) => {
               let keyInCaptureSet = captureSet.get(key);
-              if (keyInCaptureSet && keyInCaptureSet === true) {
+              if (
+                keyInCaptureSet &&
+                keyInCaptureSet === true &&
+                Captures.isCaptureSyncing(key)
+              ) {
                 doThis(key);
+              } else {
+                // console.log("👽isCaptureSyncing", key);
               }
             });
           }

@@ -82,6 +82,8 @@ define([
       _recognizedText: null,
       _noteText: null,
       _imageNode: null,
+      _imageAndTextGrid: null,
+      _recognizedTextDiv: null,
       interestedButton: null,
       uninterestedButton: null,
       //Capture State
@@ -204,19 +206,29 @@ define([
           let barcode = this.captureState.get("barcode");
           if (barcode && barcode !== "") {
             domStyle.set(this._barcodeDiv, "display", "block");
+            domStyle.set(this._imageAndTextGrid, "max-height", "340px");
+            domStyle.set(this._imageAndTextGrid, "height", "340px");
+
             this._barcodeText.innerHTML = barcode;
           } else {
             domStyle.set(this._barcodeDiv, "display", "none");
+            domStyle.set(this._imageAndTextGrid, "max-height", "370px");
+            domStyle.set(this._imageAndTextGrid, "height", "370px");
           }
-          this._recognizedText.innerHTML =
-            this.captureState.get("recognizedText");
+
+          this._recognizedText.innerHTML = this.captureState
+            .get("recognizedText")
+            .trim();
           //Get and set note
           let note = this.captureState.get("note");
           if (note && note !== "") {
-            domStyle.set(this._noteDiv, "display", "block");
+            domStyle.set(this._noteDiv, "display", "grid");
+            domStyle.set(this._recognizedTextDiv, "margin-bottom", "0");
+
             this._noteText.innerHTML = note;
           } else {
             domStyle.set(this._noteDiv, "display", "none");
+            domStyle.set(this._recognizedTextDiv, "margin-bottom", "15px");
           }
           //Get and set Image preview
           const imageBase64String = this.captureState.get("imagePreview");

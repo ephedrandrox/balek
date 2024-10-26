@@ -1,6 +1,6 @@
 .digivigilDigiscanCaptureRowViewInterface {
-  color: #ffffff;
-  background: rgba(16, 42, 59, 0.78);
+  color: #030303;
+  background: rgba(246, 246, 248, 0.93);
   display: block;
   text-align: left;
   padding: 0;
@@ -102,7 +102,6 @@
 }
 
 .digivigilDigiscanCaptureRowViewInterfaceRecognizedText {
-  color: #e5e1e1;
   padding: 3px;
   margin-right: 5px;
 }

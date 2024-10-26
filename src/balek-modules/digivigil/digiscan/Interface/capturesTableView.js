@@ -131,7 +131,9 @@ define([
         //todo: watch the current capture set
       },
       onUIStateChange: function (name, oldValue, newValue) {
-        this.refreshUI();
+        if (name !== "UIStatusText") {
+          this.refreshUI();
+        }
       },
       onClearCapturesFromSetOver: function () {
         if (
@@ -247,6 +249,7 @@ define([
       //UI Update Functions Section
       //##########################################################################################################
       refreshUI: function () {
+        //console.log("refreshUI");
         if (
           this.mainInterface !== null &&
           typeof this.mainInterface.forEachSelectedCapture === "function"

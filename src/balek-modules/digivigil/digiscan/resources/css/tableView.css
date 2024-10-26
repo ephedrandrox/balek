@@ -18,11 +18,11 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  filter: invert();
+  /*filter: invert();*/
 }
 
 .digivigilDigiscanCapturesTableViewInterfaceButton:hover {
-  filter: none;
+  filter: invert();
 }
 
 .digivigilDigiscanCapturesTableViewInterfaceHeaderDiv {
@@ -57,9 +57,9 @@
   height: 25px;
   z-index: 9;
   /*border-bottom: 2px solid black;*/
-  -webkit-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 4px 9px 0px rgba(0, 0, 0, 0.5);
 }
 
 .digivigilDigiscanCapturesTableViewInterfaceContentDiv {

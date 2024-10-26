@@ -252,7 +252,7 @@ define([
           if (note === "") {
             domStyle.set(this._noteDiv, "display", "none");
           } else {
-            domStyle.set(this._noteDiv, "display", "block");
+            domStyle.set(this._noteDiv, "display", "grid");
           }
         }
       },

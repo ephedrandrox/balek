@@ -1,15 +1,16 @@
 .digivigilDigiscanCaptureDetailViewInterfaceMainGrid {
-  display: block;
+  position: relative;
   background: none;
   display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto;
   gap: 0px 0px;
-  grid-template-areas:
-    "DetailInfo"
-    "DetailImage";
+  grid-template-areas: "DetailInfo DetailImage ";
+
 
   vertical-align: middle;
+
+
 }
 
 .digivigilDigiscanCaptureDetailViewInterface {
@@ -17,14 +18,14 @@
   background: none;
   display: inline-block;
   text-align: left;
-  padding: 0;
+  padding: 10px;
   border: none;
   border-radius: 15px;
   min-width: 200px;
   margin: 0px;
   outline: none;
   font-size: 10pt;
-
+padding:0;
   /*border: solid rgba(20, 75, 115, 0.8) 2px;*/
   /*border: solid white 2px;*/
 
@@ -32,14 +33,14 @@
 
   vertical-align: middle;
 
-  max-width: calc(50vw - 20px);
-  max-height: calc(100vw - 26px);
-
+  max-width: calc(100vw - 20px);
+  max-height: calc(50vw - 26px);
   position: relative;
 
-  top: 50%;
 
-  transform: translateY(-50%);
+  width: 100%;
+  max-height: 100%;
+
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceCaptureNotInSet {
@@ -59,8 +60,8 @@
   border: solid rgba(38, 38, 38, 0.8) 4px;
   cursor: pointer;
 
-  max-width: 80vw;
-  max-height: 80vh;
+  max-width: 30vw;
+  max-height: 30vh;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceNoImage {
@@ -68,9 +69,7 @@
   height: 40px;
 }
 
-.digivigilDigiscanCaptureDetailViewInterfaceNoteText {
-  color: black;
-}
+
 
 .digivigilDigiscanCaptureDetailViewInterfaceText {
   color: white;
@@ -84,22 +83,33 @@
 
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
   position: relative;
-  display: block;
+  display: grid;
   background: none;
   border-radius: 5px;
   padding: 10px;
   font-family: monospace;
 
-  padding-right: 20px;
+  padding-right: 60px;
 
   overflow: scroll;
-  bottom: 0;
-  width: 100%;
 
-  max-height: calc(80vh - 30px);
-  max-width: 80vw;
-  border: solid rgba(38, 38, 38, 0.8) 2px;
-  background: rgba(38, 38, 38, 0.1);
+  overflow:scroll;
+  /*top: 50%;*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  max-height: 20vh;
+    max-width: 80vw;
+
+  background: rgba(38, 38, 38, 0.3);
+
+border: solid rgba(38, 38, 38, 0.8) 4px;
+  /*top: Calc(50% - 40px);*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+/*max-width: 66vw;*/
+/*  max-height: 40vh;*/
+/*  */
+
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceBarcodeDiv {
@@ -126,8 +136,22 @@
   filter: invert();
 }
 
-.digivigilDigiscanCaptureDetailViewInterfaceCreatedDiv {
+.digivigilDigiscanCaptureDetailViewInterfaceCreatedTextDiv {
+position: relative;
+  display: block;
+
+  padding: 3px;
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceBarcodeTextDiv {
   position: relative;
+  display: block;
+
+  padding: 3px;
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceCreatedDiv {
+  position: absolute;
   display: block;
   justify-content: right;
   align-items: right;
@@ -136,27 +160,155 @@
   color: black;
   margin: 5px;
   margin-bottom: 0;
+
+  bottom: 0;
+  left:0;
+
+  z-index: 100;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceInfoDiv {
-  display: block;
+  positoion: relative;
+  display: grid;
   background: none;
   max-width: 80vw;
-  max-height: 80vh;
+  max-height: 40vw;
+
+  overflow: hidden;
+
 }
 
-.digivigilDigiscanCaptureDetailViewInterfaceContentDiv {
-  display: flex;
+.digivigilDigiscanCaptureDetailViewInterfaceInfoContent {
+  position: relative;
+  display: block;
   background: none;
+  position: relative;
+
+max-height: 40vh;
+
+
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 0px 0px;
+  grid-template-areas: "Text" "Note";
+vertical-align: middle;
 }
+
+
+.digivigilDigiscanCaptureDetailViewInterfaceNoteText {
+  color: black;
+  white-space: pre-wrap;
+
+}
+
 
 .digivigilDigiscanCaptureDetailViewInterfaceNoteDiv {
   position: relative;
-  display: block;
+  display: grid;
   color: black;
   background: rgba(249, 255, 172, 0.95);
   padding: 10px;
   min-height: 20px;
-  margin: 10px;
+  vertical-align: middle;
+
   border-radius: 15px;
+overflow:scroll;
+  /*top: 50%;*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  max-height: 20vh;
+
 }
+.digivigilDigiscanCaptureDetailViewInterfaceRecognizedText {
+  color: white;
+  white-space: pre-wrap;
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
+  position: relative;
+  display: grid;
+  background: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: monospace;
+
+  padding-right: 60px;
+
+  overflow: scroll;
+
+  overflow:scroll;
+  /*top: 50%;*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  max-height: 20vh;
+  max-width: 80vw;
+
+  background: rgba(38, 38, 38, 0.3);
+
+  border: solid rgba(38, 38, 38, 0.8) 4px;
+  /*top: Calc(50% - 40px);*/
+  /*left: 50%;*/
+  /*transform: translate(-50%, -50%);*/
+  /*max-width: 66vw;*/
+  /*  max-height: 40vh;*/
+  /*  */
+
+}
+
+
+
+
+.digivigilDigiscanCaptureDetailViewInterfaceInfoContent {
+  position: relative;
+  display: flex; /* Use flexbox to align child elements */
+  flex-direction: column; /* Arrange children in a column */
+  align-items: center; /* Center children horizontally */
+  justify-content: center; /* Center children vertically */
+  background: none;
+  max-height: 40vh;
+  gap: 2px; /* Add spacing between NoteDiv and RecognizedTextDiv */
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceNoteDiv,
+.digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
+   /* Flex to take up available space */
+   /* Flex to take up available space */
+  box-sizing: border-box; /* Ensure padding doesn’t exceed max width */
+  white-space: pre-wrap;
+}
+
+/* Individual styling for Note and RecognizedText content */
+.digivigilDigiscanCaptureDetailViewInterfaceNoteDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  color: black;
+  background: rgba(249, 255, 172, 0.95);
+  border-radius: 15px;
+  overflow: scroll;
+  margin: 10px;
+  margin-bottom: 30px;
+min-width: 200px;
+  min-height: 20px;
+  border: solid rgba(38, 38, 38, 0.8) 4px;
+
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  font-family: monospace;
+  background: rgba(38, 38, 38, 0.3);
+  color: white;
+  border-radius: 5px;
+  overflow: scroll;
+  border: solid rgba(38, 38, 38, 0.8) 4px;
+  min-width: 200px;
+  min-height: 20px;
+}
+
+
+

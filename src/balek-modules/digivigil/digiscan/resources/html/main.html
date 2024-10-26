@@ -17,16 +17,26 @@
       ></div>
       <div class="${baseClass}PreviewGrid">
         <div
-          class="${baseClass}PreviewDiv"
-          style="grid-area: CapturePreviews"
-          data-dojo-attach-point="_previewDiv"
+                class="${baseClass}DetailDiv"
+                style="grid-area: CaptureDetail"
+                data-dojo-attach-point="_detailDiv"
         ></div>
 
         <div
-          class="${baseClass}DetailDiv"
-          style="grid-area: CaptureDetail"
-          data-dojo-attach-point="_detailDiv"
-        ></div>
+          class="${baseClass}PreviewDiv"
+          style="grid-area: CapturePreviews"
+
+        >
+          <div  class="${baseClass}PreviewContentDivider">
+            &nbsp;
+          </div>
+
+
+          <div class="${baseClass}PreviewContentDiv" data-dojo-attach-point="_previewDiv">
+
+          </div>
+
+        </div>
       </div>
 
       <div
@@ -46,7 +56,6 @@
           position: fixed;
           bottom: 0;
           left: 50%;
-          transform: translate(-50%, 0);
           z-index: 100;
         "
       >

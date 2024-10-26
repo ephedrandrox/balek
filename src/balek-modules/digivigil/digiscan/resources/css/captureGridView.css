@@ -1,4 +1,5 @@
 .digivigilDigiscanCaptureGridViewInterface {
+  position: relative;
   color: #000000;
   background: rgba(246, 242, 242, 0.89);
   display: inline-block;
@@ -20,19 +21,89 @@
 
   flex-grow: 1;
   max-width: 500px;
+  max-height: 400px;
   }
 
+.digivigilDigiscanCaptureGridViewInterfaceListDiv {
+  position: absolute;
+  display: block;
+  background: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
+.digivigilDigiscanCaptureGridViewInterfaceHeaderDiv {
+  position: relative;
+  display: grid;
+  background: none;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: auto  auto 1fr;
+  grid-template-areas: "Created" "Barcode" "Capture";
+
+  position: absolute;
+  display: grid;
+  background: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 100%;
+  max-height: 100%;
+
+}
+
+.digivigilDigiscanCaptureGridViewInterfaceCreatedDiv {
+  position: relative;
+  display: grid;
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: right;
+  padding: 5px;
+  color: black;
+  margin: 5px;
+  margin-bottom: 0;
+}
+
+.digivigilDigiscanCaptureGridViewInterfaceBarcodeDiv {
+  position: relative;
+  display: grid;
+  color: black;
+  text-align: right;
+  line-height: 20px;
+  min-height: 20px;
+  padding: 3px;
+}
+
+
+.digivigilDigiscanCaptureGridViewInterfaceCapture {
+  position: relative;
+  display: grid;
+
+  max-width: 100%;
+bottom: 0;
+
+}
 .digivigilDigiscanCaptureGridViewInterfaceImageAndTextGrid {
   position: relative;
   display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto  auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
   gap: 0px 0px;
   /*grid-template-areas: "PreviewImage PreviewInfo";*/
-  grid-template-areas: "PreviewImage" "PreviewInfo";
-  height: 300px;
+  grid-template-areas: "PreviewImage" "PreviewInfo" "PreviewNote";
+
   max-width: 100%;
+
+  max-height: 340px;
+  height: 340px;
 }
+
 .digivigilDigiscanCaptureGridViewInterfaceCaptureNotInSet {
   filter: grayscale(1);
 }
@@ -52,6 +123,26 @@
   /*background-color: #f0f0f0; !* Optional background color *!*/
 }
 
+.digivigilDigiscanCaptureGridViewInterfaceContentDivider{
+  /*should be 100vw with a box shadow that takes up 10 pixels height
+  and is in fiexed position top left in parent div*/
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  display: block;
+  width: 100%;
+  /*background: rgba(0, 0, 0, 0.5);*/
+  z-index: 1000;
+  box-shadow: 0px 0px 10px 3px rgba(11, 12, 17, 0.5);
+  /*-webkit-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  /*-moz-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  /*box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  margin: 0;
+  padding: 0;
+
+}
 .digivigilDigiscanCaptureGridViewInterfaceImage {
   max-width: 200px;
   max-height: 200px;
@@ -66,10 +157,12 @@
   margin:auto;
 
   object-fit: contain;  /* Ensures the image maintains aspect ratio */
-
+  transition: transform 0.3s ease, box-shadow 0.3s ease , transform 0.3s ease;
 }
 .digivigilDigiscanCaptureGridViewInterfaceImage:hover {
-  filter: invert();
+  filter: brightness(1.1);
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceNoImage {
@@ -80,6 +173,7 @@
 
 .digivigilDigiscanCaptureGridViewInterfaceNoteText {
   color: black;
+    white-space: pre-wrap;
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceText {
@@ -88,40 +182,39 @@ margin-right:5px;
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceRecognizedText {
+  position: relative;
   color: black;
   white-space: pre-wrap;
+  padding: 10px;
+  padding-left: 20px;
+
+  overflow: scroll;
+  margin: 0;
+
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceRecognizedTextDiv {
-  position: relative;
-  display: block;
+position: relative;
+  display: grid;
   background: none;
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 5px 5px 0 0;
+  padding: 0;
+  /*padding-left: 10px;*/
+  /*padding-bottom: 10px;*/
+margin: 0;
   font-family: monospace;
 
-  padding-right: 20px;
-
+  /*padding-right: 20px;*/
   overflow: scroll;
+  overflow-y: auto;
+
   /*max-height: 300px;*/
   /*max-width: 300px;*/
   background: rgba(255, 255, 255, 0.95);
+
+  border-bottom: solid rgba(246, 242, 242, 0.89) 2px;
 }
 
-.digivigilDigiscanCaptureGridViewInterfaceBarcodeDiv {
-  position: relative;
-  display: block;
-  color: black;
-
-  /*align-items: right;*/
-  text-align: right;
-  line-height: 20px;
-  min-height: 20px;
-  padding: 3px;
-
-  /*max-width: 500px;*/
-
-}
 
 .digivigilDigiscanCaptureGridViewInterfaceIconImg {
   display: inline;
@@ -130,36 +223,9 @@ margin-right:5px;
   filter: invert(100%);
 }
 
-.digivigilDigiscanCaptureGridViewInterfaceCreatedDiv {
-  position: relative;
-  display: block;
-  /*float: left;*/
-  /*background: rgba(106, 178, 238, 0.86);*/
 
-  /*border: solid #c2c2c2 2px;*/
-  justify-content: flex-end;
-  align-items: flex-start;
-  text-align: right;
 
-  padding: 5px;
-  color: black;
-  margin: 5px;
-  margin-bottom: 0;
-}
 
-.digivigilDigiscanCaptureGridViewInterfaceHeaderDiv {
-  position: relative;
-  display: block;
-  background: none;
-  height: 100%;
-
-}
-
-.digivigilDigiscanCaptureGridViewInterfaceListDiv {
-  display: block;
-  background: none;
-  height: 100%;
-}
 
 .digivigilDigiscanCaptureGridViewInterfaceContentDiv {
   display: flex;
@@ -167,8 +233,8 @@ margin-right:5px;
 }
 
 .digivigilDigiscanCaptureGridViewInterfaceNoteDiv {
-  position: absolute;
-  display: block;
+  position: relative;
+  display: grid;
   /*background: #ffffff;*/
   /*border: solid #c2c2c2 2px;*/
   color: black;
@@ -177,7 +243,31 @@ margin-right:5px;
   min-height: 20px;
 
   border-radius: 0 0 15px 15px;
-  bottom: 0;
+bottom: 0;
+
+overflow: scroll;
+  padding-top: 10px;
+  border-top: solid rgba(239, 253, 127, 0.95) 2px;
+
+  max-height: 45px;
+}
+.digivigilDigiscanCaptureGridViewInterfaceNoteTop{
+  /*should be 100vw with a box shadow that takes up 10 pixels height
+  and is in fiexed position top left in parent div*/
+  position: absolute;
+  top: 0;
   left: 0;
   right: 0;
+  height: 0;
+  display: block;
+  width: 100%;
+  /*background: rgba(0, 0, 0, 0.5);*/
+  z-index: 1000;
+  box-shadow: 0px 0px 10px 2px rgb(246, 248, 212);
+  /*-webkit-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  /*-moz-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  /*box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
+  margin: 0;
+  padding: 0;
+
 }

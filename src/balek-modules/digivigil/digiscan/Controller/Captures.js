@@ -29,11 +29,9 @@ define([
     ImageUtility: null,
 
     captures: null, //Dojo State Object
-
     capturesByUserKey: null,
 
     statefulCapturesByCaptureID: null,
-
     StatefulCapture: null,
 
     _capturesDatabase: null, //Captures Database controller
@@ -320,15 +318,22 @@ define([
     },
 
     appendToUserList: function (id, Capture) {
+      console.log("🤡 Capture", Capture);
       if (
         Capture.capture &&
         Capture.capture.signature &&
         Capture.capture.signature.ownerUserKey &&
         Capture.capture.signature.ownerUserKey
       ) {
+        console.log(
+          "🤡 Getting Users captures for🤡: ",
+          id,
+          Capture.capture.signature.ownerUserKey
+        );
         let userCaptures = this.getCapturesForUser(
           Capture.capture.signature.ownerUserKey
         );
+
         let checksum = this.getCaptureCheckHash(Capture.capture);
         userCaptures.set(id, checksum);
         //get stateful capture and watch for removal

@@ -1,50 +1,56 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}MainGrid">
-        <div style="grid-area: DetailInfo" class="${baseClass}InfoDiv">
-            <div class="${baseClass}CreatedDiv">
-
-                <div class="${baseClass}Text"
-                     style="display: inline;"
-                     data-dojo-attach-point="_createdText">
-                    Hide Image
+        <div style="grid-area: DetailInfo;  " class="${baseClass}InfoDiv">
+            <div  class="${baseClass}InfoContent" >
+                <div class="${baseClass}RecognizedTextDiv" style="grid-area: Text ">
+                    <div class="${baseClass}Text"
+                         data-dojo-attach-point="_recognizedText">
+                    </div>
                 </div>
+                <div class="${baseClass}NoteDiv"  data-dojo-attach-point="_noteDiv" style="grid-area: Note ;display: none " >
+                    <div class="${baseClass}NoteText"
+                         data-dojo-attach-point="_noteText">
+                        Note
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+            <div class="${baseClass}CreatedDiv">
+                <div class="${baseClass}BarcodeDiv">
+                    <div class="${baseClass}BarcodeText"
+                         data-dojo-attach-point="_barcodeText">
+                    </div>
+                </div>
+
 
                 <img class="${baseClass}IconImg"
                      data-dojo-attach-event="onclick:onHideClick"
-                     style="position: relative; left: 0; top: 0; padding-left: 25px; display: inline-block; "
-                     src="balek-modules/digivigil/digiscan/resources/images/arrowtriangle.right.fill.svg"
-                     alt="Close Detailed View"/>
+                     style="position: relative; left: 0; top: 0; padding-left: 25px; display: inline-block; transform: translateY(-10px) rotate(90deg)  ; "
+                     src="balek-modules/digivigil/digiscan/resources/images/chevronCircle.svg"
+                     alt="Close Detailed View"/> <div class="${baseClass}Text"
+                                                      style="display: inline;"
+                                                      data-dojo-attach-point="_createdText"
+            >
+                Hide Full Image
+            </div>
             </div>
         </div>
 
-        <div style="grid-area: DetailImage">
-            <div class="${baseClass}CreatedDiv">
-                <div class="${baseClass}Text"
-                     data-dojo-attach-point="_createdText">
-                </div>
-            </div>
-            <div class="${baseClass}BarcodeDiv">
-                <div class="${baseClass}Text"
-                     data-dojo-attach-point="_barcodeText">
-                </div>
-            </div>
+        <div style="grid-area: DetailImage;
+ ">
+
 
             <div class="${baseClass}ImageDiv" >
                 <img data-dojo-attach-point="_imageNode" class="${baseClass}NoImage"   src="balek-modules/digivigil/digiscan/resources/images/noImage.svg" />
             </div>
         </div>
-        <div class="${baseClass}RecognizedTextDiv">
-            <div class="${baseClass}Text"
-                 data-dojo-attach-point="_recognizedText">
-            </div>
-        </div>
-        <div class="${baseClass}NoteDiv"  data-dojo-attach-point="_noteDiv" style="display: none " >
-            <div class="${baseClass}NoteText"
-                 data-dojo-attach-point="_noteText">
-                Note
-            </div>
+<!--        <div style="grid-area: DetailNote;   vertical-align: middle;">-->
 
-        </div>
-
+<!--        </div>-->
     </div>
 </div>
