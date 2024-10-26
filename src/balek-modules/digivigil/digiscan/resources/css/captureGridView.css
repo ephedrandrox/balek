@@ -221,11 +221,17 @@ margin: 0;
   width: 20px;
   height: 20px;
   filter: invert(100%);
+
+  cursor: pointer;
+
+  transition:  transform 0.3s ease;
 }
 
 
 
-
+.digivigilDigiscanCaptureGridViewInterfaceIconImg:hover {
+  transform: scale(1.2) ;
+}
 
 .digivigilDigiscanCaptureGridViewInterfaceContentDiv {
   display: flex;

@@ -6,20 +6,20 @@
   gap: 0px 0px;
   grid-template-areas: "ScapturaImage ScapturaTitle";
   height: 160px;
-
   border: solid #0c0c10 3px;
   background: rgba(128, 128, 128, 0.9);
   border-radius: 10px;
+  top: 0;
+  left: 0;
 }
 
 .digivigilDigiscanSettingsInterfaceOfDigivigil {
   position: relative;
-  right: -20px;
+  right: -44px;
   top: -20px;
-
-  font-size: 16px;
+  font-size: 38px;
   font-family: "Righteous", Arial, Helvetica, sans-serif;
-  color: #14aff1;
+  color: rgba(47, 64, 107, 0.82);
   padding: 10px;
   vertical-align: top;
   line-height: 20px;
@@ -28,22 +28,28 @@
 
 .digivigilDigiscanSettingsInterfaceSpanButton {
   cursor: pointer;
-
   line-height: 40px;
   border: solid transparent 2px;
   border-radius: 5px;
 }
 .digivigilDigiscanSettingsInterfaceSpanButton:hover {
-  border: solid #14aff1 2px;
+  border: solid rgba(47, 64, 107, 0.82) 2px;
   border-radius: 5px;
 }
 
 .digivigilDigiscanSettingsInterfaceImageButton {
   cursor: pointer;
+  opacity: 0.82;
+  filter: invert(100%) sepia(10%) saturate(500%) hue-rotate(180deg)
+    brightness(50%) contrast(100%);
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .digivigilDigiscanSettingsInterfaceImageButton:hover {
-  filter: invert();
+  opacity: 0.82;
+  filter: invert(20%) sepia(40%) saturate(500%) hue-rotate(180deg)
+    brightness(50%) contrast(100%);
+  transform: scale(1.2);
 }
 
 .digivigilDigiscanSettingsInterfaceButton {
@@ -52,9 +58,8 @@
 }
 
 .digivigilDigiscanSettingsInterface {
-  background: rgba(28, 110, 164, 0.2);
   display: inline-block;
-
+  position: relative;
   margin: 0;
   border: solid transparent 3px;
   border-radius: 8px;
@@ -67,19 +72,17 @@
   -moz-box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
   box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
   outline: none;
-  color: #14aff1;
-  background: rgba(80, 78, 78, 0.85);
-
+  color: rgba(47, 64, 107, 0.82);
+  background: rgba(206, 204, 204, 0.85);
   text-align: left;
   white-space: nowrap;
-  padding: 0;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0 10px;
+  min-width: 400px;
 }
 
 .digivigilDigiscanSettingsInterfaceSectionDiv {
   position: relative;
-  border: solid #14aff1 1px;
+  border: solid rgba(47, 64, 107, 0.82) 1px;
   border-radius: 10px;
 
   padding-left: 10px;
@@ -88,7 +91,7 @@
   margin-top: 30px;
   padding-bottom: 10px;
   margin-bottom: 10px;
-  background: rgba(80, 78, 78, 0.85);
+  background: rgba(206, 204, 204, 0.85);
 }
 
 .digivigilDigiscanSettingsInterfaceSectionDivHeaderSpan {
@@ -96,9 +99,8 @@
   top: -20px;
   left: -5px;
   border-radius: 10px;
-  background: rgba(80, 78, 78, 0.9);
-  color: #14aff1;
-  border: solid #14aff1 1px;
-
+  background: rgba(194, 191, 191, 0.9);
+  color: rgba(47, 64, 107, 0.82);
+  border: solid rgba(47, 64, 107, 0.82) 1px;
   padding: 5px;
 }

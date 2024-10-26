@@ -2,7 +2,7 @@
   position: relative;
   background: none;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto auto;
   grid-template-rows: auto;
   gap: 0px 0px;
   grid-template-areas: "DetailInfo DetailImage ";
@@ -48,17 +48,24 @@ padding:0;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceImageDiv {
-  padding: 10px;
+  padding: 0;
   position: relative;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translateX(-50%) translateY(CALC(-50% - 10px));
+
   display: inline-block;
+
+  border-radius: 5px;
+  border: solid rgba(38, 38, 38, 0.8) 4px;
+  background: rgba(38, 38, 38, 0.8);
+  margin: 10px;
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceImage {
   border-radius: 5px;
   border: solid rgba(38, 38, 38, 0.8) 4px;
-  cursor: pointer;
+
 
   max-width: 30vw;
   max-height: 30vh;
@@ -169,10 +176,10 @@ position: relative;
 
 .digivigilDigiscanCaptureDetailViewInterfaceInfoDiv {
   positoion: relative;
-  display: grid;
+  display: block;
   background: none;
-  max-width: 80vw;
-  max-height: 40vw;
+  max-width: 60vw;
+  max-height: 100%;
 
   overflow: hidden;
 
@@ -184,7 +191,7 @@ position: relative;
   background: none;
   position: relative;
 
-max-height: 40vh;
+max-height: 40%;
 
 
   grid-template-columns: 1fr;
@@ -204,7 +211,7 @@ vertical-align: middle;
 
 .digivigilDigiscanCaptureDetailViewInterfaceNoteDiv {
   position: relative;
-  display: grid;
+  display: block;
   color: black;
   background: rgba(249, 255, 172, 0.95);
   padding: 10px;
@@ -216,12 +223,17 @@ overflow:scroll;
   /*top: 50%;*/
   /*left: 50%;*/
   /*transform: translate(-50%, -50%);*/
-  max-height: 20vh;
+  max-height: 20%;
+  max-width: 60vw;
 
 }
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedText {
   color: white;
   white-space: pre-wrap;
+}
+
+.digivigilDigiscanCaptureDetailViewInterfaceDetailImage {
+
 }
 
 .digivigilDigiscanCaptureDetailViewInterfaceRecognizedTextDiv {
@@ -266,6 +278,9 @@ overflow:scroll;
   justify-content: center; /* Center children vertically */
   background: none;
   max-height: 40vh;
+
+  top: 50%;
+  transform: translateY(-50%);
   gap: 2px; /* Add spacing between NoteDiv and RecognizedTextDiv */
 }
 
@@ -289,6 +304,7 @@ overflow:scroll;
   overflow: scroll;
   margin: 10px;
   margin-bottom: 30px;
+
 min-width: 200px;
   min-height: 20px;
   border: solid rgba(38, 38, 38, 0.8) 4px;
@@ -308,6 +324,7 @@ min-width: 200px;
   border: solid rgba(38, 38, 38, 0.8) 4px;
   min-width: 200px;
   min-height: 20px;
+  margin-top: 10px;
 }
 
 
