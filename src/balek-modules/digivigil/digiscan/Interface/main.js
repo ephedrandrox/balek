@@ -485,6 +485,7 @@ define([
           this.CaptureViews[id] = new captureGridView({
             _interfaceKey: this._interfaceKey,
             interfaceCommands: this._interface,
+            mainInterface: this,
             captureID: id,
           });
         }

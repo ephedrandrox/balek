@@ -123,12 +123,12 @@ define([
             const availableCapturesWatchHandle =
               this.availableCaptures.setStateWatcher(
                 lang.hitch(this, function (name, oldValue, newValue) {
-                  console.log(
-                    "🤡🤡availableCaptures",
-                    name,
-                    oldValue,
-                    newValue
-                  );
+                  // console.log(
+                  //   "🤡🤡availableCaptures",
+                  //   name,
+                  //   oldValue,
+                  //   newValue
+                  // );
                 })
               );
 

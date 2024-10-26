@@ -51,10 +51,8 @@ body {
   align-items: flex-start;
   justify-content: center; /* Center items horizontally */
 
-
   margin: 0;
   padding: 0;
-
 
   width: 100%;
 }
@@ -66,40 +64,36 @@ body {
 
   position: relative;
 
-
   display: flex;
   flex-wrap: wrap; /* Allows the items to wrap nto multiple rows */
   gap: 10px; /* Adds space between items (optional) */
   align-items: flex-start;
 
-
   padding: 0;
-  margin-left:10px;
-  margin-right:13px;
+  margin-left: 10px;
+  margin-right: 13px;
   /*Top inner shadow */
-
 }
 
-.digivigilDigiscanMainInterfacePreviewContentDivider{
+.digivigilDigiscanMainInterfacePreviewContentDivider {
   /*should be 100vw with a box shadow that takes up 10 pixels height
   and is in fiexed position top left in parent div*/
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 0;
-    display: block;
-    width: 100%;
-    /*background: rgba(0, 0, 0, 0.5);*/
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  display: block;
+  width: 100%;
+  /*background: rgba(0, 0, 0, 0.5);*/
   border-bottom: 1px solid rgba(11, 12, 17, 0.9);
-    z-index: 1000;
-    box-shadow: 0px 0px 20px 5px rgba(11, 12, 17, 0.9);
+  z-index: 1000;
+  box-shadow: 0px 0px 20px 5px rgba(11, 12, 17, 0.9);
   /*-webkit-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
   /*-moz-box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
   /*box-shadow: 0px 10px 14px 0px rgba(0,0,0,0.75);*/
   margin: 0;
   padding: 0;
-
 }
 
 .digivigilDigiscanMainInterfaceExportControl {
@@ -108,7 +102,6 @@ body {
   background: rgba(54, 56, 58, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   transform: translate(-50%, 0);
-
 }
 .digivigilDigiscanMainInterfaceExportControl:hover {
   /*border: solid rgba(123, 131, 134, 0.8) 1px;*/
@@ -116,7 +109,7 @@ body {
   background: rgba(43, 110, 178, 0.8);
   color: white;
 
-  transform:  translate(-50%, -20px) scale(2)  ;
+  transform: translate(-50%, -20px) scale(2);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -185,11 +178,12 @@ body {
 
 .digivigilDigiscanMainInterfacePreviewGrid {
   display: grid;
-  grid-template-columns: 1fr ;
+  grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   gap: 0px 0px;
-  grid-template-areas: "CaptureDetail"
-  "CapturePreviews" ;
+  grid-template-areas:
+    "CaptureDetail"
+    "CapturePreviews";
 
   position: absolute;
   top: 26px;
@@ -213,14 +207,14 @@ body {
 }
 
 .digivigilDigiscanMainInterfaceDetailDiv {
-width: 100%;
+  width: 100%;
   max-height: 0;
- margin: 0;
+  margin: 0;
 
-    border-bottom: 2px solid #171616;
+  border-bottom: 2px solid #171616;
 
-  transition: max-height 0.3s ease, padding 0.3s ease
-
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  background: rgba(64, 64, 101, 0.38);
 }
 
 .digivigilDigiscanMainInterface {

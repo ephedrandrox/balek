@@ -69,6 +69,7 @@ define([
       //Passed Arguments
       _instanceKey: null,
       interfaceCommands: null,
+      mainInterface: null,
       captureID: null,
       //Widget Variables
       baseClass: "digivigilDigiscanCaptureGridViewInterface",
@@ -323,6 +324,22 @@ define([
               captureSet.set(this.captureID, false);
             }
           }
+        }
+      },
+      onBarcodeIconClick: function (clickEvent) {
+        if (this.captureState !== null) {
+          this.mainInterface.copyTextToClipboard(
+            this.captureState.get("barcode")
+          );
+        } else {
+          alert("Try again.");
+        }
+      },
+      onNoteIconClick: function (clickEvent) {
+        if (this.captureState !== null) {
+          this.mainInterface.copyTextToClipboard(this.captureState.get("note"));
+        } else {
+          alert("Try again.");
         }
       },
       // Called when being unloaded, Cleanup

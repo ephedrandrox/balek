@@ -39,6 +39,7 @@
       <div class="${baseClass}BarcodeDiv" style="grid-area: Barcode" data-dojo-attach-point="_barcodeDiv">
         <img
           class="${baseClass}IconImg"
+          data-dojo-attach-event="onclick:onBarcodeIconClick"
           style="
             position: absolute;
             left: 5px;
@@ -83,6 +84,8 @@
 
           <img
             class="${baseClass}IconImg"
+            data-dojo-attach-event="onclick:onNoteIconClick"
+
             style="
               position: absolute;
               right: 5px;
@@ -92,7 +95,7 @@
               filter: invert();
             "
             src="balek-modules/digivigil/digiscan/resources/images/Note.svg"
-            alt="barcode icon"
+            alt="note icon"
           />
           <div
             class="${baseClass}NoteText"
