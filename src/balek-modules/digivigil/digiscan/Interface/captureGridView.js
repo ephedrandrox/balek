@@ -223,9 +223,12 @@ define([
             domStyle.set(this._imageAndTextGrid, "height", "370px");
           }
 
-          this._recognizedText.innerHTML = this.captureState
-            .get("recognizedText")
-            .trim();
+          let recognizedText = this.captureState.get("recognizedText");
+          if (recognizedText && typeof recognizedText.trim === "function") {
+            recognizedText = recognizedText.trim();
+          }
+          this._recognizedText.innerHTML = recognizedText;
+
           //Get and set note
           let note = this.captureState.get("note");
           if (note && note !== "") {

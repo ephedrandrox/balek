@@ -1,42 +1,42 @@
 define([
+  //Dojo Base
   "dojo/_base/declare",
   "dojo/_base/lang",
-  "dojo/topic",
-
+  //Balek Module Instances
   "balek-modules/balekute/connect/Instance/main",
   "balek-server/session/sessionsController/instanceCommands",
-
+  //Balek Util
   "balek-modules/components/syncedCommander/Instance",
   "balek-modules/components/syncedMap/Instance",
 ], function (
+  //Dojo Base
   declare,
   lang,
-  topic,
+  //Balek Module Instances
   MainInstance,
   SessionsControllerInstanceCommands,
+  //Balek Util
   _SyncedCommanderInstance,
   SyncedMapInstance
 ) {
   return declare("moduleBalekuteConnectInstance", _SyncedCommanderInstance, {
     _instanceKey: null,
-
+    //Main Instance
     mainInstance: null,
-
+    //state watchers
     stateWatchers: null,
+    //sessions Controller Commands
     sessionsControllerCommands: null,
-
+    //Available Invitations SyncedMap
     availableInvitations: null,
     constructor: function (args) {
+      //Merge the arguments, get the sessions controller commands initialize the state watchers object
       declare.safeMixin(this, args);
-
       let sessionsControllerInstanceCommands =
         new SessionsControllerInstanceCommands();
       this.sessionsControllerCommands =
         sessionsControllerInstanceCommands.getCommands();
-
       this.stateWatchers = {};
-      // console.log("moduleBalekuteConnectInstance starting...");
-
       //set setRemoteCommander commands
       this._commands = {
         useTargetKey: lang.hitch(this, this.useTargetKey),
@@ -50,51 +50,50 @@ define([
           this.authenticateSessionForDeviceUser
         ),
       };
-
+      //Create the Available Invitations SyncedMap
       this.availableInvitations = new SyncedMapInstance({
         _instanceKey: this._instanceKey,
         _commonName: "Available Invitations",
       });
-
+      //Send the Component Key to the interface via state
       this._interfaceState.set(
         "availableInvitationsComponentKey",
         this.availableInvitations._componentKey
       );
-
+      //Set the Component Name
       this._interfaceState.set("Component Name", "Connect");
       //creates component Key that can be used to connect to state
       this.setInterfaceCommands();
-
+      //initialize the synced state
       this.prepareSyncedState();
-
+      //Set the status to ready
       this._interfaceState.set("Status", "Ready");
-
+      //Create the main instance
       this.mainInstance = new MainInstance({
         _instanceKey: this._instanceKey,
         _sessionKey: this._sessionKey,
         _userKey: this._userKey,
         _connectController: this.moduleController,
       });
-
+      //Send the main instance keys to the interface
       this._interfaceState.set("mainInstanceKeys", {
         instanceKey: this.mainInstance._instanceKey,
         sessionKey: this.mainInstance._sessionKey,
         userKey: this.mainInstance._userKey,
         componentKey: this.mainInstance._componentKey,
       });
-
+      //Find Owner Device or create an invitation to set one
       this.moduleController
         .loadOrCreateOwnerDeviceInvitation()
         .then(
           lang.hitch(this, function (Result) {
-            // console.log("🎃🎃🎃", Result);
             if (Result) {
               if (Result.ownerClaimKey) {
                 // console.log("📱 No Owner Device")
               } else if (Result.ownerPublicKey) {
                 // console.log("📱 Owner Device Public Key:", Result.ownerPublicKey)
               } else {
-                // console.log("🎃🎃🎃")
+                // console.log("unexpected Result", Result)
               }
             }
           })
@@ -102,19 +101,19 @@ define([
         .catch(function (rejectError) {
           // console.log("🎃🎃🎃", rejectError);
         });
-      // this.setInterfaceCommands();
     },
+    /* #############################################################################################################
+    # Remote Commands
+    #############################################################################################################*/
     acceptDeviceInfo: function (invitationKey, remoteCallback) {
       //Remote command to be called from a user signed in session
-      //
-      console.log("acceptDeviceInfo", invitationKey);
+      //Accepts the device info for the invitation key after device user accepts the invitation
 
       let userKey = this.sessionsControllerCommands.getSessionUserKey(
         this._sessionKey
       );
       if (userKey != null) {
         this._userKey = userKey;
-
         this.moduleController
           .userAcceptDeviceInfo({
             owner: {
@@ -150,8 +149,8 @@ define([
       }
     },
     useTargetKey: function (targetKey, signature, deviceInfo, remoteCallback) {
-      // console.log("useTargetKey", targetKey, deviceInfo, arguments);
-
+      // Remote command to be called from a device to activate a target key
+      // Claims a session for the device user linked to the target key
       if (
         typeof targetKey === "string" &&
         typeof signature === "string" &&
@@ -178,7 +177,8 @@ define([
     },
     useInvitationKey: function (invitationKey, deviceInfo, remoteCallback) {
       console.log("useInvitationKey", invitationKey, deviceInfo, arguments);
-
+      // Remote command to be called from a device to identify itself
+      // Using an invitation key that has been created by the owner
       if (
         typeof invitationKey === "string" &&
         typeof deviceInfo === "object" &&
@@ -203,8 +203,8 @@ define([
       }
     },
     createInvitationKey: function (input, remoteCallback) {
-      console.log("createInvitationKey", input);
-
+      // To be called by an owner claimed session to create an invitation key
+      // Which is used to set a device for a user
       let invitationHost = input;
       let userKey = this.sessionsControllerCommands.getSessionUserKey(
         this._sessionKey
@@ -251,6 +251,7 @@ define([
       ///  }));
     },
     connectInvitationState: function (invitationKey, remoteCallback) {
+      // Fetches the status of an invitation key using the key
       let invitationState =
         this.moduleController.getInvitationState(invitationKey);
       if (invitationState && typeof invitationState.watch === "function") {
@@ -259,13 +260,11 @@ define([
           const key = entry[0];
           const value = entry[1];
           if (typeof value !== "function") {
-            console.log("🟦🟩🟦🟩", key, value);
             remoteCallback({ name: key, newState: value });
-          } else {
-            console.log("🟥🟧🟥🟧", key, value);
           }
         });
-
+        //Only allows for one watcher per invitation key
+        //Interface only needs it relayed once
         if (!this.stateWatchers[invitationKey]) {
           this.stateWatchers[invitationKey] = invitationState.watch(
             lang.hitch(this, function (name, oldState, newState) {
@@ -294,7 +293,8 @@ define([
     },
     useOwnerClaimKey: function (ownerClaimKey, deviceInfo, remoteCallback) {
       console.log("useOwnerClaimKey", ownerClaimKey, deviceInfo, arguments);
-
+      // Remote Command to set a device as the owner device
+      // Uses the owner claim key that only exists until the Balek installation is claimed.
       if (
         typeof ownerClaimKey === "string" &&
         typeof deviceInfo === "object" &&
@@ -330,12 +330,6 @@ define([
       deviceInfo,
       remoteCallback
     ) {
-      // console.log("authenticateSessionForDeviceUser", timeSignedProof, deviceInfo, arguments);
-      //
-      // console.log("authenticateSessionForDeviceUser Public key", deviceInfo.publicSigningKey);
-      // console.log("authenticateSessionForDeviceUser Signature",deviceInfo.signature);
-      // console.log("authenticateSessionForDeviceUser keychainIdentifier", deviceInfo.keychainIdentifier);
-
       if (
         typeof timeSignedProof === "object" &&
         typeof deviceInfo === "object" &&

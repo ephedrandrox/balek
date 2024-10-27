@@ -246,9 +246,15 @@ define([
           let localizedDate = dateUtility.getLocalizedDate(dateString);
 
           const barcode = this.currentCaptureState.get("barcode");
-          const recognizedText = this.currentCaptureState
-            .get("recognizedText")
-            .trim();
+          //deal with undefined and null values that dont have trim()
+          // const recognizedText = this.currentCaptureState
+          //   .get("recognizedText")
+          //   .trim();
+          let recognizedText = this.currentCaptureState.get("recognizedText");
+          if (recognizedText && typeof recognizedText.trim === "function") {
+            recognizedText = recognizedText.trim();
+          }
+
           const note = this.currentCaptureState.get("note");
 
           this._createdText.innerHTML = localizedDate;

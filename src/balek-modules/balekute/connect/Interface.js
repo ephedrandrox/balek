@@ -1,27 +1,31 @@
+/*
+ * Balek Connect Interface
+ * Keeps a syncedMap of available invitations
+ * Creates an Invitation Interface for each available invitation
+ * Creates a Main Interface
+ * Adds the Main Interface to a static workspace container
+ *
+ */
+
 define([
+  //Dojo Base
   "dojo/_base/declare",
   "dojo/_base/lang",
-  "dojo/topic",
-
-  "dojo/dom-construct",
-  "dojo/dom-style",
-  "dojo/_base/window",
-
+  //Balek Module Interfaces
   "balek-modules/balekute/connect/Interface/main",
   "balek-modules/balekute/connect/Interface/invitation",
-
+  //Balek Workspace Interface
   "balek-client/session/workspace/workspaceManagerInterfaceCommands",
   "balek-modules/components/syncedCommander/Interface",
   "balek-modules/components/syncedMap/Interface",
 ], function (
+  //Dojo Base
   declare,
   lang,
-  topic,
-  domConstruct,
-  domStyle,
-  win,
+  //Balek Module Interfaces
   MainInterface,
-  Invitation,
+  InvitationInterface,
+  //Balek Workspace Interface
   balekWorkspaceManagerInterfaceCommands,
   _SyncedCommanderInterface,
   SyncedMapInterface
@@ -29,19 +33,21 @@ define([
   return declare("moduleBalekuteConnectInterface", _SyncedCommanderInterface, {
     _instanceKey: null,
     _mainInterface: null,
-
+    //Workspace Manager Commands
     workspaceManagerCommands: null,
-
+    //Available Invitations SyncedMap
     availableInvitations: null,
     availableInvitationsWatchHandle: null,
-
+    //Invitations and their Interfaces
+    invitationInterfaces: null,
     invitations: null,
 
     constructor: function (args) {
+      // Create the invitationInterfaces and invitations objects
       this.invitationInterfaces = {};
       this.invitations = {};
+      //Merge the arguments and get the workspace commands
       declare.safeMixin(this, args);
-      // console.log("BKConnect: starting up")
       let workspaceManagerInterfaceCommands =
         new balekWorkspaceManagerInterfaceCommands();
       this.workspaceManagerCommands =
@@ -54,6 +60,8 @@ define([
       if (name === "Status" && newState === "Ready") {
         //we could do something based on status here
       } else if (name === "availableInvitationsComponentKey") {
+        //Got Component Key for availableInvitations
+        //Set up the availableInvitations SyncedMap
         if (
           this.availableInvitations === null &&
           newState !== null &&
@@ -70,8 +78,8 @@ define([
             );
         }
       } else if (name === "mainInstanceKeys") {
-        //console.log("mainInstanceKeys:", newState);
-
+        //Got the mainInstanceKeys
+        //Create the Main Interface
         if (this._mainInterface === null) {
           this._mainInterface = new MainInterface({
             _instanceKey: newState.instanceKey,
@@ -79,7 +87,7 @@ define([
             _componentKey: newState.componentKey,
             _interface: this,
           });
-
+          // add the mainInterface to a static workspace container
           this._mainInterface
             .getContainerKeys()
             .then(
@@ -89,9 +97,6 @@ define([
                   Array.isArray(containerKeys) &&
                   containerKeys.length === 0
                 ) {
-                  // console.log("addToCurrentWorkspace ooooooooooooooooooooooooooooooooooooooooo");
-                  // topic.publish("addToCurrentWorkspace",this._mainInterface );
-
                   let workspaceContainerWidgetPath =
                     "balek-client/session/workspace/container/widgets/static/staticContainerWidget";
                   let activeWorkspaceKey = this.workspaceManagerCommands
@@ -104,7 +109,6 @@ define([
                     )
                     .then(
                       lang.hitch(this, function (workspaceContainerKey) {
-                        //  console.log("gotWorkspaceContainerKey", workspaceContainerKey);
                         this.workspaceManagerCommands
                           .addContainerToWorkspace(
                             workspaceContainerKey,
@@ -138,42 +142,17 @@ define([
       }
     },
     onAvailableInvitationsStateChange: function (name, oldState, newState) {
-      console.log(
-        "CDD:onAvailableInvitationsStateChange ",
-        name,
-        oldState,
-        newState
-      );
-
-      if (!this.invitations[name.toString()]) {
-        console.log(
-          "CDD:",
-          "onAvailableInvitationsStateChange creating interface",
-          name
-        );
-
-        let newInvitation = new Invitation({
+      if (!this.invitations[name.toString()] && newState !== undefined) {
+        let newInvitation = new InvitationInterface({
           invitationKey: name.toString(),
           connectInterface: this,
         });
-        // this.invitations[name.toString()] = newInvitation;
-        console.log("CDD:", "onAvailableInvitationsStateChange", newInvitation);
-
-        this._mainInterface.onNewInvitation(newInvitation);
-      } else {
-        console.log(
-          "CDD",
-          "onAvailableInvitationsStateChange",
-          this._menuInterfaces
-        );
+        this.invitations[name.toString()] = newInvitation;
+        if (this._mainInterface) {
+          //Todo: add the new invitation to the main interface
+          //this._mainInterface.onNewInvitation(newInvitation);
+        }
       }
-    },
-    getWorkspaceDomNode: function () {
-      // console.log("BKConnect: getWorkspaceDomNode called")
-      return undefined;
-    },
-    toggleShowView: function () {
-      // console.log("BKConnect: toggleShowView called")
     },
     unload: function () {},
   });

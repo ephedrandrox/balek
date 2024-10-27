@@ -1,154 +1,204 @@
-define(['dojo/_base/declare',
-        'dojo/_base/lang',
-        'dojo/topic',
-        'dojo/dom-class',
-        'dojo/dom-style',
-        'dojo/dom-construct',
-        "dojo/_base/window",
-        'dojo/on',
-        "dojo/dom-attr",
-        "dojo/keys",
-        "dijit/focus",
-        "dojo/ready",
-        "dijit/InlineEditBox",
-        "dijit/form/TextBox",
-        "dijit/_WidgetBase",
-        "dijit/_TemplatedMixin",
+define([
+  "dojo/_base/declare",
+  "dojo/_base/lang",
+  "dojo/topic",
+  "dojo/dom-class",
+  "dojo/dom-style",
+  "dojo/dom-construct",
+  "dojo/_base/window",
+  "dojo/on",
+  "dojo/dom-attr",
+  "dojo/keys",
+  "dijit/focus",
+  "dojo/ready",
+  "dijit/InlineEditBox",
+  "dijit/form/TextBox",
+  //Balek Util
+  "balek-modules/ui/util/styler",
 
-        'balek-modules/components/syncedCommander/Interface',
-        'balek-client/session/workspace/container/containable',
+  "dijit/_WidgetBase",
+  "dijit/_TemplatedMixin",
+  "balek-modules/components/syncedCommander/Interface",
+  "balek-client/session/workspace/container/containable",
 
-        "balek-client/session/sessionController/interfaceCommands",
+  "balek-client/session/sessionController/interfaceCommands",
 
-
-        'dojo/text!balek-modules/balekute/connect/resources/html/main.html',
-        'dojo/text!balek-modules/balekute/connect/resources/css/main.css',
-        'dojo/text!balek-modules/balekute/connect/resources/css/invitation.css'
+  "dojo/text!balek-modules/balekute/connect/resources/html/main.html",
+  "dojo/text!balek-modules/balekute/connect/resources/css/main.css",
+  "dojo/text!balek-modules/balekute/connect/resources/css/invitation.css",
+], function (
+  declare,
+  lang,
+  topic,
+  domClass,
+  domStyle,
+  domConstruct,
+  win,
+  on,
+  domAttr,
+  dojoKeys,
+  dijitFocus,
+  dojoReady,
+  InlineEditBox,
+  TextBox,
+  //Balek Util
+  styler,
+  _WidgetBase,
+  _TemplatedMixin,
+  _SyncedCommanderInterface,
+  _BalekWorkspaceContainerContainable,
+  SessionControllerInterfaceCommands,
+  template,
+  mainCss,
+  invitationCss
+) {
+  return declare(
+    "moduleBalekuteConnectInterface",
+    [
+      _WidgetBase,
+      _TemplatedMixin,
+      _SyncedCommanderInterface,
+      _BalekWorkspaceContainerContainable,
     ],
-    function (declare, lang, topic, domClass, domStyle, domConstruct, win, on, domAttr, dojoKeys,
-              dijitFocus, dojoReady, InlineEditBox, TextBox,
-              _WidgetBase, _TemplatedMixin,
-              _SyncedCommanderInterface,
-              _BalekWorkspaceContainerContainable,
-              SessionControllerInterfaceCommands,
-              template,
-              mainCss,
-              invitationCss) {
-        return declare("moduleBalekuteConnectInterface", [_WidgetBase, _TemplatedMixin, _SyncedCommanderInterface, _BalekWorkspaceContainerContainable], {
-            _instanceKey: null,
-            _interface: null,
-            templateString: template,
-            baseClass: "moduleBalekuteConnectInterface",
+    {
+      _instanceKey: null,
+      _interface: null,
+      templateString: template,
+      baseClass: "moduleBalekuteConnectInterface",
 
-            _mainCssString: mainCss,
-            _invitationCssString: invitationCss,
+      _mainCssString: mainCss,
+      _invitationCssString: invitationCss,
 
-            _invitationsDiv: null,
+      _invitationsDiv: null,
 
-            _qrDiv: null,
-            _qrImage: null,
-            qrEncodedString: "",
+      _qrDiv: null,
+      _qrImage: null,
+      qrEncodedString: "",
 
-            targetKey: "",
+      targetKey: "",
 
-            sessionControllerCommands: null,
+      sessionControllerCommands: null,
 
-            beingActivated: false,
+      beingActivated: false,
+      shared: {},
 
-            _createInvitationClicked: function(clickEvent){
-                console.log(this._instanceCommands)
-
-
-
-                this._interface._instanceCommands.createInvitationKey(location.hostname).then(function(commandReturnResults){
-                    console.log("#CDD", commandReturnResults)
-                    //create new interface with callback
-                }).catch(function(commandErrorResults){
-                    console.log("#CD", "Create Invitation Key Received Error Response" + commandErrorResults);
-                });
-
-
-
-            },
-            _loginWithPassword: function(clickEvent){
-                //The connect interface allows balekute devices to connect
-                //Since we are a web interface, lets load the login
-                // topic.publish("requestModuleLoad", "session/login");
-                topic.publish("requestModuleLoad", "diaplode/login");
-            },
-            _qrClicked: function(clickEvent){
-                if(!clickEvent.metaKey)
-                {
-                    window.open("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + this.targetKey, "_self")
-                }
-
-            },
-            constructor: function (args) {
-                this._interface = {};
-
-                let sessionControllerInterfaceCommands = new SessionControllerInterfaceCommands();
-                this.sessionControllerCommands = sessionControllerInterfaceCommands.getCommands();
-
-
-                declare.safeMixin(this, args);
-                // console.log("BKConnect: staring up main interface")
-                domConstruct.place(domConstruct.toDom("<style>" + this._mainCssString + "</style>"), win.body());
-                domConstruct.place(domConstruct.toDom("<style>" + this._invitationCssString + "</style>"), win.body());
-                this.setContainerName(" 📱 - Balekute Connect - ");
-                dojoReady(lang.hitch(this, function () {
-                    if (this._componentKey) {
-                        this.askToConnectInterface();
-                    }
-                }));
-            },
-
-            onInterfaceStateChange: function (name, oldState, newState) {
-               // console.log("🆘🆘calling", name, oldState, newState);
-                this.inherited(arguments);     //this has to be done so remoteCommander works
-
-            if(name == "targetKey"){
-                this.targetKey = newState
-                this._instanceCommands.getQRCode("balekute://newConnection/?host=" + location.hostname + "&targetKey=" + newState).then(lang.hitch(this, function(commandReturnResults){
-                    // console.log("#QRCode", commandReturnResults)
-                    //create new interface with callback
-
-                    this.qrEncodedString = commandReturnResults.Result
-                    // console.log("#QRCode this.qrEncodedString", this.qrEncodedString)
-
-                    if(this._qrDiv && this._qrImage )
-                    {
-                        this._qrImage.src = this.qrEncodedString
-                    }
-
-                })).catch(function(commandErrorResults){
-                    console.log("#QRCode", "Create QRCode Received Error Response" + commandErrorResults);
-                });
-                }
-                if(name == "targetActivated" && this.beingActivated == false){
-                    topic.publish("loadBackground", "flowerOfLife");
-                    this.destroy();
-                }
-            },
-            onNewInvitation: function(invitation){
-                console.log("CDD: newIn", invitation);
-                domConstruct.place(invitation.domNode, this._invitationsDiv)
-
-            },
-
-            postCreate: function () {
-                this.initializeContainable();
-
-            },
-            startupContainable: function(){
-                //called after containable is started
-                // console.log("startupContainable main connect containable");
-
-
-            },
-            unload: function () {
-
-                this.inherited(arguments);
-                this.destroy();
+      constructor: function (args) {
+        // Create an empty interface object
+        // Get Controller Commands
+        this._interface = {};
+        let sessionControllerInterfaceCommands =
+          new SessionControllerInterfaceCommands();
+        this.sessionControllerCommands =
+          sessionControllerInterfaceCommands.getCommands();
+        //Mix in the arguments -  could override the above
+        declare.safeMixin(this, args);
+        //Set up the styler and add the main and invitation css
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
+        this.shared.styler.addStyle(
+          this.baseClass,
+          this._mainCssString + " \n" + this._invitationCssString
+        );
+        this.setContainerName(" 📱 - Balekute Connect - ");
+        dojoReady(
+          lang.hitch(this, function () {
+            if (this._componentKey) {
+              this.askToConnectInterface();
             }
-        });
-    });
+          })
+        );
+      },
+
+      _createInvitationClicked: function (clickEvent) {
+        console.log(this._instanceCommands);
+
+        this._interface._instanceCommands
+          .createInvitationKey(location.hostname)
+          .then(function (commandReturnResults) {
+            console.log("#CDD", commandReturnResults);
+            //create new interface with callback
+          })
+          .catch(function (commandErrorResults) {
+            console.log(
+              "#CD",
+              "Create Invitation Key Received Error Response" +
+                commandErrorResults
+            );
+          });
+      },
+      _loginWithPassword: function (clickEvent) {
+        //The connect interface allows balekute devices to connect
+        //Since we are a web interface, lets load the login
+        // topic.publish("requestModuleLoad", "session/login");
+        topic.publish("requestModuleLoad", "diaplode/login");
+      },
+      _qrClicked: function (clickEvent) {
+        if (!clickEvent.metaKey) {
+          window.open(
+            "balekute://newConnection/?host=" +
+              location.hostname +
+              "&targetKey=" +
+              this.targetKey,
+            "_self"
+          );
+        }
+      },
+
+      onInterfaceStateChange: function (name, oldState, newState) {
+        // console.log("🆘🆘calling", name, oldState, newState);
+        this.inherited(arguments); //this has to be done so remoteCommander works
+
+        if (name == "targetKey") {
+          this.targetKey = newState;
+          this._instanceCommands
+            .getQRCode(
+              "balekute://newConnection/?host=" +
+                location.hostname +
+                "&targetKey=" +
+                newState
+            )
+            .then(
+              lang.hitch(this, function (commandReturnResults) {
+                // console.log("#QRCode", commandReturnResults)
+                //create new interface with callback
+
+                this.qrEncodedString = commandReturnResults.Result;
+                // console.log("#QRCode this.qrEncodedString", this.qrEncodedString)
+
+                if (this._qrDiv && this._qrImage) {
+                  this._qrImage.src = this.qrEncodedString;
+                }
+              })
+            )
+            .catch(function (commandErrorResults) {
+              console.log(
+                "#QRCode",
+                "Create QRCode Received Error Response" + commandErrorResults
+              );
+            });
+        }
+        if (name == "targetActivated" && this.beingActivated == false) {
+          topic.publish("loadBackground", "flowerOfLife");
+          this.destroy();
+        }
+      },
+      onNewInvitation: function (invitation) {
+        console.log("CDD: newIn", invitation);
+        domConstruct.place(invitation.domNode, this._invitationsDiv);
+      },
+
+      postCreate: function () {
+        this.initializeContainable();
+      },
+      startupContainable: function () {
+        //called after containable is started
+        // console.log("startupContainable main connect containable");
+      },
+      unload: function () {
+        this.inherited(arguments);
+        this.destroy();
+      },
+    }
+  );
+});
