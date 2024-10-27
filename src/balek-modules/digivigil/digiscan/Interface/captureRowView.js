@@ -30,6 +30,8 @@ define([
   "dijit/focus",
   "dojo/ready",
   "dojo/_base/fx",
+  //Balek Util
+  "balek-modules/ui/util/styler",
   //Dojo Widgets
   "dijit/InlineEditBox",
   "dijit/form/TextBox",
@@ -54,6 +56,8 @@ define([
   dijitFocus,
   dojoReady,
   fx,
+  //Balek Util
+  styler,
   //Dojo Widgets
   InlineEditBox,
   TextBox,
@@ -93,16 +97,20 @@ define([
       uiStateWatchHandle: null,
       //State of current selected Capture Set
       currentCaptureSetWatchHandle: null,
-      /* Mixes in and checks for Passed Arguments
-           Uses passed capture ID to retrieve and watch capture state
-           Reloads View From State on initialization and on each state change
+      shared: {},
 
-           Places css and then
-           Waits for DOM to be ready to focus the widget
-      */
+      /* Mixes in and checks for Passed Arguments
+             Uses passed capture ID to retrieve and watch capture state
+             Reloads View From State on initialization and on each state change
+
+             Places css and then
+             Waits for DOM to be ready to focus the widget
+        */
       constructor: function (args) {
         declare.safeMixin(this, args);
-
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
         if (this.captureID && this.interfaceCommands) {
           this.captureState = this.interfaceCommands
             .getCaptures()
@@ -113,10 +121,7 @@ define([
           this.reloadViewFromState();
         }
 
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
         dojoReady(
           lang.hitch(this, function () {
             dijitFocus.focus(this.domNode);

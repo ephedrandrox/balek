@@ -27,6 +27,8 @@ define([
   "dijit/focus",
   "dojo/ready",
   "dojo/_base/fx",
+  //Balek Util
+  "balek-modules/ui/util/styler",
   //Widgets
   "dijit/InlineEditBox",
   "dijit/form/TextBox",
@@ -51,6 +53,8 @@ define([
   dijitFocus,
   dojoReady,
   fx,
+  //Balek Util
+  styler,
   //Widgets
   InlineEditBox,
   TextBox,
@@ -86,15 +90,17 @@ define([
       currentCaptureID: null,
       currentCaptureState: null,
       currentCaptureStateWatchHandle: null,
+      shared: {},
       /*mixes in passed arguments
        adds mainCssString to the body
        waits for dojo to be ready then focuses on the main domNode*/
       constructor: function (args) {
         declare.safeMixin(this, args);
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
+
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
         dojoReady(
           lang.hitch(this, function () {
             dijitFocus.focus(this.domNode);
@@ -240,7 +246,9 @@ define([
           let localizedDate = dateUtility.getLocalizedDate(dateString);
 
           const barcode = this.currentCaptureState.get("barcode");
-          const recognizedText = this.currentCaptureState.get("recognizedText");
+          const recognizedText = this.currentCaptureState
+            .get("recognizedText")
+            .trim();
           const note = this.currentCaptureState.get("note");
 
           this._createdText.innerHTML = localizedDate;

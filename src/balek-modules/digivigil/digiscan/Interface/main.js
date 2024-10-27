@@ -37,6 +37,8 @@ define([
   "dijit/form/TextBox",
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
+  //Balek Util
+  "balek-modules/ui/util/styler",
   //Scaptura Widgets
   "balek-modules/digivigil/digiscan/Interface/captureDetailView",
   "balek-modules/digivigil/digiscan/Interface/captureGridView",
@@ -66,6 +68,8 @@ define([
   TextBox,
   _WidgetBase,
   _TemplatedMixin,
+  //Balek Util
+  styler,
   //Scaptura Widgets
   CaptureDetailView,
   captureGridView,
@@ -120,6 +124,7 @@ define([
       lastCaptureSetIDWatched: null,
       //Array of Capture Grid Views
       CaptureViews: null,
+      shared: {},
       //##########################################################################################################
       //Startup Functions Section
       //##########################################################################################################
@@ -137,10 +142,11 @@ define([
         this.CaptureViews = {};
 
         declare.safeMixin(this, args);
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
       },
       postCreate: function () {
         /*

@@ -26,6 +26,9 @@ define([
   "dojo/ready",
   "dojo/_base/fx",
 
+  //Balek Util
+  "balek-modules/ui/util/styler",
+
   "balek-modules/digivigil/ui/input/getUserInput",
 
   "dijit/_WidgetBase",
@@ -47,6 +50,8 @@ define([
   dijitFocus,
   dojoReady,
   fx,
+  //Balek Util
+  styler,
   getUserInput,
   _WidgetBase,
   _TemplatedMixin,
@@ -82,15 +87,17 @@ define([
 
       uiState: null,
       uiStateWatchHandle: null,
+      shared: {},
+
       //##########################################################################################################
       //Startup Functions Section
       //##########################################################################################################
       constructor: function (args) {
         declare.safeMixin(this, args);
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
         dojoReady(
           lang.hitch(this, function () {
             dijitFocus.focus(this.domNode);

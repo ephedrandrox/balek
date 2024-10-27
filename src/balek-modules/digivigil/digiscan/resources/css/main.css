@@ -202,7 +202,6 @@ body {
   right: 0;
   /*visibility: inherit;*/
   visibility: hidden;
-
   background: rgba(20, 27, 47, 0.7);
 }
 
@@ -214,7 +213,7 @@ body {
   border-bottom: 2px solid #171616;
 
   transition: max-height 0.3s ease, padding 0.3s ease;
-  background: rgba(64, 64, 101, 0.38);
+  background: rgba(236, 236, 248, 0.52);
 }
 
 .digivigilDigiscanMainInterface {

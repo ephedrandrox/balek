@@ -15,6 +15,9 @@ define([
   "dijit/_WidgetBase",
   "dijit/_TemplatedMixin",
 
+  //Balek Util
+  "balek-modules/ui/util/styler",
+
   "dojo/text!balek-modules/digivigil/digiscan/resources/html/settings.html",
   "dojo/text!balek-modules/digivigil/digiscan/resources/css/settings.css",
 
@@ -36,6 +39,8 @@ define([
   TextBox,
   _WidgetBase,
   _TemplatedMixin,
+  //Balek Util
+  styler,
   template,
   mainCss,
   _SyncedCommanderInterface,
@@ -60,16 +65,17 @@ define([
 
       uiState: null, //SyncedMap
       uiStateWatchHandle: null,
+      shared: {},
 
       //##########################################################################################################
       //Startup Functions Section
       //##########################################################################################################
       constructor: function (args) {
         declare.safeMixin(this, args);
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
       },
       postCreate: function () {
         this.initializeContainable();

@@ -13,6 +13,8 @@ define([
   "dijit/focus",
   "dojo/ready",
   "dojo/_base/fx",
+  //Balek Util
+  "balek-modules/ui/util/styler",
 
   "dijit/InlineEditBox",
   "dijit/form/TextBox",
@@ -37,6 +39,8 @@ define([
   dijitFocus,
   dojoReady,
   fx,
+  //Balek Util
+  styler,
   InlineEditBox,
   TextBox,
   _WidgetBase,
@@ -69,18 +73,17 @@ define([
       currentCaptureSetWatchHandle: null,
 
       CaptureViews: null,
+      shared: {},
 
       constructor: function (args) {
         this.CaptureViews = {};
 
         declare.safeMixin(this, args);
-
+        if (this.shared.styler === undefined) {
+          this.shared.styler = new styler({});
+        }
         //  this.captureState =   this.interfaceCommands.getCaptures()
-
-        domConstruct.place(
-          domConstruct.toDom("<style>" + this._mainCssString + "</style>"),
-          win.body()
-        );
+        this.shared.styler.addStyle(this.baseClass, this._mainCssString);
       },
       postCreate: function () {
         if (this.interfaceCommands !== null) {
