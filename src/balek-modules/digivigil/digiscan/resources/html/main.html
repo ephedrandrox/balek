@@ -3,33 +3,31 @@
   data-dojo-attach-event="onkeyup:_onKeyUp"
   tabindex="0"
 >
+
   <div class="${baseClass}BackgroundDiv">
     <img
       class="${baseClass}BackgroundDivImage"
       src="balek-modules/digivigil/digiscan/resources/images/ScapturaTrans.svg"
     />
   </div>
+
   <div class="${baseClass}MainDiv">
+    <div
+            class="${baseClass}DetailDiv"
+            data-dojo-attach-point="_detailDiv"
+    ></div>
     <div class="${baseClass}MainContentDiv">
       <div
         class="${baseClass}TableViewDiv"
         data-dojo-attach-point="_tableDiv"
       ></div>
-      <div class="${baseClass}PreviewGrid">
-        <div
-                class="${baseClass}DetailDiv"
-                style="grid-area: CaptureDetail"
-                data-dojo-attach-point="_detailDiv"
-        ></div>
+<!--      <div class="${baseClass}PreviewGrid">-->
 
         <div
           class="${baseClass}PreviewDiv"
           style="grid-area: CapturePreviews"
 
         >
-          <div  class="${baseClass}PreviewContentDivider">
-            &nbsp;
-          </div>
 
 
           <div class="${baseClass}PreviewContentDiv" data-dojo-attach-point="_previewDiv">
@@ -37,7 +35,9 @@
           </div>
 
         </div>
-      </div>
+
+
+      <!--      </div>-->
 
       <div
         data-dojo-attach-point="_statusDiv"

@@ -1,6 +1,10 @@
 <div class="${baseClass}" tabindex="0">
     <div class="${baseClass}MainGrid">
-        <div style="grid-area: DetailInfo;  " class="${baseClass}InfoDiv">
+        <div style="position : relative ;grid-area: Divider; height: 20px; overflow: hidden;" >
+            <div   class="${baseClass}Divider"></div>
+
+        </div>
+        <div style="grid-area: DetailInfo; position: relative " class="${baseClass}InfoDiv">
             <div  class="${baseClass}InfoContent" >
                 <div class="${baseClass}RecognizedTextDiv" style="grid-area: Text ">
                     <div class="${baseClass}Text"
@@ -28,17 +32,19 @@
                 </div>
 
 
-                <img class="${baseClass}IconImg"
-                     data-dojo-attach-event="onclick:onHideClick"
-                     style="position: relative; left: 0; top: 0; padding-left: 25px; display: inline-block; transform: translateY(-10px) rotate(90deg)  ; "
-                     src="balek-modules/digivigil/digiscan/resources/images/chevronCircle.svg"
-                     alt="Close Detailed View"/> <div class="${baseClass}Text"
-                                                      style="display: inline;"
-                                                      data-dojo-attach-point="_createdText"
-            >
-                Hide Full Image
+
+
             </div>
             </div>
+
+        <img class="${baseClass}IconImg"
+             data-dojo-attach-event="onclick:onHideClick"
+             style="position: absolute; right: 10px; top: -10px; padding-left: 25px; display: inline-block; transform: translateY(-10px) rotate(-90deg)  ; "
+             src="balek-modules/digivigil/digiscan/resources/images/chevronCircle.svg"
+             alt="Close Detailed View"/> <div class="${baseClass}Text"
+                                              style="display: inline;"
+                                              data-dojo-attach-point="_createdText"
+    >
         </div>
 
         <div class="${baseClass}DetailImage"  style="grid-area: DetailImage;

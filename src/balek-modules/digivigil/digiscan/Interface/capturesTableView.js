@@ -136,6 +136,8 @@ define([
       onUIStateChange: function (name, oldValue, newValue) {
         if (name !== "UIStatusText") {
           this.refreshUI();
+        } else {
+          // this.refreshUI();
         }
       },
       onClearCapturesFromSetOver: function () {
@@ -252,7 +254,6 @@ define([
       //UI Update Functions Section
       //##########################################################################################################
       refreshUI: function () {
-        //console.log("refreshUI");
         if (
           this.mainInterface !== null &&
           typeof this.mainInterface.forEachSelectedCapture === "function"

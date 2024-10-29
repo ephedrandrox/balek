@@ -60,8 +60,8 @@ define([
     },
     getCaptureByID: function (captureID) {
       if (!this.captures[captureID]) {
-        let CapturesState = declare([Stateful], {});
-        this.captures[captureID] = new CapturesState({});
+        let CaptureState = declare([Stateful], {});
+        this.captures[captureID] = new CaptureState({});
 
         this.captures[captureID].set("created", "");
         this.captures[captureID].set("barcode", "");

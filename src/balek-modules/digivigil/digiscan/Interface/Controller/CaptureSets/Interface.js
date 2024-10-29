@@ -51,6 +51,8 @@ define([
               this.captureSetSyncedMaps[captureSetID].setStateWatcher(
                 lang.hitch(this, function (name, oldValue, newValue) {
                   this.captureSets[captureSetID].set(name, newValue);
+
+                  // console.log(this.captureSets[captureSetID]);
                 })
               );
           })

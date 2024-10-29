@@ -122,6 +122,10 @@ define([
       captureSetsWatchHandle: null,
       currentCaptureSetWatchHandle: null,
       lastCaptureSetIDWatched: null,
+      //Captures State
+      captures: null,
+      capturesWatchHandle: null,
+
       //Array of Capture Grid Views
       CaptureViews: null,
       shared: {},
@@ -227,6 +231,28 @@ define([
               console.error("Error this._interface.getCaptureSets()", Error);
             })
           );
+
+        this._interface
+          .getAvailableCaptures()
+          .then(
+            lang.hitch(this, function (captures) {
+              this.captures = captures;
+              this.capturesWatchHandle = this.captures.setStateWatcher(
+                lang.hitch(this, function (name, oldValue, newValue) {
+                  this.refreshViews();
+                })
+              );
+              this.refreshViews();
+            })
+          )
+          .catch(
+            lang.hitch(this, function (Error) {
+              console.error(
+                "Error this._interface.getAvailableCaptures()",
+                Error
+              );
+            })
+          );
       },
       startupContainable: function () {
         //called after containable is started
@@ -302,8 +328,9 @@ define([
                   let captureView = this.getCaptureView(name);
                   dojoReady(
                     lang.hitch(this, function () {
-                      if (this._previewDiv.contains(captureView.domNode))
-                        domConstruct.destroy(captureView.domNode);
+                      if (this._previewDiv.contains(captureView.domNode)) {
+                        captureView.domNode.remove();
+                      }
                     })
                   );
                   if (this.MainTable !== null) {
@@ -312,12 +339,12 @@ define([
                 } else if (name === "filterSettings") {
                   //if the received value is not a boolean and it's name is filterSettings
                   // then we want to use them to filter the captures
-                  // console.log(
-                  //   "👽currentCaptureSetWatchHandle filter settings",
-                  //   name,
-                  //   oldValue,
-                  //   newValue
-                  // );
+                  console.log(
+                    "👽currentCaptureSetWatchHandle filter settings",
+                    name,
+                    oldValue,
+                    newValue
+                  );
                 } else {
                   //if the received value is not a boolean and it's name is not filterSettings
                   //then we should issue a warning cause that is unexpected
@@ -596,15 +623,19 @@ define([
               let keyInCaptureSet = captureSet.get(key);
               if (
                 keyInCaptureSet &&
-                keyInCaptureSet === true &&
-                Captures.isCaptureSyncing(key)
+                keyInCaptureSet === true
+                // && Captures.isCaptureSyncing(key)
               ) {
                 doThis(key);
-              } else {
-                // console.log("👽isCaptureSyncing", key);
               }
             });
+          } else {
+            // console.error("👽forEachSelectedCapture: missing captureSet");
           }
+        } else {
+          // console.error(
+          //   "👽forEachSelectedCapture: missing parameters or not ready"
+          // );
         }
       },
       createTabbedDataDownload: function (tabbedData) {

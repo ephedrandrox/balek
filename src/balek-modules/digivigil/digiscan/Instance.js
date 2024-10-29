@@ -124,6 +124,7 @@ define([
       });
 
       this.uiState.add("ActiveView", "previewDiv");
+      this.uiState.add("selectedDetailsSize", "30");
       this.uiState.add("showHiddenViews", false);
 
       this._interfaceState.set(

@@ -120,17 +120,17 @@ define([
               _componentKey: newState,
             });
 
-            const availableCapturesWatchHandle =
-              this.availableCaptures.setStateWatcher(
-                lang.hitch(this, function (name, oldValue, newValue) {
-                  // console.log(
-                  //   "🤡🤡availableCaptures",
-                  //   name,
-                  //   oldValue,
-                  //   newValue
-                  // );
-                })
-              );
+            // const availableCapturesWatchHandle =
+            //   this.availableCaptures.setStateWatcher(
+            //     lang.hitch(this, function (name, oldValue, newValue) {
+            //       // console.log(
+            //       //   "🤡🤡availableCaptures",
+            //       //   name,
+            //       //   oldValue,
+            //       //   newValue
+            //       // );
+            //     })
+            //   );
 
             for (const ResolveKey in this.availableCapturesResolveRequests) {
               this.availableCapturesResolveRequests[ResolveKey](
@@ -343,7 +343,7 @@ define([
       //##########################################################################################################
       //Interface Functions Section
       //##########################################################################################################
-      getAvailableEntries: function () {
+      getAvailableCaptures: function () {
         return new Promise(
           lang.hitch(this, function (Resolve, Reject) {
             if (this.availableCaptures == null) {
@@ -623,7 +623,7 @@ define([
               "removeCaptureFromSet Received Error Response" +
                 commandErrorResults
             );
-            resultCallback(commandReturnResults);
+            resultCallback(commandErrorResults);
           });
       },
       addCaptureToSet: function (captureSetID, captureID, resultCallback) {
